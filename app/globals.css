@@ -149,7 +149,36 @@ html, body {
 /* ── Ticker ────────────────────────────────────────────────────────────────── */
 .ticker-track {
   display: flex;
-  animation: ticker 30s linear infinite;
+  animation: ticker 36s linear infinite;
   white-space: nowrap;
 }
 .ticker-track:hover { animation-play-state: paused; }
+
+/* ── Spotlight / beam ──────────────────────────────────────────────────────── */
+@keyframes beam {
+  0%   { opacity: 0; transform: translateX(-100%) rotate(25deg); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(200%) rotate(25deg); }
+}
+.animate-beam { animation: beam 6s ease-in-out infinite 2s; }
+
+/* ── Slow spin for decorative rings ───────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* ── Number counter flash ──────────────────────────────────────────────────── */
+@keyframes count-flash {
+  0%   { opacity: 0; transform: translateY(8px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  90%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ── Fade up variants ─────────────────────────────────────────────────────── */
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
