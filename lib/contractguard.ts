@@ -5,6 +5,7 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContractGuardOutput } from './types'
+import { extractJSON } from './utils'
 
 // Module-level singleton — avoids re-instantiation on every call in serverless warm invocations
 const anthropic = new Anthropic({
@@ -110,14 +111,9 @@ async function runDirectAnalysis(
     throw new Error('ContractGuard analysis returned no text content')
   }
 
-  const jsonMatch = block.text.match(/\{[\s\S]*\}/)
-  if (!jsonMatch) {
-    throw new Error('ContractGuard analysis did not return valid JSON')
-  }
-
   let parsed: unknown
   try {
-    parsed = JSON.parse(jsonMatch[0])
+    parsed = extractJSON(block.text)
   } catch {
     throw new Error('ContractGuard analysis returned malformed JSON')
   }

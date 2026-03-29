@@ -40,17 +40,22 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Payment not completed' }, { status: 402 })
     }
 
-    const customerId = session.customer as string
-    const subscriptionId = session.subscription as string
+    const customerId = typeof session.customer === 'string' ? session.customer : null
+    const subscriptionId = typeof session.subscription === 'string' ? session.subscription : null
+
+    if (!customerId || !subscriptionId) {
+      return NextResponse.json({ error: 'Invalid session data' }, { status: 400 })
+    }
+
     const token = issueToken(customerId, subscriptionId)
 
     const res = NextResponse.json({ ok: true })
     res.cookies.set('gss_pro', token, {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'strict',
       path: '/',
-      maxAge: 60 * 60 * 24 * 32,
+      maxAge: 60 * 60 * 24 * 7, // 7 days — short TTL, renewal handled by webhook
     })
     return res
   } catch (err) {

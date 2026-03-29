@@ -48,12 +48,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       if (rateData) {
         const windowAge = Date.now() - new Date(rateData.window_start).getTime()
-        if (windowAge < WINDOW_MS && rateData.analyses_count >= ANON_LIMIT) {
-          return NextResponse.json(
-            { error: 'LIMIT_REACHED' },
-            { status: 429 }
-          )
+        const windowActive = windowAge < WINDOW_MS
+        if (windowActive && rateData.analyses_count >= ANON_LIMIT) {
+          return NextResponse.json({ error: 'LIMIT_REACHED' }, { status: 429 })
         }
+        // Reset stale window so increment below starts fresh
+        if (!windowActive) rateData = null
       }
     }
 

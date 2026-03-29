@@ -5,6 +5,7 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContractGuardOutput, DocumentType, OverchargeOutput } from './types'
+import { extractJSON } from './utils'
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -82,14 +83,9 @@ ${RESPONSE_SCHEMA}`
     throw new Error('Overcharge analysis returned no text content')
   }
 
-  const jsonMatch = block.text.match(/\{[\s\S]*\}/)
-  if (!jsonMatch) {
-    throw new Error('Overcharge analysis did not return valid JSON')
-  }
-
   let parsed: OverchargeOutput
   try {
-    parsed = JSON.parse(jsonMatch[0]) as OverchargeOutput
+    parsed = extractJSON(block.text) as OverchargeOutput
   } catch {
     throw new Error('Overcharge analysis returned malformed JSON')
   }

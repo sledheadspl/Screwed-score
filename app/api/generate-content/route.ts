@@ -73,9 +73,8 @@ Return ONLY valid JSON in this exact format:
   const text = response.content[0]?.type === 'text' ? response.content[0].text : ''
 
   try {
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) throw new Error('No JSON found')
-    const content = JSON.parse(jsonMatch[0])
+    const { extractJSON } = await import('@/lib/utils')
+    const content = extractJSON(text)
     return NextResponse.json(content)
   } catch {
     return NextResponse.json({ error: 'Failed to parse generated content' }, { status: 500 })
