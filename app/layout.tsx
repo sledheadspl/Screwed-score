@@ -49,8 +49,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         {children}
-        <footer className="text-center py-6 text-sm text-gray-400">
-          Built by <a href="https://rembydesign.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-200 transition-colors">REMbyDesign</a>
+        <footer className="text-center py-8 text-sm text-gray-500 space-y-1">
+          <div className="font-semibold tracking-wide text-gray-400">REMbyDesign</div>
+          <div>&copy; {new Date().getFullYear()} REMbyDesign. All rights reserved.</div>
+          <div>Unauthorized reproduction or distribution is strictly prohibited.</div>
         </footer>
       </body>
     </html>
