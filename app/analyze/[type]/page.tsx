@@ -113,7 +113,7 @@ export async function generateMetadata({ params }: { params: { type: string } })
     openGraph: {
       title: config.title,
       description: config.subheadline,
-      url: `https://getscrewedscore.com/analyze/${params.type}`,
+      url: `https://screwedscore.com/analyze/${params.type}`,
     },
   }
 }

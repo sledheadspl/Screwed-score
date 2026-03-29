@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? 'https://getscrewedscore.com'
+    process.env.NEXT_PUBLIC_APP_URL ?? 'https://screwedscore.com'
   ),
   title: 'Get Screwed Score — Find Out If You\'re Being Overcharged',
   description:
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Get Screwed Score',
     description: 'Upload any document. Find out if you\'re getting screwed.',
-    url: 'https://getscrewedscore.com',
+    url: 'https://screwedscore.com',
     siteName: 'GetScrewedScore',
     type: 'website',
     images: [

@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
           zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: '24px',
         }}>
           <span style={{ fontSize: '15px', color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
-            getscrewedscore.com
+            screwedscore.com
           </span>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '8px',

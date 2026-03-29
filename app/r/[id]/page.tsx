@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     openGraph: {
       title, description,
-      url: `https://getscrewedscore.com/r/${params.id}`,
+      url: `https://screwedscore.com/r/${params.id}`,
       type: 'website',
       images: [{ url: ogUrl, width: 1200, height: 630 }],
     },

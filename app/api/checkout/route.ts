@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const origin = process.env.NEXT_PUBLIC_SITE_URL ?? req.headers.get('origin') ?? 'https://getscrewedscore.netlify.app'
+    const origin = process.env.NEXT_PUBLIC_SITE_URL ?? req.headers.get('origin') ?? 'https://screwedscore.com'
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
