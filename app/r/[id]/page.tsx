@@ -54,8 +54,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     analysis.screwed_score === 'MAYBE'   ? `⚠️ Suspicious charges on their ${docLabel}${amountText}` :
                                            `✅ Clean ${docLabel} — no red flags found`
 
-  const description = analysis.screwed_score_reason.slice(0, 155)
-  const ogUrl = `/og?score=${analysis.screwed_score}&percent=${analysis.screwed_score_percent}&type=${encodeURIComponent(docLabel)}&amount=${Math.round(flagged)}&reason=${encodeURIComponent(analysis.screwed_score_reason.slice(0, 80))}`
+  const reason = analysis.screwed_score_reason ?? ''
+  const description = reason.slice(0, 155)
+  const ogUrl = `/og?score=${analysis.screwed_score}&percent=${analysis.screwed_score_percent}&type=${encodeURIComponent(docLabel)}&amount=${Math.round(flagged)}&reason=${encodeURIComponent(reason.slice(0, 80))}`
 
   return {
     title: `${title} | GetScrewedScore`,

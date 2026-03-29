@@ -17,15 +17,23 @@ const PERKS = [
 
 export function PaywallModal({ onClose, onGoogleLogin }: Props) {
   const [loading, setLoading] = useState(false)
+  const [checkoutError, setCheckoutError] = useState(false)
 
   const handlePro = async () => {
     setLoading(true)
+    setCheckoutError(false)
     try {
       const res = await fetch('/api/checkout', { method: 'POST' })
-      const { url } = await res.json()
-      if (url) window.location.href = url
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setLoading(false)
+        setCheckoutError(true)
+      }
     } catch {
       setLoading(false)
+      setCheckoutError(true)
     }
   }
 
@@ -64,15 +72,20 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         </ul>
 
         {/* CTA */}
-        <button onClick={handlePro} disabled={loading}
-          className="w-full py-3 rounded-xl font-black text-sm text-white transition-all disabled:opacity-60"
-          style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
-            </span>
-          ) : 'Go Pro — $9.99/month'}
-        </button>
+        <div className="space-y-2">
+          <button onClick={handlePro} disabled={loading}
+            className="w-full py-3 rounded-xl font-black text-sm text-white transition-all disabled:opacity-60"
+            style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
+              </span>
+            ) : 'Go Pro — $9.99/month'}
+          </button>
+          {checkoutError && (
+            <p className="text-center text-xs text-red-400">Something went wrong. Please try again.</p>
+          )}
+        </div>
 
         {/* Divider */}
         <div className="flex items-center gap-3">
@@ -94,7 +107,7 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         </button>
 
         <p className="text-center text-[10px] text-brand-sub/50">
-          Signing in gives you 5 free analyses/day
+          Sign in to save and revisit your past analyses
         </p>
       </div>
     </div>

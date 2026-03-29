@@ -104,6 +104,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const safeName = file.name
       .replace(/.*[/\\]/, '')            // strip any path prefix
       .replace(/[^a-zA-Z0-9._-]/g, '_') // allow only safe chars
+      .replace(/\.{2,}/g, '_')           // collapse consecutive dots
       .slice(0, 80)
 
     const storageId   = randomUUID()

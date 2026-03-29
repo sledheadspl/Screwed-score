@@ -42,18 +42,22 @@ const SCORE_COLORS: Record<string, string> = {
 export default function HomePage() {
   const [state, setState] = useState<AppState>(INITIAL_STATE)
   const [showPaywall, setShowPaywall] = useState(false)
-  const [isPro] = useState(() => {
-    if (typeof document === 'undefined') return false
-    return document.cookie.includes('gss_pro=')
-  })
+  const [isPro, setIsPro] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
   useEffect(() => {
+    // Read cookie on mount (SSR-safe) and recheck whenever auth changes
+    const checkPro = () => setIsPro(
+      typeof document !== 'undefined' && document.cookie.includes('gss_pro=')
+    )
+    checkPro()
+
     supabase.auth.getUser().then(({ data }) => {
       setUserEmail(data.user?.email ?? null)
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setUserEmail(session?.user?.email ?? null)
+      checkPro()
     })
     return () => subscription.unsubscribe()
   }, [])

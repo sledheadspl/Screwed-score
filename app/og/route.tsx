@@ -9,7 +9,8 @@ export async function GET(req: NextRequest) {
   const score   = searchParams.get('score')    // SCREWED | MAYBE | SAFE
   const percent = searchParams.get('percent')  // 0-100
   const docType = searchParams.get('type')     // e.g. "Medical Bill"
-  const amount  = parseInt(searchParams.get('amount') ?? '0', 10)
+  const rawAmount = parseInt(searchParams.get('amount') ?? '0', 10)
+  const amount = isNaN(rawAmount) || rawAmount < 0 ? 0 : rawAmount
   const reason  = searchParams.get('reason') ?? ''
 
   const isResult = Boolean(score && percent)
