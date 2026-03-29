@@ -11,6 +11,7 @@ import { RotateCcw, AlertCircle, Receipt, FileText, DollarSign, Sparkles } from 
 import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
 import { PaywallModal } from '@/components/PaywallModal'
+import { ContentGenerator } from '@/components/ContentGenerator'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -41,6 +42,10 @@ const SCORE_COLORS: Record<string, string> = {
 export default function HomePage() {
   const [state, setState] = useState<AppState>(INITIAL_STATE)
   const [showPaywall, setShowPaywall] = useState(false)
+  const [isPro] = useState(() => {
+    if (typeof document === 'undefined') return false
+    return document.cookie.includes('gss_pro=')
+  })
 
   const handleGoogleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -349,6 +354,13 @@ export default function HomePage() {
                 </div>
               </div>
             )}
+
+            {/* Content Generator */}
+            <ContentGenerator
+              analysisId={state.analysisId}
+              isPro={isPro}
+              onUpgrade={() => setShowPaywall(true)}
+            />
 
             {/* Share */}
             <div className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
