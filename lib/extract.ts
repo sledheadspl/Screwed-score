@@ -45,9 +45,7 @@ export async function extractTextFromBuffer(
   mimeType: string
 ): Promise<string> {
   if (mimeType === 'application/pdf') {
-    const pdfParse = (await import('pdf-parse')).default
-    const data = await pdfParse(buffer)
-    return data.text.trim()
+    return extractTextFromPdf(buffer)
   }
 
   if (
@@ -68,6 +66,37 @@ export async function extractTextFromBuffer(
   }
 
   throw new Error(`Unsupported file type: ${mimeType}`)
+}
+
+async function extractTextFromPdf(buffer: Buffer): Promise<string> {
+  const Anthropic = (await import('@anthropic-ai/sdk')).default
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: 30_000 })
+  const base64 = buffer.toString('base64')
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await (client.messages.create as any)({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 4000,
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'document',
+            source: { type: 'base64', media_type: 'application/pdf', data: base64 },
+          },
+          {
+            type: 'text',
+            text: 'Extract ALL text from this document exactly as it appears. Include all line items, prices, dates, names, and terms. Output only the extracted text, no commentary.',
+          },
+        ],
+      },
+    ],
+  })
+
+  const block = response.content[0]
+  if (!block || block.type !== 'text') throw new Error('PDF extraction returned no text')
+  return block.text.trim()
 }
 
 async function extractTextFromImage(buffer: Buffer, mimeType: string): Promise<string> {
