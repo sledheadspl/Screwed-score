@@ -49,8 +49,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         {children}
-        <footer className="text-center py-8 text-sm text-gray-500 space-y-1">
-          <div className="font-semibold tracking-wide text-gray-400">REMbyDesign</div>
+        <footer className="text-center py-8 text-sm text-gray-500 space-y-2">
+          <div className="flex justify-center">
+            <img src="/rembydesign-logo.svg" alt="REMbyDesign" className="h-8 opacity-80" />
+          </div>
           <div>&copy; {new Date().getFullYear()} REMbyDesign. All rights reserved.</div>
           <div>Unauthorized reproduction or distribution is strictly prohibited.</div>
         </footer>
