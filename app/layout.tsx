@@ -47,7 +47,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer className="text-center py-6 text-sm text-gray-400">
+          Built by <a href="https://rembydesign.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-200 transition-colors">REMbyDesign</a>
+        </footer>
+      </body>
     </html>
   )
 }
