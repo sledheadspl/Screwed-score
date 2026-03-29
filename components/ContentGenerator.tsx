@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
-import { Sparkles, Copy, Check, Loader2, ChevronDown, ChevronUp, Zap, Video, Download, RefreshCw } from 'lucide-react'
+import { useState } from 'react'
+import { Sparkles, Copy, Check, Loader2, ChevronDown, ChevronUp, Zap } from 'lucide-react'
+import { VideoGenerator, type VideoMeta } from './VideoGenerator'
 
 interface GeneratedContent {
   hook: string
@@ -9,9 +10,8 @@ interface GeneratedContent {
   caption: string
   hashtags: string[]
   on_screen_text: string[]
+  _meta?: VideoMeta
 }
-
-type VideoStatus = 'idle' | 'rendering' | 'succeeded' | 'failed'
 
 interface Props {
   analysisId: string
@@ -41,41 +41,6 @@ export function ContentGenerator({ analysisId, isPro, onUpgrade }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [scriptOpen, setScriptOpen] = useState(false)
 
-  // Video state
-  const [videoStatus, setVideoStatus] = useState<VideoStatus>('idle')
-  const [videoProgress, setVideoProgress] = useState(0)
-  const [videoUrl, setVideoUrl] = useState<string | null>(null)
-  const [videoError, setVideoError] = useState<string | null>(null)
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
-
-  const stopPolling = useCallback(() => {
-    if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
-  }, [])
-
-  const pollStatus = useCallback((renderId: string) => {
-    stopPolling()
-    pollRef.current = setInterval(async () => {
-      try {
-        const res = await fetch(`/api/video-status/${renderId}`)
-        if (!res.ok) { stopPolling(); setVideoStatus('failed'); return }
-        const data = await res.json()
-        setVideoProgress(Math.round((data.progress ?? 0) * 100))
-        if (data.status === 'succeeded') {
-          stopPolling()
-          setVideoStatus('succeeded')
-          setVideoUrl(data.url)
-        } else if (data.status === 'failed') {
-          stopPolling()
-          setVideoStatus('failed')
-          setVideoError(data.error_message ?? 'Render failed')
-        }
-      } catch {
-        stopPolling()
-        setVideoStatus('failed')
-      }
-    }, 3000)
-  }, [stopPolling])
-
   const generate = async () => {
     if (!isPro) { onUpgrade(); return }
     setLoading(true)
@@ -89,45 +54,10 @@ export function ContentGenerator({ analysisId, isPro, onUpgrade }: Props) {
       const data = await res.json()
       if (!res.ok) { setError('Generation failed. Try again.'); return }
       setContent(data)
-      // Reset video state on new content
-      setVideoStatus('idle')
-      setVideoUrl(null)
-      setVideoError(null)
     } catch {
       setError('Something went wrong.')
     } finally {
       setLoading(false)
-    }
-  }
-
-  const generateVideo = async () => {
-    if (!content) return
-    setVideoStatus('rendering')
-    setVideoProgress(0)
-    setVideoError(null)
-    setVideoUrl(null)
-
-    try {
-      const res = await fetch('/api/generate-video', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          analysis_id: analysisId,
-          hook: content.hook,
-          on_screen_text: content.on_screen_text,
-          caption: content.caption,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setVideoStatus('failed')
-        setVideoError('Video generation failed. Try again.')
-        return
-      }
-      pollStatus(data.render_id)
-    } catch {
-      setVideoStatus('failed')
-      setVideoError('Something went wrong.')
     }
   }
 
@@ -209,82 +139,10 @@ export function ContentGenerator({ analysisId, isPro, onUpgrade }: Props) {
             </div>
           </div>
 
-          {/* ── Video Generator ── */}
-          <div className="rounded-xl border border-brand-border overflow-hidden">
-            <div className="px-4 py-3 bg-brand-muted border-b border-brand-border flex items-center gap-2">
-              <Video className="w-3.5 h-3.5 text-red-400" />
-              <span className="text-xs font-bold text-brand-sub uppercase tracking-widest">Auto Video</span>
-              <span className="ml-auto text-[10px] text-brand-sub/50">powered by Creatomate</span>
-            </div>
-
-            <div className="p-4">
-              {videoStatus === 'idle' && (
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-xs text-brand-sub">
-                    Generate a ready-to-post 9:16 MP4 — hook, reveal, flagged charges, CTA. ~30 seconds to render.
-                  </p>
-                  <button onClick={generateVideo}
-                    className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-                    <Video className="w-3.5 h-3.5" />
-                    Generate
-                  </button>
-                </div>
-              )}
-
-              {videoStatus === 'rendering' && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs text-brand-sub">
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-red-400" />
-                      <span>Rendering your video…</span>
-                    </div>
-                    <span className="font-bold text-brand-text">{videoProgress}%</span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-brand-muted overflow-hidden">
-                    <div className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: `${videoProgress}%`,
-                        background: 'linear-gradient(90deg, #ff6b60, #ff3b30)',
-                      }} />
-                  </div>
-                  <p className="text-[10px] text-brand-sub/50 text-center">Usually takes 20–40 seconds</p>
-                </div>
-              )}
-
-              {videoStatus === 'succeeded' && videoUrl && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-green-400 font-bold">
-                    <Check className="w-3.5 h-3.5" />
-                    Video ready!
-                  </div>
-                  <div className="flex gap-2">
-                    <a href={videoUrl} download target="_blank" rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
-                      style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-                      <Download className="w-4 h-4" />
-                      Download MP4
-                    </a>
-                    <button onClick={() => { setVideoStatus('idle'); setVideoUrl(null) }}
-                      className="px-3 py-2.5 rounded-xl border border-brand-border text-xs text-brand-sub hover:text-brand-text transition-colors">
-                      <RefreshCw className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                  <p className="text-[10px] text-brand-sub/50">9:16 portrait · MP4 · Ready for TikTok, Reels, Shorts</p>
-                </div>
-              )}
-
-              {videoStatus === 'failed' && (
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-xs text-red-400">{videoError ?? 'Render failed. Try again.'}</p>
-                  <button onClick={() => setVideoStatus('idle')}
-                    className="shrink-0 text-xs text-brand-sub hover:text-brand-text transition-colors">
-                    Retry
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          {/* Video generator — only shown when we have meta from the API */}
+          {content._meta && (
+            <VideoGenerator hook={content.hook} meta={content._meta} />
+          )}
         </div>
       </div>
     )
@@ -303,7 +161,7 @@ export function ContentGenerator({ analysisId, isPro, onUpgrade }: Props) {
             )}
           </div>
           <p className="text-xs text-brand-sub">
-            Get a ready-to-post TikTok/Reel script, caption, hashtags, and auto-generated MP4 video.
+            Get a ready-to-post TikTok/Reel script, caption, hashtags, and auto-generated video.
           </p>
         </div>
         <button onClick={generate} disabled={loading}

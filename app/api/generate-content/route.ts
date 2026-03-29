@@ -75,7 +75,27 @@ Return ONLY valid JSON in this exact format:
   try {
     const { extractJSON } = await import('@/lib/utils')
     const content = extractJSON(text)
-    return NextResponse.json(content)
+
+    // Include analysis meta so the client can render the video without a second fetch
+    const flaggedItems = (analysis.overcharge_output?.line_items ?? [])
+      .filter((i: { flagged: boolean }) => i.flagged)
+      .slice(0, 3)
+      .map((i: { description: string; charged_amount: number | null; flag_reason?: string }) => ({
+        description: i.description,
+        charged_amount: i.charged_amount ?? null,
+        flag_reason: i.flag_reason ?? null,
+      }))
+
+    return NextResponse.json({
+      ...(content as object),
+      _meta: {
+        score: analysis.screwed_score,
+        score_percent: analysis.screwed_score_percent,
+        flagged_amount: analysis.overcharge_output?.total_flagged_amount ?? 0,
+        flagged_items: flaggedItems,
+        doc_label: (analysis.document_type ?? 'document').replace(/_/g, ' '),
+      },
+    })
   } catch {
     return NextResponse.json({ error: 'Failed to parse generated content' }, { status: 500 })
   }
