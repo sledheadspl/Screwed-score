@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { detectDocumentType } from '@/lib/detect'
+import { verifyToken } from '@/app/api/verify-checkout/route'
 import type { UploadResponse } from '@/lib/types'
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
@@ -17,33 +18,42 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 3 analyses per IP per 24 hours. */
-const ANON_LIMIT  = 3
+/** Anonymous users: 2 analyses per IP per 24 hours. Pro users: unlimited. */
+const ANON_LIMIT  = 2
 const WINDOW_MS   = 24 * 60 * 60 * 1000
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = createServiceClient()
 
-    // ── 1. Rate limiting ────────────────────────────────────────────────────
+    // ── 1. Pro token check — bypass rate limit for paying customers ─────────
+    const proToken = req.cookies.get('gss_pro')?.value
+    const isPro = proToken ? verifyToken(proToken) : false
+
+    // ── 2. Rate limiting (skipped for Pro) ──────────────────────────────────
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '0.0.0.0'
     // Use full SHA-256 hex (64 chars) — truncation reduces entropy unnecessarily
     const { createHash } = await import('crypto')
     const ipHash = createHash('sha256').update(ip).digest('hex')
 
-    const { data: rateData } = await supabase
-      .from('rate_limits')
-      .select('analyses_count, window_start')
-      .eq('ip_hash', ipHash)
-      .maybeSingle()
+    let rateData: { analyses_count: number; window_start: string } | null = null
 
-    if (rateData) {
-      const windowAge = Date.now() - new Date(rateData.window_start).getTime()
-      if (windowAge < WINDOW_MS && rateData.analyses_count >= ANON_LIMIT) {
-        return NextResponse.json(
-          { error: 'Free limit reached. Sign up for more analyses.' },
-          { status: 429 }
-        )
+    if (!isPro) {
+      const { data } = await supabase
+        .from('rate_limits')
+        .select('analyses_count, window_start')
+        .eq('ip_hash', ipHash)
+        .maybeSingle()
+      rateData = data
+
+      if (rateData) {
+        const windowAge = Date.now() - new Date(rateData.window_start).getTime()
+        if (windowAge < WINDOW_MS && rateData.analyses_count >= ANON_LIMIT) {
+          return NextResponse.json(
+            { error: 'LIMIT_REACHED' },
+            { status: 429 }
+          )
+        }
       }
     }
 
@@ -129,21 +139,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       throw new Error(`Failed to persist document: ${docError?.message ?? 'unknown error'}`)
     }
 
-    // ── 8. Atomic rate limit increment ──────────────────────────────────────
-    // Use upsert with calculated new count to avoid TOCTOU race.
-    const now = new Date().toISOString()
-    const windowExpired = !rateData ||
-      Date.now() - new Date(rateData.window_start).getTime() >= WINDOW_MS
+    // ── 8. Atomic rate limit increment (skipped for Pro) ────────────────────
+    if (!isPro) {
+      const now = new Date().toISOString()
+      const windowExpired = !rateData ||
+        Date.now() - new Date(rateData.window_start).getTime() >= WINDOW_MS
 
-    await supabase.from('rate_limits').upsert(
-      {
-        ip_hash:         ipHash,
-        analyses_count:  windowExpired ? 1 : (rateData!.analyses_count + 1),
-        window_start:    windowExpired ? now : rateData!.window_start,
-        updated_at:      now,
-      },
-      { onConflict: 'ip_hash' }
-    )
+      await supabase.from('rate_limits').upsert(
+        {
+          ip_hash:         ipHash,
+          analyses_count:  windowExpired ? 1 : (rateData!.analyses_count + 1),
+          window_start:    windowExpired ? now : rateData!.window_start,
+          updated_at:      now,
+        },
+        { onConflict: 'ip_hash' }
+      )
+    }
 
     // NOTE: extracted_text is intentionally NOT returned to the client.
     // The analyze route fetches it from the DB using document_id.
