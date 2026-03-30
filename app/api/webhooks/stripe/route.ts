@@ -50,8 +50,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice
-        const subscriptionId = invoice.subscription as string | null
+        // In Stripe SDK v21 the Invoice type uses `parent` for subscription linkage;
+        // cast to access the subscription field safely regardless of SDK version.
+        const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null }
+        const subscriptionId = typeof invoice.subscription === 'string' ? invoice.subscription : null
         if (subscriptionId) {
           await supabase.from('revoked_subscriptions').upsert(
             { subscription_id: subscriptionId, reason: 'payment_failed', revoked_at: new Date().toISOString() },

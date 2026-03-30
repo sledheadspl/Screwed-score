@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Global middleware — adds security headers to every response.
  * Runs on the Edge runtime before any route handler.
  */
-export function middleware(req: NextRequest): NextResponse {
+export function proxy(req: NextRequest): NextResponse {
   const res = NextResponse.next()
 
   // Prevent page from being embedded in iframes on other origins

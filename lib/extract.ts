@@ -2,6 +2,7 @@
  * Text extraction from uploaded files.
  * Server-side only — never import from client components.
  */
+import type { Message } from '@anthropic-ai/sdk/resources/messages'
 
 // Magic byte signatures for MIME validation (first 8 bytes)
 const MAGIC_BYTES: Array<{ mime: string; bytes: number[]; offset?: number }> = [
@@ -73,11 +74,11 @@ async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: 30_000 })
   const base64 = buffer.toString('base64')
 
-  // The Anthropic SDK types for message content don't yet include the document block
-  // in the union for MessageParam.content — cast to the non-streaming params type
-  // to avoid `any` while keeping full type coverage on the rest of the call.
-  type CreateParams = Parameters<typeof client.messages.create>[0]
-  const response = await client.messages.create({
+  // The SDK union return type includes Stream when params are ambiguous;
+  // cast to Message since we are not streaming.
+  const response = await (client.messages.create as (
+    params: object
+  ) => Promise<Message>)({
     model: 'claude-sonnet-4-6',
     max_tokens: 4000,
     messages: [
@@ -95,7 +96,7 @@ async function extractTextFromPdf(buffer: Buffer): Promise<string> {
         ],
       },
     ],
-  } as CreateParams)
+  })
 
   const block = response.content[0]
   if (!block || block.type !== 'text') throw new Error('PDF extraction returned no text')

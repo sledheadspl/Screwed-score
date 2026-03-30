@@ -73,24 +73,26 @@ export default function HomePage() {
         .eq('is_public', true)
         .order('created_at', { ascending: false })
         .limit(6)
-        .then(({ data }) => {
-          if (!data) return
-          setRecentScans(
-            data.map(row => {
-              const diffMin = Math.floor((now - new Date(row.created_at).getTime()) / 60_000)
-              const time    = diffMin < 60 ? `${diffMin}m ago` : `${Math.floor(diffMin / 60)}h ago`
-              const flagged = (row.overcharge_output as { total_flagged_amount?: number })
-                ?.total_flagged_amount ?? 0
-              return {
-                score:  row.screwed_score as string,
-                doc:    (row.document_type as string).replace(/_/g, ' '),
-                amount: flagged > 0 ? `$${Math.round(flagged).toLocaleString()}` : '',
-                time,
-              }
-            })
-          )
-        })
-        .catch(() => {}) // non-fatal — widget stays hidden if fetch fails
+        .then(
+          ({ data }) => {
+            if (!data) return
+            setRecentScans(
+              data.map(row => {
+                const diffMin = Math.floor((now - new Date(row.created_at).getTime()) / 60_000)
+                const time    = diffMin < 60 ? `${diffMin}m ago` : `${Math.floor(diffMin / 60)}h ago`
+                const flagged = (row.overcharge_output as { total_flagged_amount?: number })
+                  ?.total_flagged_amount ?? 0
+                return {
+                  score:  row.screwed_score as string,
+                  doc:    (row.document_type as string).replace(/_/g, ' '),
+                  amount: flagged > 0 ? `$${Math.round(flagged).toLocaleString()}` : '',
+                  time,
+                }
+              })
+            )
+          },
+          () => {} // non-fatal — widget stays hidden if fetch fails
+        )
     }
 
     return () => subscription.unsubscribe()
