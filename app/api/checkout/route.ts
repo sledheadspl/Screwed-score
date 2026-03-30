@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('STRIPE_SECRET_KEY environment variable is required')
+}
+if (!process.env.GSS_STRIPE_PRICE_ID) {
+  throw new Error('GSS_STRIPE_PRICE_ID environment variable is required')
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2026-03-25.dahlia' as Stripe.LatestApiVersion,
+})
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {

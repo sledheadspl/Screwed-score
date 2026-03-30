@@ -16,13 +16,17 @@ async function getAnalysis(id: string): Promise<AnalysisResult | null> {
   const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('analyses')
-    .select('*')
+    .select('id, document_type, screwed_score, screwed_score_percent, screwed_score_reason, plain_summary, what_they_tried, what_to_do_next, top_findings, overcharge_output, contract_guard_output, is_public, created_at')
     .eq('id', id)
     .eq('is_public', true)
     .single()
 
   if (error || !data) return null
-  supabase.rpc('increment_share_views', { analysis_id: id }).then(() => {})
+
+  // Increment share view counter — non-fatal if it fails
+  await supabase
+    .rpc('increment_share_views', { analysis_id: id })
+    .catch((err: unknown) => console.error('[share] increment_share_views failed:', err))
 
   return {
     id: data.id,

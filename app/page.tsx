@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { UploadZone } from '@/components/UploadZone'
 import { ProgressBar } from '@/components/ProgressBar'
 import { ScoreCard } from '@/components/ScoreCard'
@@ -24,29 +24,25 @@ const INITIAL_STATE: AppState = {
   documentType: null,
 }
 
-const RECENT_SCORES = [
-  { score: 'SCREWED', doc: 'Mechanic invoice', amount: '$847', time: '2m ago' },
-  { score: 'MAYBE',   doc: 'Phone bill',        amount: '$43',  time: '5m ago' },
-  { score: 'SCREWED', doc: 'Contractor est.',   amount: '$2,100', time: '11m ago' },
-  { score: 'SAFE',    doc: 'Employment contract', amount: '',   time: '18m ago' },
-  { score: 'SCREWED', doc: 'Medical bill',      amount: '$1,240', time: '24m ago' },
-  { score: 'MAYBE',   doc: 'Lease agreement',   amount: '$310', time: '31m ago' },
-]
-
 const SCORE_COLORS: Record<string, string> = {
   SCREWED: 'text-red-400',
   MAYBE:   'text-yellow-400',
   SAFE:    'text-green-400',
 }
 
+type RecentScan = { score: string; doc: string; amount: string; time: string }
+
 export default function HomePage() {
   const [state, setState] = useState<AppState>(INITIAL_STATE)
   const [showPaywall, setShowPaywall] = useState(false)
   const [isPro] = useState(() => {
     if (typeof document === 'undefined') return false
-    return document.cookie.includes('gss_pro=')
+    // Parse cookies properly — avoid substring false positives
+    return document.cookie.split(';').some(c => c.trim().split('=')[0] === 'gss_pro')
   })
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [recentScans, setRecentScans] = useState<RecentScan[]>([])
+  const fetchedRef = useRef(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -55,6 +51,37 @@ export default function HomePage() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setUserEmail(session?.user?.email ?? null)
     })
+
+    // Fetch real recent public scans once on mount
+    if (!fetchedRef.current) {
+      fetchedRef.current = true
+      const now = Date.now()
+      supabase
+        .from('analyses')
+        .select('screwed_score, document_type, overcharge_output, created_at')
+        .eq('is_public', true)
+        .order('created_at', { ascending: false })
+        .limit(6)
+        .then(({ data }) => {
+          if (!data) return
+          setRecentScans(
+            data.map(row => {
+              const diffMin = Math.floor((now - new Date(row.created_at).getTime()) / 60_000)
+              const time    = diffMin < 60 ? `${diffMin}m ago` : `${Math.floor(diffMin / 60)}h ago`
+              const flagged = (row.overcharge_output as { total_flagged_amount?: number })
+                ?.total_flagged_amount ?? 0
+              return {
+                score:  row.screwed_score as string,
+                doc:    (row.document_type as string).replace(/_/g, ' '),
+                amount: flagged > 0 ? `$${Math.round(flagged).toLocaleString()}` : '',
+                time,
+              }
+            })
+          )
+        })
+        .catch(() => {}) // non-fatal — widget stays hidden if fetch fails
+    }
+
     return () => subscription.unsubscribe()
   }, [])
 
@@ -251,30 +278,32 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Live feed */}
-            <div className="animate-fade-up delay-300 rounded-xl border border-brand-border bg-brand-surface overflow-hidden"
-              style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-              <div className="px-4 py-3 border-b border-brand-border flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-xs font-semibold text-brand-sub uppercase tracking-widest">Recent scans</span>
-              </div>
-              <div className="divide-y divide-brand-border">
-                {RECENT_SCORES.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between px-4 py-2.5">
-                    <div className="flex items-center gap-3">
-                      <span className={`text-xs font-black ${SCORE_COLORS[item.score]}`}>{item.score}</span>
-                      <span className="text-xs text-brand-sub">{item.doc}</span>
+            {/* Live feed — only rendered when real data is available */}
+            {recentScans.length > 0 && (
+              <div className="animate-fade-up delay-300 rounded-xl border border-brand-border bg-brand-surface overflow-hidden"
+                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+                <div className="px-4 py-3 border-b border-brand-border flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-xs font-semibold text-brand-sub uppercase tracking-widest">Recent scans</span>
+                </div>
+                <div className="divide-y divide-brand-border">
+                  {recentScans.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between px-4 py-2.5">
+                      <div className="flex items-center gap-3">
+                        <span className={`text-xs font-black ${SCORE_COLORS[item.score] ?? 'text-brand-sub'}`}>{item.score}</span>
+                        <span className="text-xs text-brand-sub capitalize">{item.doc}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {item.amount && (
+                          <span className="text-xs font-semibold text-red-400">{item.amount}</span>
+                        )}
+                        <span className="text-[10px] text-brand-sub/50">{item.time}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      {item.amount && (
-                        <span className="text-xs font-semibold text-red-400">{item.amount}</span>
-                      )}
-                      <span className="text-[10px] text-brand-sub/50">{item.time}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* How it works */}
             <div className="animate-fade-up delay-400">

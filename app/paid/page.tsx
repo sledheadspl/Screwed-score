@@ -13,7 +13,11 @@ function PaidInner() {
     const sessionId = params.get('session_id')
     if (!sessionId) { router.replace('/'); return }
 
-    fetch(`/api/verify-checkout?session_id=${sessionId}`)
+    fetch('/api/verify-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId }),
+    })
       .then(r => r.json())
       .then(data => {
         if (data.ok) {

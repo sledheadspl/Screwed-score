@@ -73,8 +73,11 @@ async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: 30_000 })
   const base64 = buffer.toString('base64')
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const response = await (client.messages.create as any)({
+  // The Anthropic SDK types for message content don't yet include the document block
+  // in the union for MessageParam.content — cast to the non-streaming params type
+  // to avoid `any` while keeping full type coverage on the rest of the call.
+  type CreateParams = Parameters<typeof client.messages.create>[0]
+  const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 4000,
     messages: [
@@ -92,7 +95,7 @@ async function extractTextFromPdf(buffer: Buffer): Promise<string> {
         ],
       },
     ],
-  })
+  } as CreateParams)
 
   const block = response.content[0]
   if (!block || block.type !== 'text') throw new Error('PDF extraction returned no text')

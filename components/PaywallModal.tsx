@@ -94,7 +94,7 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         </button>
 
         <p className="text-center text-[10px] text-brand-sub/50">
-          Signing in gives you 5 free analyses/day
+          Sign in to get 5 free scans/day · Anonymous limit is 2/day
         </p>
       </div>
     </div>

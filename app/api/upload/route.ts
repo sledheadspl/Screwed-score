@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { randomUUID } from 'crypto'
+import { createServerClient } from '@supabase/ssr'
 import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { detectDocumentType } from '@/lib/detect'
@@ -18,23 +19,74 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 2 analyses per IP per 24 hours. Pro users: unlimited. */
-const ANON_LIMIT  = 2
-const WINDOW_MS   = 24 * 60 * 60 * 1000
+/** Anonymous users: 2 analyses per IP per 24 hours. */
+const ANON_LIMIT   = 2
+/** Authenticated (signed-in) users: 5 analyses per user per 24 hours. */
+const AUTH_LIMIT   = 5
+const WINDOW_MS    = 24 * 60 * 60 * 1000
+
+/**
+ * Returns the real client IP.
+ * Prefers platform-set headers (x-real-ip, cf-connecting-ip) over x-forwarded-for
+ * to prevent clients from spoofing their IP by injecting custom headers.
+ */
+function getClientIp(req: NextRequest): string {
+  return (
+    req.headers.get('x-real-ip') ??
+    req.headers.get('cf-connecting-ip') ??
+    // Rightmost entry in x-forwarded-for is the last trusted proxy — most reliable
+    // when x-real-ip is not available
+    req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
+    '0.0.0.0'
+  )
+}
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = createServiceClient()
 
     // ── 1. Pro token check — bypass rate limit for paying customers ─────────
+    let isPro = false
     const proToken = req.cookies.get('gss_pro')?.value
-    const isPro = proToken ? verifyToken(proToken) : false
+    if (proToken) {
+      const subscriptionId = verifyToken(proToken)
+      if (subscriptionId) {
+        // Verify the subscription has not been revoked (cancelled / payment failed)
+        const { data: revoked } = await supabase
+          .from('revoked_subscriptions')
+          .select('subscription_id')
+          .eq('subscription_id', subscriptionId)
+          .maybeSingle()
+        isPro = !revoked
+      }
+    }
 
-    // ── 2. Rate limiting (skipped for Pro) ──────────────────────────────────
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '0.0.0.0'
-    // Use full SHA-256 hex (64 chars) — truncation reduces entropy unnecessarily
+    // ── 2. Auth check — signed-in users get a higher free-tier limit ─────────
+    let userId: string | null = null
+    if (!isPro) {
+      const authClient = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            getAll: () => req.cookies.getAll(),
+            setAll: () => {}, // read-only — we never set cookies here
+          },
+        }
+      )
+      const { data: { user } } = await authClient.auth.getUser()
+      userId = user?.id ?? null
+    }
+
+    // ── 3. Rate limiting (skipped for Pro) ──────────────────────────────────
     const { createHash } = await import('crypto')
+    const ip     = getClientIp(req)
     const ipHash = createHash('sha256').update(ip).digest('hex')
+
+    // Authenticated users tracked by user_id so limit doesn't bleed across devices;
+    // anonymous users tracked by IP hash.
+    const rateLimitKey = userId ? `user:${userId}` : ipHash
+    const limit        = userId ? AUTH_LIMIT : ANON_LIMIT
 
     let rateData: { analyses_count: number; window_start: string } | null = null
 
@@ -42,22 +94,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const { data } = await supabase
         .from('rate_limits')
         .select('analyses_count, window_start')
-        .eq('ip_hash', ipHash)
+        .eq('ip_hash', rateLimitKey)
         .maybeSingle()
       rateData = data
 
       if (rateData) {
         const windowAge = Date.now() - new Date(rateData.window_start).getTime()
-        if (windowAge < WINDOW_MS && rateData.analyses_count >= ANON_LIMIT) {
-          return NextResponse.json(
-            { error: 'LIMIT_REACHED' },
-            { status: 429 }
-          )
+        if (windowAge < WINDOW_MS && rateData.analyses_count >= limit) {
+          return NextResponse.json({ error: 'LIMIT_REACHED' }, { status: 429 })
         }
       }
     }
 
-    // ── 2. Parse and validate form data ────────────────────────────────────
+    // ── 4. Parse and validate form data ────────────────────────────────────
     const form = await req.formData()
     const file = form.get('file') as File | null
 
@@ -76,7 +125,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const buffer = Buffer.from(await file.arrayBuffer())
 
-    // ── 3. Magic byte validation (guards against MIME spoofing) ────────────
+    // ── 5. Magic byte validation (guards against MIME spoofing) ────────────
     try {
       checkMagicBytes(buffer, file.type)
     } catch {
@@ -86,7 +135,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       )
     }
 
-    // ── 4. Extract text ─────────────────────────────────────────────────────
+    // ── 6. Extract text ─────────────────────────────────────────────────────
     const extractedText = await extractTextFromBuffer(buffer, file.type)
 
     if (!extractedText || extractedText.trim().length < 20) {
@@ -96,14 +145,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       )
     }
 
-    // ── 5. Detect document type ─────────────────────────────────────────────
+    // ── 7. Detect document type ─────────────────────────────────────────────
     const documentType = detectDocumentType(extractedText, file.name)
 
-    // ── 6. Upload to Supabase Storage ───────────────────────────────────────
-    // Sanitize filename — strip path components and non-safe chars
+    // ── 8. Upload to Supabase Storage ───────────────────────────────────────
     const safeName = file.name
-      .replace(/.*[/\\]/, '')            // strip any path prefix
-      .replace(/[^a-zA-Z0-9._-]/g, '_') // allow only safe chars
+      .replace(/.*[/\\]/, '')
+      .replace(/[^a-zA-Z0-9._-]/g, '_')
       .slice(0, 80)
 
     const storageId   = randomUUID()
@@ -114,32 +162,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .upload(storagePath, buffer, { contentType: file.type, upsert: false })
 
     if (storageError) {
-      // Non-fatal: proceed without a stored file.
-      // analysis can still run from extracted text already in memory.
       console.warn('Storage upload failed (non-fatal):', storageError.message)
     }
 
-    // ── 7. Persist document record ──────────────────────────────────────────
+    // ── 9. Persist document record ──────────────────────────────────────────
     const { data: doc, error: docError } = await supabase
       .from('documents')
       .insert({
         original_file_name: file.name.slice(0, 255),
-        // Only store the path if the upload actually succeeded
-        storage_path:    storageError ? null : storagePath,
-        mime_type:       file.type,
-        extracted_text:  extractedText, // stored server-side only, never returned to client
-        document_type:   documentType,
-        file_size_bytes: file.size,
-        ip_hash:         ipHash,
+        storage_path:       storageError ? null : storagePath,
+        mime_type:          file.type,
+        extracted_text:     extractedText, // stored server-side only, never returned to client
+        document_type:      documentType,
+        file_size_bytes:    file.size,
+        ip_hash:            ipHash,
+        user_id:            userId ?? undefined,
       })
       .select('id')
       .single()
 
     if (docError || !doc) {
-      throw new Error(`Failed to persist document: ${docError?.message ?? 'unknown error'}`)
+      throw new Error('Failed to persist document')
     }
 
-    // ── 8. Atomic rate limit increment (skipped for Pro) ────────────────────
+    // ── 10. Atomic rate limit increment (skipped for Pro) ────────────────────
     if (!isPro) {
       const now = new Date().toISOString()
       const windowExpired = !rateData ||
@@ -147,7 +193,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       await supabase.from('rate_limits').upsert(
         {
-          ip_hash:         ipHash,
+          ip_hash:         rateLimitKey,
           analyses_count:  windowExpired ? 1 : (rateData!.analyses_count + 1),
           window_start:    windowExpired ? now : rateData!.window_start,
           updated_at:      now,
