@@ -198,10 +198,7 @@ export default function HomePage() {
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/analyze`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ document_id }),
         }
       )
