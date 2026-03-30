@@ -7,9 +7,24 @@ import { isValidUUID } from '@/lib/utils'
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  // Pro gate
+  // Pro gate — verify token AND confirm it hasn't been revoked
   const proToken = req.cookies.get('gss_pro')?.value
-  if (!proToken || !verifyToken(proToken)) {
+  if (!proToken) {
+    return NextResponse.json({ error: 'PRO_REQUIRED' }, { status: 403 })
+  }
+  const subscriptionId = verifyToken(proToken)
+  if (!subscriptionId) {
+    return NextResponse.json({ error: 'PRO_REQUIRED' }, { status: 403 })
+  }
+
+  const supabase = createServiceClient()
+
+  const { data: revoked } = await supabase
+    .from('revoked_subscriptions')
+    .select('subscription_id')
+    .eq('subscription_id', subscriptionId)
+    .maybeSingle()
+  if (revoked) {
     return NextResponse.json({ error: 'PRO_REQUIRED' }, { status: 403 })
   }
 
@@ -17,8 +32,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!analysis_id || !isValidUUID(analysis_id)) {
     return NextResponse.json({ error: 'Invalid analysis_id' }, { status: 400 })
   }
-
-  const supabase = createServiceClient()
   const { data: analysis, error } = await supabase
     .from('analyses')
     .select('screwed_score, screwed_score_percent, screwed_score_reason, document_type, plain_summary, what_they_tried, what_to_do_next, top_findings, overcharge_output')

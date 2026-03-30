@@ -122,6 +122,10 @@ async function runDirectAnalysis(
     throw new Error('ContractGuard analysis returned malformed JSON')
   }
 
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('ContractGuard analysis returned unexpected JSON structure')
+  }
+
   return normalizeContractGuardOutput(parsed as ContractGuardOutput)
 }
 

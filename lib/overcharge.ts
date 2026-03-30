@@ -87,14 +87,18 @@ ${RESPONSE_SCHEMA}`
     throw new Error('Overcharge analysis did not return valid JSON')
   }
 
-  let parsed: OverchargeOutput
+  let parsed: unknown
   try {
-    parsed = JSON.parse(jsonMatch[0]) as OverchargeOutput
+    parsed = JSON.parse(jsonMatch[0])
   } catch {
     throw new Error('Overcharge analysis returned malformed JSON')
   }
 
-  return normalizeOverchargeOutput(parsed)
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('Overcharge analysis returned unexpected JSON structure')
+  }
+
+  return normalizeOverchargeOutput(parsed as OverchargeOutput)
 }
 
 function normalizeOverchargeOutput(raw: OverchargeOutput): OverchargeOutput {

@@ -42,9 +42,20 @@ export default function HomePage() {
   })
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [recentScans, setRecentScans] = useState<RecentScan[]>([])
+  const [authError, setAuthError] = useState(false)
   const fetchedRef = useRef(false)
 
   useEffect(() => {
+    // Show error banner if OAuth callback redirected with ?auth_error=1
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('auth_error') === '1') {
+        setAuthError(true)
+        // Remove the query param from the URL without a page reload
+        window.history.replaceState({}, '', window.location.pathname)
+      }
+    }
+
     supabase.auth.getUser().then(({ data }) => {
       setUserEmail(data.user?.email ?? null)
     })
@@ -162,6 +173,14 @@ export default function HomePage() {
     <div className="min-h-screen bg-brand-bg">
       {showPaywall && (
         <PaywallModal onClose={() => setShowPaywall(false)} onGoogleLogin={handleGoogleLogin} />
+      )}
+
+      {/* ── Auth error banner ────────────────────────────────────────────── */}
+      {authError && (
+        <div className="fixed top-0 inset-x-0 z-50 flex items-center justify-between gap-4 px-4 py-3 bg-red-950/90 border-b border-red-500/30 text-sm text-red-300 backdrop-blur-sm">
+          <span>Sign-in failed — please try again.</span>
+          <button onClick={() => setAuthError(false)} className="text-red-400 hover:text-red-200 transition-colors text-xs font-bold">Dismiss</button>
+        </div>
       )}
 
       {/* ── Global ambient glow ─────────────────────────────────────────── */}
