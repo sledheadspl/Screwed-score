@@ -102,7 +102,7 @@ async function runDirectAnalysis(
   const truncatedText = text.length > 15_000 ? text.slice(0, 15_000) + '\n[text truncated]' : text
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 4096,
     system: DIRECT_SYSTEM_PROMPT,
     messages: [
