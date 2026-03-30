@@ -10,7 +10,7 @@ import { extractJSON } from './utils'
 // Module-level singleton — avoids re-instantiation on every call in serverless warm invocations
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-  timeout: 45_000,
+  timeout: 25_000,
 })
 
 const DIRECT_SYSTEM_PROMPT = `You are an expert contract analyst and consumer protection specialist.

@@ -201,13 +201,15 @@ export default function HomePage() {
       })
       setPhase('analyzing', 88, 'Computing your Screwed Score...')
 
-      const analyzeData = await analyzeRes.json()
+      const analyzeText = await analyzeRes.text()
+      let analyzeData: { error?: string; analysis_id?: string; result?: AnalyzeResponse['result'] } = {}
+      try { analyzeData = JSON.parse(analyzeText) } catch { /* non-JSON response */ }
       if (!analyzeRes.ok) {
-        setState(s => ({ ...s, phase: 'error', error: analyzeData.error ?? 'Analysis failed' }))
+        setState(s => ({ ...s, phase: 'error', error: analyzeData.error ?? 'Analysis timed out — please try again.' }))
         return
       }
 
-      const { analysis_id, result } = analyzeData as AnalyzeResponse
+      const { analysis_id, result } = analyzeData as unknown as AnalyzeResponse
       setState(s => ({
         ...s, phase: 'done', progress: 100, progressLabel: 'Done',
         analysisId: analysis_id, documentType: document_type,
