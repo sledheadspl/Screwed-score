@@ -9,10 +9,10 @@ interface Props {
 }
 
 const PERKS = [
-  'Unlimited document analyses',
+  'Full detailed analysis unlocked',
   'All document types — bills, contracts, invoices',
-  'Priority AI processing',
-  'Shareable result links forever',
+  'Shareable result link',
+  'One-time payment, no subscription',
 ]
 
 export function PaywallModal({ onClose, onGoogleLogin }: Props) {
@@ -56,9 +56,9 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
             <span className="text-xs font-bold text-red-400 uppercase tracking-widest">You&apos;ve used your 3 free scans</span>
           </div>
           <h2 className="text-xl font-black text-brand-text leading-tight">
-            Unlock unlimited<br />analyses for $4.99/mo
+            Unlock this scan<br />for $2.99
           </h2>
-          <p className="text-xs text-brand-sub">Cancel anytime. No contracts.</p>
+          <p className="text-xs text-brand-sub">One-time payment. No subscription.</p>
         </div>
 
         {/* Perks */}
@@ -80,7 +80,7 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
               <span className="flex items-center justify-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
               </span>
-            ) : 'Go Pro — $4.99/month'}
+            ) : 'Unlock this scan — $2.99'}
           </button>
           {checkoutError && (
             <p className="text-center text-xs text-red-400">Something went wrong. Please try again.</p>
