@@ -194,11 +194,17 @@ export default function HomePage() {
       await delay(400)
       setPhase('analyzing', 65, 'Running AI analysis...')
 
-      const analyzeRes  = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document_id }),
-      })
+      const analyzeRes  = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/analyze`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ document_id }),
+        }
+      )
       setPhase('analyzing', 88, 'Computing your Screwed Score...')
 
       const analyzeText = await analyzeRes.text()
