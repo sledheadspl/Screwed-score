@@ -23,9 +23,9 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 2 analyses per IP per 24 hours. Pro users: unlimited. */
-const ANON_LIMIT = 2
-const WINDOW_MS  = 24 * 60 * 60 * 1000
+/** Anonymous users: 3 analyses per IP per 30 days. Pro users: unlimited. */
+const ANON_LIMIT = 3
+const WINDOW_MS  = 30 * 24 * 60 * 60 * 1000
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

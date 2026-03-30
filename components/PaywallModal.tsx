@@ -53,10 +53,10 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-red-400" />
-            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Free limit reached</span>
+            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">You&apos;ve used your 3 free scans</span>
           </div>
           <h2 className="text-xl font-black text-brand-text leading-tight">
-            Unlock unlimited<br />analyses for $9.99/mo
+            Unlock unlimited<br />analyses for $4.99/mo
           </h2>
           <p className="text-xs text-brand-sub">Cancel anytime. No contracts.</p>
         </div>
@@ -80,7 +80,7 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
               <span className="flex items-center justify-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
               </span>
-            ) : 'Go Pro — $9.99/month'}
+            ) : 'Go Pro — $4.99/month'}
           </button>
           {checkoutError && (
             <p className="text-center text-xs text-red-400">Something went wrong. Please try again.</p>
