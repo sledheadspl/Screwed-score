@@ -1,40 +1,47 @@
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
-import { verifyToken } from '@/app/api/verify-checkout/route'
-import { isValidUUID } from '@/lib/utils'
+import { verifyToken } from '@/lib/auth'
+import { isValidUUID, extractJSON } from '@/lib/utils'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  // Pro gate
-  const proToken = req.cookies.get('gss_pro')?.value
-  if (!proToken || !verifyToken(proToken)) {
-    return NextResponse.json({ error: 'PRO_REQUIRED' }, { status: 403 })
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { analysis_id } = await req.json()
+  const proToken = req.cookies['gss_pro']
+  if (!proToken || !verifyToken(proToken)) {
+    return res.status(403).json({ error: 'PRO_REQUIRED' })
+  }
+
+  const { analysis_id } = req.body
   if (!analysis_id || !isValidUUID(analysis_id)) {
-    return NextResponse.json({ error: 'Invalid analysis_id' }, { status: 400 })
+    return res.status(400).json({ error: 'Invalid analysis_id' })
   }
 
   const supabase = createServiceClient()
   const { data: analysis, error } = await supabase
     .from('analyses')
-    .select('screwed_score, screwed_score_percent, screwed_score_reason, document_type, plain_summary, what_they_tried, what_to_do_next, top_findings, overcharge_output')
+    .select(
+      'screwed_score, screwed_score_percent, screwed_score_reason, document_type, plain_summary, what_they_tried, what_to_do_next, top_findings, overcharge_output'
+    )
     .eq('id', analysis_id)
     .maybeSingle()
 
   if (error || !analysis) {
-    return NextResponse.json({ error: 'Analysis not found' }, { status: 404 })
+    return res.status(404).json({ error: 'Analysis not found' })
   }
 
   const flaggedCharges = (analysis.overcharge_output?.line_items ?? [])
     .filter((i: { flagged: boolean }) => i.flagged)
     .slice(0, 3)
-    .map((i: { description: string; charged_amount: number | null; flag_reason: string }) =>
-      `• ${i.description}: $${i.charged_amount ?? '?'} — ${i.flag_reason}`
-    ).join('\n')
+    .map(
+      (i: { description: string; charged_amount: number | null; flag_reason: string }) =>
+        `• ${i.description}: $${i.charged_amount ?? '?'} — ${i.flag_reason}`
+    )
+    .join('\n')
 
   const topFindings = (analysis.top_findings ?? [])
     .slice(0, 3)
@@ -65,7 +72,7 @@ Return ONLY valid JSON in this exact format:
 }`
 
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 1200,
     messages: [{ role: 'user', content: prompt }],
   })
@@ -73,30 +80,30 @@ Return ONLY valid JSON in this exact format:
   const text = response.content[0]?.type === 'text' ? response.content[0].text : ''
 
   try {
-    const { extractJSON } = await import('@/lib/utils')
     const content = extractJSON(text)
 
-    // Include analysis meta so the client can render the video without a second fetch
     const flaggedItems = (analysis.overcharge_output?.line_items ?? [])
       .filter((i: { flagged: boolean }) => i.flagged)
       .slice(0, 3)
-      .map((i: { description: string; charged_amount: number | null; flag_reason?: string }) => ({
-        description: i.description,
-        charged_amount: i.charged_amount ?? null,
-        flag_reason: i.flag_reason ?? null,
-      }))
+      .map(
+        (i: { description: string; charged_amount: number | null; flag_reason?: string }) => ({
+          description:    i.description,
+          charged_amount: i.charged_amount ?? null,
+          flag_reason:    i.flag_reason ?? null,
+        })
+      )
 
-    return NextResponse.json({
+    return res.status(200).json({
       ...(content as object),
       _meta: {
-        score: analysis.screwed_score,
-        score_percent: analysis.screwed_score_percent,
+        score:          analysis.screwed_score,
+        score_percent:  analysis.screwed_score_percent,
         flagged_amount: analysis.overcharge_output?.total_flagged_amount ?? 0,
-        flagged_items: flaggedItems,
-        doc_label: (analysis.document_type ?? 'document').replace(/_/g, ' '),
+        flagged_items:  flaggedItems,
+        doc_label:      (analysis.document_type ?? 'document').replace(/_/g, ' '),
       },
     })
   } catch {
-    return NextResponse.json({ error: 'Failed to parse generated content' }, { status: 500 })
+    return res.status(500).json({ error: 'Failed to parse generated content' })
   }
 }

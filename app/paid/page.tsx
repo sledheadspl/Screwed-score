@@ -10,7 +10,7 @@ function PaidInner() {
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying')
 
   useEffect(() => {
-    const sessionId = params.get('session_id')
+    const sessionId = params?.get('session_id')
     if (!sessionId) { router.replace('/'); return }
 
     fetch(`/api/verify-checkout?session_id=${sessionId}`)

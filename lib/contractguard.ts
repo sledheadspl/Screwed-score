@@ -16,13 +16,20 @@ const anthropic = new Anthropic({
 const DIRECT_SYSTEM_PROMPT = `You are an expert contract analyst and consumer protection specialist.
 Analyze the provided document and return a detailed JSON analysis.
 
+LANGUAGE RULES:
+1. Detect the language of the document text.
+2. Write ALL text fields in your response in that same language.
+3. Set "detected_language" to the ISO 639-1 code (e.g. "en", "es", "fr", "de", "pt", "zh", "ar", "ja", "ko", "hi").
+4. If the document is in English, respond in English as normal.
+
 Return ONLY valid JSON matching this exact structure — no markdown, no commentary:
 {
   "contract_type": "string",
+  "detected_language": "ISO 639-1 code e.g. en",
   "parties": { "party_a": { "name": "string", "role": "string" }, "party_b": { "name": "string", "role": "string" } },
   "dates": { "effective": "string or null", "expiration": "string or null" },
-  "financial_commitment": { "amount": number or null, "currency": "USD", "breakdown": "string" },
-  "plain_english_summary": "3-4 sentence plain English summary",
+  "financial_commitment": { "amount": number or null, "currency": "string", "breakdown": "string" },
+  "plain_english_summary": "3-4 sentence summary in the document's language",
   "key_terms": [{ "term_name": "string", "original_text": "string", "plain_english": "string", "your_obligation": "string" }],
   "red_flags": [{ "title": "string", "clause_text": "string", "severity": "low|medium|high|critical", "issue": "string", "negotiation_script": "string", "alternative_language": "string" }],
   "green_flags": [{ "title": "string", "clause_text": "string", "why_good": "string" }],
@@ -125,14 +132,15 @@ async function runDirectAnalysis(
 function normalizeContractGuardOutput(raw: ContractGuardOutput): ContractGuardOutput {
   return {
     ...raw,
-    contract_type: raw.contract_type ?? 'unknown',
+    contract_type:         raw.contract_type ?? 'unknown',
+    detected_language:     raw.detected_language ?? 'en',
     plain_english_summary: raw.plain_english_summary ?? '',
-    key_terms: raw.key_terms ?? [],
-    red_flags: raw.red_flags ?? [],
-    green_flags: raw.green_flags ?? [],
-    missing_protections: raw.missing_protections ?? [],
-    overall_grade: raw.overall_grade ?? 'C',
-    questions_to_ask: raw.questions_to_ask ?? [],
-    pro_tips: raw.pro_tips ?? [],
+    key_terms:             raw.key_terms ?? [],
+    red_flags:             raw.red_flags ?? [],
+    green_flags:           raw.green_flags ?? [],
+    missing_protections:   raw.missing_protections ?? [],
+    overall_grade:         raw.overall_grade ?? 'C',
+    questions_to_ask:      raw.questions_to_ask ?? [],
+    pro_tips:              raw.pro_tips ?? [],
   }
 }

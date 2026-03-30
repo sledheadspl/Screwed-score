@@ -30,6 +30,7 @@ async function getAnalysis(id: string): Promise<AnalysisResult | null> {
     screwed_score: data.screwed_score,
     screwed_score_percent: data.screwed_score_percent,
     screwed_score_reason: data.screwed_score_reason,
+    language: data.language ?? 'en',
     top_findings: data.top_findings ?? [],
     overcharge: data.overcharge_output ?? {},
     contract_guard: data.contract_guard_output ?? {},

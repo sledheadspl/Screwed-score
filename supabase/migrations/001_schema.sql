@@ -149,6 +149,29 @@ create policy "Service role manages rate limits"
 
 -- ─── Functions ───────────────────────────────────────────────────────────────
 
+-- ─── Stripe Subscriptions ────────────────────────────────────────────────────
+-- Stores active Pro tokens keyed by Stripe customer ID.
+-- Written by the /api/webhook route on subscription created/updated/deleted.
+create table if not exists stripe_subscriptions (
+  stripe_customer_id     text primary key,
+  stripe_subscription_id text not null,
+  token                  text,
+  status                 text not null default 'active',
+  created_at             timestamptz not null default now(),
+  updated_at             timestamptz not null default now()
+);
+
+alter table stripe_subscriptions enable row level security;
+
+drop policy if exists "Service role manages stripe_subscriptions" on stripe_subscriptions;
+
+create policy "Service role manages stripe_subscriptions"
+  on stripe_subscriptions for all
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+-- ─── Auth Trigger ─────────────────────────────────────────────────────────────
+
 create or replace function handle_new_user()
 returns trigger
 language plpgsql
