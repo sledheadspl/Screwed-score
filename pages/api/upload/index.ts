@@ -34,9 +34,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const supabase = createServiceClient()
 
-    // ── 1. Pro token check — bypass rate limit for paying customers ─────────
+    // ── 1. Pro check — cookie token OR logged-in Pro profile ───────────────
     const proToken = req.cookies['gss_pro']
-    const isPro = proToken ? verifyToken(proToken) : false
+    let isPro = proToken ? verifyToken(proToken) : false
+
+    if (!isPro) {
+      const authToken = req.headers['x-supabase-token'] as string | undefined
+      if (authToken) {
+        try {
+          const { createClient } = await import('@supabase/supabase-js')
+          const userClient = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+          )
+          const { data: { user } } = await userClient.auth.getUser(authToken)
+          if (user?.id) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('subscription_tier, subscription_status')
+              .eq('id', user.id)
+              .maybeSingle()
+            if (profile?.subscription_tier === 'pro' && profile?.subscription_status === 'active') {
+              isPro = true
+            }
+          }
+        } catch { /* non-fatal */ }
+      }
+    }
 
     // ── 2. Rate limiting (skipped for Pro) ──────────────────────────────────
     const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? '0.0.0.0'

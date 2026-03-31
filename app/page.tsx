@@ -17,6 +17,8 @@ import { formatDollar } from '@/lib/utils'
 import { PaywallModal } from '@/components/PaywallModal'
 import { ContentGenerator } from '@/components/ContentGenerator'
 import { TrustedProviders } from '@/components/TrustedProviders'
+import { RecommendedProviders } from '@/components/RecommendedProviders'
+import { ShareExperience } from '@/components/ShareExperience'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -176,7 +178,12 @@ export default function HomePage() {
       form.append('file', file)
       setPhase('uploading', 25, 'Uploading file...')
 
-      const uploadRes  = await fetch('/api/upload', { method: 'POST', body: form })
+      const { data: sessionData } = await supabase.auth.getSession()
+      const authToken = sessionData?.session?.access_token
+      const uploadHeaders: Record<string, string> = {}
+      if (authToken) uploadHeaders['x-supabase-token'] = authToken
+
+      const uploadRes  = await fetch('/api/upload', { method: 'POST', body: form, headers: uploadHeaders })
       const uploadData = await uploadRes.json()
 
       if (!uploadRes.ok) {
@@ -268,6 +275,10 @@ export default function HomePage() {
                 <Zap className="w-3 h-3" /> Pro
               </span>
             )}
+            <a href="/community"
+              className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
+              <Users className="w-3.5 h-3.5" /> Community
+            </a>
             {state.phase === 'done' ? (
               <button onClick={handleReset}
                 className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
@@ -773,6 +784,17 @@ export default function HomePage() {
 
             <TrustedProviders documentType={state.documentType} score={state.result.screwed_score} />
 
+            <RecommendedProviders
+              documentType={state.documentType ?? 'unknown'}
+              score={state.result.screwed_score}
+            />
+
+            <ShareExperience
+              defaultScore={state.result.screwed_score}
+              defaultCategory={state.documentType ?? 'unknown'}
+              analysisId={state.analysisId}
+            />
+
             <ContentGenerator analysisId={state.analysisId} isPro={isPro} onUpgrade={() => setShowPaywall(true)} />
 
             <div className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
@@ -804,6 +826,7 @@ export default function HomePage() {
             <span className="ml-2 text-brand-sub/40">· Not legal or financial advice</span>
           </div>
           <div className="flex items-center gap-4">
+            <a href="/community" className="hover:text-brand-text transition-colors">Community</a>
             <a href="/privacy" className="hover:text-brand-text transition-colors">Privacy</a>
             <a href="/terms" className="hover:text-brand-text transition-colors">Terms</a>
             <span className="text-brand-sub/40">© {new Date().getFullYear()} REMbyDesign</span>
