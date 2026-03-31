@@ -399,9 +399,15 @@ export default function HomePage() {
                 <span className="text-brand-text font-bold">$1,400/year</span>
                 {' '}on bills, invoices, and contracts they never check.
               </p>
-              <p className="animate-fade-up delay-300 text-sm text-brand-sub/60 mb-10">
+              <p className="animate-fade-up delay-300 text-sm text-brand-sub/60 mb-4">
                 Upload yours. AI scans for red flags, hidden fees, and overcharges — in 20 seconds. Free.
               </p>
+              {/* Second value prop */}
+              <div className="animate-fade-up delay-400 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-green-500/20 bg-green-500/6 mb-8">
+                <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
+                <span className="text-xs font-bold text-green-400">Getting screwed?</span>
+                <span className="text-xs text-brand-sub">We&apos;ll connect you with someone who won&apos;t.</span>
+              </div>
 
               {/* Hero illustration */}
               <div className="animate-fade-up delay-200 flex justify-center mb-4 sm:hidden">
@@ -626,8 +632,8 @@ export default function HomePage() {
                     },
                     {
                       n: '03', icon: TrendingUp, color: '#4ade80',
-                      title: 'Get your Screwed Score',
-                      desc: 'SCREWED, MAYBE, or SAFE — plus exactly what to say to fight back or renegotiate.',
+                      title: 'Get your score + a better option',
+                      desc: 'SCREWED, MAYBE, or SAFE — plus trusted providers who won\'t overcharge you, recommended by the community.',
                     },
                   ].map(({ n, icon: Icon, color, title, desc }) => (
                     <div key={n} className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-4 relative"
@@ -645,6 +651,50 @@ export default function HomePage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </section>
+
+              {/* ── Find Someone Better ───────────────────────────────── */}
+              <section className="animate-fade-up space-y-6">
+                <div className="text-center space-y-2">
+                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">Getting screwed?</p>
+                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+                    We&apos;ll find you someone better.
+                  </h2>
+                  <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
+                    Every SCREWED result comes with trusted, community-vetted alternatives in that category —
+                    mechanics, doctors, contractors, and more who won&apos;t pad your bill.
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    { emoji: '🔧', category: 'Mechanic', desc: 'Got a padded labor bill? We\'ll show you AAA-certified shops with upfront pricing in your area.', color: '#f87171' },
+                    { emoji: '🏥', category: 'Medical / Dental', desc: 'Duplicate billing or mystery codes? We\'ll connect you with patient advocates and fair-price tools.', color: '#60a5fa' },
+                    { emoji: '🏗️', category: 'Contractor', desc: 'Overpriced estimate? We\'ll show you vetted contractors with real market pricing for your project.', color: '#4ade80' },
+                  ].map(({ emoji, category, desc, color }) => (
+                    <div key={category} className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
+                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{emoji}</span>
+                        <span className="font-bold text-brand-text text-sm">{category}</span>
+                      </div>
+                      <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
+                      <div className="flex items-center gap-1.5 text-xs font-semibold" style={{ color }}>
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        Community vetted
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center">
+                  <a href="/community"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-border bg-brand-surface hover:bg-brand-muted transition-colors text-sm font-semibold text-brand-sub hover:text-brand-text">
+                    <Users className="w-4 h-4" />
+                    See the community wall of trusted providers
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </section>
 
