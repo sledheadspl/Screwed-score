@@ -245,18 +245,15 @@ export default function HomePage() {
 
       {/* ── Background atmosphere ─────────────────────────────────────── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {/* Main red halo */}
+        {/* Subtle red halo */}
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full"
-          style={{ background: 'radial-gradient(ellipse, rgba(255,59,48,0.12) 0%, transparent 65%)', filter: 'blur(1px)' }} />
+          style={{ background: 'radial-gradient(ellipse, rgba(255,59,48,0.06) 0%, transparent 65%)' }} />
         {/* Grid texture */}
-        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-40" />
-        {/* Vignette */}
-        <div className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 60%, rgba(8,8,8,0.8) 100%)' }} />
+        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-100" />
       </div>
 
       {/* ── Navbar ──────────────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 border-b border-brand-border/50 bg-brand-bg/85 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-brand-border bg-white/90 backdrop-blur-xl shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
 
           {/* Logo */}
