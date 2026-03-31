@@ -112,10 +112,10 @@ Return ONLY valid JSON matching this exact structure — no markdown, no comment
 Grading: A=very fair/balanced, B=minor concerns, C=some concerning clauses, D=multiple red flags, F=heavily one-sided/predatory`
 
 async function runContractGuard(text: string, documentType: string, client: Anthropic): Promise<ContractGuardOutput> {
-  const truncated = text.length > 15_000 ? text.slice(0, 15_000) + '\n[text truncated]' : text
+  const truncated = text.length > 12_000 ? text.slice(0, 12_000) + '\n[text truncated]' : text
   const response = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 4096,
+    max_tokens: 8000,
     system: CG_SYSTEM,
     messages: [{ role: 'user', content: `Document type: ${documentType}\n\nDocument text:\n${truncated}` }],
   })
@@ -158,11 +158,11 @@ const OC_SCHEMA = `{
 }`
 
 async function runOvercharge(text: string, documentType: string, language: string, client: Anthropic): Promise<OverchargeOutput> {
-  const truncated = text.length > 12_000 ? text.slice(0, 12_000) + '\n[text truncated]' : text
+  const truncated = text.length > 10_000 ? text.slice(0, 10_000) + '\n[text truncated]' : text
   const langNote = language !== 'en' ? `\nIMPORTANT: Write all text fields in this language: ${language}\n` : ''
   const response = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 2500,
+    max_tokens: 4000,
     system: OC_SYSTEM,
     messages: [{ role: 'user', content: `Analyze this ${documentType.replace(/_/g, ' ')} for overcharges.${langNote}\nDocument text:\n${truncated}\n\nReturn JSON matching:\n${OC_SCHEMA}` }],
   })
