@@ -32,6 +32,11 @@ function json(data: unknown, status = 200, req?: Request) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/** Strip lone UTF-16 surrogates — they come from badly-encoded PDFs and break JSON.parse */
+function sanitizeText(text: string): string {
+  return text.replace(/[\uD800-\uDFFF]/g, '')
+}
+
 function isValidUUID(v: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v)
 }
@@ -314,17 +319,19 @@ Deno.serve(async (req) => {
     }
 
     const documentType = doc.document_type as DocumentType
+    // Sanitize before sending to AI — removes lone surrogates from bad PDFs
+    const cleanText = sanitizeText(doc.extracted_text)
 
     // Run both AI calls in parallel
     const [cgOutput, ocOutput] = await Promise.all([
-      runContractGuard(doc.extracted_text, documentType, anthropic),
-      runOvercharge(doc.extracted_text, documentType, 'en', anthropic),
+      runContractGuard(cleanText, documentType, anthropic),
+      runOvercharge(cleanText, documentType, 'en', anthropic),
     ])
     const detectedLanguage = cgOutput.detected_language ?? 'en'
 
     // Re-run overcharge with correct language if not English
     const overchargeOutput = detectedLanguage !== 'en'
-      ? await runOvercharge(doc.extracted_text, documentType, detectedLanguage, anthropic)
+      ? await runOvercharge(cleanText, documentType, detectedLanguage, anthropic)
       : ocOutput
 
     const analysisId = crypto.randomUUID()

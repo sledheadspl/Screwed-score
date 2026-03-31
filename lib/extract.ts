@@ -40,12 +40,21 @@ export function checkMagicBytes(buffer: Buffer, claimedMime: string): void {
   }
 }
 
+/**
+ * Removes lone UTF-16 surrogates (U+D800–U+DFFF) and other characters that
+ * are invalid in JSON strings. These come from badly-encoded PDFs and cause
+ * JSON.parse to throw when the AI reflects them back in its response.
+ */
+function sanitizeText(text: string): string {
+  return text.replace(/[\uD800-\uDFFF]/g, '')
+}
+
 export async function extractTextFromBuffer(
   buffer: Buffer,
   mimeType: string
 ): Promise<string> {
   if (mimeType === 'application/pdf') {
-    return extractTextFromPdf(buffer)
+    return sanitizeText(await extractTextFromPdf(buffer))
   }
 
   if (
@@ -54,15 +63,15 @@ export async function extractTextFromBuffer(
   ) {
     const mammoth = await import('mammoth')
     const result = await mammoth.extractRawText({ buffer })
-    return result.value.trim()
+    return sanitizeText(result.value.trim())
   }
 
   if (mimeType.startsWith('text/')) {
-    return buffer.toString('utf-8').trim()
+    return sanitizeText(buffer.toString('utf-8').trim())
   }
 
   if (mimeType.startsWith('image/')) {
-    return extractTextFromImage(buffer, mimeType)
+    return sanitizeText(await extractTextFromImage(buffer, mimeType))
   }
 
   throw new Error(`Unsupported file type: ${mimeType}`)
