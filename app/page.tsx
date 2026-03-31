@@ -255,7 +255,7 @@ export default function HomePage() {
         error: err instanceof Error ? err.message : 'Something went wrong. Please try again.',
       }))
     }
-  }, [])
+  }, [refToken])
 
   const handleReset = () => setState(INITIAL_STATE)
   const isLoading   = state.phase === 'uploading' || state.phase === 'parsing' || state.phase === 'analyzing'
