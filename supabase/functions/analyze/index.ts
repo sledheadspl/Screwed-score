@@ -7,16 +7,26 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, x-client-info',
+const ALLOWED_ORIGINS = [
+  'https://screwedscore.com',
+  'https://www.screwedscore.com',
+  'https://getscrewedscore.netlify.app',
+]
+
+function getCORS(req: Request) {
+  const origin = req.headers.get('origin') ?? ''
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, x-client-info',
+  }
 }
 
-function json(data: unknown, status = 200) {
+function json(data: unknown, status = 200, req?: Request) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...CORS, 'Content-Type': 'application/json' },
+    headers: { ...(req ? getCORS(req) : { 'Access-Control-Allow-Origin': ALLOWED_ORIGINS[0] }), 'Content-Type': 'application/json' },
   })
 }
 
@@ -269,16 +279,16 @@ function assembleResult(id: string, documentType: DocumentType, cg: ContractGuar
 // ─── Main Handler ─────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: CORS })
-  if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
+  if (req.method === 'OPTIONS') return new Response(null, { headers: getCORS(req) })
+  if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405, req)
 
   try {
     const body = await req.json().catch(() => null)
     if (!body?.document_id || typeof body.document_id !== 'string') {
-      return json({ error: 'document_id is required' }, 400)
+      return json({ error: 'document_id is required' }, 400, req)
     }
     if (!isValidUUID(body.document_id)) {
-      return json({ error: 'Invalid document_id format' }, 400)
+      return json({ error: 'Invalid document_id format' }, 400, req)
     }
 
     const supabaseUrl  = Deno.env.get('SUPABASE_URL')!
@@ -297,10 +307,10 @@ Deno.serve(async (req) => {
       .eq('id', body.document_id)
       .maybeSingle()
 
-    if (docError) return json({ error: 'Failed to retrieve document' }, 500)
-    if (!doc) return json({ error: 'Document not found' }, 404)
+    if (docError) return json({ error: 'Failed to retrieve document' }, 500, req)
+    if (!doc) return json({ error: 'Document not found' }, 404, req)
     if (!doc.extracted_text || doc.extracted_text.trim().length < 20) {
-      return json({ error: 'Document has no readable text' }, 422)
+      return json({ error: 'Document has no readable text' }, 422, req)
     }
 
     const documentType = doc.document_type as DocumentType
@@ -340,9 +350,9 @@ Deno.serve(async (req) => {
 
     if (saveError) console.error('[analyze] DB save failed:', saveError.message)
 
-    return json({ analysis_id: analysisId, result })
+    return json({ analysis_id: analysisId, result }, 200, req)
   } catch (err) {
     console.error('[analyze] Error:', err)
-    return json({ error: 'Analysis failed. Please try again.' }, 500)
+    return json({ error: 'Analysis failed. Please try again.' }, 500, req)
   }
 })
