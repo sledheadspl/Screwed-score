@@ -5,6 +5,7 @@ import { formatDollar } from '@/lib/utils'
 import type { AnalysisResult, ScrewedScore } from '@/lib/types'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import { ShareButton } from './ShareButton'
+import { DownloadCard } from './DownloadCard'
 import { TrendingUp, AlertTriangle, CheckCircle, Shield } from 'lucide-react'
 
 interface ScoreCardProps {
@@ -180,6 +181,11 @@ export function ScoreCard({ result, analysisId, isPublic = false }: ScoreCardPro
               color="red"
             />
           </div>
+
+          {/* Download / Share card */}
+          {!isPublic && (
+            <DownloadCard result={result} analysisId={analysisId} />
+          )}
         </div>
       </div>
 

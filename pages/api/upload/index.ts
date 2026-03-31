@@ -62,13 +62,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // ── 2. Rate limiting (skipped for Pro) ──────────────────────────────────
+    // ── 2. Referral token bypass check ──────────────────────────────────────
+    const refToken = req.headers['x-ref-token'] as string | undefined
+    let refBypassed = false
+
+    if (!isPro && refToken) {
+      const { data: refRow } = await supabase
+        .from('referral_tokens')
+        .select('id, used')
+        .eq('token', refToken)
+        .maybeSingle()
+
+      if (refRow && !refRow.used) {
+        // Consume the token atomically
+        const { error: consumeErr } = await supabase
+          .from('referral_tokens')
+          .update({ used: true, used_at: new Date().toISOString() })
+          .eq('id', refRow.id)
+          .eq('used', false) // guard against race condition
+
+        if (!consumeErr) refBypassed = true
+      }
+    }
+
+    // ── 3. Rate limiting (skipped for Pro or valid referral) ─────────────────
     const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? '0.0.0.0'
     const ipHash = createHash('sha256').update(ip).digest('hex')
 
     let rateData: { analyses_count: number; window_start: string } | null = null
 
-    if (!isPro) {
+    if (!isPro && !refBypassed) {
       const { data } = await supabase
         .from('rate_limits')
         .select('analyses_count, window_start')
@@ -164,8 +187,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error(`Failed to persist document: ${docError?.message ?? 'unknown error'}`)
     }
 
-    // ── 9. Atomic rate limit increment (skipped for Pro) ────────────────────
-    if (!isPro) {
+    // ── 9. Atomic rate limit increment (skipped for Pro or referral bypass) ──
+    if (!isPro && !refBypassed) {
       const now           = new Date().toISOString()
       const windowExpired = !rateData ||
         Date.now() - new Date(rateData.window_start).getTime() >= WINDOW_MS

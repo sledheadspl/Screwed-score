@@ -19,6 +19,7 @@ import { ContentGenerator } from '@/components/ContentGenerator'
 import { TrustedProviders } from '@/components/TrustedProviders'
 import { RecommendedProviders } from '@/components/RecommendedProviders'
 import { ShareExperience } from '@/components/ShareExperience'
+import { ReferralCard } from '@/components/ReferralCard'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -126,7 +127,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'What file types can I upload?',
-    a: 'PDF, Word (.docx), JPEG, PNG, and plain text. You can also photograph a paper bill with your phone — the AI reads it through the image.',
+    a: 'PDF, Word (.docx), JPEG, PNG, and plain text. You can also photograph a paper bill with your phone — the AI reads it through the image. Documents in Spanish, French, German, Portuguese, Chinese, Arabic, Japanese, Korean, Hindi, Italian, Russian, and Dutch are automatically detected and analyzed in that language.',
   },
   {
     q: 'Is my document kept private?',
@@ -147,6 +148,8 @@ export default function HomePage() {
   const [showPaywall, setShowPaywall] = useState(false)
   const [isPro, setIsPro]       = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [refToken, setRefToken] = useState<string | null>(null)
+  const [refBanner, setRefBanner] = useState(false)
 
   useEffect(() => {
     const checkPro = () => setIsPro(
@@ -158,6 +161,24 @@ export default function HomePage() {
       setUserEmail(session?.user?.email ?? null)
       checkPro()
     })
+
+    // Handle referral token from URL
+    const params = new URLSearchParams(window.location.search)
+    const ref = params.get('ref')
+    if (ref) {
+      fetch(`/api/referral?token=${encodeURIComponent(ref)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.valid) {
+            setRefToken(ref)
+            setRefBanner(true)
+            // Clean the URL without reload
+            window.history.replaceState({}, '', '/')
+          }
+        })
+        .catch(() => {})
+    }
+
     return () => subscription.unsubscribe()
   }, [])
 
@@ -182,6 +203,7 @@ export default function HomePage() {
       const authToken = sessionData?.session?.access_token
       const uploadHeaders: Record<string, string> = {}
       if (authToken) uploadHeaders['x-supabase-token'] = authToken
+      if (refToken)  uploadHeaders['x-ref-token'] = refToken
 
       const uploadRes  = await fetch('/api/upload', { method: 'POST', body: form, headers: uploadHeaders })
       const uploadData = await uploadRes.json()
@@ -197,6 +219,8 @@ export default function HomePage() {
       }
 
       const { document_id, document_type } = uploadData as UploadResponse
+      // Token consumed — clear it so it can't be sent again
+      if (refToken) { setRefToken(null); setRefBanner(false) }
       setPhase('parsing', 45, 'Reading your document...')
       await delay(400)
       setPhase('analyzing', 65, 'Running AI analysis...')
@@ -324,6 +348,19 @@ export default function HomePage() {
         {state.phase === 'idle' && (
           <>
 
+            {/* ── Referral banner ───────────────────────────────────────── */}
+            {refBanner && (
+              <div className="max-w-xl mx-auto px-4 pt-6">
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-500/25 text-sm">
+                  <span className="text-lg">🎁</span>
+                  <div>
+                    <span className="font-bold text-purple-300">A friend gave you a free scan!</span>
+                    <span className="text-brand-sub ml-2">Upload any bill or contract below — no paywall.</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* ── Hero ──────────────────────────────────────────────────── */}
             <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-10 text-center relative">
 
@@ -435,6 +472,26 @@ export default function HomePage() {
                     {t}
                   </span>
                 ))}
+                <span className="flex items-center gap-1.5 text-blue-400/70">
+                  <span className="text-sm">🌐</span>
+                  12 languages
+                </span>
+              </div>
+
+              {/* Language flags strip */}
+              <div className="animate-fade-up delay-500 flex flex-wrap items-center justify-center gap-2 mt-3">
+                <span className="text-[10px] text-brand-sub/40 mr-1">Reads &amp; analyzes in:</span>
+                {[
+                  { flag: '🇺🇸', lang: 'EN' }, { flag: '🇪🇸', lang: 'ES' }, { flag: '🇫🇷', lang: 'FR' },
+                  { flag: '🇩🇪', lang: 'DE' }, { flag: '🇵🇹', lang: 'PT' }, { flag: '🇨🇳', lang: 'ZH' },
+                  { flag: '🇸🇦', lang: 'AR' }, { flag: '🇯🇵', lang: 'JA' }, { flag: '🇰🇷', lang: 'KO' },
+                  { flag: '🇮🇳', lang: 'HI' }, { flag: '🇮🇹', lang: 'IT' }, { flag: '🇷🇺', lang: 'RU' },
+                ].map(({ flag, lang }) => (
+                  <span key={lang} className="inline-flex items-center gap-0.5 text-[10px] text-brand-sub/50">
+                    <span>{flag}</span>
+                    <span>{lang}</span>
+                  </span>
+                ))}
               </div>
 
               {/* Social proof count */}
@@ -485,7 +542,7 @@ export default function HomePage() {
                   {[
                     { value: '$4.2M+',  label: 'in overcharges found',      icon: DollarSign, color: 'text-red-400',    glow: 'rgba(255,59,48,0.06)'   },
                     { value: '23,400+', label: 'documents analyzed',         icon: FileText,   color: 'text-blue-400',   glow: 'rgba(96,165,250,0.05)'  },
-                    { value: '~20s',    label: 'average scan time',          icon: Zap,        color: 'text-yellow-400', glow: 'rgba(250,204,21,0.06)'  },
+                    { value: '12',      label: 'languages supported',        icon: Sparkles,   color: 'text-purple-400', glow: 'rgba(168,85,247,0.06)'  },
                     { value: '78%',     label: 'of scans find something',    icon: Users,      color: 'text-green-400',  glow: 'rgba(74,222,128,0.05)'  },
                   ].map(({ value, label, icon: Icon, color, glow }) => (
                     <div key={label} className="rounded-2xl border border-brand-border bg-brand-surface p-5 sm:p-6 text-center space-y-2 relative overflow-hidden"
@@ -849,6 +906,8 @@ export default function HomePage() {
               defaultCategory={state.documentType ?? 'unknown'}
               analysisId={state.analysisId}
             />
+
+            <ReferralCard result={state.result} analysisId={state.analysisId!} />
 
             <ContentGenerator analysisId={state.analysisId} isPro={isPro} onUpgrade={() => setShowPaywall(true)} />
 
