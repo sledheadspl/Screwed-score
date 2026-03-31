@@ -120,7 +120,7 @@ const TESTIMONIALS = [
 const FAQ_ITEMS = [
   {
     q: 'Is this actually free?',
-    a: 'Yes — 2 full scans are free, no account required. If you find something (most people do), Pro gives you unlimited scans for $9.99/month.',
+    a: 'Yes — 3 full scans are free, no account required. After that, unlock additional scans for $2.99 each — one-time, no subscription.',
   },
   {
     q: 'What file types can I upload?',
@@ -136,7 +136,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'What if I find something wrong?',
-    a: 'Every analysis includes a "What to Do Next" section with specific language to use when confronting the business or negotiating. Pro users also get a viral TikTok/Reels script to share their result.',
+    a: 'Every analysis includes a "What to Do Next" section with specific language to use when confronting the business or negotiating. Paid scans also include a shareable result link and a viral TikTok/Reels script.',
   },
 ]
 

@@ -1,16 +1,16 @@
 import { createHmac } from 'crypto'
 
 /**
- * Issues an HMAC-signed token encoding the Stripe customer + subscription IDs.
+ * Issues an HMAC-signed token encoding the Stripe customer + payment IDs.
  * @param ttlDays  How long until the token expires (default 32 days).
  */
 export function issueToken(
   customerId: string,
-  subscriptionId: string,
+  paymentId: string,
   ttlDays = 32
 ): string {
   const expiry = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * ttlDays
-  const payload = `${customerId}:${subscriptionId}:${expiry}`
+  const payload = `${customerId}:${paymentId}:${expiry}`
   const sig = createHmac('sha256', process.env.GSS_TOKEN_SECRET!)
     .update(payload)
     .digest('hex')
