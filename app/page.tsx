@@ -10,7 +10,7 @@ import { ShareButton } from '@/components/ShareButton'
 import {
   RotateCcw, AlertCircle, Receipt, FileText, DollarSign,
   Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
-  Star, ChevronDown, Users,
+  Star, ChevronDown, Users, Flame,
 } from 'lucide-react'
 import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
@@ -275,6 +275,10 @@ export default function HomePage() {
                 <Zap className="w-3 h-3" /> Pro
               </span>
             )}
+            <a href="/shame"
+              className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
+              <Flame className="w-3.5 h-3.5" /> Wall of Shame
+            </a>
             <a href="/community"
               className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
               <Users className="w-3.5 h-3.5" /> Community
@@ -392,6 +396,10 @@ export default function HomePage() {
                   screwed?
                 </span>
               </h1>
+              {/* Viral sub-hook */}
+              <p className="animate-fade-up delay-150 text-sm font-bold text-brand-sub/60 -mt-4 mb-6 uppercase tracking-widest">
+                The credit score for businesses that overcharge you.
+              </p>
 
               {/* Subheadline */}
               <p className="animate-fade-up delay-200 text-lg sm:text-xl text-brand-sub max-w-2xl mx-auto leading-relaxed mb-3">
@@ -876,6 +884,7 @@ export default function HomePage() {
             <span className="ml-2 text-brand-sub/40">· Not legal or financial advice</span>
           </div>
           <div className="flex items-center gap-4">
+            <a href="/shame" className="hover:text-brand-text transition-colors">Wall of Shame</a>
             <a href="/community" className="hover:text-brand-text transition-colors">Community</a>
             <a href="/privacy" className="hover:text-brand-text transition-colors">Privacy</a>
             <a href="/terms" className="hover:text-brand-text transition-colors">Terms</a>

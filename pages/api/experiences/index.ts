@@ -48,6 +48,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single()
 
     if (error) return res.status(500).json({ error: error.message })
+
+    // Update business reputation score (non-fatal)
+    fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'}/api/business-scores`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ business_name, category, city, state, score, amount_dollars }),
+    }).catch(() => {})
+
     return res.status(201).json({ id: data.id })
   }
 
