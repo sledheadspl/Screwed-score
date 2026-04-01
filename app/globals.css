@@ -5,19 +5,19 @@
 @tailwind utilities;
 
 :root {
-  --bg: #ffffff;
-  --surface: #f9f9f9;
-  --surface2: #f2f2f2;
-  --border: #e8e8e8;
-  --muted: #f4f4f4;
-  --text: #0a0a0a;
-  --subtext: #6b7280;
+  --bg: #080808;
+  --surface: #0f0f0f;
+  --surface2: #141414;
+  --border: #1c1c1c;
+  --muted: #242424;
+  --text: #f2f2f2;
+  --subtext: #777777;
   --red: #ff3b30;
-  --red-glow: rgba(255, 59, 48, 0.15);
-  --yellow: #f59e0b;
-  --yellow-glow: rgba(245, 158, 11, 0.15);
-  --green: #16a34a;
-  --green-glow: rgba(22, 163, 74, 0.15);
+  --red-glow: rgba(255, 59, 48, 0.4);
+  --yellow: #ffd60a;
+  --yellow-glow: rgba(255, 214, 10, 0.35);
+  --green: #30d158;
+  --green-glow: rgba(48, 209, 88, 0.35);
 }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
@@ -115,7 +115,7 @@ html, body {
 
 /* ── Shimmer text ──────────────────────────────────────────────────────────── */
 .shimmer-text {
-  background: linear-gradient(90deg, #0a0a0a 0%, #333 40%, #aaa 50%, #333 60%, #0a0a0a 100%);
+  background: linear-gradient(90deg, #f2f2f2 0%, #ffffff 40%, #888 50%, #ffffff 60%, #f2f2f2 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -143,7 +143,7 @@ html, body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px dashed #e8e8e8;
+  border-bottom: 1px dashed var(--border);
   font-size: 13px;
 }
 .receipt-item:last-child { border-bottom: none; }

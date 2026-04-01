@@ -10,16 +10,16 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          bg:      '#ffffff',
-          surface: '#f9f9f9',
-          surface2:'#f2f2f2',
-          border:  '#e8e8e8',
-          muted:   '#f4f4f4',
-          text:    '#0a0a0a',
-          sub:     '#6b7280',
+          bg:      '#080808',
+          surface: '#0f0f0f',
+          surface2:'#141414',
+          border:  '#1c1c1c',
+          muted:   '#242424',
+          text:    '#f2f2f2',
+          sub:     '#777777',
           red:     '#ff3b30',
-          yellow:  '#f59e0b',
-          green:   '#16a34a',
+          yellow:  '#ffd60a',
+          green:   '#30d158',
         },
       },
       fontFamily: {
@@ -27,7 +27,7 @@ const config: Config = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'grid-pattern': "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)",
+        'grid-pattern': "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
       },
       backgroundSize: {
         'grid': '40px 40px',
