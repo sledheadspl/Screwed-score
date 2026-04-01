@@ -116,7 +116,7 @@ export default function CommunityPage() {
             <h1 className="text-3xl font-black text-brand-text">Community Wall of Shame</h1>
           </div>
           <p className="text-brand-sub">
-            Real people. Real businesses. Real overcharges. The community that keeps each other safe.
+            Real people. Real businesses. Real experiences. The community that keeps each other safe.
           </p>
           <div className="flex items-center gap-4 text-sm">
             <span className="text-red-400 font-bold">{screwedCount} got screwed</span>

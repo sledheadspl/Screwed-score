@@ -20,6 +20,8 @@ import { TrustedProviders } from '@/components/TrustedProviders'
 import { RecommendedProviders } from '@/components/RecommendedProviders'
 import { ShareExperience } from '@/components/ShareExperience'
 import { ReferralCard } from '@/components/ReferralCard'
+import { DisputeLetter } from '@/components/DisputeLetter'
+import { BenchmarkCard } from '@/components/BenchmarkCard'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -893,6 +895,14 @@ export default function HomePage() {
                 </div>
               </div>
             )}
+
+            <BenchmarkCard
+              documentType={state.result.document_type}
+              scorePercent={state.result.screwed_score_percent}
+              score={state.result.screwed_score}
+            />
+
+            <DisputeLetter analysisId={state.analysisId} score={state.result.screwed_score} />
 
             <TrustedProviders documentType={state.documentType} score={state.result.screwed_score} />
 

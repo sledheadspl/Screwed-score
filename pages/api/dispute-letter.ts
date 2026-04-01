@@ -1,0 +1,103 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { createServiceClient } from '@/lib/supabase'
+import Anthropic from '@anthropic-ai/sdk'
+import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
+import type { DocumentType } from '@/lib/types'
+
+const anthropic = new Anthropic()
+
+const RECIPIENT_BY_TYPE: Record<string, string> = {
+  mechanic_invoice:    'Service Manager / Billing Department',
+  medical_bill:        'Patient Billing Department',
+  dental_bill:         'Patient Billing Department',
+  contractor_estimate: 'Project Manager / Owner',
+  phone_bill:          'Customer Billing Department',
+  internet_bill:       'Customer Billing Department',
+  lease_agreement:     'Property Manager / Landlord',
+  insurance_quote:     'Policy Services Department',
+  employment_contract: 'Human Resources Department',
+  brand_deal:          'Business Affairs / Contracts Department',
+  service_agreement:   'Billing / Contracts Department',
+  unknown:             'Billing Department',
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+
+  const { analysis_id } = req.body as { analysis_id?: string }
+  if (!analysis_id || typeof analysis_id !== 'string') {
+    return res.status(400).json({ error: 'analysis_id required' })
+  }
+
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('analyses')
+    .select('*')
+    .eq('id', analysis_id)
+    .eq('is_public', true)
+    .single()
+
+  if (error || !data) return res.status(404).json({ error: 'Analysis not found' })
+
+  const docType = data.document_type as DocumentType
+  const docLabel = DOCUMENT_TYPE_LABELS[docType] ?? 'Document'
+  const recipient = RECIPIENT_BY_TYPE[docType] ?? 'Billing Department'
+
+  const overcharge = data.overcharge_output ?? {}
+  const contractGuard = data.contract_guard_output ?? {}
+
+  const flaggedItems: Array<{ description: string; charged_amount?: number | null; flag_reason?: string | null }> =
+    (overcharge.line_items ?? []).filter((i: { flagged: boolean }) => i.flagged)
+  const totalFlagged: number = overcharge.total_flagged_amount ?? 0
+  const redFlags: Array<{ title: string; severity: string; issue: string }> =
+    contractGuard.red_flags ?? []
+
+  const flaggedText = flaggedItems.length > 0
+    ? flaggedItems.map(i =>
+        `- ${i.description}${i.charged_amount != null ? `: $${i.charged_amount.toFixed(2)}` : ''}${i.flag_reason ? ` — ${i.flag_reason}` : ''}`
+      ).join('\n')
+    : null
+
+  const redFlagText = redFlags.length > 0
+    ? redFlags.map(f => `- [${f.severity.toUpperCase()}] ${f.title}: ${f.issue}`).join('\n')
+    : null
+
+  const issueContext = [
+    flaggedText   ? `BILLING ISSUES:\n${flaggedText}` : null,
+    redFlagText   ? `CONTRACT/CLAUSE ISSUES:\n${redFlagText}` : null,
+    `OVERALL: ${data.screwed_score_reason ?? ''}`,
+  ].filter(Boolean).join('\n\n')
+
+  const prompt = `You are a consumer rights advocate writing a professional dispute letter for someone who received a ${docLabel} with AI-identified issues.
+
+${issueContext}
+${totalFlagged > 0 ? `\nTotal amount flagged: $${totalFlagged.toFixed(2)}` : ''}
+
+Write a formal dispute letter addressed to: ${recipient}
+
+Rules:
+- Use [YOUR NAME], [YOUR ADDRESS], [YOUR PHONE/EMAIL], and [DATE] as placeholders
+- Reference each specific issue (exact items, dollar amounts, clause names) — be precise
+- State a clear demand: itemized correction, refund of overcharged amount, clause removal, or written explanation
+- Set a 14-day deadline for written response
+- Cite applicable consumer protection law where relevant (e.g. Fair Debt Collection Practices Act for medical/dental billing, your state's consumer protection statute for service overcharges, state landlord-tenant law for lease disputes)
+- Tone: professional and firm — not aggressive, not apologetic
+- Close with a concrete next-steps warning if unresolved (state attorney general complaint, BBB filing, small claims court)
+- Use proper formal letter formatting with spacing
+
+Return ONLY the letter text. Start with [YOUR NAME].`
+
+  try {
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: prompt }],
+    })
+
+    const letter = (message.content[0] as { type: string; text: string }).text
+    return res.status(200).json({ letter })
+  } catch (err) {
+    console.error('[dispute-letter]', err)
+    return res.status(500).json({ error: 'Failed to generate letter' })
+  }
+}

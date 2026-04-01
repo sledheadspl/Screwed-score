@@ -48,7 +48,7 @@ export default function BusinessPage({ params }: { params: Promise<{ slug: strin
   const handleShare = () => {
     const url = window.location.href
     const text = business
-      ? `🚨 ${business.business_name} has a ${business.screwed_percent}% SCREWED rating on GetScrewedScore — ${business.total_count} people reported getting overcharged. Check before you pay. screwedscore.com`
+      ? `🚨 ${business.business_name} has a ${business.screwed_percent}% SCREWED rating on GetScrewedScore — based on ${business.total_count} community-submitted document${business.total_count !== 1 ? 's' : ''}. Check before you pay. screwedscore.com`
       : `Check this business on GetScrewedScore`
     if (navigator.share) {
       navigator.share({ title: 'GetScrewedScore', text, url })
@@ -150,11 +150,17 @@ export default function BusinessPage({ params }: { params: Promise<{ slug: strin
                 </div>
                 {business.total_flagged_dollars > 0 && (
                   <div className="flex items-center gap-1.5 text-xs text-red-400">
-                    <TrendingUp className="w-3.5 h-3.5" /> ${business.total_flagged_dollars.toLocaleString()} flagged in overcharges
+                    <TrendingUp className="w-3.5 h-3.5" /> ${business.total_flagged_dollars.toLocaleString()} flagged in submitted docs (AI est.)
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Disclaimer */}
+            <p className="text-xs text-brand-sub/50 -mt-2">
+              Ratings reflect AI analysis of documents submitted by community members. Dollar amounts are AI estimates, not verified findings of fraud or wrongdoing.{' '}
+              <a href="mailto:support@getscrewedscore.com?subject=Dispute%20a%20Report" className="underline hover:text-brand-sub transition-colors">Business owner? Dispute a report.</a>
+            </p>
 
             {/* Community reports */}
             {experiences.length > 0 && (

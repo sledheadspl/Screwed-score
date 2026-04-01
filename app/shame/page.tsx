@@ -88,7 +88,7 @@ export default function ShamePage() {
           </div>
           <p className="text-brand-sub max-w-xl">
             Every time someone uploads a document from a business, that business gets rated.
-            No hiding. No paying for better ratings. Just the truth.
+            No hiding. No paying for better ratings. Every rating reflects AI analysis of a real submitted document.
           </p>
 
           {/* Community stats */}
@@ -101,7 +101,7 @@ export default function ShamePage() {
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-surface border border-brand-border">
               <TrendingUp className="w-4 h-4 text-red-400" />
               <span className="text-sm font-bold text-red-400">${stats.total_flagged.toLocaleString()}</span>
-              <span className="text-xs text-brand-sub">flagged by community</span>
+              <span className="text-xs text-brand-sub">flagged (AI est.)</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-surface border border-brand-border">
               <Flame className="w-4 h-4 text-orange-400" />
@@ -174,7 +174,7 @@ export default function ShamePage() {
                     {b.total_flagged_dollars > 0 && (
                       <>
                         <span className="text-brand-sub/40">·</span>
-                        <span className="text-red-400">${b.total_flagged_dollars.toLocaleString()} flagged</span>
+                        <span className="text-red-400">${b.total_flagged_dollars.toLocaleString()} flagged (est.)</span>
                       </>
                     )}
                   </div>
@@ -189,7 +189,7 @@ export default function ShamePage() {
         {/* CTA */}
         <div className="rounded-2xl border border-brand-border bg-brand-surface p-6 text-center space-y-3">
           <p className="font-bold text-brand-text">Is your business on this list?</p>
-          <p className="text-sm text-brand-sub">Every report is based on real documents submitted by real customers. The data doesn&apos;t lie.</p>
+          <p className="text-sm text-brand-sub">Every rating reflects AI analysis of documents submitted by real customers. Dollar amounts are AI estimates from those documents, not verified overcharge findings.</p>
           <Link href="/"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
             style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>

@@ -7,6 +7,8 @@ import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
 import Link from 'next/link'
 import { ArrowRight, AlertTriangle, CheckCircle, AlertCircle, Receipt } from 'lucide-react'
+import { DisputeLetter } from '@/components/DisputeLetter'
+import { BenchmarkCard } from '@/components/BenchmarkCard'
 
 interface Props {
   params: { id: string }
@@ -253,6 +255,20 @@ export default async function SharePage({ params }: Props) {
               <span>✓ 20 seconds</span>
             </div>
           </div>
+        </div>
+
+        {/* Benchmark comparison */}
+        <div className="animate-fade-up delay-400">
+          <BenchmarkCard
+            documentType={analysis.document_type}
+            scorePercent={analysis.screwed_score_percent}
+            score={analysis.screwed_score}
+          />
+        </div>
+
+        {/* Dispute letter */}
+        <div className="animate-fade-up delay-400">
+          <DisputeLetter analysisId={analysis.id} score={analysis.screwed_score} />
         </div>
 
         {/* What to do next */}
