@@ -30,7 +30,7 @@ export function proxy(req: NextRequest): NextResponse {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://js.stripe.com",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://js.stripe.com https://www.google.com https://www.gstatic.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.supabase.co",
       "font-src 'self'",

@@ -63,6 +63,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `}</Script>
           </>
         )}
+        {/* Google Ads */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18056991193"
+          strategy="afterInteractive"
+        />
+        <Script id="gads-init" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-18056991193');
+        `}</Script>
       </head>
       <body>
         {children}
