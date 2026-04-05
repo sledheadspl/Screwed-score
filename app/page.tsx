@@ -10,7 +10,7 @@ import { ShareButton } from '@/components/ShareButton'
 import {
   RotateCcw, AlertCircle, Receipt, FileText, DollarSign,
   Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
-  Star, ChevronDown, Users, Flame,
+  Star, ChevronDown, Users, Flame, MessageSquare, Building2,
 } from 'lucide-react'
 import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
@@ -123,6 +123,10 @@ const FAQ_ITEMS = [
   {
     q: 'What if I find something wrong?',
     a: 'Every analysis includes a "What to Do Next" section with specific language to use when confronting the business or negotiating. Paid scans also include a shareable result link and a viral TikTok/Reels script.',
+  },
+  {
+    q: 'Can I dispute a charge directly?',
+    a: 'Yes — every SCREWED or MAYBE result includes access to the Dispute Hub. Open a formal thread linked to the vendor, describe what happened, and they can respond publicly. Every outcome you report (full win, partial, or refused) adds to the community recovery total.',
   },
 ]
 
@@ -444,10 +448,17 @@ export default function HomePage() {
                 Upload yours. AI scans for red flags, hidden fees, and overcharges — in 20 seconds. Free.
               </p>
               {/* Second value prop */}
-              <div className="animate-fade-up delay-400 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-green-500/20 bg-green-500/6 mb-8">
-                <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
-                <span className="text-xs font-bold text-green-400">Getting screwed?</span>
-                <span className="text-xs text-brand-sub">We&apos;ll connect you with someone who won&apos;t.</span>
+              <div className="animate-fade-up delay-400 flex flex-wrap justify-center gap-2 mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500/20 bg-green-500/6">
+                  <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
+                  <span className="text-xs font-bold text-green-400">Vendor Registry</span>
+                  <span className="text-xs text-brand-sub">AI reputation scores on every business.</span>
+                </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/20 bg-red-500/6">
+                  <MessageSquare className="w-3.5 h-3.5 text-red-400" />
+                  <span className="text-xs font-bold text-red-400">Dispute Hub</span>
+                  <span className="text-xs text-brand-sub">Fight back. On the record.</span>
+                </div>
               </div>
 
               {/* Hero illustration */}
@@ -674,8 +685,8 @@ export default function HomePage() {
                     },
                     {
                       n: '03', icon: TrendingUp, color: '#4ade80',
-                      title: 'Get your score + a better option',
-                      desc: 'SCREWED, MAYBE, or SAFE — plus trusted providers who won\'t overcharge you, recommended by the community.',
+                      title: 'Score, dispute, and find someone better',
+                      desc: 'SCREWED, MAYBE, or SAFE — then open a formal dispute, track your outcome, and get matched with trusted providers who won\'t overcharge you.',
                     },
                   ].map(({ n, icon: Icon, color, title, desc }) => (
                     <div key={n} className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-4 relative"
@@ -737,6 +748,114 @@ export default function HomePage() {
                     See the community wall of trusted providers
                     <ChevronRight className="w-3.5 h-3.5" />
                   </a>
+                </div>
+              </section>
+
+              {/* ── Wall of Shame ─────────────────────────────────── */}
+              <section className="animate-fade-up space-y-6">
+                <div className="text-center space-y-2">
+                  <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Wall of Shame</p>
+                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+                    The worst offenders.{' '}
+                    <span style={{
+                      background: 'linear-gradient(135deg, #ff8a80, #ff3b30)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    }}>Ranked publicly.</span>
+                  </h2>
+                  <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
+                    Every scan links anonymously to a vendor. Businesses that repeatedly overcharge rise to the top — a live, community-powered blacklist.
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    {
+                      icon: Building2, color: '#ef4444', glow: 'rgba(239,68,68,0.06)',
+                      title: 'Vendors tracked automatically',
+                      desc: 'Every SCREWED or MAYBE result links to a vendor profile. No manual reporting needed — it builds itself.',
+                    },
+                    {
+                      icon: TrendingUp, color: '#f59e0b', glow: 'rgba(245,158,11,0.06)',
+                      title: 'Ranked by screwed rate',
+                      desc: 'Vendors with the highest rate of SCREWED verdicts and total flagged dollars rise to the top.',
+                    },
+                    {
+                      icon: Flame, color: '#ff6b60', glow: 'rgba(255,107,96,0.06)',
+                      title: 'Updated with every scan',
+                      desc: 'The moment a pattern emerges across multiple users, it\'s visible to everyone — in real time.',
+                    },
+                  ].map(({ icon: Icon, color, glow, title, desc }) => (
+                    <div key={title} className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
+                      style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.03), 0 0 20px ${glow}` }}>
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                        style={{ background: color + '15', border: `1px solid ${color}30` }}>
+                        <Icon className="w-4 h-4" style={{ color }} />
+                      </div>
+                      <p className="text-sm font-bold text-brand-text">{title}</p>
+                      <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center">
+                  <a href="/shame"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-colors text-sm font-semibold text-red-400 hover:text-red-300">
+                    <Flame className="w-4 h-4" />
+                    View the Wall of Shame
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </section>
+
+              {/* ── Dispute Hub ───────────────────────────────────────── */}
+              <section className="animate-fade-up space-y-6">
+                <div className="text-center space-y-2">
+                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">Dispute Hub</p>
+                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+                    Don&apos;t just know. Fight back.
+                  </h2>
+                  <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
+                    Every SCREWED result now lets you open a formal dispute — publicly linked to the vendor.
+                    They can respond. The community tracks what happens next.
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-4 relative">
+                  <div className="hidden sm:block absolute top-10 left-[20%] right-[20%] h-px"
+                    style={{ background: 'linear-gradient(90deg, transparent, rgba(255,59,48,0.3) 30%, rgba(255,59,48,0.3) 70%, transparent)' }} />
+
+                  {[
+                    {
+                      n: '01', icon: MessageSquare, color: '#f87171',
+                      title: 'Open a dispute',
+                      desc: 'From any SCREWED or MAYBE result, open a formal thread — tied to the vendor profile and your analysis.',
+                    },
+                    {
+                      n: '02', icon: Building2, color: '#60a5fa',
+                      title: 'Vendor can respond publicly',
+                      desc: 'Businesses can reply on the record. Good responses help them. Bad ones stay visible forever.',
+                    },
+                    {
+                      n: '03', icon: TrendingUp, color: '#4ade80',
+                      title: 'Report your outcome',
+                      desc: 'Win, partial win, or refused — every outcome is counted and added to the community recovery total.',
+                    },
+                  ].map(({ n, icon: Icon, color, title, desc }) => (
+                    <div key={n} className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-4 relative"
+                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+                      <div className="flex items-center justify-between">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                          style={{ background: color + '15', border: `1px solid ${color}30` }}>
+                          <Icon className="w-5 h-5" style={{ color }} />
+                        </div>
+                        <span className="text-[10px] font-black text-brand-sub/30 tracking-widest">{n}</span>
+                      </div>
+                      <div className="space-y-1.5">
+                        <p className="text-sm font-bold text-brand-text">{title}</p>
+                        <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </section>
 
