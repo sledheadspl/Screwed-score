@@ -51,12 +51,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (error) return res.status(500).json({ error: error.message })
 
-    // Update business reputation score (non-fatal)
+    // Update business reputation score asynchronously (non-fatal)
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'}/api/business-scores`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ business_name, category, city, state, score, amount_dollars }),
-    }).catch(() => {})
+    }).catch((err: unknown) => {
+      console.error('[experiences] Failed to update business-scores:', err instanceof Error ? err.message : String(err))
+    })
 
     return res.status(201).json({ id: data.id })
   }
@@ -68,10 +70,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { error } = await supabase.rpc('increment_upvotes', { experience_id: id })
     if (error) {
-      // Fallback if RPC doesn't exist
-      const { data: exp } = await supabase.from('experiences').select('upvotes').eq('id', id).single()
-      if (!exp) return res.status(404).json({ error: 'Not found' })
-      await supabase.from('experiences').update({ upvotes: (exp.upvotes ?? 0) + 1 }).eq('id', id)
+      // RPC is defined in migration 005 — if missing, log and continue rather than
+      // falling back to a non-atomic read-modify-write which causes race conditions.
+      console.error('[experiences] increment_upvotes RPC failed:', error.message)
     }
     return res.status(200).json({ ok: true })
   }

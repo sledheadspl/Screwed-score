@@ -102,12 +102,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const rateLimitKey = userId ? `user:${userId}` : ipHash
     const limit        = userId ? AUTH_LIMIT : ANON_LIMIT
 
-    let rateData: { analyses_count: number; window_start: string } | null = null
+    let rateData: { request_count: number; window_start: string } | null = null
 
     if (!isPro && !refBypassed) {
       const { data } = await supabase
         .from('rate_limits')
-        .select('analyses_count, window_start')
+        .select('request_count, window_start')
         .eq('ip_hash', rateLimitKey)
         .maybeSingle()
       rateData = data
@@ -115,7 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (rateData) {
         const windowAge    = Date.now() - new Date(rateData.window_start).getTime()
         const windowActive = windowAge < WINDOW_MS
-        if (windowActive && rateData.analyses_count >= limit) {
+        if (windowActive && rateData.request_count >= limit) {
           return res.status(429).json({ error: 'LIMIT_REACHED' })
         }
         if (!windowActive) rateData = null
@@ -210,7 +210,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await supabase.from('rate_limits').upsert(
         {
           ip_hash:         rateLimitKey,
-          analyses_count:  windowExpired ? 1 : (rateData!.analyses_count + 1),
+          request_count:  windowExpired ? 1 : (rateData!.request_count + 1),
           window_start:    windowExpired ? now : rateData!.window_start,
           updated_at:      now,
         },
