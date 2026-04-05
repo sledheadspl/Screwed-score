@@ -5,12 +5,19 @@ import { formatDollar } from '@/lib/utils'
 import type { AnalysisResult, ScrewedScore } from '@/lib/types'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import { ShareButton } from './ShareButton'
+import { DownloadCard } from './DownloadCard'
 import { TrendingUp, AlertTriangle, CheckCircle, Shield } from 'lucide-react'
 
 interface ScoreCardProps {
   result: AnalysisResult
   analysisId: string
   isPublic?: boolean
+}
+
+const LANGUAGE_NAMES: Record<string, string> = {
+  es: 'Spanish', fr: 'French', de: 'German', pt: 'Portuguese',
+  zh: 'Chinese', ar: 'Arabic', ja: 'Japanese', ko: 'Korean',
+  hi: 'Hindi', it: 'Italian', ru: 'Russian', nl: 'Dutch',
 }
 
 const SCORE_CONFIG = {
@@ -103,12 +110,19 @@ export function ScoreCard({ result, analysisId, isPublic = false }: ScoreCardPro
 
         <div className="relative p-6 sm:p-8 space-y-5">
 
-          {/* Doc type badge */}
+          {/* Doc type badge + language */}
           <div className="flex items-center justify-between">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${cfg.badgeClass}`}>
-              <Icon className="w-3 h-3" />
-              {DOCUMENT_TYPE_LABELS[result.document_type]}
-            </span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${cfg.badgeClass}`}>
+                <Icon className="w-3 h-3" />
+                {DOCUMENT_TYPE_LABELS[result.document_type]}
+              </span>
+              {result.language && result.language !== 'en' && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border border-blue-500/30 bg-blue-500/10 text-blue-400">
+                  🌐 Analyzed in {LANGUAGE_NAMES[result.language] ?? result.language.toUpperCase()}
+                </span>
+              )}
+            </div>
             {!isPublic && <ShareButton analysisId={analysisId} score={result.screwed_score} />}
           </div>
 
@@ -167,6 +181,11 @@ export function ScoreCard({ result, analysisId, isPublic = false }: ScoreCardPro
               color="red"
             />
           </div>
+
+          {/* Download / Share card */}
+          {!isPublic && (
+            <DownloadCard result={result} analysisId={analysisId} />
+          )}
         </div>
       </div>
 

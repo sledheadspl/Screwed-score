@@ -10,7 +10,7 @@ function PaidInner() {
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying')
 
   useEffect(() => {
-    const sessionId = params.get('session_id')
+    const sessionId = params?.get('session_id')
     if (!sessionId) { router.replace('/'); return }
 
     fetch('/api/verify-checkout', {
@@ -43,8 +43,8 @@ function PaidInner() {
           <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
             <Sparkles className="w-8 h-8 text-green-400" />
           </div>
-          <h1 className="text-2xl font-black text-brand-text">You&apos;re Pro!</h1>
-          <p className="text-brand-sub">Unlimited analyses unlocked. Redirecting…</p>
+          <h1 className="text-2xl font-black text-brand-text">Scan Unlocked!</h1>
+          <p className="text-brand-sub">Your analysis is ready. Redirecting…</p>
         </>
       )}
       {status === 'error' && (

@@ -239,6 +239,7 @@ export function assembleResult(
   return {
     id,
     document_type:          documentType,
+    language:               cg.detected_language ?? 'en',
     screwed_score:          score,
     screwed_score_reason:   reason,
     screwed_score_percent:  percent,

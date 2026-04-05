@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Sparkles, Copy, Check, Loader2, ChevronDown, ChevronUp, Zap } from 'lucide-react'
+import { VideoGenerator, type VideoMeta } from './VideoGenerator'
 
 interface GeneratedContent {
   hook: string
@@ -9,6 +10,7 @@ interface GeneratedContent {
   caption: string
   hashtags: string[]
   on_screen_text: string[]
+  _meta?: VideoMeta
 }
 
 interface Props {
@@ -136,6 +138,11 @@ export function ContentGenerator({ analysisId, isPro, onUpgrade }: Props) {
               ))}
             </div>
           </div>
+
+          {/* Video generator — only shown when we have meta from the API */}
+          {content._meta && (
+            <VideoGenerator hook={content.hook} meta={content._meta} />
+          )}
         </div>
       </div>
     )
@@ -154,7 +161,7 @@ export function ContentGenerator({ analysisId, isPro, onUpgrade }: Props) {
             )}
           </div>
           <p className="text-xs text-brand-sub">
-            Get a ready-to-post TikTok/Reel script, caption, and hashtags based on your results.
+            Get a ready-to-post TikTok/Reel script, caption, hashtags, and auto-generated video.
           </p>
         </div>
         <button onClick={generate} disabled={loading}

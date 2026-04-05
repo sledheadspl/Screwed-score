@@ -7,6 +7,8 @@ import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
 import Link from 'next/link'
 import { ArrowRight, AlertTriangle, CheckCircle, AlertCircle, Receipt } from 'lucide-react'
+import { DisputeLetter } from '@/components/DisputeLetter'
+import { BenchmarkCard } from '@/components/BenchmarkCard'
 
 interface Props {
   params: { id: string }
@@ -34,6 +36,7 @@ async function getAnalysis(id: string): Promise<AnalysisResult | null> {
     screwed_score: data.screwed_score,
     screwed_score_percent: data.screwed_score_percent,
     screwed_score_reason: data.screwed_score_reason,
+    language: data.language ?? 'en',
     top_findings: data.top_findings ?? [],
     overcharge: data.overcharge_output ?? {},
     contract_guard: data.contract_guard_output ?? {},
@@ -58,8 +61,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     analysis.screwed_score === 'MAYBE'   ? `⚠️ Suspicious charges on their ${docLabel}${amountText}` :
                                            `✅ Clean ${docLabel} — no red flags found`
 
-  const description = analysis.screwed_score_reason.slice(0, 155)
-  const ogUrl = `/og?score=${analysis.screwed_score}&percent=${analysis.screwed_score_percent}&type=${encodeURIComponent(docLabel)}&amount=${Math.round(flagged)}&reason=${encodeURIComponent(analysis.screwed_score_reason.slice(0, 80))}`
+  const reason = analysis.screwed_score_reason ?? ''
+  const description = reason.slice(0, 155)
+  const ogUrl = `/og?score=${analysis.screwed_score}&percent=${analysis.screwed_score_percent}&type=${encodeURIComponent(docLabel)}&amount=${Math.round(flagged)}&reason=${encodeURIComponent(reason.slice(0, 80))}`
 
   return {
     title: `${title} | GetScrewedScore`,
@@ -255,6 +259,20 @@ export default async function SharePage({ params }: Props) {
               <span>✓ 20 seconds</span>
             </div>
           </div>
+        </div>
+
+        {/* Benchmark comparison */}
+        <div className="animate-fade-up delay-400">
+          <BenchmarkCard
+            documentType={analysis.document_type}
+            scorePercent={analysis.screwed_score_percent}
+            score={analysis.screwed_score}
+          />
+        </div>
+
+        {/* Dispute letter */}
+        <div className="animate-fade-up delay-400">
+          <DisputeLetter analysisId={analysis.id} score={analysis.screwed_score} />
         </div>
 
         {/* What to do next */}

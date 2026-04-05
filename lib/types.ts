@@ -44,6 +44,7 @@ export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
 
 export interface ContractGuardOutput {
   contract_type: string
+  detected_language?: string   // ISO 639-1 code, e.g. "en", "es", "fr"
   parties?: {
     party_a?: { name?: string; role?: string }
     party_b?: { name?: string; role?: string }
@@ -131,6 +132,7 @@ export interface Finding {
 export interface AnalysisResult {
   id: string
   document_type: DocumentType
+  language: string             // ISO 639-1 code, e.g. "en", "es", "fr"
   screwed_score: ScrewedScore
   screwed_score_reason: string
   screwed_score_percent: number
