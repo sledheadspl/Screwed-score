@@ -10,6 +10,7 @@ import { ArrowRight, AlertTriangle, CheckCircle, AlertCircle, Receipt } from 'lu
 import { DisputeLetter } from '@/components/DisputeLetter'
 import { BenchmarkCard } from '@/components/BenchmarkCard'
 import { OutcomeReport } from '@/components/OutcomeReport'
+import { FightBackKit } from '@/components/FightBackKit'
 
 interface Props {
   params: { id: string }
@@ -274,6 +275,11 @@ export default async function SharePage({ params }: Props) {
         {/* Dispute letter */}
         <div className="animate-fade-up delay-400">
           <DisputeLetter analysisId={analysis.id} score={analysis.screwed_score} />
+        </div>
+
+        {/* Fight Back Kit */}
+        <div className="animate-fade-up delay-400">
+          <FightBackKit analysisId={analysis.id} score={analysis.screwed_score} />
         </div>
 
         {/* Outcome report */}

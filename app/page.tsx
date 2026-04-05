@@ -25,6 +25,7 @@ import { BenchmarkCard } from '@/components/BenchmarkCard'
 import { LiveTicker } from '@/components/LiveTicker'
 import { OutcomeReport } from '@/components/OutcomeReport'
 import { VictoryBanner } from '@/components/VictoryBanner'
+import { FightBackKit } from '@/components/FightBackKit'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -1000,6 +1001,8 @@ export default function HomePage() {
             />
 
             <DisputeLetter analysisId={state.analysisId} score={state.result.screwed_score} />
+
+            <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />
 
             <OutcomeReport analysisId={state.analysisId} score={state.result.screwed_score} />
 
