@@ -13,7 +13,7 @@ import { OutcomeReport } from '@/components/OutcomeReport'
 import { FightBackKit } from '@/components/FightBackKit'
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 async function getAnalysis(id: string): Promise<AnalysisResult | null> {
@@ -51,7 +51,8 @@ async function getAnalysis(id: string): Promise<AnalysisResult | null> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const analysis = await getAnalysis(params.id)
+  const { id } = await params
+  const analysis = await getAnalysis(id)
   if (!analysis) return { title: 'Analysis not found — GetScrewedScore' }
 
   const docLabel = DOCUMENT_TYPE_LABELS[analysis.document_type]
@@ -112,7 +113,8 @@ const SCORE_CONFIG = {
 }
 
 export default async function SharePage({ params }: Props) {
-  const analysis = await getAnalysis(params.id)
+  const { id } = await params
+  const analysis = await getAnalysis(id)
   if (!analysis) notFound()
 
   const cfg = SCORE_CONFIG[analysis.screwed_score]
