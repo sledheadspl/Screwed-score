@@ -7,3 +7,8 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[plugins]]
+  package = "netlify-plugin-is-website-vulnerable"
+  [plugins.inputs]
+    fail_build = false
