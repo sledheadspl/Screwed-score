@@ -9,31 +9,23 @@ interface Props {
 }
 
 const PERKS = [
-  'Full detailed analysis unlocked',
+  'Unlimited document analyses',
   'All document types — bills, contracts, invoices',
-  'Shareable result link',
-  'One-time payment, no subscription',
+  'Priority AI processing',
+  'Shareable result links forever',
 ]
 
 export function PaywallModal({ onClose, onGoogleLogin }: Props) {
   const [loading, setLoading] = useState(false)
-  const [checkoutError, setCheckoutError] = useState(false)
 
   const handlePro = async () => {
     setLoading(true)
-    setCheckoutError(false)
     try {
       const res = await fetch('/api/checkout', { method: 'POST' })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setLoading(false)
-        setCheckoutError(true)
-      }
+      const { url } = await res.json()
+      if (url) window.location.href = url
     } catch {
       setLoading(false)
-      setCheckoutError(true)
     }
   }
 
@@ -53,12 +45,12 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-red-400" />
-            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">You&apos;ve used your 3 free scans</span>
+            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Free limit reached</span>
           </div>
           <h2 className="text-xl font-black text-brand-text leading-tight">
-            Unlock this scan<br />for $2.99
+            Unlock unlimited<br />analyses for $9.99/mo
           </h2>
-          <p className="text-xs text-brand-sub">One-time payment. No subscription.</p>
+          <p className="text-xs text-brand-sub">Cancel anytime. No contracts.</p>
         </div>
 
         {/* Perks */}
@@ -72,20 +64,15 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         </ul>
 
         {/* CTA */}
-        <div className="space-y-2">
-          <button onClick={handlePro} disabled={loading}
-            className="w-full py-3 rounded-xl font-black text-sm text-white transition-all disabled:opacity-60"
-            style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
-              </span>
-            ) : 'Unlock this scan — $2.99'}
-          </button>
-          {checkoutError && (
-            <p className="text-center text-xs text-red-400">Something went wrong. Please try again.</p>
-          )}
-        </div>
+        <button onClick={handlePro} disabled={loading}
+          className="w-full py-3 rounded-xl font-black text-sm text-white transition-all disabled:opacity-60"
+          style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
+            </span>
+          ) : 'Go Pro — $9.99/month'}
+        </button>
 
         {/* Divider */}
         <div className="flex items-center gap-3">
@@ -107,7 +94,7 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         </button>
 
         <p className="text-center text-[10px] text-brand-sub/50">
-          Sign in to save and revisit your past analyses
+          Sign in to get 5 free scans/day · Anonymous limit is 2/day
         </p>
       </div>
     </div>

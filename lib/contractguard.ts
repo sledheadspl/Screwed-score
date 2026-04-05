@@ -5,31 +5,23 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContractGuardOutput } from './types'
-import { extractJSON } from './utils'
 
 // Module-level singleton — avoids re-instantiation on every call in serverless warm invocations
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-  timeout: 25_000,
+  timeout: 45_000,
 })
 
 const DIRECT_SYSTEM_PROMPT = `You are an expert contract analyst and consumer protection specialist.
 Analyze the provided document and return a detailed JSON analysis.
 
-LANGUAGE RULES:
-1. Detect the language of the document text.
-2. Write ALL text fields in your response in that same language.
-3. Set "detected_language" to the ISO 639-1 code (e.g. "en", "es", "fr", "de", "pt", "zh", "ar", "ja", "ko", "hi").
-4. If the document is in English, respond in English as normal.
-
 Return ONLY valid JSON matching this exact structure — no markdown, no commentary:
 {
   "contract_type": "string",
-  "detected_language": "ISO 639-1 code e.g. en",
   "parties": { "party_a": { "name": "string", "role": "string" }, "party_b": { "name": "string", "role": "string" } },
   "dates": { "effective": "string or null", "expiration": "string or null" },
-  "financial_commitment": { "amount": number or null, "currency": "string", "breakdown": "string" },
-  "plain_english_summary": "3-4 sentence summary in the document's language",
+  "financial_commitment": { "amount": number or null, "currency": "USD", "breakdown": "string" },
+  "plain_english_summary": "3-4 sentence plain English summary",
   "key_terms": [{ "term_name": "string", "original_text": "string", "plain_english": "string", "your_obligation": "string" }],
   "red_flags": [{ "title": "string", "clause_text": "string", "severity": "low|medium|high|critical", "issue": "string", "negotiation_script": "string", "alternative_language": "string" }],
   "green_flags": [{ "title": "string", "clause_text": "string", "why_good": "string" }],
@@ -102,7 +94,7 @@ async function runDirectAnalysis(
   const truncatedText = text.length > 15_000 ? text.slice(0, 15_000) + '\n[text truncated]' : text
 
   const response = await anthropic.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-sonnet-4-6',
     max_tokens: 4096,
     system: DIRECT_SYSTEM_PROMPT,
     messages: [
@@ -118,11 +110,20 @@ async function runDirectAnalysis(
     throw new Error('ContractGuard analysis returned no text content')
   }
 
+  const jsonMatch = block.text.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) {
+    throw new Error('ContractGuard analysis did not return valid JSON')
+  }
+
   let parsed: unknown
   try {
-    parsed = extractJSON(block.text)
+    parsed = JSON.parse(jsonMatch[0])
   } catch {
     throw new Error('ContractGuard analysis returned malformed JSON')
+  }
+
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('ContractGuard analysis returned unexpected JSON structure')
   }
 
   return normalizeContractGuardOutput(parsed as ContractGuardOutput)
@@ -132,15 +133,14 @@ async function runDirectAnalysis(
 function normalizeContractGuardOutput(raw: ContractGuardOutput): ContractGuardOutput {
   return {
     ...raw,
-    contract_type:         raw.contract_type ?? 'unknown',
-    detected_language:     raw.detected_language ?? 'en',
+    contract_type: raw.contract_type ?? 'unknown',
     plain_english_summary: raw.plain_english_summary ?? '',
-    key_terms:             raw.key_terms ?? [],
-    red_flags:             raw.red_flags ?? [],
-    green_flags:           raw.green_flags ?? [],
-    missing_protections:   raw.missing_protections ?? [],
-    overall_grade:         raw.overall_grade ?? 'C',
-    questions_to_ask:      raw.questions_to_ask ?? [],
-    pro_tips:              raw.pro_tips ?? [],
+    key_terms: raw.key_terms ?? [],
+    red_flags: raw.red_flags ?? [],
+    green_flags: raw.green_flags ?? [],
+    missing_protections: raw.missing_protections ?? [],
+    overall_grade: raw.overall_grade ?? 'C',
+    questions_to_ask: raw.questions_to_ask ?? [],
+    pro_tips: raw.pro_tips ?? [],
   }
 }

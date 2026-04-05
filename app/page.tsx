@@ -152,10 +152,13 @@ export default function HomePage() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [refToken, setRefToken] = useState<string | null>(null)
   const [refBanner, setRefBanner] = useState(false)
+  const [authError, setAuthError] = useState(false)
 
   useEffect(() => {
+    // Parse cookies properly to avoid substring false positives
     const checkPro = () => setIsPro(
-      typeof document !== 'undefined' && document.cookie.includes('gss_pro=')
+      typeof document !== 'undefined' &&
+      document.cookie.split(';').some(c => c.trim().split('=')[0] === 'gss_pro')
     )
     checkPro()
     supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null))
@@ -164,8 +167,14 @@ export default function HomePage() {
       checkPro()
     })
 
-    // Handle referral token from URL
+    // Show error banner if OAuth callback redirected with ?auth_error=1
     const params = new URLSearchParams(window.location.search)
+    if (params.get('auth_error') === '1') {
+      setAuthError(true)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+
+    // Handle referral token from URL
     const ref = params.get('ref')
     if (ref) {
       fetch(`/api/referral?token=${encodeURIComponent(ref)}`)
@@ -267,6 +276,13 @@ export default function HomePage() {
 
       {showPaywall && (
         <PaywallModal onClose={() => setShowPaywall(false)} onGoogleLogin={handleGoogleLogin} />
+      )}
+
+      {authError && (
+        <div className="fixed top-0 inset-x-0 z-50 flex items-center justify-between gap-4 px-4 py-3 bg-red-950/90 border-b border-red-500/30 text-sm text-red-300 backdrop-blur-sm">
+          <span>Sign-in failed — please try again.</span>
+          <button onClick={() => setAuthError(false)} className="text-red-400 hover:text-red-200 transition-colors text-xs font-bold">Dismiss</button>
+        </div>
       )}
 
       {/* ── Background atmosphere ─────────────────────────────────────── */}

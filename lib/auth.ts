@@ -1,4 +1,4 @@
-import { createHmac } from 'crypto'
+import { createHmac, timingSafeEqual } from 'crypto'
 
 /**
  * Issues an HMAC-signed token encoding the Stripe customer + payment IDs.
@@ -26,7 +26,11 @@ export function verifyToken(token: string): boolean {
     const expected = createHmac('sha256', process.env.GSS_TOKEN_SECRET!)
       .update(payload)
       .digest('hex')
-    if (sig !== expected) return false
+    // Timing-safe comparison to prevent timing attacks
+    const sigBuf = Buffer.from(sig, 'hex')
+    const expBuf = Buffer.from(expected, 'hex')
+    if (sigBuf.length !== expBuf.length) return false
+    if (!timingSafeEqual(sigBuf, expBuf)) return false
     const expiry = parseInt(payload.split(':')[2] ?? '0', 10)
     return Date.now() / 1000 < expiry
   } catch {

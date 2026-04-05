@@ -14,21 +14,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // Rate limit by IP
-  const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? '0.0.0.0'
+  // CSRF: reject requests from other origins
+  const requestOrigin = req.headers.origin as string | undefined
+  const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
+  if (requestOrigin && requestOrigin !== allowedOrigin) {
+    return res.status(403).json({ error: 'Forbidden' })
+  }
+
+  // Rate limit by IP — rightmost x-forwarded-for is the most tamper-resistant
+  const ip = (req.headers['x-real-ip'] as string) ??
+    (req.headers['cf-connecting-ip'] as string) ??
+    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+    '0.0.0.0'
   const ipHash = createHash('sha256').update(`checkout:${ip}`).digest('hex')
 
   try {
     const supabase = createServiceClient()
     const { data } = await supabase
       .from('rate_limits')
-      .select('analyses_count, window_start')
+      .select('request_count, window_start')
       .eq('ip_hash', ipHash)
       .maybeSingle()
 
     if (data) {
       const windowAge = Date.now() - new Date(data.window_start).getTime()
-      if (windowAge < CHECKOUT_WINDOW_MS && data.analyses_count >= CHECKOUT_LIMIT) {
+      if (windowAge < CHECKOUT_WINDOW_MS && data.request_count >= CHECKOUT_LIMIT) {
         return res.status(429).json({ error: 'Too many requests. Try again later.' })
       }
     }
@@ -38,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await supabase.from('rate_limits').upsert(
       {
         ip_hash:        ipHash,
-        analyses_count: windowExpired ? 1 : (data!.analyses_count + 1),
+        request_count: windowExpired ? 1 : (data!.request_count + 1),
         window_start:   windowExpired ? now : data!.window_start,
         updated_at:     now,
       },

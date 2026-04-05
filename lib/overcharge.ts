@@ -5,11 +5,10 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import type { ContractGuardOutput, DocumentType, OverchargeOutput } from './types'
-import { extractJSON } from './utils'
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-  timeout: 25_000,
+  timeout: 45_000,
 })
 
 const SYSTEM_PROMPT = `You are a consumer protection analyst specializing in detecting overcharges,
@@ -23,8 +22,7 @@ RULES:
 - Flag vague line items that could hide padding (e.g., "miscellaneous fees", "processing charge")
 - Detect duplicates: same service billed twice under different names
 - You are NOT giving legal or medical advice
-- Return ONLY valid JSON — no markdown fences, no commentary outside the JSON
-- Write ALL text fields in the language specified in the user prompt`
+- Return ONLY valid JSON — no markdown fences, no commentary outside the JSON`
 
 const RESPONSE_SCHEMA = `{
   "document_type": "mechanic_invoice|contractor_estimate|insurance_quote|medical_bill|dental_bill|phone_bill|internet_bill|lease_agreement|brand_deal|employment_contract|service_agreement|unknown",
@@ -48,8 +46,7 @@ const RESPONSE_SCHEMA = `{
 export async function detectOvercharges(
   text: string,
   documentType: DocumentType,
-  cgOutput: ContractGuardOutput | null,
-  language = 'en'
+  cgOutput: ContractGuardOutput | null
 ): Promise<OverchargeOutput> {
   const docLabel = documentType.replace(/_/g, ' ')
 
@@ -62,11 +59,8 @@ export async function detectOvercharges(
   // Truncate document text
   const truncatedText = text.length > 12_000 ? text.slice(0, 12_000) + '\n[text truncated]' : text
 
-  const langInstruction = language !== 'en'
-    ? `\nIMPORTANT: Write all text fields in your JSON response in this language: ${language}\n`
-    : ''
+  const prompt = `Analyze this ${docLabel} for overcharges and suspicious pricing.
 
-  const prompt = `Analyze this ${docLabel} for overcharges and suspicious pricing.${langInstruction}
 ContractGuard red flags already identified (use as additional context):
 ${cgContext || '(none)'}
 
@@ -77,7 +71,7 @@ Return JSON matching this exact schema:
 ${RESPONSE_SCHEMA}`
 
   const response = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-sonnet-4-6',
     max_tokens: 2500,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
@@ -88,14 +82,23 @@ ${RESPONSE_SCHEMA}`
     throw new Error('Overcharge analysis returned no text content')
   }
 
-  let parsed: OverchargeOutput
+  const jsonMatch = block.text.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) {
+    throw new Error('Overcharge analysis did not return valid JSON')
+  }
+
+  let parsed: unknown
   try {
-    parsed = extractJSON(block.text) as OverchargeOutput
+    parsed = JSON.parse(jsonMatch[0])
   } catch {
     throw new Error('Overcharge analysis returned malformed JSON')
   }
 
-  return normalizeOverchargeOutput(parsed)
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('Overcharge analysis returned unexpected JSON structure')
+  }
+
+  return normalizeOverchargeOutput(parsed as OverchargeOutput)
 }
 
 function normalizeOverchargeOutput(raw: OverchargeOutput): OverchargeOutput {

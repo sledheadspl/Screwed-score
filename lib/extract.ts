@@ -2,6 +2,7 @@
  * Text extraction from uploaded files.
  * Server-side only — never import from client components.
  */
+import type { Message } from '@anthropic-ai/sdk/resources/messages'
 
 // Magic byte signatures for MIME validation (first 8 bytes)
 const MAGIC_BYTES: Array<{ mime: string; bytes: number[]; offset?: number }> = [
@@ -40,21 +41,12 @@ export function checkMagicBytes(buffer: Buffer, claimedMime: string): void {
   }
 }
 
-/**
- * Removes lone UTF-16 surrogates (U+D800–U+DFFF) and other characters that
- * are invalid in JSON strings. These come from badly-encoded PDFs and cause
- * JSON.parse to throw when the AI reflects them back in its response.
- */
-function sanitizeText(text: string): string {
-  return text.replace(/[\uD800-\uDFFF]/g, '')
-}
-
 export async function extractTextFromBuffer(
   buffer: Buffer,
   mimeType: string
 ): Promise<string> {
   if (mimeType === 'application/pdf') {
-    return sanitizeText(await extractTextFromPdf(buffer))
+    return extractTextFromPdf(buffer)
   }
 
   if (
@@ -63,15 +55,15 @@ export async function extractTextFromBuffer(
   ) {
     const mammoth = await import('mammoth')
     const result = await mammoth.extractRawText({ buffer })
-    return sanitizeText(result.value.trim())
+    return result.value.trim()
   }
 
   if (mimeType.startsWith('text/')) {
-    return sanitizeText(buffer.toString('utf-8').trim())
+    return buffer.toString('utf-8').trim()
   }
 
   if (mimeType.startsWith('image/')) {
-    return sanitizeText(await extractTextFromImage(buffer, mimeType))
+    return extractTextFromImage(buffer, mimeType)
   }
 
   throw new Error(`Unsupported file type: ${mimeType}`)
@@ -82,9 +74,12 @@ async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: 30_000 })
   const base64 = buffer.toString('base64')
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const response = await (client.messages.create as any)({
-    model: 'claude-haiku-4-5-20251001',
+  // The SDK union return type includes Stream when params are ambiguous;
+  // cast to Message since we are not streaming.
+  const response = await (client.messages.create as (
+    params: object
+  ) => Promise<Message>)({
+    model: 'claude-sonnet-4-6',
     max_tokens: 4000,
     messages: [
       {
@@ -126,7 +121,7 @@ async function extractTextFromImage(buffer: Buffer, mimeType: string): Promise<s
   const base64 = buffer.toString('base64')
 
   const response = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-sonnet-4-6',
     max_tokens: 2000,
     messages: [
       {

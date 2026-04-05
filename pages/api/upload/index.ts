@@ -23,9 +23,11 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 3 analyses per IP per 30 days. Pro users: unlimited. */
-const ANON_LIMIT = 3
-const WINDOW_MS  = 30 * 24 * 60 * 60 * 1000
+/** Anonymous users: 2 analyses per IP per 24 hours. */
+const ANON_LIMIT = 2
+/** Authenticated (signed-in) users: 5 analyses per user per 24 hours. */
+const AUTH_LIMIT = 5
+const WINDOW_MS  = 24 * 60 * 60 * 1000
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -34,35 +36,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const supabase = createServiceClient()
 
-    // ── 1. Pro check — cookie token OR logged-in Pro profile ───────────────
+    // ── 1. Auth lookup (once) — used for Pro profile check + rate limit key ──
+    const authToken = req.headers['x-supabase-token'] as string | undefined
+    let userId: string | null = null
+
+    if (authToken) {
+      try {
+        const { createClient } = await import('@supabase/supabase-js')
+        const userClient = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+        const { data: { user } } = await userClient.auth.getUser(authToken)
+        userId = user?.id ?? null
+      } catch { /* non-fatal */ }
+    }
+
+    // ── 2. Pro check — cookie token OR active profile subscription ────────────
     const proToken = req.cookies['gss_pro']
     let isPro = proToken ? verifyToken(proToken) : false
 
-    if (!isPro) {
-      const authToken = req.headers['x-supabase-token'] as string | undefined
-      if (authToken) {
-        try {
-          const { createClient } = await import('@supabase/supabase-js')
-          const userClient = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-          )
-          const { data: { user } } = await userClient.auth.getUser(authToken)
-          if (user?.id) {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('subscription_tier, subscription_status')
-              .eq('id', user.id)
-              .maybeSingle()
-            if (profile?.subscription_tier === 'pro' && profile?.subscription_status === 'active') {
-              isPro = true
-            }
-          }
-        } catch { /* non-fatal */ }
-      }
+    if (!isPro && userId) {
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('subscription_tier, subscription_status')
+          .eq('id', userId)
+          .maybeSingle()
+        if (profile?.subscription_tier === 'pro' && profile?.subscription_status === 'active') {
+          isPro = true
+        }
+      } catch { /* non-fatal */ }
     }
 
-    // ── 2. Referral token bypass check ──────────────────────────────────────
+    // ── 3. Referral token bypass check ──────────────────────────────────────
     const refToken = req.headers['x-ref-token'] as string | undefined
     let refBypassed = false
 
@@ -74,42 +81,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .maybeSingle()
 
       if (refRow && !refRow.used) {
-        // Consume the token atomically
         const { error: consumeErr } = await supabase
           .from('referral_tokens')
           .update({ used: true, used_at: new Date().toISOString() })
           .eq('id', refRow.id)
           .eq('used', false) // guard against race condition
-
         if (!consumeErr) refBypassed = true
       }
     }
 
-    // ── 3. Rate limiting (skipped for Pro or valid referral) ─────────────────
-    const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? '0.0.0.0'
+    // ── 4. Rate limiting (skipped for Pro or valid referral) ─────────────────
+    // Prefer x-real-ip (set by reverse proxy) over x-forwarded-for to prevent spoofing
+    const ip = (req.headers['x-real-ip'] as string) ??
+      (req.headers['cf-connecting-ip'] as string) ??
+      (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+      '0.0.0.0'
     const ipHash = createHash('sha256').update(ip).digest('hex')
 
-    let rateData: { analyses_count: number; window_start: string } | null = null
+    // Auth users tracked by user_id; anon by IP hash
+    const rateLimitKey = userId ? `user:${userId}` : ipHash
+    const limit        = userId ? AUTH_LIMIT : ANON_LIMIT
+
+    let rateData: { request_count: number; window_start: string } | null = null
 
     if (!isPro && !refBypassed) {
       const { data } = await supabase
         .from('rate_limits')
-        .select('analyses_count, window_start')
-        .eq('ip_hash', ipHash)
+        .select('request_count, window_start')
+        .eq('ip_hash', rateLimitKey)
         .maybeSingle()
       rateData = data
 
       if (rateData) {
         const windowAge    = Date.now() - new Date(rateData.window_start).getTime()
         const windowActive = windowAge < WINDOW_MS
-        if (windowActive && rateData.analyses_count >= ANON_LIMIT) {
+        if (windowActive && rateData.request_count >= limit) {
           return res.status(429).json({ error: 'LIMIT_REACHED' })
         }
         if (!windowActive) rateData = null
       }
     }
 
-    // ── 3. Parse multipart form data with formidable ─────────────────────────
+    // ── 5. Parse multipart form data with formidable ─────────────────────────
     const form = formidable({ maxFileSize: MAX_FILE_SIZE_BYTES, keepExtensions: true })
     const [, files] = await form.parse(req)
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
@@ -179,6 +192,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         document_type:      documentType,
         file_size_bytes:    uploadedFile.size,
         ip_hash:            ipHash,
+        user_id:            userId ?? undefined,
       })
       .select('id')
       .single()
@@ -195,8 +209,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       await supabase.from('rate_limits').upsert(
         {
-          ip_hash:         ipHash,
-          analyses_count:  windowExpired ? 1 : (rateData!.analyses_count + 1),
+          ip_hash:         rateLimitKey,
+          request_count:  windowExpired ? 1 : (rateData!.request_count + 1),
           window_start:    windowExpired ? now : rateData!.window_start,
           updated_at:      now,
         },

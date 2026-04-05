@@ -134,9 +134,12 @@ export function buildFindings(
   }
 
   // Overcharge line items
+  const VALID_SEVERITIES = new Set<string>(['high', 'medium', 'low'])
   for (const item of (oc.line_items ?? []).filter(i => i.flagged)) {
-    // Fix: resolve null before casting — `??` must come before `as`
-    const severity: FindingSeverity = (item.severity ?? 'medium') as FindingSeverity
+    const rawSeverity = item.severity ?? 'medium'
+    const severity: FindingSeverity = VALID_SEVERITIES.has(rawSeverity)
+      ? (rawSeverity as FindingSeverity)
+      : 'medium'
 
     findings.push({
       severity,
