@@ -36,35 +36,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const supabase = createServiceClient()
 
-    // ── 1. Pro check — cookie token OR logged-in Pro profile ───────────────
+    // ── 1. Auth lookup (once) — used for Pro profile check + rate limit key ──
+    const authToken = req.headers['x-supabase-token'] as string | undefined
+    let userId: string | null = null
+
+    if (authToken) {
+      try {
+        const { createClient } = await import('@supabase/supabase-js')
+        const userClient = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+        const { data: { user } } = await userClient.auth.getUser(authToken)
+        userId = user?.id ?? null
+      } catch { /* non-fatal */ }
+    }
+
+    // ── 2. Pro check — cookie token OR active profile subscription ────────────
     const proToken = req.cookies['gss_pro']
     let isPro = proToken ? verifyToken(proToken) : false
 
-    if (!isPro) {
-      const authToken = req.headers['x-supabase-token'] as string | undefined
-      if (authToken) {
-        try {
-          const { createClient } = await import('@supabase/supabase-js')
-          const userClient = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-          )
-          const { data: { user } } = await userClient.auth.getUser(authToken)
-          if (user?.id) {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('subscription_tier, subscription_status')
-              .eq('id', user.id)
-              .maybeSingle()
-            if (profile?.subscription_tier === 'pro' && profile?.subscription_status === 'active') {
-              isPro = true
-            }
-          }
-        } catch { /* non-fatal */ }
-      }
+    if (!isPro && userId) {
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('subscription_tier, subscription_status')
+          .eq('id', userId)
+          .maybeSingle()
+        if (profile?.subscription_tier === 'pro' && profile?.subscription_status === 'active') {
+          isPro = true
+        }
+      } catch { /* non-fatal */ }
     }
 
-    // ── 2. Referral token bypass check ──────────────────────────────────────
+    // ── 3. Referral token bypass check ──────────────────────────────────────
     const refToken = req.headers['x-ref-token'] as string | undefined
     let refBypassed = false
 
@@ -76,31 +81,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .maybeSingle()
 
       if (refRow && !refRow.used) {
-        // Consume the token atomically
         const { error: consumeErr } = await supabase
           .from('referral_tokens')
           .update({ used: true, used_at: new Date().toISOString() })
           .eq('id', refRow.id)
           .eq('used', false) // guard against race condition
-
         if (!consumeErr) refBypassed = true
-      }
-    }
-
-    // ── 3. Auth check — signed-in users get a higher free-tier limit ──────────
-    let userId: string | null = null
-    if (!isPro) {
-      const authToken = req.headers['x-supabase-token'] as string | undefined
-      if (authToken) {
-        try {
-          const { createClient } = await import('@supabase/supabase-js')
-          const userClient = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-          )
-          const { data: { user } } = await userClient.auth.getUser(authToken)
-          userId = user?.id ?? null
-        } catch { /* non-fatal */ }
       }
     }
 
@@ -136,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // ── 3. Parse multipart form data with formidable ─────────────────────────
+    // ── 5. Parse multipart form data with formidable ─────────────────────────
     const form = formidable({ maxFileSize: MAX_FILE_SIZE_BYTES, keepExtensions: true })
     const [, files] = await form.parse(req)
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file

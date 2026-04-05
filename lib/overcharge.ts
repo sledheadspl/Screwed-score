@@ -46,12 +46,12 @@ const RESPONSE_SCHEMA = `{
 export async function detectOvercharges(
   text: string,
   documentType: DocumentType,
-  cgOutput: ContractGuardOutput
+  cgOutput: ContractGuardOutput | null
 ): Promise<OverchargeOutput> {
   const docLabel = documentType.replace(/_/g, ' ')
 
   // Summarize CG red flags to give context without duplicating the full text
-  const cgContext = cgOutput.red_flags
+  const cgContext = (cgOutput?.red_flags ?? [])
     .slice(0, 5)
     .map(f => `- ${f.title}: ${f.issue}`)
     .join('\n')

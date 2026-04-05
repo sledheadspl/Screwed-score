@@ -5,11 +5,12 @@ import { issueToken } from '@/lib/auth'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const sessionId = typeof req.query.session_id === 'string' ? req.query.session_id : null
+  // session_id comes from the POST body (sent by /paid page)
+  const sessionId = typeof req.body?.session_id === 'string' ? req.body.session_id : null
   if (!sessionId) {
     return res.status(400).json({ error: 'Missing session_id' })
   }

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { issueToken } from '@/lib/auth'
 
 const OWNER_SECRET = process.env.OWNER_ACCESS_SECRET
-const PRO_TOKEN = 'b3duZXJfc2xlZGhlYWRzc3BsOm93bmVyX3N1YjoyMDkwMjUzMTYw.b862f7f2f94359e9b089264fbefd30a51da91c557b2917dc1152e83aa4d15f50'
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { secret } = req.query
@@ -9,9 +9,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(403).json({ error: 'Forbidden' })
   }
 
+  // Generate token dynamically — never store a static token in source code
+  const token = issueToken('owner', 'owner_access', 365)
+
   res.setHeader(
     'Set-Cookie',
-    `gss_pro=${PRO_TOKEN}; Path=/; Max-Age=315360000; SameSite=Strict; Secure`
+    `gss_pro=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 365}`
   )
   res.redirect(302, '/')
 }

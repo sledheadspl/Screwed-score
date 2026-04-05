@@ -94,8 +94,11 @@ Return ONLY the letter text. Start with [YOUR NAME].`
       messages: [{ role: 'user', content: prompt }],
     })
 
-    const letter = (message.content[0] as { type: string; text: string }).text
-    return res.status(200).json({ letter })
+    const block = message.content[0]
+    if (!block || block.type !== 'text') {
+      return res.status(500).json({ error: 'Failed to generate letter' })
+    }
+    return res.status(200).json({ letter: block.text })
   } catch (err) {
     console.error('[dispute-letter]', err)
     return res.status(500).json({ error: 'Failed to generate letter' })

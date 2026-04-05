@@ -21,5 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     checks.supabase_db = `THROW: ${err instanceof Error ? err.message : String(err)}`
   }
 
-  return res.status(200).json(checks)
+  const allOk = Object.values(checks).every(v => v === 'ok')
+  return res.status(allOk ? 200 : 503).json({ status: allOk ? 'ok' : 'degraded', checks })
 }

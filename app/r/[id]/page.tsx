@@ -18,7 +18,7 @@ async function getAnalysis(id: string): Promise<AnalysisResult | null> {
   const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('analyses')
-    .select('id, document_type, screwed_score, screwed_score_percent, screwed_score_reason, plain_summary, what_they_tried, what_to_do_next, top_findings, overcharge_output, contract_guard_output, is_public, created_at')
+    .select('id, document_type, screwed_score, screwed_score_percent, screwed_score_reason, plain_summary, what_they_tried, what_to_do_next, top_findings, overcharge_output, contract_guard_output, is_public, created_at, language')
     .eq('id', id)
     .eq('is_public', true)
     .single()
