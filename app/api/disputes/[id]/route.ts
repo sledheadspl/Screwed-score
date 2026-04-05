@@ -4,12 +4,12 @@ import { getDisputeById } from '@/lib/disputes/service'
 export const runtime = 'nodejs'
 
 interface Params {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export async function GET(_req: NextRequest, { params }: Params): Promise<NextResponse> {
   try {
-    const { id } = params
+    const { id } = await params
     if (!id) {
       return NextResponse.json({ error: 'id is required' }, { status: 400 })
     }

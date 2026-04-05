@@ -5,12 +5,12 @@ import { getVendorReputation } from '@/lib/vendors/reputation'
 export const runtime = 'nodejs'
 
 interface Params {
-  params: { vendorId: string }
+  params: Promise<{ vendorId: string }>
 }
 
 export async function GET(_req: NextRequest, { params }: Params): Promise<NextResponse> {
   try {
-    const { vendorId } = params
+    const { vendorId } = await params
     if (!vendorId) {
       return NextResponse.json({ error: 'vendorId is required' }, { status: 400 })
     }

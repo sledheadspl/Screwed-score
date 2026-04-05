@@ -6,7 +6,7 @@ export const runtime = 'nodejs'
 export const maxDuration = 30
 
 interface Params {
-  params: { vendorId: string }
+  params: Promise<{ vendorId: string }>
 }
 
 /**
@@ -15,7 +15,7 @@ interface Params {
  */
 export async function GET(_req: NextRequest, { params }: Params): Promise<NextResponse> {
   try {
-    const { vendorId } = params
+    const { vendorId } = await params
     if (!vendorId) {
       return NextResponse.json({ error: 'vendorId is required' }, { status: 400 })
     }
