@@ -33,7 +33,6 @@ const INITIAL_STATE: AppState = {
   analysisId: null, result: null, error: null, documentType: null,
 }
 
-
 // ── Document types ──────────────────────────────────────────────────────────
 const DOC_TYPES = [
   { emoji: '🔧', label: 'Mechanic Invoice',    heat: 'high'   },
@@ -119,7 +118,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How accurate is the AI?',
-    a: 'The scoring uses Claude Sonnet (Anthropic\'s latest model) to cross-check each line item against industry pricing norms and contract law patterns. It flags what looks suspicious and explains why — but always review with a professional before taking legal or financial action.',
+    a: "The scoring uses Claude Sonnet (Anthropic's latest model) to cross-check each line item against industry pricing norms and contract law patterns. It flags what looks suspicious and explains why — but always review with a professional before taking legal or financial action.",
   },
   {
     q: 'What if I find something wrong?',
@@ -132,16 +131,15 @@ const FAQ_ITEMS = [
 ]
 
 export default function HomePage() {
-  const [state, setState]       = useState<AppState>(INITIAL_STATE)
+  const [state, setState]           = useState<AppState>(INITIAL_STATE)
   const [showPaywall, setShowPaywall] = useState(false)
-  const [isPro, setIsPro]       = useState(false)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [refToken, setRefToken] = useState<string | null>(null)
-  const [refBanner, setRefBanner] = useState(false)
-  const [authError, setAuthError] = useState(false)
+  const [isPro, setIsPro]           = useState(false)
+  const [userEmail, setUserEmail]   = useState<string | null>(null)
+  const [refToken, setRefToken]     = useState<string | null>(null)
+  const [refBanner, setRefBanner]   = useState(false)
+  const [authError, setAuthError]   = useState(false)
 
   useEffect(() => {
-    // Parse cookies properly to avoid substring false positives
     const checkPro = () => setIsPro(
       typeof document !== 'undefined' &&
       document.cookie.split(';').some(c => c.trim().split('=')[0] === 'gss_pro')
@@ -153,14 +151,12 @@ export default function HomePage() {
       checkPro()
     })
 
-    // Show error banner if OAuth callback redirected with ?auth_error=1
     const params = new URLSearchParams(window.location.search)
     if (params.get('auth_error') === '1') {
       setAuthError(true)
       window.history.replaceState({}, '', window.location.pathname)
     }
 
-    // Handle referral token from URL
     const ref = params.get('ref')
     if (ref) {
       fetch(`/api/referral?token=${encodeURIComponent(ref)}`)
@@ -169,7 +165,6 @@ export default function HomePage() {
           if (data.valid) {
             setRefToken(ref)
             setRefBanner(true)
-            // Clean the URL without reload
             window.history.replaceState({}, '', '/')
           }
         })
@@ -216,13 +211,12 @@ export default function HomePage() {
       }
 
       const { document_id, document_type } = uploadData as UploadResponse
-      // Token consumed — clear it so it can't be sent again
       if (refToken) { setRefToken(null); setRefBanner(false) }
       setPhase('parsing', 45, 'Reading your document...')
       await delay(400)
       setPhase('analyzing', 65, 'Running AI analysis...')
 
-      const analyzeRes  = await fetch(
+      const analyzeRes = await fetch(
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/analyze`,
         {
           method: 'POST',
@@ -271,52 +265,52 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ── Background atmosphere ─────────────────────────────────────── */}
+      {/* ── Atmospheric background ───────────────────────────────────────── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {/* Subtle red halo */}
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full"
-          style={{ background: 'radial-gradient(ellipse, rgba(255,59,48,0.06) 0%, transparent 65%)' }} />
-        {/* Grid texture */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150vw] h-[75vh]"
+          style={{ background: 'radial-gradient(ellipse, rgba(255,59,48,0.065) 0%, transparent 58%)' }} />
+        <div className="absolute bottom-0 right-0 w-[70vw] h-[55vh]"
+          style={{ background: 'radial-gradient(ellipse at bottom right, rgba(255,59,48,0.025) 0%, transparent 70%)' }} />
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-100" />
+        <div className="absolute inset-0 noise-bg" />
       </div>
 
-      {/* ── Navbar ──────────────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 border-b border-brand-border bg-white/90 backdrop-blur-xl shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      {/* ── Navbar ──────────────────────────────────────────────────────────── */}
+      <nav className="sticky top-0 z-50 border-b border-brand-border/60 bg-brand-bg/80 backdrop-blur-2xl">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
 
-          {/* Logo */}
-          <div className="flex items-center gap-1 select-none">
-            <span className="text-base font-black text-brand-text tracking-tight">Get</span>
-            <span className="text-base font-black tracking-tight" style={{
+          <div className="flex items-center gap-0 select-none">
+            <span className="text-lg font-black text-brand-text tracking-tight">Get</span>
+            <span className="text-lg font-black tracking-tight" style={{
               background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             }}>Screwed</span>
-            <span className="text-base font-black text-brand-text tracking-tight">Score</span>
+            <span className="text-lg font-black text-brand-text tracking-tight">Score</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-0.5">
             {isPro && (
-              <span className="hidden sm:flex items-center gap-1.5 text-[10px] font-bold text-red-400 border border-red-500/30 rounded-full px-2.5 py-1 uppercase tracking-wider">
+              <span className="flex items-center gap-1 text-[10px] font-bold text-red-400 border border-red-500/30 rounded-full px-2.5 py-1 uppercase tracking-wider mr-3">
                 <Zap className="w-3 h-3" /> Pro
               </span>
             )}
-            <a href="/shame"
-              className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
+            <a href="/shame" className="text-sm text-brand-sub hover:text-brand-text transition-colors px-4 py-2 rounded-lg hover:bg-brand-muted/50 flex items-center gap-1.5">
               <Flame className="w-3.5 h-3.5" /> Wall of Shame
             </a>
-            <a href="/community"
-              className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
+            <a href="/community" className="text-sm text-brand-sub hover:text-brand-text transition-colors px-4 py-2 rounded-lg hover:bg-brand-muted/50 flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5" /> Community
             </a>
+          </div>
+
+          <div className="flex items-center gap-2.5">
             {state.phase === 'done' ? (
-              <button onClick={handleReset}
-                className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted">
+              <button onClick={handleReset} className="flex items-center gap-1.5 text-sm text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted/50">
                 <RotateCcw className="w-3.5 h-3.5" /> New scan
               </button>
             ) : (
-              <span className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub">
+              <span className="hidden sm:flex items-center gap-1.5 text-xs text-brand-sub/45">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Free · No account needed
+                3 free scans · No account
               </span>
             )}
             {userEmail ? (
@@ -346,15 +340,15 @@ export default function HomePage() {
 
       <main className="relative">
 
-        {/* ════════════════════════════════════════════════════════════════
-            IDLE STATE — full landing page
-        ════════════════════════════════════════════════════════════════ */}
+        {/* ════════════════════════════════════════════════════════════════════
+            IDLE STATE — landing page
+        ════════════════════════════════════════════════════════════════════ */}
         {state.phase === 'idle' && (
           <>
 
-            {/* ── Referral banner ───────────────────────────────────────── */}
+            {/* ── Referral banner ─────────────────────────────────────────── */}
             {refBanner && (
-              <div className="max-w-xl mx-auto px-4 pt-6">
+              <div className="max-w-2xl mx-auto px-4 pt-6">
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-500/25 text-sm">
                   <span className="text-lg">🎁</span>
                   <div>
@@ -365,562 +359,507 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* ── Hero ──────────────────────────────────────────────────── */}
-            <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-10 text-center relative">
+            {/* ════ HERO ══════════════════════════════════════════════════ */}
+            <section className="relative flex flex-col items-center justify-center min-h-[88vh] px-4 pt-20 pb-16 text-center overflow-hidden">
 
-              {/* Floating score cards — decorative, desktop only */}
-              <div className="hidden xl:block absolute left-0 top-32 -rotate-3 opacity-80 pointer-events-none animate-float"
-                style={{ animationDelay: '0.5s' }}>
-                <div className="rounded-2xl border border-yellow-500/25 bg-brand-surface/95 backdrop-blur-sm p-4 w-52 shadow-2xl">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-black text-yellow-400">⚠️ MAYBE</span>
-                    <span className="text-[11px] font-black text-yellow-400">$43</span>
-                  </div>
-                  <p className="text-[10px] text-brand-sub leading-relaxed">Mystery "device protection" fee never agreed to.</p>
-                  <div className="mt-2.5 pt-2 border-t border-brand-border/40">
-                    <span className="text-[9px] text-brand-sub/40">Phone Bill · Miami, FL</span>
-                  </div>
-                </div>
-              </div>
+              {/* Overline */}
+              <p className="animate-fade-up text-[11px] font-bold text-brand-sub/45 uppercase tracking-[0.25em] mb-8">
+                Live AI · Free · No account required
+              </p>
 
-              <div className="hidden xl:block absolute right-0 top-24 rotate-2 opacity-85 pointer-events-none animate-float">
-                <div className="rounded-2xl border border-red-500/30 bg-brand-surface/95 backdrop-blur-sm p-4 w-56 shadow-2xl"
-                  style={{ boxShadow: '0 0 30px rgba(255,59,48,0.08)' }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-black text-red-400">🚨 SCREWED</span>
-                    <span className="text-[11px] font-black text-red-400">$847</span>
-                  </div>
-                  <p className="text-[10px] text-brand-sub leading-relaxed">Labor at 3× book rate. Diagnostic fee charged twice.</p>
-                  <div className="mt-2.5 pt-2 border-t border-brand-border/40">
-                    <span className="text-[9px] text-brand-sub/40">Mechanic Invoice · Phoenix, AZ</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hidden xl:block absolute right-4 bottom-28 -rotate-1 opacity-60 pointer-events-none animate-float"
-                style={{ animationDelay: '1s' }}>
-                <div className="rounded-2xl border border-green-500/20 bg-brand-surface/90 backdrop-blur-sm p-4 w-48 shadow-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[11px] font-black text-green-400">✅ SAFE</span>
-                  </div>
-                  <p className="text-[10px] text-brand-sub leading-relaxed">Fair and balanced. 3 protective clauses found.</p>
-                  <div className="mt-2.5 pt-2 border-t border-brand-border/40">
-                    <span className="text-[9px] text-brand-sub/40">Employment Contract · Austin, TX</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Live badge */}
-              <div className="animate-fade-up inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-red-500/20 bg-red-500/6 mb-8">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
-                </span>
-                <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Live AI Analysis</span>
-                <span className="text-xs text-brand-sub">·</span>
-                <span className="text-xs text-brand-sub">Free · No account</span>
-              </div>
-
-              {/* Main headline */}
-              <h1 className="animate-fade-up delay-100 font-black leading-[0.88] tracking-tighter mb-6"
-                style={{ fontSize: 'clamp(52px, 10vw, 96px)' }}>
-                <span className="text-brand-text block">Are you being</span>
-                <span className="block italic" style={{
-                  background: 'linear-gradient(135deg, #ff8a80 0%, #ff3b30 40%, #cc1a10 100%)',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  textShadow: 'none',
-                  filter: 'drop-shadow(0 0 60px rgba(255,59,48,0.4))',
+              {/* Headline */}
+              <div className="animate-fade-up delay-100 mb-8">
+                <p className="font-black text-brand-text/55 tracking-tight" style={{ fontSize: 'clamp(20px, 3.2vw, 32px)', lineHeight: 1.1 }}>
+                  Are you being
+                </p>
+                <h1 className="font-black tracking-tighter" style={{
+                  fontSize: 'clamp(72px, 14vw, 138px)',
+                  lineHeight: 0.88,
+                  background: 'linear-gradient(135deg, #ff9080 0%, #ff3b30 45%, #bf1a0e 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  filter: 'drop-shadow(0 0 100px rgba(255,59,48,0.35))',
+                  fontStyle: 'italic',
                 }}>
                   screwed?
-                </span>
-              </h1>
-              {/* Viral sub-hook */}
-              <p className="animate-fade-up delay-150 text-sm font-bold text-brand-sub/60 -mt-4 mb-6 uppercase tracking-widest">
-                The credit score for businesses that overcharge you.
-              </p>
-
-              {/* Subheadline */}
-              <p className="animate-fade-up delay-200 text-lg sm:text-xl text-brand-sub max-w-2xl mx-auto leading-relaxed mb-3">
-                The average American overpays{' '}
-                <span className="text-brand-text font-bold">$1,400/year</span>
-                {' '}on bills, invoices, and contracts they never check.
-              </p>
-              <p className="animate-fade-up delay-300 text-sm text-brand-sub/60 mb-4">
-                Upload yours. AI scans for red flags, hidden fees, and overcharges — in 20 seconds. Free.
-              </p>
-              {/* Second value prop */}
-              <div className="animate-fade-up delay-400 flex flex-wrap justify-center gap-2 mb-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500/20 bg-green-500/6">
-                  <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
-                  <span className="text-xs font-bold text-green-400">Vendor Registry</span>
-                  <span className="text-xs text-brand-sub">AI reputation scores on every business.</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/20 bg-red-500/6">
-                  <MessageSquare className="w-3.5 h-3.5 text-red-400" />
-                  <span className="text-xs font-bold text-red-400">Dispute Hub</span>
-                  <span className="text-xs text-brand-sub">Fight back. On the record.</span>
-                </div>
+                </h1>
               </div>
 
-              {/* Hero illustration */}
-              <div className="animate-fade-up delay-200 flex justify-center mb-4 sm:hidden">
-                <HeroIllustrationSmall />
-              </div>
+              {/* Subhead */}
+              <p className="animate-fade-up delay-200 text-lg sm:text-xl text-brand-sub/75 max-w-lg mx-auto leading-relaxed mb-2">
+                The average American overpays <span className="text-brand-text font-bold">$1,400/year</span> on bills they never read.
+              </p>
+              <p className="animate-fade-up delay-300 text-sm text-brand-sub/45 mb-10 max-w-md mx-auto">
+                Upload any document. AI flags overcharges, hidden fees, and red flags in 20 seconds.
+              </p>
 
-              {/* Upload zone — the hero element */}
-              <div className="animate-fade-up delay-300 relative max-w-xl mx-auto">
-                {/* Glow halo behind upload zone */}
-                <div className="absolute inset-0 rounded-2xl -z-10"
-                  style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,59,48,0.18) 0%, transparent 70%)', filter: 'blur(20px)' }} />
+              {/* Upload zone */}
+              <div className="animate-fade-up delay-300 w-full max-w-xl mx-auto relative mb-7">
+                <div className="absolute -inset-6 rounded-3xl -z-10" style={{
+                  background: 'radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255,59,48,0.16) 0%, transparent 70%)',
+                  filter: 'blur(24px)',
+                }} />
                 <UploadZone onUpload={handleUpload} isLoading={false} />
               </div>
 
               {/* Trust row */}
-              <div className="animate-fade-up delay-400 flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-6 text-xs text-brand-sub/50">
-                {['No account needed', 'No credit card', 'Results in ~20s', 'Data never sold'].map(t => (
+              <div className="animate-fade-up delay-400 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-brand-sub/40 mb-6">
+                {['No account needed', 'No credit card', 'Results in ~20s', 'Data never stored'].map(t => (
                   <span key={t} className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3 h-3 text-green-500/60" />
-                    {t}
+                    <ShieldCheck className="w-3 h-3 text-green-500/40" /> {t}
                   </span>
                 ))}
-                <span className="flex items-center gap-1.5 text-blue-400/70">
-                  <span className="text-sm">🌐</span>
-                  12 languages
+                <span className="flex items-center gap-1.5 text-blue-400/40">
+                  <span>🌐</span> 12 languages
                 </span>
               </div>
 
-              {/* Language flags strip */}
-              <div className="animate-fade-up delay-500 flex flex-wrap items-center justify-center gap-2 mt-3">
-                <span className="text-[10px] text-brand-sub/40 mr-1">Reads &amp; analyzes in:</span>
-                {[
-                  { flag: '🇺🇸', lang: 'EN' }, { flag: '🇪🇸', lang: 'ES' }, { flag: '🇫🇷', lang: 'FR' },
-                  { flag: '🇩🇪', lang: 'DE' }, { flag: '🇵🇹', lang: 'PT' }, { flag: '🇨🇳', lang: 'ZH' },
-                  { flag: '🇸🇦', lang: 'AR' }, { flag: '🇯🇵', lang: 'JA' }, { flag: '🇰🇷', lang: 'KO' },
-                  { flag: '🇮🇳', lang: 'HI' }, { flag: '🇮🇹', lang: 'IT' }, { flag: '🇷🇺', lang: 'RU' },
-                ].map(({ flag, lang }) => (
-                  <span key={lang} className="inline-flex items-center gap-0.5 text-[10px] text-brand-sub/50">
-                    <span>{flag}</span>
-                    <span>{lang}</span>
-                  </span>
-                ))}
-              </div>
-
-              {/* Social proof count */}
-              <div className="animate-fade-up delay-500 flex items-center justify-center gap-2 mt-5">
+              {/* Social proof */}
+              <div className="animate-fade-up delay-500 flex items-center justify-center gap-3">
                 <div className="flex -space-x-2">
-                  {['#ff6b60','#f59e0b','#4ade80','#60a5fa','#a78bfa'].map((c, i) => (
-                    <div key={i} className="w-6 h-6 rounded-full border-2 border-brand-bg flex items-center justify-center text-[8px] font-black"
-                      style={{ background: c + '25', borderColor: '#080808', color: c }}>
-                      {['MT','PK','JM','RS','AL'][i]}
+                  {[
+                    { c: '#ff6b60', i: 'MT' }, { c: '#f59e0b', i: 'PK' },
+                    { c: '#4ade80', i: 'JM' }, { c: '#60a5fa', i: 'RS' }, { c: '#a78bfa', i: 'AL' },
+                  ].map(({ c, i }) => (
+                    <div key={i} className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-[9px] font-black shrink-0"
+                      style={{ background: c + '22', borderColor: '#080808', color: c }}>
+                      {i}
                     </div>
                   ))}
                 </div>
-                <span className="text-xs text-brand-sub/50">
-                  <span className="text-brand-sub font-semibold">23,400+</span> documents scanned
+                <span className="text-sm text-brand-sub/50">
+                  <span className="text-brand-text/80 font-bold">23,400+</span> documents scanned
                 </span>
               </div>
             </section>
 
-            {/* ── Live ticker ───────────────────────────────────────────── */}
+            {/* ════ LIVE TICKER ═══════════════════════════════════════════ */}
             <LiveTicker />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-24 pb-24">
-
-              {/* ── Stats ─────────────────────────────────────────────── */}
-              <section className="animate-fade-up">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            {/* ════ STATS BAND ════════════════════════════════════════════ */}
+            <section className="animate-fade-up border-t border-b border-brand-border/30 py-14">
+              <div className="max-w-6xl mx-auto px-5 sm:px-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
-                    { value: '$4.2M+',  label: 'in overcharges found',      icon: DollarSign, color: 'text-red-400',    glow: 'rgba(255,59,48,0.06)'   },
-                    { value: '23,400+', label: 'documents analyzed',         icon: FileText,   color: 'text-blue-400',   glow: 'rgba(96,165,250,0.05)'  },
-                    { value: '12',      label: 'languages supported',        icon: Sparkles,   color: 'text-purple-400', glow: 'rgba(168,85,247,0.06)'  },
-                    { value: '78%',     label: 'of scans find something',    icon: Users,      color: 'text-green-400',  glow: 'rgba(74,222,128,0.05)'  },
-                  ].map(({ value, label, icon: Icon, color, glow }) => (
-                    <div key={label} className="rounded-2xl border border-brand-border bg-brand-surface p-5 sm:p-6 text-center space-y-2 relative overflow-hidden"
-                      style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.04), 0 0 30px ${glow}` }}>
-                      <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-20" />
-                      <div className="w-8 h-8 rounded-xl mx-auto flex items-center justify-center relative z-10"
-                        style={{ background: glow, border: `1px solid ${glow.replace('0.0', '0.2')}` }}>
-                        <Icon className={`w-4 h-4 ${color}`} />
-                      </div>
-                      <p className={`text-3xl sm:text-4xl font-black relative z-10 ${color}`}>{value}</p>
-                      <p className="text-[11px] text-brand-sub relative z-10 leading-tight">{label}</p>
+                    { value: '$4.2M+*',  label: 'in overcharges found',      color: '#ff3b30' },
+                    { value: '23,400+', label: 'documents analyzed',         color: '#60a5fa' },
+                    { value: '78%*',    label: 'of scans flag something',    color: '#ffd60a' },
+                    { value: '12',      label: 'languages supported',        color: '#30d158' },
+                  ].map(({ value, label, color }, idx) => (
+                    <div key={label} className={`px-4 sm:px-8 py-6 text-center ${idx > 0 ? 'stat-divider' : ''}`}>
+                      <p className="font-black tracking-tighter leading-none mb-2.5"
+                        style={{ fontSize: 'clamp(40px, 6vw, 72px)', color }}>
+                        {value}
+                      </p>
+                      <p className="text-[11px] text-brand-sub/50 uppercase tracking-widest leading-tight">{label}</p>
                     </div>
                   ))}
                 </div>
-              </section>
+                {/* Stats footnote */}
+                <p className="mt-6 text-center text-[10px] text-brand-sub/25 tracking-wide">
+                  * Figures based on documents analyzed through this platform. Results vary by document type.
+                </p>
 
-              <VictoryBanner />
-
-              {/* ── Testimonials ──────────────────────────────────────── */}
-              <section className="animate-fade-up space-y-8">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">Real stories</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    They found out. Now they know.
-                  </h2>
+                {/* Victory banner sits flush inside the stats band */}
+                <div className="mt-6 pt-6 border-t border-brand-border/20">
+                  <VictoryBanner />
                 </div>
+              </div>
+            </section>
 
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {TESTIMONIALS.map((t) => (
-                    <div key={t.name} className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-4 text-left relative overflow-hidden"
-                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                      {/* Subtle color glow top-right */}
-                      <div className="absolute top-0 right-0 w-24 h-24 rounded-full pointer-events-none"
-                        style={{ background: `radial-gradient(circle, ${t.color}08 0%, transparent 70%)` }} />
-                      {/* Stars */}
-                      <div className="flex gap-0.5">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                        ))}
+            {/* ════ EDITORIAL STATEMENT ═══════════════════════════════════ */}
+            <section className="animate-fade-up max-w-4xl mx-auto px-5 sm:px-8 py-24 text-center">
+              <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em] mb-8">Why this exists</p>
+              <p className="font-black tracking-tighter text-brand-text leading-[1.05]" style={{ fontSize: 'clamp(28px, 5vw, 52px)' }}>
+                Mechanics. Hospitals. Contractors.<br />
+                Phone companies.
+              </p>
+              <p className="font-black tracking-tighter leading-[1.05] mt-2" style={{ fontSize: 'clamp(28px, 5vw, 52px)', color: 'rgba(242,242,242,0.25)' }}>
+                They all count on you never reading the bill.
+              </p>
+              <p className="text-brand-sub/60 text-lg mt-10 max-w-xl mx-auto leading-relaxed">
+                GetScrewedScore reads it for you. Every line. Every charge. Every clause — and tells you exactly when something is wrong.
+              </p>
+            </section>
+
+            {/* ════ HOW IT WORKS ══════════════════════════════════════════ */}
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-14">
+              <div className="text-center space-y-2">
+                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">How it works</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Three steps. Twenty seconds.</h2>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-0">
+                {[
+                  {
+                    n: '01', icon: FileText, color: '#60a5fa',
+                    title: 'Upload your document',
+                    desc: 'Drag & drop any bill, invoice, contract, or photo. PDF, Word, image — we handle it all.',
+                  },
+                  {
+                    n: '02', icon: Sparkles, color: '#f87171',
+                    title: 'AI scans for red flags',
+                    desc: 'Overcharges, hidden fees, duplicate billing, and suspicious clauses — flagged and explained in plain English.',
+                  },
+                  {
+                    n: '03', icon: TrendingUp, color: '#4ade80',
+                    title: 'Know, dispute, fight back',
+                    desc: 'SCREWED, MAYBE, or SAFE. Open a formal dispute, track your outcome, and get matched with better providers.',
+                  },
+                ].map(({ n, icon: Icon, color, title, desc }, idx) => (
+                  <div key={n} className={`relative px-8 py-8 ${idx > 0 ? 'section-rule sm:section-rule-none border-t border-l-0 sm:border-t-0 sm:stat-divider' : ''}`}>
+                    {/* Ghost number */}
+                    <div className="step-ghost-num absolute top-4 right-6 select-none pointer-events-none">{n}</div>
+                    <div className="relative z-10 space-y-4">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                        style={{ background: color + '12', border: `1px solid ${color}22` }}>
+                        <Icon className="w-5 h-5" style={{ color }} />
                       </div>
-                      <p className="text-sm text-brand-text/80 leading-relaxed relative z-10">
-                        &ldquo;{t.quote}&rdquo;
-                      </p>
-                      <div className="flex items-center gap-3 pt-1">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
-                          style={{ background: t.color + '18', color: t.color, border: `1px solid ${t.color}30` }}>
-                          {t.initials}
+                      <div className="space-y-2">
+                        <p className="text-base font-bold text-brand-text">{title}</p>
+                        <p className="text-sm text-brand-sub/60 leading-relaxed">{desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* ════ BENTO FEATURE GRID ════════════════════════════════════ */}
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
+              <div className="text-center space-y-2">
+                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">The full arsenal</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Not just a scanner.</h2>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                {/* Wall of Shame — wide (2 cols) */}
+                <div className="bento-cell lg:col-span-2 rounded-2xl border border-brand-border group hover:border-red-500/20 transition-all duration-300"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)', minHeight: '220px' }}>
+                  <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none"
+                    style={{ background: 'radial-gradient(circle at top right, rgba(255,59,48,0.05) 0%, transparent 65%)' }} />
+                  <div className="relative p-7 h-full flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.2)' }}>
+                          <Flame className="w-5 h-5 text-red-400" />
                         </div>
                         <div>
-                          <p className="text-xs font-semibold text-brand-text">{t.name}</p>
-                          <p className="text-[10px] text-brand-sub">{t.location} · {t.doc}</p>
+                          <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-0.5">Wall of Shame</p>
+                          <h3 className="text-xl font-black text-brand-text tracking-tight leading-tight">The worst offenders. Ranked publicly.</h3>
                         </div>
                       </div>
+                      <p className="text-sm text-brand-sub/60 leading-relaxed max-w-md">
+                        Every scan links anonymously to a vendor. Businesses that repeatedly overcharge rise to the top — a live, community-powered blacklist that builds itself.
+                      </p>
                     </div>
-                  ))}
+                    <div className="mt-6 flex items-center gap-2">
+                      <a href="/shame" className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300 transition-colors">
+                        View the Wall of Shame <ChevronRight className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </section>
 
-              {/* ── Example results ───────────────────────────────────── */}
-              <section className="animate-fade-up space-y-8">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">What it looks like</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    Real results. Real money.
-                  </h2>
-                  <p className="text-brand-sub text-sm max-w-md mx-auto">
-                    Every scan gives you a plain-English breakdown of exactly what&apos;s wrong — and what to do about it.
+                {/* Fight Back Kit */}
+                <div className="bento-cell rounded-2xl group hover:border-yellow-500/20 transition-all duration-300"
+                  style={{
+                    background: 'linear-gradient(145deg, rgba(245,158,11,0.07) 0%, #0f0f0f 55%)',
+                    border: '1px solid rgba(245,158,11,0.18)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)',
+                    minHeight: '220px',
+                  }}>
+                  <div className="p-7 h-full flex flex-col">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+                      style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.22)' }}>
+                      <Zap className="w-5 h-5 text-yellow-400" />
+                    </div>
+                    <p className="text-[10px] font-bold text-yellow-400 uppercase tracking-widest mb-1.5">Fight Back Kit</p>
+                    <h3 className="text-lg font-black text-brand-text tracking-tight mb-3 leading-tight">5-piece kit to get your money back.</h3>
+                    <p className="text-sm text-brand-sub/55 leading-relaxed flex-1">
+                      Demand letter, phone script, chargeback guide, escalation path, and a 3-email follow-up sequence — generated for your exact situation.
+                    </p>
+                    <p className="mt-5 text-xs font-black" style={{ color: 'rgba(245,158,11,0.7)' }}>$14.99 · One-time</p>
+                  </div>
+                </div>
+
+                {/* Dispute Hub */}
+                <div className="bento-cell rounded-2xl border border-brand-border group hover:border-blue-500/20 transition-all duration-300"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)', minHeight: '200px' }}>
+                  <div className="absolute bottom-0 left-0 w-44 h-44 pointer-events-none"
+                    style={{ background: 'radial-gradient(circle at bottom left, rgba(96,165,250,0.05) 0%, transparent 70%)' }} />
+                  <div className="relative p-7">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+                      style={{ background: 'rgba(96,165,250,0.08)', border: '1px solid rgba(96,165,250,0.18)' }}>
+                      <MessageSquare className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1.5">Dispute Hub</p>
+                    <h3 className="text-lg font-black text-brand-text tracking-tight mb-3 leading-tight">Don't just know. Fight back.</h3>
+                    <p className="text-sm text-brand-sub/55 leading-relaxed">
+                      Open a formal dispute linked to the vendor. They can respond publicly. Every outcome builds the community record.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Vendor Registry */}
+                <div className="bento-cell rounded-2xl border border-brand-border group hover:border-green-500/20 transition-all duration-300"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)', minHeight: '200px' }}>
+                  <div className="p-7">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+                      style={{ background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.16)' }}>
+                      <Building2 className="w-5 h-5 text-green-400" />
+                    </div>
+                    <p className="text-[10px] font-bold text-green-400 uppercase tracking-widest mb-1.5">Vendor Registry</p>
+                    <h3 className="text-lg font-black text-brand-text tracking-tight mb-3 leading-tight">AI reputation scores on every business.</h3>
+                    <p className="text-sm text-brand-sub/55 leading-relaxed">
+                      Every vendor that appears in a scan gets a public profile. Screwed rate, total flagged dollars, community reviews.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Multilingual pill */}
+                <div className="rounded-2xl overflow-hidden flex items-center gap-5 px-6 py-5"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(168,85,247,0.07) 0%, #0f0f0f 65%)',
+                    border: '1px solid rgba(168,85,247,0.14)',
+                  }}>
+                  <div className="text-4xl shrink-0">🌐</div>
+                  <div>
+                    <p className="text-base font-black text-brand-text tracking-tight">12 languages</p>
+                    <p className="text-[11px] text-brand-sub/45 mt-1 leading-relaxed tracking-wide">EN ES FR DE PT ZH AR JA KO HI IT RU</p>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            {/* ════ TESTIMONIALS ══════════════════════════════════════════ */}
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
+              <div className="text-center space-y-2">
+                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">The evidence</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">They found out.</h2>
+              </div>
+
+              {/* Featured pull quote */}
+              <div className="relative rounded-3xl border border-brand-border bg-brand-surface overflow-hidden p-8 sm:p-14"
+                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 0 80px rgba(255,59,48,0.03)' }}>
+                {/* Giant decorative quote mark */}
+                <div className="absolute top-4 left-8 font-black leading-none select-none pointer-events-none"
+                  style={{
+                    fontSize: '160px', lineHeight: 1,
+                    color: 'rgba(255,59,48,0.05)',
+                    fontFamily: 'Georgia, "Times New Roman", serif',
+                  }}>"</div>
+                <div className="relative z-10 max-w-2xl mx-auto text-center">
+                  <p className="font-bold text-brand-text/85 leading-relaxed mb-10"
+                    style={{ fontSize: 'clamp(20px, 3vw, 28px)', lineHeight: 1.4 }}>
+                    "{TESTIMONIALS[0].quote}"
                   </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-black shrink-0"
+                      style={{ background: TESTIMONIALS[0].color + '18', color: TESTIMONIALS[0].color, border: `1px solid ${TESTIMONIALS[0].color}30` }}>
+                      {TESTIMONIALS[0].initials}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-bold text-brand-text">{TESTIMONIALS[0].name}</p>
+                      <p className="text-xs text-brand-sub/50 mt-0.5">{TESTIMONIALS[0].location} · {TESTIMONIALS[0].doc}</p>
+                    </div>
+                  </div>
                 </div>
+              </div>
 
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {EXAMPLES.map((ex) => (
-                    <div key={ex.doc} className="rounded-2xl border overflow-hidden relative group"
-                      style={{ borderColor: ex.border, background: ex.bg, boxShadow: `0 0 40px ${ex.bg}` }}>
-                      <div className="p-5 space-y-4">
-                        {/* Badge */}
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-black" style={{ color: ex.color }}>
-                            {ex.emoji} {ex.score}
-                          </span>
-                          {ex.amount && (
-                            <span className="ml-auto text-sm font-black" style={{ color: ex.color }}>
-                              {ex.amount}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs font-semibold text-brand-sub uppercase tracking-wider">{ex.doc}</p>
-                        <p className="text-sm text-brand-text/75 leading-relaxed">{ex.reason}</p>
+              {/* Two secondary testimonials */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                {TESTIMONIALS.slice(1).map((t) => (
+                  <div key={t.name} className="rounded-2xl border border-brand-border bg-brand-surface p-7 space-y-5 relative overflow-hidden"
+                    style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+                    <div className="absolute top-0 right-0 w-28 h-28 pointer-events-none"
+                      style={{ background: `radial-gradient(circle at top right, ${t.color}07 0%, transparent 70%)` }} />
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />)}
+                    </div>
+                    <p className="text-sm text-brand-text/75 leading-relaxed relative z-10">"{t.quote}"</p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
+                        style={{ background: t.color + '16', color: t.color, border: `1px solid ${t.color}28` }}>
+                        {t.initials}
                       </div>
-                      {/* Bottom bar */}
-                      <div className="px-5 py-3 border-t flex items-center gap-2 text-xs text-brand-sub/50"
-                        style={{ borderColor: ex.border }}>
-                        <Sparkles className="w-3 h-3" />
-                        AI-generated analysis
+                      <div>
+                        <p className="text-xs font-semibold text-brand-text">{t.name}</p>
+                        <p className="text-[10px] text-brand-sub/45 mt-0.5">{t.location} · {t.doc}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </section>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-              {/* ── Document types ────────────────────────────────────── */}
-              <section className="animate-fade-up space-y-8">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">Supported documents</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    If they charged you, we can check it.
-                  </h2>
-                </div>
+            {/* ════ EXAMPLE RESULTS — BENTO ═══════════════════════════════ */}
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
+              <div className="text-center space-y-2">
+                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">What it looks like</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Real results. Real money.</h2>
+                <p className="text-sm text-brand-sub/50 max-w-md mx-auto">Plain-English breakdown. Exact charges. What to do next.</p>
+              </div>
 
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                  {DOC_TYPES.map(({ emoji, label, heat }) => (
-                    <div key={label}
-                      className="rounded-xl border border-brand-border bg-brand-surface p-4 flex flex-col items-center gap-2 text-center hover:border-red-500/30 transition-colors cursor-default relative"
-                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                      {heat === 'high' && (
-                        <span className="absolute top-2 right-2 text-[8px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
-                          🔥 High risk
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ gridAutoRows: 'auto' }}>
+
+                {/* SCREWED — dominant bento cell */}
+                <div className="md:col-span-2 md:row-span-2 rounded-2xl border overflow-hidden relative"
+                  style={{
+                    borderColor: EXAMPLES[0].border,
+                    background: EXAMPLES[0].bg,
+                    minHeight: '280px',
+                  }}>
+                  <div className="p-7 h-full flex flex-col justify-between">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-black score-text-screwed">🚨 SCREWED</span>
+                        <span className="font-black score-text-screwed" style={{ fontSize: 'clamp(28px, 4vw, 44px)', lineHeight: 1 }}>
+                          $847
                         </span>
-                      )}
-                      <span className="text-2xl">{emoji}</span>
-                      <span className="text-[11px] font-semibold text-brand-sub leading-tight">{label}</span>
+                      </div>
+                      <p className="text-xs font-bold text-brand-sub/50 uppercase tracking-widest">{EXAMPLES[0].doc}</p>
+                      <p className="text-base text-brand-text/70 leading-relaxed">{EXAMPLES[0].reason}</p>
                     </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* ── How it works ──────────────────────────────────────── */}
-              <section className="animate-fade-up space-y-8">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">How it works</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    Three steps. Twenty seconds.
-                  </h2>
-                </div>
-
-                <div className="grid sm:grid-cols-3 gap-4 relative">
-                  {/* Connector line */}
-                  <div className="hidden sm:block absolute top-10 left-[20%] right-[20%] h-px"
-                    style={{ background: 'linear-gradient(90deg, transparent, rgba(255,59,48,0.3) 30%, rgba(255,59,48,0.3) 70%, transparent)' }} />
-
-                  {[
-                    {
-                      n: '01', icon: FileText, color: '#60a5fa',
-                      title: 'Upload your document',
-                      desc: 'Drag & drop any bill, invoice, contract, or photo. PDF, Word, image — we handle it all.',
-                    },
-                    {
-                      n: '02', icon: Sparkles, color: '#f87171',
-                      title: 'AI scans for red flags',
-                      desc: 'Our AI checks for overcharges, hidden fees, duplicate billing, and suspicious clauses.',
-                    },
-                    {
-                      n: '03', icon: TrendingUp, color: '#4ade80',
-                      title: 'Score, dispute, and find someone better',
-                      desc: 'SCREWED, MAYBE, or SAFE — then open a formal dispute, track your outcome, and get matched with trusted providers who won\'t overcharge you.',
-                    },
-                  ].map(({ n, icon: Icon, color, title, desc }) => (
-                    <div key={n} className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-4 relative"
-                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                      <div className="flex items-center justify-between">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                          style={{ background: color + '15', border: `1px solid ${color}30` }}>
-                          <Icon className="w-5 h-5" style={{ color }} />
+                    {/* Faux receipt fragment */}
+                    <div className="mt-6 pt-5 border-t border-red-500/15 space-y-0">
+                      {[
+                        { label: 'Labor (4.5 hrs × $195)', amount: '$877', flagged: true },
+                        { label: 'Parts markup (180% over MSRP)', amount: '$310', flagged: true },
+                        { label: 'Diagnostic fee ×2 (duplicate)', amount: '$150', flagged: true },
+                      ].map(item => (
+                        <div key={item.label} className="receipt-item">
+                          <span className="text-brand-sub/55 flex-1 pr-4">{item.label}</span>
+                          <span className="font-black text-red-400 tabular-nums shrink-0">{item.amount}</span>
                         </div>
-                        <span className="text-[10px] font-black text-brand-sub/30 tracking-widest">{n}</span>
-                      </div>
-                      <div className="space-y-1.5">
-                        <p className="text-sm font-bold text-brand-text">{title}</p>
-                        <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* ── Find Someone Better ───────────────────────────────── */}
-              <section className="animate-fade-up space-y-6">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">Getting screwed?</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    We&apos;ll find you someone better.
-                  </h2>
-                  <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
-                    Every SCREWED result comes with trusted, community-vetted alternatives in that category —
-                    mechanics, doctors, contractors, and more who won&apos;t pad your bill.
-                  </p>
+                  </div>
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {[
-                    { emoji: '🔧', category: 'Mechanic', desc: 'Got a padded labor bill? We\'ll show you AAA-certified shops with upfront pricing in your area.', color: '#f87171' },
-                    { emoji: '🏥', category: 'Medical / Dental', desc: 'Duplicate billing or mystery codes? We\'ll connect you with patient advocates and fair-price tools.', color: '#60a5fa' },
-                    { emoji: '🏗️', category: 'Contractor', desc: 'Overpriced estimate? We\'ll show you vetted contractors with real market pricing for your project.', color: '#4ade80' },
-                  ].map(({ emoji, category, desc, color }) => (
-                    <div key={category} className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
-                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{emoji}</span>
-                        <span className="font-bold text-brand-text text-sm">{category}</span>
-                      </div>
-                      <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
-                      <div className="flex items-center gap-1.5 text-xs font-semibold" style={{ color }}>
-                        <ShieldCheck className="w-3.5 h-3.5" />
-                        Community vetted
-                      </div>
+                {/* MAYBE */}
+                <div className="rounded-2xl border overflow-hidden"
+                  style={{ borderColor: EXAMPLES[1].border, background: EXAMPLES[1].bg, minHeight: '130px' }}>
+                  <div className="p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-black score-text-maybe">⚠️ MAYBE</span>
+                      <span className="text-sm font-black score-text-maybe">{EXAMPLES[1].amount}</span>
                     </div>
-                  ))}
+                    <p className="text-[10px] font-bold text-brand-sub/50 uppercase tracking-widest">{EXAMPLES[1].doc}</p>
+                    <p className="text-sm text-brand-text/65 leading-relaxed">{EXAMPLES[1].reason}</p>
+                  </div>
                 </div>
 
-                <div className="text-center">
-                  <a href="/community"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-brand-border bg-brand-surface hover:bg-brand-muted transition-colors text-sm font-semibold text-brand-sub hover:text-brand-text">
-                    <Users className="w-4 h-4" />
-                    See the community wall of trusted providers
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </section>
-
-              {/* ── Wall of Shame ─────────────────────────────────── */}
-              <section className="animate-fade-up space-y-6">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Wall of Shame</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    The worst offenders.{' '}
-                    <span style={{
-                      background: 'linear-gradient(135deg, #ff8a80, #ff3b30)',
-                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                    }}>Ranked publicly.</span>
-                  </h2>
-                  <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
-                    Every scan links anonymously to a vendor. Businesses that repeatedly overcharge rise to the top — a live, community-powered blacklist.
-                  </p>
-                </div>
-
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {[
-                    {
-                      icon: Building2, color: '#ef4444', glow: 'rgba(239,68,68,0.06)',
-                      title: 'Vendors tracked automatically',
-                      desc: 'Every SCREWED or MAYBE result links to a vendor profile. No manual reporting needed — it builds itself.',
-                    },
-                    {
-                      icon: TrendingUp, color: '#f59e0b', glow: 'rgba(245,158,11,0.06)',
-                      title: 'Ranked by screwed rate',
-                      desc: 'Vendors with the highest rate of SCREWED verdicts and total flagged dollars rise to the top.',
-                    },
-                    {
-                      icon: Flame, color: '#ff6b60', glow: 'rgba(255,107,96,0.06)',
-                      title: 'Updated with every scan',
-                      desc: 'The moment a pattern emerges across multiple users, it\'s visible to everyone — in real time.',
-                    },
-                  ].map(({ icon: Icon, color, glow, title, desc }) => (
-                    <div key={title} className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
-                      style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.03), 0 0 20px ${glow}` }}>
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                        style={{ background: color + '15', border: `1px solid ${color}30` }}>
-                        <Icon className="w-4 h-4" style={{ color }} />
-                      </div>
-                      <p className="text-sm font-bold text-brand-text">{title}</p>
-                      <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
+                {/* SAFE */}
+                <div className="rounded-2xl border overflow-hidden"
+                  style={{ borderColor: EXAMPLES[2].border, background: EXAMPLES[2].bg, minHeight: '130px' }}>
+                  <div className="p-5 space-y-3">
+                    <div className="flex items-center">
+                      <span className="text-sm font-black score-text-safe">✅ SAFE</span>
                     </div>
-                  ))}
+                    <p className="text-[10px] font-bold text-brand-sub/50 uppercase tracking-widest">{EXAMPLES[2].doc}</p>
+                    <p className="text-sm text-brand-text/65 leading-relaxed">{EXAMPLES[2].reason}</p>
+                  </div>
                 </div>
 
-                <div className="text-center">
-                  <a href="/shame"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-colors text-sm font-semibold text-red-400 hover:text-red-300">
-                    <Flame className="w-4 h-4" />
-                    View the Wall of Shame
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </section>
+              </div>
+            </section>
 
-              {/* ── Dispute Hub ───────────────────────────────────────── */}
-              <section className="animate-fade-up space-y-6">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">Dispute Hub</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-                    Don&apos;t just know. Fight back.
-                  </h2>
-                  <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
-                    Every SCREWED result now lets you open a formal dispute — publicly linked to the vendor.
-                    They can respond. The community tracks what happens next.
-                  </p>
-                </div>
+            {/* ════ DOC TYPES — CHIP STRIP ════════════════════════════════ */}
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
+              <div className="text-center space-y-2">
+                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">Supported documents</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Anything they bill you for.</h2>
+              </div>
 
-                <div className="grid sm:grid-cols-3 gap-4 relative">
-                  <div className="hidden sm:block absolute top-10 left-[20%] right-[20%] h-px"
-                    style={{ background: 'linear-gradient(90deg, transparent, rgba(255,59,48,0.3) 30%, rgba(255,59,48,0.3) 70%, transparent)' }} />
+              <div className="flex flex-wrap justify-center gap-2.5">
+                {DOC_TYPES.map(({ emoji, label, heat }) => (
+                  <div key={label}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold cursor-default transition-all duration-200 hover:scale-[1.02]"
+                    style={{
+                      border: heat === 'high' ? '1px solid rgba(255,59,48,0.2)' : '1px solid rgba(255,255,255,0.07)',
+                      background: heat === 'high' ? 'rgba(255,59,48,0.05)' : 'rgba(255,255,255,0.03)',
+                      color: heat === 'high' ? 'rgba(255,120,110,0.8)' : 'rgba(119,119,119,0.8)',
+                    }}>
+                    <span>{emoji}</span>
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-                  {[
-                    {
-                      n: '01', icon: MessageSquare, color: '#f87171',
-                      title: 'Open a dispute',
-                      desc: 'From any SCREWED or MAYBE result, open a formal thread — tied to the vendor profile and your analysis.',
-                    },
-                    {
-                      n: '02', icon: Building2, color: '#60a5fa',
-                      title: 'Vendor can respond publicly',
-                      desc: 'Businesses can reply on the record. Good responses help them. Bad ones stay visible forever.',
-                    },
-                    {
-                      n: '03', icon: TrendingUp, color: '#4ade80',
-                      title: 'Report your outcome',
-                      desc: 'Win, partial win, or refused — every outcome is counted and added to the community recovery total.',
-                    },
-                  ].map(({ n, icon: Icon, color, title, desc }) => (
-                    <div key={n} className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-4 relative"
-                      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                      <div className="flex items-center justify-between">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                          style={{ background: color + '15', border: `1px solid ${color}30` }}>
-                          <Icon className="w-5 h-5" style={{ color }} />
-                        </div>
-                        <span className="text-[10px] font-black text-brand-sub/30 tracking-widest">{n}</span>
-                      </div>
-                      <div className="space-y-1.5">
-                        <p className="text-sm font-bold text-brand-text">{title}</p>
-                        <p className="text-xs text-brand-sub leading-relaxed">{desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            {/* ════ FAQ ═══════════════════════════════════════════════════ */}
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24">
+              <div className="lg:grid lg:grid-cols-[1fr_2fr] lg:gap-16 space-y-10 lg:space-y-0">
 
-              {/* ── FAQ ──────────────────────────────────────────────── */}
-              <section className="animate-fade-up space-y-8">
-                <div className="text-center space-y-2">
-                  <p className="text-[10px] font-bold text-brand-sub uppercase tracking-widest">FAQ</p>
-                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+                {/* Left: heading */}
+                <div className="lg:pt-2">
+                  <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em] mb-4">FAQ</p>
+                  <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight leading-tight mb-4">
                     Questions people actually ask
                   </h2>
+                  <p className="text-sm text-brand-sub/50 leading-relaxed">
+                    Results are informational only — not legal or financial advice. Always verify with a professional before taking action.
+                  </p>
                 </div>
-                <div className="space-y-2 max-w-2xl mx-auto">
+
+                {/* Right: accordion */}
+                <div className="space-y-2">
                   {FAQ_ITEMS.map((item, i) => (
                     <FaqItem key={i} q={item.q} a={item.a} />
                   ))}
                 </div>
-              </section>
+              </div>
+            </section>
 
-              {/* ── Bottom CTA ────────────────────────────────────────── */}
-              <section className="animate-fade-up rounded-3xl overflow-hidden relative"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255,59,48,0.1) 0%, rgba(255,59,48,0.03) 100%)',
-                  border: '1px solid rgba(255,59,48,0.2)',
-                  boxShadow: '0 0 80px rgba(255,59,48,0.1)',
-                }}>
-                {/* Background glow */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full"
-                    style={{ background: 'radial-gradient(ellipse 60% 80% at 50% 0%, rgba(255,59,48,0.15) 0%, transparent 70%)' }} />
+            {/* ════ BOTTOM CTA — FULL BLEED ═══════════════════════════════ */}
+            <section className="relative overflow-hidden py-28 border-t border-brand-border/20">
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full"
+                  style={{ background: 'radial-gradient(ellipse 80% 120% at 50% 0%, rgba(255,59,48,0.14) 0%, transparent 60%)' }} />
+                <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-100" />
+              </div>
+
+              <div className="relative max-w-2xl mx-auto px-4 text-center space-y-8">
+                <div className="space-y-4">
+                  <p className="text-[11px] font-bold text-red-400/60 uppercase tracking-[0.25em]">Start free right now</p>
+                  <h2 className="font-black text-brand-text tracking-tighter leading-[0.9]"
+                    style={{ fontSize: 'clamp(52px, 9vw, 108px)' }}>
+                    Stop wondering.<br />
+                    <span style={{
+                      background: 'linear-gradient(135deg, #ff8a80, #ff3b30)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    }}>Start knowing.</span>
+                  </h2>
+                  <p className="text-brand-sub/50 text-base max-w-sm mx-auto leading-relaxed">
+                    3 free scans. No account. No credit card. If you find something, you'll want to share it.
+                  </p>
                 </div>
 
-                <div className="relative p-10 sm:p-16 text-center space-y-8">
-                  <div className="space-y-4">
-                    <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Start free right now</p>
-                    <h2 className="text-4xl sm:text-5xl font-black text-brand-text tracking-tighter leading-tight">
-                      Stop wondering.<br />
-                      <span style={{
-                        background: 'linear-gradient(135deg, #ff8a80, #ff3b30)',
-                        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                      }}>Start knowing.</span>
-                    </h2>
-                    <p className="text-brand-sub max-w-md mx-auto text-sm leading-relaxed">
-                      Two free scans. No account. No credit card. If you find something, you&apos;ll want to share it.
-                    </p>
-                  </div>
-
-                  <div className="max-w-lg mx-auto">
-                    <UploadZone onUpload={handleUpload} isLoading={false} />
-                  </div>
-
-                  <div className="flex items-center justify-center gap-2 text-xs text-brand-sub/40">
-                    <ShieldCheck className="w-3.5 h-3.5 text-green-500/40" />
-                    Your documents are never stored permanently or shared with third parties.
-                  </div>
+                <div className="relative">
+                  <div className="absolute -inset-6 rounded-3xl -z-10" style={{
+                    background: 'radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255,59,48,0.15) 0%, transparent 70%)',
+                    filter: 'blur(24px)',
+                  }} />
+                  <UploadZone onUpload={handleUpload} isLoading={false} />
                 </div>
-              </section>
 
-            </div>
+                <p className="flex items-center justify-center gap-2 text-xs text-brand-sub/30">
+                  <ShieldCheck className="w-3.5 h-3.5 text-green-500/25" />
+                  Documents are never stored permanently or shared with third parties.
+                </p>
+              </div>
+            </section>
+
           </>
         )}
 
-        {/* ════════════════════════════════════════════════════════════════
+        {/* ════════════════════════════════════════════════════════════════════
             LOADING STATE
-        ════════════════════════════════════════════════════════════════ */}
+        ════════════════════════════════════════════════════════════════════ */}
         {isLoading && (
           <div className="max-w-2xl mx-auto px-4 py-10 space-y-4">
             <UploadZone onUpload={handleUpload} isLoading />
@@ -928,9 +867,9 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* ════════════════════════════════════════════════════════════════
+        {/* ════════════════════════════════════════════════════════════════════
             ERROR STATE
-        ════════════════════════════════════════════════════════════════ */}
+        ════════════════════════════════════════════════════════════════════ */}
         {state.phase === 'error' && (
           <div className="max-w-2xl mx-auto px-4 py-10">
             <div className="rounded-2xl border border-red-500/25 bg-red-950/15 p-6 space-y-4 animate-fade-up"
@@ -950,9 +889,9 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* ════════════════════════════════════════════════════════════════
+        {/* ════════════════════════════════════════════════════════════════════
             RESULTS STATE
-        ════════════════════════════════════════════════════════════════ */}
+        ════════════════════════════════════════════════════════════════════ */}
         {state.phase === 'done' && state.result && state.analysisId && (
           <div className="max-w-2xl mx-auto px-4 py-10 space-y-4 animate-fade-up">
 
@@ -1042,9 +981,9 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
+      {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer className="border-t border-brand-border mt-10 py-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-sub">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-sub">
           <div className="flex items-center gap-1">
             <span className="font-black text-brand-text">Get</span>
             <span className="font-black text-red-400">Screwed</span>
@@ -1066,70 +1005,6 @@ export default function HomePage() {
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-// ── Hero illustration SVG (mobile compact version) ──────────────────────────
-function HeroIllustrationSmall() {
-  return (
-    <svg width="260" height="160" viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Doc shadow */}
-      <rect x="56" y="20" width="110" height="130" rx="10" fill="rgba(255,59,48,0.04)" />
-      {/* Main document */}
-      <rect x="50" y="14" width="110" height="130" rx="10" fill="#0f0f0f" stroke="#1c1c1c" strokeWidth="1.5"/>
-      {/* Corner fold */}
-      <path d="M136 14 L160 38" stroke="#1c1c1c" strokeWidth="1"/>
-      <path d="M136 14 L136 38 L160 38" fill="#141414" stroke="#1c1c1c" strokeWidth="0.75"/>
-      {/* Doc header */}
-      <rect x="66" y="30" width="60" height="6" rx="3" fill="#1e1e1e"/>
-      <rect x="66" y="42" width="40" height="4" rx="2" fill="#191919"/>
-      {/* Separator */}
-      <line x1="66" y1="55" x2="144" y2="55" stroke="#1a1a1a" strokeWidth="1"/>
-      {/* Normal line items */}
-      <rect x="66" y="63" width="48" height="4" rx="2" fill="#1e1e1e"/>
-      <rect x="126" y="63" width="18" height="4" rx="2" fill="#1e1e1e"/>
-      {/* Flagged line item */}
-      <rect x="62" y="74" width="86" height="14" rx="5" fill="rgba(255,59,48,0.1)" stroke="rgba(255,59,48,0.3)" strokeWidth="1"/>
-      <rect x="66" y="78" width="44" height="4" rx="2" fill="rgba(255,100,90,0.5)"/>
-      <rect x="126" y="78" width="18" height="4" rx="2" fill="rgba(255,59,48,0.7)"/>
-      {/* Warning dot */}
-      <circle cx="57" cy="81" r="5" fill="rgba(255,59,48,0.15)" stroke="rgba(255,59,48,0.5)" strokeWidth="1"/>
-      <text x="57" y="85" fill="#ff3b30" fontSize="6" textAnchor="middle" fontWeight="900">!</text>
-      {/* Normal items */}
-      <rect x="66" y="96" width="52" height="4" rx="2" fill="#1e1e1e"/>
-      <rect x="126" y="96" width="18" height="4" rx="2" fill="#1e1e1e"/>
-      {/* Second flagged */}
-      <rect x="62" y="107" width="86" height="14" rx="5" fill="rgba(255,59,48,0.07)" stroke="rgba(255,59,48,0.2)" strokeWidth="1"/>
-      <rect x="66" y="111" width="38" height="4" rx="2" fill="rgba(255,100,90,0.35)"/>
-      <rect x="126" y="111" width="18" height="4" rx="2" fill="rgba(255,59,48,0.5)"/>
-      <circle cx="57" cy="114" r="5" fill="rgba(255,59,48,0.1)" stroke="rgba(255,59,48,0.4)" strokeWidth="1"/>
-      <text x="57" y="118" fill="#ff3b30" fontSize="6" textAnchor="middle" fontWeight="900">!</text>
-      {/* Total */}
-      <line x1="66" y1="128" x2="144" y2="128" stroke="#1c1c1c" strokeWidth="0.75"/>
-      <rect x="66" y="133" width="30" height="5" rx="2.5" fill="#2a2a2a"/>
-      <rect x="126" y="133" width="18" height="5" rx="2.5" fill="rgba(255,59,48,0.45)"/>
-
-      {/* Magnifying glass */}
-      <circle cx="185" cy="90" r="40" fill="rgba(255,59,48,0.03)" stroke="rgba(255,59,48,0.55)" strokeWidth="2"/>
-      <line x1="214" y1="119" x2="234" y2="142" stroke="rgba(255,59,48,0.75)" strokeWidth="4" strokeLinecap="round"/>
-      <circle cx="185" cy="90" r="30" fill="rgba(255,59,48,0.02)" stroke="rgba(255,59,48,0.1)" strokeWidth="0.75"/>
-      {/* Shine on glass */}
-      <path d="M165 72 Q173 65 183 67" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" strokeLinecap="round"/>
-
-      {/* SCREWED badge */}
-      <rect x="145" y="18" width="82" height="22" rx="8" fill="#0f0f0f" stroke="rgba(255,59,48,0.4)" strokeWidth="1.5"/>
-      <text x="186" y="33" fill="#ff3b30" fontSize="9" textAnchor="middle" fontWeight="900">🚨 SCREWED</text>
-
-      {/* Floating $ signs */}
-      <text x="228" y="50" fill="rgba(255,59,48,0.55)" fontSize="20" fontWeight="900" fontFamily="system-ui, sans-serif">$</text>
-      <text x="22" y="110" fill="rgba(255,59,48,0.4)" fontSize="15" fontWeight="900" fontFamily="system-ui, sans-serif">$</text>
-      <text x="218" y="145" fill="rgba(255,59,48,0.25)" fontSize="11" fontWeight="900" fontFamily="system-ui, sans-serif">$</text>
-
-      {/* Sparkle dots */}
-      <circle cx="35" cy="40" r="1.5" fill="rgba(255,59,48,0.4)"/>
-      <circle cx="245" cy="70" r="1" fill="rgba(255,255,255,0.12)"/>
-      <circle cx="245" cy="160" r="1.5" fill="rgba(255,59,48,0.25)"/>
-    </svg>
-  )
 }
 
 // ── FAQ accordion item ───────────────────────────────────────────────────────

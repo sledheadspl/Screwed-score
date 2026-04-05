@@ -184,3 +184,19 @@ html, body {
 .delay-600 { animation-delay: 600ms; }
 .delay-700 { animation-delay: 700ms; }
 .delay-800 { animation-delay: 800ms; }
+
+/* ── High-end landing page utilities ─────────────────────────────────────── */
+.stat-divider { border-left: 1px solid rgba(255,255,255,0.05); }
+.section-rule  { border-top:  1px solid rgba(255,255,255,0.04); }
+.bento-cell    { position: relative; overflow: hidden; background: var(--surface); }
+
+/* ── Ghost step number (decorative) ─────────────────────────────────────── */
+.step-ghost-num {
+  font-size: clamp(80px, 12vw, 120px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: rgba(255,255,255,0.03);
+  user-select: none;
+  pointer-events: none;
+}
