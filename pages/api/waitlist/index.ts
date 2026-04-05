@@ -3,24 +3,8 @@ import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { isValidUUID } from '@/lib/utils'
 
-/** Simple IP-based rate limit: max 3 waitlist signups per IP per hour. */
-const RATE_LIMIT    = 3
-const RATE_WINDOW_MS = 60 * 60 * 1000
-
-// In-memory store — resets on cold start, which is acceptable here
-const ipCounts = new Map<string, { count: number; resetAt: number }>()
-
-function checkWaitlistRateLimit(ipHash: string): boolean {
-  const now   = Date.now()
-  const entry = ipCounts.get(ipHash)
-  if (!entry || now > entry.resetAt) {
-    ipCounts.set(ipHash, { count: 1, resetAt: now + RATE_WINDOW_MS })
-    return true
-  }
-  if (entry.count >= RATE_LIMIT) return false
-  entry.count++
-  return true
-}
+const RATE_LIMIT     = 3
+const RATE_WINDOW_MS = 60 * 60 * 1000   // 1 hour
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
@@ -32,7 +16,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ip     = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? '0.0.0.0'
     const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 16)
 
-    if (!checkWaitlistRateLimit(ipHash)) {
+    const supabase = createServiceClient()
+
+    // Supabase-backed rate limit check
+    const { data: rlData } = await supabase
+      .from('rate_limits')
+      .select('waitlist_count, waitlist_window_start')
+      .eq('ip_hash', ipHash)
+      .maybeSingle()
+
+    const now           = new Date()
+    const windowExpired = !rlData ||
+      now.getTime() - new Date(rlData.waitlist_window_start).getTime() >= RATE_WINDOW_MS
+
+    if (!windowExpired && rlData && rlData.waitlist_count >= RATE_LIMIT) {
       return res.status(429).json({ error: 'Too many requests' })
     }
 
@@ -52,10 +49,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const allowedSources = new Set(['result_page', 'share_page', 'landing'])
     const source = allowedSources.has(body.source) ? body.source : 'result_page'
 
-    const supabase = createServiceClient()
     await supabase.from('waitlist').upsert(
       { email, source, analysis_id: analysisId },
       { onConflict: 'email', ignoreDuplicates: true }
+    )
+
+    // Update rate limit counter
+    await supabase.from('rate_limits').upsert(
+      {
+        ip_hash:               ipHash,
+        waitlist_count:        windowExpired ? 1 : (rlData!.waitlist_count + 1),
+        waitlist_window_start: windowExpired ? now.toISOString() : rlData!.waitlist_window_start,
+        updated_at:            now.toISOString(),
+      },
+      { onConflict: 'ip_hash' }
     )
 
     // Always return success — don't leak whether the email already existed

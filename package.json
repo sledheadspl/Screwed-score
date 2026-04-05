@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "dev:local": "NEXT_PUBLIC_APP_URL=http://10.0.0.228:3000 next dev --hostname 0.0.0.0",
+    "build": "next build && node fix-netlify-handler.js",
     "start": "next start",
     "lint": "next lint"
   },

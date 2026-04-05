@@ -22,6 +22,9 @@ import { ShareExperience } from '@/components/ShareExperience'
 import { ReferralCard } from '@/components/ReferralCard'
 import { DisputeLetter } from '@/components/DisputeLetter'
 import { BenchmarkCard } from '@/components/BenchmarkCard'
+import { LiveTicker } from '@/components/LiveTicker'
+import { OutcomeReport } from '@/components/OutcomeReport'
+import { VictoryBanner } from '@/components/VictoryBanner'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -29,28 +32,6 @@ const INITIAL_STATE: AppState = {
   analysisId: null, result: null, error: null, documentType: null,
 }
 
-// ── Live ticker data ────────────────────────────────────────────────────────
-const TICKER_ITEMS = [
-  { score: 'SCREWED', emoji: '🚨', doc: 'Mechanic Invoice',      amount: '$847',   note: 'labor padding detected',         loc: 'Phoenix, AZ' },
-  { score: 'SAFE',    emoji: '✅', doc: 'Employment Contract',   amount: '',        note: 'fair and balanced',              loc: 'Austin, TX'  },
-  { score: 'SCREWED', emoji: '🚨', doc: 'Medical Bill',          amount: '$1,240', note: 'duplicate billing found',        loc: 'Chicago, IL' },
-  { score: 'MAYBE',   emoji: '⚠️', doc: 'Phone Bill',            amount: '$43',    note: 'mystery fees flagged',           loc: 'Miami, FL'   },
-  { score: 'SCREWED', emoji: '🚨', doc: 'Contractor Estimate',   amount: '$2,100', note: '3× market rate on materials',    loc: 'Denver, CO'  },
-  { score: 'MAYBE',   emoji: '⚠️', doc: 'Lease Agreement',       amount: '$310',   note: 'unusual fee clauses',            loc: 'Seattle, WA' },
-  { score: 'SCREWED', emoji: '🚨', doc: 'Dental Bill',           amount: '$590',   note: 'unbundled procedure codes',      loc: 'Dallas, TX'  },
-  { score: 'SAFE',    emoji: '✅', doc: 'Insurance Quote',        amount: '',        note: 'pricing within normal range',    loc: 'Portland, OR'},
-  { score: 'SCREWED', emoji: '🚨', doc: 'Internet Bill',         amount: '$34/mo', note: 'phantom equipment rental',       loc: 'Atlanta, GA' },
-  { score: 'MAYBE',   emoji: '⚠️', doc: 'Brand Deal Contract',   amount: '',        note: 'IP grab clause found',           loc: 'LA, CA'      },
-]
-
-const SCORE_COLOR: Record<string, string> = {
-  SCREWED: 'text-red-400', MAYBE: 'text-yellow-400', SAFE: 'text-green-400',
-}
-const SCORE_BG: Record<string, string> = {
-  SCREWED: 'bg-red-500/10 border-red-500/20',
-  MAYBE:   'bg-yellow-500/10 border-yellow-500/20',
-  SAFE:    'bg-green-500/10 border-green-500/20',
-}
 
 // ── Document types ──────────────────────────────────────────────────────────
 const DOC_TYPES = [
@@ -529,28 +510,7 @@ export default function HomePage() {
             </section>
 
             {/* ── Live ticker ───────────────────────────────────────────── */}
-            <div className="animate-fade-in delay-500 border-y border-brand-border/60 overflow-hidden py-3 my-6"
-              style={{ background: 'linear-gradient(90deg, rgba(8,8,8,0.98) 0%, transparent 5%, transparent 95%, rgba(8,8,8,0.98) 100%)' }}>
-              <div className="flex items-center gap-3 mb-0">
-                {/* Duplicate for seamless loop */}
-                <div className="ticker-track gap-8 pl-8">
-                  {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-                    <span key={i} className="inline-flex items-center gap-3 pr-12">
-                      <span className={`text-[11px] font-black px-2 py-0.5 rounded border ${SCORE_BG[item.score]} ${SCORE_COLOR[item.score]}`}>
-                        {item.emoji} {item.score}
-                      </span>
-                      <span className="text-xs text-brand-text font-semibold">{item.doc}</span>
-                      {item.amount && (
-                        <span className="text-xs font-bold text-red-400">{item.amount}</span>
-                      )}
-                      <span className="text-xs text-brand-sub/50">{item.note}</span>
-                      <span className="text-[10px] text-brand-sub/30">·</span>
-                      <span className="text-[10px] text-brand-sub/40">{item.loc}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <LiveTicker />
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-24 pb-24">
 
@@ -576,6 +536,8 @@ export default function HomePage() {
                   ))}
                 </div>
               </section>
+
+              <VictoryBanner />
 
               {/* ── Testimonials ──────────────────────────────────────── */}
               <section className="animate-fade-up space-y-8">
@@ -919,6 +881,8 @@ export default function HomePage() {
             />
 
             <DisputeLetter analysisId={state.analysisId} score={state.result.screwed_score} />
+
+            <OutcomeReport analysisId={state.analysisId} score={state.result.screwed_score} />
 
             <TrustedProviders documentType={state.documentType} score={state.result.screwed_score} />
 

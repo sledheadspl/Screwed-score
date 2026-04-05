@@ -26,6 +26,8 @@ Fill in:
 - `CONTRACTGUARD_FUNCTION_URL` → Your deployed analyze-contract edge function URL
   e.g. `https://xxx.supabase.co/functions/v1/analyze-contract`
 - `CONTRACTGUARD_FUNCTION_KEY` → Your Supabase service role key (used as Bearer token)
+- `GSS_TOKEN_SECRET` → Random secret for signing Pro access tokens (e.g. `openssl rand -hex 32`)
+  Used by `/api/verify-checkout` to issue HMAC-signed `gss_pro` cookies after Stripe checkout
 
 ## 3. Set up Supabase
 
@@ -54,14 +56,14 @@ npm run dev
 
 Open http://localhost:3000
 
-## 5. Deploy to Vercel
+## 5. Deploy to Netlify
 
 ```bash
-npm install -g vercel
-vercel --prod
+npm install -g netlify-cli
+netlify deploy --prod
 ```
 
-Add all environment variables in Vercel dashboard → Settings → Environment Variables.
+Add all environment variables in Netlify dashboard → Site → Environment Variables.
 
 ## Architecture
 

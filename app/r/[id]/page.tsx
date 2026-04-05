@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { ArrowRight, AlertTriangle, CheckCircle, AlertCircle, Receipt } from 'lucide-react'
 import { DisputeLetter } from '@/components/DisputeLetter'
 import { BenchmarkCard } from '@/components/BenchmarkCard'
+import { OutcomeReport } from '@/components/OutcomeReport'
 
 interface Props {
   params: { id: string }
@@ -273,6 +274,11 @@ export default async function SharePage({ params }: Props) {
         {/* Dispute letter */}
         <div className="animate-fade-up delay-400">
           <DisputeLetter analysisId={analysis.id} score={analysis.screwed_score} />
+        </div>
+
+        {/* Outcome report */}
+        <div className="animate-fade-up delay-400">
+          <OutcomeReport analysisId={analysis.id} score={analysis.screwed_score} />
         </div>
 
         {/* What to do next */}
