@@ -3,7 +3,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { randomBytes } from 'crypto'
 
 function generateToken(): string {
-  return randomBytes(6).toString('base64url') // 8 URL-safe chars
+  return randomBytes(16).toString('base64url') // 22 URL-safe chars, ~128 bits entropy
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

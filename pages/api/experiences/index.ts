@@ -5,14 +5,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const supabase = createServiceClient()
 
   if (req.method === 'GET') {
-    const { category, score, limit = '20', offset = '0' } = req.query
+    const { category, score } = req.query
+    const limit  = Math.min(Math.max(parseInt(req.query.limit  as string || '20', 10) || 20, 1), 50)
+    const offset = Math.max(parseInt(req.query.offset as string || '0',  10) || 0,  0)
     let query = supabase
       .from('experiences')
       .select('*')
       .order('upvotes', { ascending: false })
       .order('created_at', { ascending: false })
-      .limit(Number(limit))
-      .range(Number(offset), Number(offset) + Number(limit) - 1)
+      .limit(limit)
+      .range(offset, offset + limit - 1)
 
     if (category && category !== 'all') query = query.eq('category', category)
     if (score && score !== 'all') query = query.eq('score', score)

@@ -9,7 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const supabase = createServiceClient()
 
   if (req.method === 'GET') {
-    const { tab, slug, limit = '20' } = req.query
+    const { tab, slug } = req.query
+    const limit = Math.min(Math.max(parseInt(req.query.limit as string || '20', 10) || 20, 1), 50)
 
     // Single business lookup
     if (slug && typeof slug === 'string') {
@@ -36,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .from('business_scores')
       .select('*')
       .gte('total_count', 1)
-      .limit(Number(limit))
+      .limit(limit)
 
     if (tab === 'honor') {
       query = query.order('screwed_percent', { ascending: true }).order('total_count', { ascending: false })

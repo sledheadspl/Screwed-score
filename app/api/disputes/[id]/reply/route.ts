@@ -55,7 +55,9 @@ export async function POST(req: NextRequest, { params }: Params): Promise<NextRe
     return NextResponse.json({ message }, { status: 201 })
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Internal server error'
-    const status = msg.includes('not found') ? 404 : msg.includes('Cannot reply') ? 409 : 500
+    let status = 500
+    if (msg === 'Dispute not found') status = 404
+    else if (msg === 'Cannot reply to a resolved or closed dispute') status = 409
     return NextResponse.json({ error: msg }, { status })
   }
 }

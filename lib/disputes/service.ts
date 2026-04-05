@@ -81,14 +81,8 @@ export async function replyToDispute(
     throw new Error('Cannot reply to a resolved or closed dispute')
   }
 
-  // Move to in_progress if still open
-  if (dispute.status === 'open') {
-    await supabase
-      .from('disputes')
-      .update({ status: 'in_progress', updated_at: new Date().toISOString() })
-      .eq('id', disputeId)
-  }
-
+  // Note: is_vendor_rep is a self-reported flag — in production a proper
+  // vendor auth system would verify this claim. For now it's trust-on-submit.
   const { data: message, error } = await supabase
     .from('dispute_messages')
     .insert({
@@ -100,6 +94,14 @@ export async function replyToDispute(
     .select()
     .single()
 
+  // Move to in_progress if still open (after successful insert)
+  if (!error && dispute.status === 'open') {
+    await supabase
+      .from('disputes')
+      .update({ status: 'in_progress', updated_at: new Date().toISOString() })
+      .eq('id', disputeId)
+  }
+
   if (error || !message) throw new Error(error?.message ?? 'Failed to post reply')
   return message as DisputeMessage
 }
@@ -110,6 +112,24 @@ export async function resolveDispute(
   userId: string | null
 ): Promise<Dispute> {
   const supabase = createServiceClient()
+
+  // Verify ownership — only the dispute creator or admin (no userId) can resolve
+  const { data: existing } = await supabase
+    .from('disputes')
+    .select('user_id, status')
+    .eq('id', disputeId)
+    .single()
+
+  if (!existing) throw new Error('Dispute not found')
+
+  // If the dispute has a recorded owner, require the caller to be that owner
+  if (existing.user_id !== null && userId !== existing.user_id) {
+    throw new Error('Not authorized to resolve this dispute')
+  }
+
+  if (existing.status === 'resolved' || existing.status === 'closed') {
+    throw new Error('Dispute is already resolved')
+  }
 
   const { data: dispute, error } = await supabase
     .from('disputes')

@@ -133,7 +133,8 @@ create policy "wall_of_shame_public_read" on wall_of_shame_entries for select us
 -- Disputes: public read, any user can create
 create policy "disputes_public_read"   on disputes for select using (true);
 create policy "disputes_any_insert"    on disputes for insert with check (true);
-create policy "disputes_owner_update"  on disputes for update using (auth.uid() = user_id or auth.uid() is null);
+-- Only the dispute creator can update; anonymous disputes (user_id IS NULL) use service-role only
+create policy "disputes_owner_update"  on disputes for update using (auth.uid() = user_id);
 
 -- Dispute messages: public read, any user can insert
 create policy "dispute_messages_public_read" on dispute_messages for select using (true);

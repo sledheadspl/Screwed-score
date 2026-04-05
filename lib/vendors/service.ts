@@ -55,7 +55,9 @@ export async function searchVendors(params: VendorSearchParams): Promise<Vendor[
     .range(offset, offset + limit - 1)
 
   if (params.q) {
-    query = query.ilike('name', `%${params.q}%`)
+    // Limit search term length to prevent LIKE-based DoS
+    const safeQ = params.q.slice(0, 100)
+    query = query.ilike('name', `%${safeQ}%`)
   }
   if (params.category) {
     query = query.eq('category', params.category)

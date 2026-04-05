@@ -16,7 +16,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { vendor_id, analysis_id, category, title, description, amount_disputed } =
       body as Record<string, unknown>
 
-    if (!DISPUTE_CATEGORIES.has(category as string)) {
+    if (typeof category !== 'string' || !DISPUTE_CATEGORIES.has(category)) {
       return NextResponse.json({ error: 'Invalid category' }, { status: 400 })
     }
     if (typeof title !== 'string' || !title.trim()) {
