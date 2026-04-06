@@ -119,7 +119,7 @@ export default function EliteSuitePage() {
           </p>
 
           <div className="animate-fade-up delay-400 space-y-4">
-            <a href="mailto:hello@rembydesign.com?subject=Elite%20Suite%20Application"
+            <a href="mailto:sledheadspl@gmail.com?subject=Elite%20Suite%20Application"
               className="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl text-sm font-bold text-black transition-all hover:scale-[1.02]"
               style={{
                 background: 'linear-gradient(135deg, #fff7aa, #ffd700, #cc9900)',
@@ -262,7 +262,7 @@ export default function EliteSuitePage() {
               Applications are reviewed personally. Spots are limited to maintain the quality of service each client deserves.
             </p>
             <div className="space-y-3">
-              <a href="mailto:hello@rembydesign.com?subject=Elite%20Suite%20Application"
+              <a href="mailto:sledheadspl@gmail.com?subject=Elite%20Suite%20Application"
                 className="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl text-sm font-bold text-black transition-all hover:scale-[1.02]"
                 style={{
                   background: 'linear-gradient(135deg, #fff7aa, #ffd700, #cc9900)',
