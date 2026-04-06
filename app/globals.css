@@ -18,6 +18,10 @@
   --yellow-glow: rgba(255, 214, 10, 0.35);
   --green: #30d158;
   --green-glow: rgba(48, 209, 88, 0.35);
+  --cyan: #00E5FF;
+  --cyan-glow: rgba(0, 229, 255, 0.35);
+  --gold: #ffd700;
+  --gold-glow: rgba(255, 215, 0, 0.35);
 }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
@@ -46,13 +50,39 @@ html, body {
 }
 
 /* ── Glow utilities ────────────────────────────────────────────────────────── */
-.glow-red  { box-shadow: 0 0 40px var(--red-glow), 0 0 80px rgba(255,59,48,0.15); }
+.glow-red    { box-shadow: 0 0 40px var(--red-glow),  0 0 80px rgba(255,59,48,0.15); }
 .glow-yellow { box-shadow: 0 0 40px var(--yellow-glow), 0 0 80px rgba(255,214,10,0.12); }
-.glow-green { box-shadow: 0 0 40px var(--green-glow), 0 0 80px rgba(48,209,88,0.12); }
+.glow-green  { box-shadow: 0 0 40px var(--green-glow), 0 0 80px rgba(48,209,88,0.12); }
+.glow-cyan   { box-shadow: 0 0 40px var(--cyan-glow),  0 0 80px rgba(0,229,255,0.15); }
+.glow-gold   { box-shadow: 0 0 40px var(--gold-glow),  0 0 80px rgba(255,215,0,0.12); }
 
-.text-glow-red { text-shadow: 0 0 40px rgba(255,59,48,0.6), 0 0 80px rgba(255,59,48,0.3); }
+.text-glow-red    { text-shadow: 0 0 40px rgba(255,59,48,0.6),  0 0 80px rgba(255,59,48,0.3); }
 .text-glow-yellow { text-shadow: 0 0 40px rgba(255,214,10,0.6), 0 0 80px rgba(255,214,10,0.3); }
-.text-glow-green { text-shadow: 0 0 40px rgba(48,209,88,0.6), 0 0 80px rgba(48,209,88,0.3); }
+.text-glow-green  { text-shadow: 0 0 40px rgba(48,209,88,0.6),  0 0 80px rgba(48,209,88,0.3); }
+.text-glow-cyan   { text-shadow: 0 0 40px rgba(0,229,255,0.7),  0 0 80px rgba(0,229,255,0.35); }
+.text-glow-gold   { text-shadow: 0 0 40px rgba(255,215,0,0.7),  0 0 80px rgba(255,215,0,0.35); }
+
+/* ── Prestige glassmorphism card ──────────────────────────────────────────── */
+.glass-card {
+  background: rgba(15, 15, 15, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Neon border pulse (cyan) ─────────────────────────────────────────────── */
+@keyframes border-glow-cyan {
+  0%, 100% { border-color: rgba(0,229,255,0.2); box-shadow: 0 0 20px rgba(0,229,255,0.05); }
+  50%       { border-color: rgba(0,229,255,0.6); box-shadow: 0 0 40px rgba(0,229,255,0.2); }
+}
+.animate-border-cyan { animation: border-glow-cyan 3s ease-in-out infinite; }
+
+/* ── Neon border pulse (gold) ─────────────────────────────────────────────── */
+@keyframes border-glow-gold {
+  0%, 100% { border-color: rgba(255,215,0,0.2); box-shadow: 0 0 20px rgba(255,215,0,0.05); }
+  50%       { border-color: rgba(255,215,0,0.6); box-shadow: 0 0 40px rgba(255,215,0,0.2); }
+}
+.animate-border-gold { animation: border-glow-gold 3s ease-in-out infinite; }
 
 /* ── Animations ────────────────────────────────────────────────────────────── */
 @keyframes fadeUp {

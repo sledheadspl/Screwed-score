@@ -20,6 +20,8 @@ const config: Config = {
           red:     '#ff3b30',
           yellow:  '#ffd60a',
           green:   '#30d158',
+          cyan:    '#00E5FF',
+          deep:    '#0a0a12',
         },
       },
       fontFamily: {

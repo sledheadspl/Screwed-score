@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
+import Navbar from '@/components/navigation/Navbar'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://screwedscore.com'),
@@ -130,6 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <Navbar />
         {children}
         <footer className="text-center py-8 text-sm text-gray-500 space-y-2">
           <div className="flex justify-center">

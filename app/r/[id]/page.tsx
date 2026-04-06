@@ -132,24 +132,6 @@ export default async function SharePage({ params }: Props) {
           style={{ background: `radial-gradient(ellipse, ${cfg.glowColor} 0%, transparent 70%)` }} />
       </div>
 
-      <nav className="sticky top-0 z-50 border-b border-brand-border/60 bg-brand-bg/80 backdrop-blur-xl">
-        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1 select-none">
-            <span className="text-base font-black text-brand-text">Get</span>
-            <span className="text-base font-black" style={{
-              background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            }}>Screwed</span>
-            <span className="text-base font-black text-brand-text">Score</span>
-          </Link>
-          <Link href="/"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)', boxShadow: '0 0 20px rgba(255,59,48,0.3)' }}>
-            Check mine <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </nav>
-
       <main className="max-w-2xl mx-auto px-4 py-10 space-y-5 relative">
 
         {/* Hero */}

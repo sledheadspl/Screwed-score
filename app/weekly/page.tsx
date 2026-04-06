@@ -120,25 +120,6 @@ export default async function WeeklyPage() {
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-30" />
       </div>
 
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-brand-border/50 bg-brand-bg/85 backdrop-blur-xl">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1 select-none">
-            <span className="text-base font-black text-brand-text">Get</span>
-            <span className="text-base font-black" style={{
-              background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            }}>Screwed</span>
-            <span className="text-base font-black text-brand-text">Score</span>
-          </Link>
-          <Link href="/"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-all"
-            style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-            Check Mine <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </nav>
-
       <div className="relative z-10 max-w-3xl mx-auto px-4 py-10 space-y-8">
 
         {/* Header */}

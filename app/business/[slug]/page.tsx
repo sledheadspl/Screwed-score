@@ -77,22 +77,6 @@ export default function BusinessPage({ params }: { params: Promise<{ slug: strin
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-30" />
       </div>
 
-      <nav className="sticky top-0 z-50 border-b border-brand-border/50 bg-brand-bg/85 backdrop-blur-xl">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1 select-none">
-            <span className="text-base font-black text-brand-text">Get</span>
-            <span className="text-base font-black" style={{
-              background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            }}>Screwed</span>
-            <span className="text-base font-black text-brand-text">Score</span>
-          </Link>
-          <Link href="/shame" className="text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
-            ← Business Rankings
-          </Link>
-        </div>
-      </nav>
-
       <div className="relative z-10 max-w-3xl mx-auto px-4 py-10 space-y-6">
         {loading ? (
           <div className="flex items-center justify-center py-20">
