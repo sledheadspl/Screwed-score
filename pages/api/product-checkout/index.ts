@@ -42,7 +42,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
 
   const requestOrigin = req.headers.origin as string | undefined
-  if (requestOrigin && requestOrigin !== origin) {
+  const allowedOrigins = [
+    origin,
+    origin.replace('https://', 'https://www.'),
+    origin.replace('https://www.', 'https://'),
+  ]
+  if (requestOrigin && !allowedOrigins.includes(requestOrigin)) {
     return res.status(403).json({ error: 'Forbidden' })
   }
 
