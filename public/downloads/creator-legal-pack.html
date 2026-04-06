@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creator Legal Pack — REMbyDesign</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:60px 32px}
+.doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+.doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+.doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+.doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+.doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+.toc ol{padding-left:20px}
+.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+.section{margin-bottom:64px}
+.section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+p{color:rgba(242,242,242,.65);margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.system{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.system-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.system-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.system-name{font-size:16px;font-weight:700;color:var(--text)}
+.system-body{padding:20px 24px}
+.system-body ul{padding-left:0;list-style:none}
+.system-body li{font-size:13px;color:rgba(242,242,242,.55);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.system-body li:last-child{border-bottom:none}
+.system-body li::before{content:'&#8594;';color:var(--cyan);flex-shrink:0;margin-top:1px}
+.formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+tr:last-child td{border-bottom:none}
+.callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+.callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+.callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+.callout.red{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.2)}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+.callout-text strong{color:var(--text)}
+.steps{margin:20px 0}
+.step{display:flex;gap:16px;margin-bottom:20px}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+.step-content{padding-top:4px}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+.doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+.contract-block{background:#0a0a0a;border:1px solid rgba(0,229,255,.12);border-radius:12px;padding:28px 32px;margin:20px 0;font-size:13px;color:rgba(242,242,242,.7);line-height:1.9}
+.contract-block h4{color:var(--cyan);font-size:12px;letter-spacing:.1em;margin-bottom:16px;margin-top:0}
+.contract-block p{color:rgba(242,242,242,.65);margin-bottom:10px;font-size:13px}
+.fill{color:var(--yellow);font-style:italic}
+.tag-red{display:inline-block;background:rgba(255,59,48,.12);border:1px solid rgba(255,59,48,.3);color:var(--red);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase}
+.tag-green{display:inline-block;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.3);color:var(--green);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase}
+.tag-yellow{display:inline-block;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.3);color:var(--yellow);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase}
+ul.checklist{list-style:none;padding-left:0;margin:12px 0}
+ul.checklist li{font-size:13px;color:rgba(242,242,242,.6);padding:5px 0;display:flex;gap:10px;align-items:flex-start}
+ul.checklist li::before{content:'&#9632;';color:var(--cyan);flex-shrink:0;font-size:10px;margin-top:4px}
+@media print{body{background:#fff;color:#000}.page{padding:20px}.formula{background:#f5f5f5;color:#0070c0}.contract-block{background:#f9f9f9;border-color:#ccc}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-badge">&#9670; Creator Legal Pack</div>
+  <h1 class="doc-title">Creator Legal Pack</h1>
+  <p class="doc-subtitle">Professional contracts, disclaimers, and TOS templates written for online creators. Covers brand deals, coaching, digital products, and UGC agreements.</p>
+  <div class="doc-meta">
+    <span>6 contract templates</span>
+    <span>FTC compliant</span>
+    <span>Editable + copy-paste</span>
+    <span>REMbyDesign &copy; 2026</span>
+    <span>$129</span>
+  </div>
+</div>
+
+<!-- LEGAL DISCLAIMER CALLOUT -->
+<div class="callout yellow">
+  <div class="callout-icon">&#9888;</div>
+  <div class="callout-text">
+    <strong>Important Disclaimer.</strong> The templates and information in this document are provided for informational and educational purposes only. They do not constitute legal advice and are not a substitute for consultation with a licensed attorney in your jurisdiction. Laws vary by state, country, and context. Before using any of these templates in a high-stakes situation — especially for agreements involving significant money, IP, or liability — consult a qualified legal professional. REMbyDesign makes no warranties regarding the enforceability or completeness of these templates for your specific circumstances.
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li>How to Use These Templates</li>
+    <li>Brand Deal / Sponsorship Agreement</li>
+    <li>UGC Creator Agreement</li>
+    <li>Digital Product Terms of Service</li>
+    <li>Coaching / Consulting Service Agreement</li>
+    <li>Affiliate Disclosure Templates (FTC-Compliant)</li>
+    <li>DMCA Takedown Notice Template</li>
+    <li>Invoice &amp; Payment Terms Template</li>
+    <li>Negotiation Guide: Terms, Red Flags &amp; Rate Anchoring</li>
+  </ol>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-num">Section 01</div>
+  <h2>How to Use These Templates</h2>
+  <p>These templates are designed to give you a professional starting point — not a finished document. Every deal is different, every client is different, and every jurisdiction has different laws. The goal is to save you 80% of the work so you can focus on the 20% that's specific to your situation.</p>
+
+  <h3>The Fill-in-the-Blank System</h3>
+  <p>Throughout every template you'll see bracketed placeholders formatted like <span class="fill">[CREATOR NAME]</span> or <span class="fill">[PAYMENT AMOUNT]</span>. These yellow items require your input. Never send a contract with unfilled brackets — it signals sloppiness and can create ambiguity that courts may interpret against you.</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#128073;</div>
+    <div class="callout-text"><strong>Before filling in any template:</strong> Copy the full text into a Google Doc or Word document. Use Find &amp; Replace to locate every bracket. Highlight filled-in sections in a different color for your own review pass before sending.</div>
+  </div>
+
+  <h3>What to Customize in Every Contract</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Party Information</div>
+        <div class="step-desc">Full legal names, not usernames or handles. If you operate under an LLC or business entity, use that entity name. Include addresses — even a city/state is sufficient for most freelance agreements.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Scope of Work &amp; Deliverables</div>
+        <div class="step-desc">Be brutally specific. "One Instagram post" is not enough — specify dimensions, format (Reel vs. static), caption length, number of hashtags, tag requirements, and story slide count. Ambiguity always costs you.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Payment Terms</div>
+        <div class="step-desc">Amount, currency, payment method (ACH, wire, PayPal, etc.), due date (Net 15, Net 30, or upon deliverable), and what happens if payment is late. Never skip the late fee clause.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Usage Rights &amp; License Duration</div>
+        <div class="step-desc">This is where most creators get burned. Specify exactly where the brand can use your content, for how long, and whether they can use it in paid ads. "Unlimited use forever" should cost significantly more than "organic social only for 6 months."</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Governing Law</div>
+        <div class="step-desc">The state (or country) whose laws govern the contract. Always try to make it your home state. This matters if you ever need to file a claim or defend yourself.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>When to Involve a Lawyer</h3>
+  <p>Use these templates for deals under $5,000 where the stakes are manageable. For anything above that threshold — or any deal involving exclusivity, significant IP transfers, long-term licensing, or clauses that limit your right to work with competitors — pay a lawyer to review it. A one-hour consultation typically costs $150–$400 and can save you thousands.</p>
+
+  <table>
+    <thead>
+      <tr><th>Situation</th><th>DIY Template OK?</th><th>Recommendation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Brand deal under $2,500</td><td><span class="tag-green">Yes</span></td><td>Use template as-is with customization</td></tr>
+      <tr><td>Brand deal $2,500–$10,000</td><td><span class="tag-yellow">Maybe</span></td><td>Use template, have lawyer review if exclusivity involved</td></tr>
+      <tr><td>Brand deal over $10,000</td><td><span class="tag-red">No</span></td><td>Always have a lawyer review</td></tr>
+      <tr><td>Coaching program under $1,000/client</td><td><span class="tag-green">Yes</span></td><td>Use template</td></tr>
+      <tr><td>Group program over $3,000</td><td><span class="tag-yellow">Maybe</span></td><td>Add custom liability clauses for your niche</td></tr>
+      <tr><td>IP assignment / content buyout</td><td><span class="tag-red">No</span></td><td>Always consult a lawyer</td></tr>
+      <tr><td>UGC deal with paid ad usage</td><td><span class="tag-yellow">Maybe</span></td><td>Ensure ad usage rate is specified</td></tr>
+    </tbody>
+  </table>
+
+  <h3>How to Send Contracts Professionally</h3>
+  <p>The tool you use to send contracts signals your professionalism. Emailing a Google Doc link is fine for smaller deals. For anything over $1,000, consider using a proper e-signature platform.</p>
+
+  <div class="card">
+    <div class="card-title">Recommended E-Signature Tools</div>
+    <div class="card-desc"><strong>HelloSign (now Dropbox Sign)</strong> — $15/mo, clean UI, legally binding. Best for creators.<br><br><strong>DocuSign</strong> — industry standard, brands recognize it, slightly more expensive ($25/mo). Use when working with large corporations who may scrutinize the signing method.<br><br><strong>PandaDoc</strong> — free tier available, has a built-in template library. Good for starting out.<br><br><strong>Adobe Sign</strong> — if you already pay for Adobe Creative Cloud, this is included at higher tiers.</div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">&#10003;</div>
+    <div class="callout-text"><strong>Pro tip:</strong> Always send the contract — don't wait for the brand to send theirs. Your contract protects you. Their contract protects them. Whoever sends first sets the baseline terms.</div>
+  </div>
+</div>
+
+<!-- SECTION 2: BRAND DEAL CONTRACT -->
+<div class="section">
+  <div class="section-num">Section 02</div>
+  <h2>Brand Deal / Sponsorship Agreement</h2>
+  <p>This is the most important contract in your arsenal. Use it for any paid partnership where a brand is compensating you to promote their product or service on your platform(s). Modify the deliverables section heavily — it should be as specific as possible.</p>
+
+  <div class="contract-block">
+    <h4>BRAND DEAL / SPONSORSHIP AGREEMENT</h4>
+    <p>This Brand Deal and Content Sponsorship Agreement (the "Agreement") is entered into as of <span class="fill">[DATE]</span> (the "Effective Date"), by and between:</p>
+    <p><strong>Creator:</strong> <span class="fill">[YOUR FULL LEGAL NAME OR BUSINESS ENTITY]</span>, residing at or operating from <span class="fill">[YOUR CITY, STATE/PROVINCE, COUNTRY]</span> ("Creator"), and</p>
+    <p><strong>Brand:</strong> <span class="fill">[BRAND LEGAL ENTITY NAME]</span>, a <span class="fill">[STATE/PROVINCE]</span> <span class="fill">[corporation / LLC / partnership]</span> with its principal place of business at <span class="fill">[BRAND ADDRESS]</span> ("Brand").</p>
+    <p>The Creator and Brand are each referred to herein individually as a "Party" and collectively as the "Parties."</p>
+
+    <p><strong>1. SERVICES AND DELIVERABLES</strong></p>
+    <p>1.1 Creator agrees to create and publish the following content (the "Deliverables") on the platforms specified below, subject to the terms of this Agreement:</p>
+    <p>
+      Platform: <span class="fill">[PLATFORM(S): e.g., YouTube, Instagram, TikTok, Podcast]</span><br>
+      Content Type: <span class="fill">[e.g., one (1) dedicated YouTube video, minimum 8 minutes in length; two (2) Instagram Reels, minimum 30 seconds each; one (1) Instagram Story sequence of not fewer than three (3) frames]</span><br>
+      Sponsored Segment Duration/Placement: <span class="fill">[e.g., 60-second mid-roll read between minutes 3 and 6 of the video; 15-second integrated mention at the start of each Reel]</span><br>
+      Required Talking Points: <span class="fill">[LIST SPECIFIC CLAIMS, DISCOUNTS, OR MESSAGES BRAND REQUIRES]</span><br>
+      Required Links/Codes: <span class="fill">[e.g., affiliate link in description, promo code "CREATOR20" in caption]</span><br>
+      Required Tags/Mentions: <span class="fill">[e.g., tag @BrandHandle, use #BrandHashtag]</span>
+    </p>
+    <p>1.2 All Deliverables must include a clear and conspicuous FTC-compliant disclosure indicating the material connection between Creator and Brand (e.g., "#ad", "#sponsored", or "Paid partnership with [Brand]"). Creator bears sole responsibility for compliance with applicable FTC guidelines and platform disclosure requirements.</p>
+
+    <p><strong>2. TIMELINE AND DEADLINES</strong></p>
+    <p>2.1 <strong>Draft Submission Deadline:</strong> Creator will submit a draft of each Deliverable to Brand for review no later than <span class="fill">[DATE]</span>.</p>
+    <p>2.2 <strong>Brand Review Period:</strong> Brand will provide written feedback or approval within <span class="fill">[3 / 5 / 7]</span> business days of receiving the draft. Failure to respond within this period constitutes automatic approval.</p>
+    <p>2.3 <strong>Revision Rounds:</strong> This Agreement includes <span class="fill">[TWO (2)]</span> rounds of revisions. Additional revision rounds beyond this number will be billed at Creator's standard revision rate of <span class="fill">[$XXX per round]</span>.</p>
+    <p>2.4 <strong>Publication Deadline:</strong> All approved Deliverables must be published no later than <span class="fill">[DATE]</span>, unless Brand approves a written extension.</p>
+    <p>2.5 <strong>Go-Live Notification:</strong> Creator will notify Brand by email within 24 hours of publication with a direct link to each Deliverable.</p>
+
+    <p><strong>3. COMPENSATION AND PAYMENT TERMS</strong></p>
+    <p>3.1 <strong>Flat Fee:</strong> Brand agrees to pay Creator a total flat fee of <span class="fill">[$AMOUNT USD]</span> for the Deliverables specified in Section 1 (the "Fee").</p>
+    <p>3.2 <strong>Payment Schedule:</strong> <span class="fill">[CHOOSE ONE:]</span><br>
+      Option A: 100% of the Fee is due within <span class="fill">[NET 15 / NET 30]</span> days of the publication of all Deliverables.<br>
+      Option B: 50% of the Fee (<span class="fill">[$AMOUNT]</span>) is due upon execution of this Agreement; the remaining 50% (<span class="fill">[$AMOUNT]</span>) is due within <span class="fill">[NET 15]</span> days of publication of all Deliverables.<br>
+      Option C: 100% of the Fee is due within 5 business days of execution of this Agreement (prepay).
+    </p>
+    <p>3.3 <strong>Payment Method:</strong> All payments shall be made via <span class="fill">[ACH / Wire Transfer / PayPal / Venmo for Business / Check]</span> to the account or address provided by Creator separately.</p>
+    <p>3.4 <strong>Late Fees:</strong> Any payment not received within the time period specified in Section 3.2 will accrue a late fee of <span class="fill">[1.5%]</span> per month (or the maximum rate permitted by applicable law, whichever is lower) on the outstanding balance, calculated from the original due date.</p>
+    <p>3.5 <strong>Taxes:</strong> Creator is solely responsible for all taxes, withholdings, and self-employment contributions on amounts received under this Agreement. Brand will issue a Form 1099-NEC (or equivalent) if required by applicable law.</p>
+
+    <p><strong>4. USAGE RIGHTS AND LICENSE</strong></p>
+    <p>4.1 <strong>License Grant:</strong> Upon receipt of full payment, Creator grants Brand a <span class="fill">[non-exclusive / exclusive]</span>, <span class="fill">[limited / worldwide]</span> license to use, reproduce, and distribute the Deliverables solely for the following purposes and platforms:</p>
+    <p>
+      Permitted Channels: <span class="fill">[e.g., Brand's owned social media accounts (organic only); Brand's website and email newsletters]</span><br>
+      Paid Advertising: <span class="fill">[YES / NO]</span> — if YES, see Section 4.2 for additional fee.<br>
+      License Duration: <span class="fill">[6 months / 12 months / in perpetuity]</span> from the date of original publication.
+    </p>
+    <p>4.2 <strong>Paid Advertising Usage:</strong> If Brand wishes to use any Deliverable in paid advertising (including but not limited to Meta Ads, Google Ads, TikTok Ads, or programmatic placements), Brand must obtain Creator's written consent and pay an additional <strong>Paid Ad Usage Fee</strong> of <span class="fill">[$AMOUNT]</span> per platform per 90-day period. This fee is separate from and in addition to the flat fee in Section 3.1.</p>
+    <p>4.3 <strong>No Alterations:</strong> Brand shall not edit, crop, alter, or modify the Deliverables in any way that materially changes Creator's message, likeness, or brand without Creator's prior written consent.</p>
+    <p>4.4 <strong>Ownership:</strong> Nothing in this Agreement transfers ownership of the Deliverables to Brand. Creator retains all copyright and intellectual property rights in the Deliverables. This Agreement grants only the limited license described herein.</p>
+    <p>4.5 <strong>Portfolio Rights:</strong> Creator retains the right to display the Deliverables in Creator's portfolio, media kit, and case studies for the purpose of promoting Creator's services.</p>
+
+    <p><strong>5. EXCLUSIVITY</strong></p>
+    <p>5.1 <span class="fill">[CHOOSE ONE:]</span><br>
+      Option A (No Exclusivity): This Agreement is non-exclusive. Creator may create content for and work with competing brands during the term of this Agreement.<br>
+      Option B (Limited Exclusivity): Creator agrees not to publish sponsored content for direct competitors of Brand — defined as companies offering <span class="fill">[DESCRIBE COMPETING PRODUCT CATEGORY]</span> — for a period of <span class="fill">[30 / 60 / 90]</span> days <span class="fill">[before / after / before and after]</span> the publication date of each Deliverable. In consideration of this exclusivity, Brand agrees to pay Creator an additional Exclusivity Fee of <span class="fill">[$AMOUNT]</span>, included in or in addition to the flat fee in Section 3.1.
+    </p>
+
+    <p><strong>6. KILL FEE</strong></p>
+    <p>6.1 If Brand cancels this Agreement after Creator has commenced work on the Deliverables (defined as submission of any draft, outline, or footage to Brand), Brand agrees to pay Creator a Kill Fee as follows:</p>
+    <p>
+      Cancellation before draft submission: <span class="fill">[25%]</span> of total Fee<br>
+      Cancellation after draft submission but before publication: <span class="fill">[50%]</span> of total Fee<br>
+      Cancellation after publication: <span class="fill">[100%]</span> of total Fee
+    </p>
+    <p>6.2 If Creator cancels this Agreement without cause after accepting payment, Creator agrees to refund any amounts received and shall not be entitled to any additional compensation.</p>
+
+    <p><strong>7. CONTENT APPROVAL AND CREATIVE CONTROL</strong></p>
+    <p>7.1 Creator retains creative control over the format, tone, style, and delivery of the Deliverables, subject to the required talking points and brand guidelines provided by Brand in writing prior to the Effective Date.</p>
+    <p>7.2 Brand may request reasonable edits during the revision rounds specified in Section 2.3. Brand may not require Creator to make statements that are false, misleading, or that violate Creator's editorial standards.</p>
+    <p>7.3 Creator reserves the right to decline to post any Deliverable if, in Creator's good-faith judgment, posting it would materially harm Creator's reputation or violate Creator's editorial policies. In such event, the Parties will negotiate in good faith a modified approach. If no resolution is reached within 10 business days, either Party may terminate this Agreement with a Kill Fee as specified in Section 6.</p>
+
+    <p><strong>8. REPRESENTATIONS AND WARRANTIES</strong></p>
+    <p>8.1 <strong>Creator represents and warrants that:</strong> (a) Creator has full authority to enter into this Agreement; (b) the Deliverables will be Creator's original work and will not infringe any third-party intellectual property rights; (c) Creator will comply with all applicable laws, platform policies, and FTC disclosure requirements in connection with the Deliverables; and (d) Creator does not have any existing contractual obligation that would conflict with this Agreement.</p>
+    <p>8.2 <strong>Brand represents and warrants that:</strong> (a) Brand has full authority to enter into this Agreement; (b) Brand's products and services are accurately described in all briefing materials provided to Creator; (c) any claims Brand requires Creator to make are truthful and substantiated; and (d) Brand's use of the Deliverables will comply with applicable advertising laws.</p>
+
+    <p><strong>9. INDEMNIFICATION</strong></p>
+    <p>9.1 Each Party (the "Indemnifying Party") agrees to defend, indemnify, and hold harmless the other Party and its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys' fees) arising out of or relating to: (a) the Indemnifying Party's breach of this Agreement; or (b) the Indemnifying Party's negligence or willful misconduct.</p>
+    <p>9.2 Brand will indemnify Creator against any claims arising from the accuracy of Brand's product claims or the legality of Brand's products and services.</p>
+
+    <p><strong>10. LIMITATION OF LIABILITY</strong></p>
+    <p>10.1 In no event shall either Party be liable to the other for any indirect, incidental, special, consequential, or punitive damages, including loss of profits or business opportunities, even if advised of the possibility of such damages.</p>
+    <p>10.2 Each Party's total liability under this Agreement shall not exceed the total Fee paid or payable under this Agreement.</p>
+
+    <p><strong>11. CONFIDENTIALITY</strong></p>
+    <p>11.1 Each Party agrees to keep confidential any non-public information disclosed by the other Party in connection with this Agreement, including but not limited to campaign details, compensation amounts, and product launch timelines, for a period of <span class="fill">[12 months]</span> following the termination of this Agreement.</p>
+
+    <p><strong>12. GOVERNING LAW AND DISPUTE RESOLUTION</strong></p>
+    <p>12.1 This Agreement shall be governed by the laws of the State of <span class="fill">[YOUR STATE]</span>, without regard to conflict-of-law principles.</p>
+    <p>12.2 Any dispute arising under this Agreement shall first be subject to good-faith negotiation between the Parties. If unresolved within 30 days, disputes shall be submitted to binding arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules, with proceedings conducted in <span class="fill">[YOUR CITY, STATE]</span>.</p>
+
+    <p><strong>13. GENERAL PROVISIONS</strong></p>
+    <p>13.1 <strong>Entire Agreement.</strong> This Agreement constitutes the entire agreement between the Parties regarding its subject matter and supersedes all prior negotiations, representations, and understandings.</p>
+    <p>13.2 <strong>Amendments.</strong> This Agreement may only be modified by a written amendment signed by both Parties.</p>
+    <p>13.3 <strong>Severability.</strong> If any provision of this Agreement is held unenforceable, the remaining provisions shall continue in full force and effect.</p>
+    <p>13.4 <strong>Waiver.</strong> Failure of either Party to enforce any provision shall not constitute a waiver of the right to enforce such provision in the future.</p>
+    <p>13.5 <strong>Independent Contractors.</strong> The Parties are independent contractors. Nothing in this Agreement creates an employment, partnership, joint venture, or agency relationship.</p>
+
+    <p><strong>IN WITNESS WHEREOF,</strong> the Parties have executed this Agreement as of the date first written above.</p>
+    <p>
+      Creator: _______________________________ Date: ____________<br>
+      <span class="fill">[CREATOR NAME / ENTITY]</span><br><br>
+      Brand Representative: _______________________________ Date: ____________<br>
+      <span class="fill">[NAME, TITLE, BRAND ENTITY]</span>
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 3: UGC CREATOR AGREEMENT -->
+<div class="section">
+  <div class="section-num">Section 03</div>
+  <h2>UGC Creator Agreement</h2>
+  <p>Use this template when a brand or agency is hiring you to create User-Generated Content — video or photos they will use in their own marketing, not content you publish on your own channel. UGC deals have different IP dynamics than standard sponsorships. You're selling usage rights to content you create.</p>
+
+  <div class="contract-block">
+    <h4>UGC CONTENT CREATION AGREEMENT</h4>
+    <p>This UGC Content Creation Agreement (the "Agreement") is entered into as of <span class="fill">[DATE]</span>, by and between:</p>
+    <p><strong>Creator:</strong> <span class="fill">[YOUR FULL LEGAL NAME OR BUSINESS ENTITY]</span> ("Creator"), and</p>
+    <p><strong>Client:</strong> <span class="fill">[CLIENT / BRAND LEGAL ENTITY NAME]</span> ("Client").</p>
+
+    <p><strong>1. SCOPE OF WORK</strong></p>
+    <p>1.1 Creator agrees to create the following content assets (the "Content") for Client:</p>
+    <p>
+      Number of Videos: <span class="fill">[e.g., Three (3) short-form videos]</span><br>
+      Video Length: <span class="fill">[e.g., 30–60 seconds each]</span><br>
+      Format/Aspect Ratio: <span class="fill">[e.g., 9:16 vertical for TikTok/Reels/Shorts]</span><br>
+      Number of Photos: <span class="fill">[e.g., Ten (10) lifestyle photos]</span><br>
+      Themes/Concepts: <span class="fill">[e.g., unboxing, before/after, testimonial, product demo]</span><br>
+      Brand Guidelines Provided: <span class="fill">[YES / NO — attach if YES]</span><br>
+      Script/Brief Provided by Client: <span class="fill">[YES / NO — attach if YES]</span>
+    </p>
+    <p>1.2 Creator will script, film, and edit all Content using Creator's own equipment and in Creator's own style, unless Client has provided a detailed brief. Creator is not required to follow scripts verbatim; natural delivery is expected unless otherwise agreed.</p>
+    <p>1.3 Creator will not publish any of the Content on Creator's own social channels unless explicitly authorized by Client in writing.</p>
+
+    <p><strong>2. DELIVERABLE SPECIFICATIONS AND DEADLINES</strong></p>
+    <p>2.1 Creator will deliver all Content to Client via <span class="fill">[Google Drive / WeTransfer / Dropbox / email]</span> by <span class="fill">[DATE]</span>.</p>
+    <p>2.2 All video files will be delivered in <span class="fill">[MP4 / MOV]</span> format, minimum <span class="fill">[1080p]</span> resolution.</p>
+    <p>2.3 All photo files will be delivered in <span class="fill">[JPEG / PNG / RAW]</span> format, minimum <span class="fill">[2000px on the long edge]</span>.</p>
+    <p>2.4 <strong>Raw Files:</strong> <span class="fill">[YES / NO]</span> — Raw/unedited files <span class="fill">[will / will not]</span> be included. If yes, raw files are subject to the same usage license specified in Section 4 and may not be used beyond the licensed scope.</p>
+    <p>2.5 Client will provide written approval or revision requests within <span class="fill">[5]</span> business days of receiving Content. Silence beyond this period constitutes approval.</p>
+    <p>2.6 This Agreement includes <span class="fill">[TWO (2)]</span> rounds of revisions. Additional revisions are billed at <span class="fill">[$XXX per asset per round]</span>.</p>
+
+    <p><strong>3. PAYMENT</strong></p>
+    <p>3.1 Client agrees to pay Creator a total of <span class="fill">[$AMOUNT]</span> for the Content specified in Section 1.</p>
+    <p>3.2 Payment Schedule: <span class="fill">[e.g., 50% ($XXX) due upon execution; 50% ($XXX) due upon delivery and approval of all Content]</span>.</p>
+    <p>3.3 <strong>Usage-Based Pricing:</strong> The Fee in Section 3.1 covers the usage rights specified in Section 4. If Client wishes to expand usage beyond what is licensed in Section 4 (e.g., adding paid advertising rights, extending the license period, or licensing to third parties), Client must pay additional fees as follows:</p>
+    <p>
+      Paid advertising on Meta/TikTok/Google per 90-day period: <span class="fill">[$AMOUNT per asset]</span><br>
+      Extended license (each additional 6-month term): <span class="fill">[$AMOUNT per asset]</span><br>
+      Third-party sublicense: <span class="fill">[$AMOUNT, requires Creator written consent]</span>
+    </p>
+    <p>3.4 Late fees accrue at <span class="fill">[1.5%]</span> per month on overdue balances.</p>
+
+    <p><strong>4. INTELLECTUAL PROPERTY AND USAGE RIGHTS</strong></p>
+    <p>4.1 Creator retains full copyright ownership of all Content created under this Agreement.</p>
+    <p>4.2 Upon receipt of full payment, Creator grants Client a <strong>limited, non-exclusive, non-transferable license</strong> to use the Content as follows:</p>
+    <p>
+      Permitted Platforms: <span class="fill">[e.g., Client's owned social media accounts (organic posts only); Client's website; Client's email marketing]</span><br>
+      Paid Advertising: <span class="fill">[YES / NO]</span><br>
+      License Duration: <span class="fill">[6 months / 12 months / 24 months]</span> from date of delivery<br>
+      Geographic Territory: <span class="fill">[Worldwide / United States only / specify region]</span>
+    </p>
+    <p>4.3 Client may not sell, sublicense, transfer, or assign the Content or any rights thereto to any third party without Creator's prior written consent and payment of the applicable third-party sublicense fee.</p>
+    <p>4.4 Client may not alter, remix, or use the Content in a context that misrepresents Creator's statements, likeness, or endorsement.</p>
+    <p>4.5 Upon expiration of the license, Client must cease all use of the Content and delete it from all digital platforms, ad accounts, and internal storage.</p>
+
+    <p><strong>5. KILL CLAUSE</strong></p>
+    <p>5.1 If Client cancels this Agreement after Creator has begun production (defined as any filming, photography, or editing work), Client owes the Kill Fee as follows:</p>
+    <p>
+      Before any production work: No fee owed<br>
+      After production begun, before delivery: <span class="fill">[50%]</span> of total Fee<br>
+      After delivery, before approval: <span class="fill">[75%]</span> of total Fee<br>
+      After approval: <span class="fill">[100%]</span> of total Fee
+    </p>
+
+    <p><strong>6. CREATOR'S REPRESENTATIONS</strong></p>
+    <p>6.1 Creator represents that: (a) Creator owns or has licensed all elements incorporated into the Content, including music, footage, props, and locations; (b) Creator has obtained any necessary model or property releases for third parties appearing in or depicted in the Content; (c) the Content does not defame any person or entity; and (d) Creator is not bound by any exclusivity agreement that would prevent Creator from completing this Agreement.</p>
+    <p>6.2 <strong>Music Licensing:</strong> Creator will use only royalty-free, licensed, or original music in the Content, or will deliver videos without music ("music-off" versions) for Client to add licensed music. Creator is not liable for any music licensing claims arising from Client's use of Content after delivery.</p>
+
+    <p><strong>7. INDEPENDENT CONTRACTOR STATUS</strong></p>
+    <p>Creator is an independent contractor. Client will not withhold taxes, provide benefits, or treat Creator as an employee. Creator is responsible for all applicable taxes.</p>
+
+    <p><strong>8. GOVERNING LAW</strong></p>
+    <p>This Agreement is governed by the laws of the State of <span class="fill">[YOUR STATE]</span>.</p>
+
+    <p><strong>SIGNATURES</strong></p>
+    <p>
+      Creator: _______________________________ Date: ____________<br>
+      <span class="fill">[CREATOR NAME]</span><br><br>
+      Client: _______________________________ Date: ____________<br>
+      <span class="fill">[CLIENT NAME, TITLE, ENTITY]</span>
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 4: DIGITAL PRODUCT TOS -->
+<div class="section">
+  <div class="section-num">Section 04</div>
+  <h2>Digital Product Terms of Service</h2>
+  <p>This template is for the Terms of Service page or document that governs the purchase and use of your digital products — templates, courses, ebooks, presets, Notion systems, etc. Post this on your website and link to it from every product checkout.</p>
+
+  <div class="contract-block">
+    <h4>DIGITAL PRODUCT TERMS OF SERVICE</h4>
+    <p><em>Last Updated: <span class="fill">[DATE]</span></em></p>
+    <p>These Terms of Service ("Terms") govern your purchase and use of digital products ("Products") offered by <span class="fill">[YOUR NAME / BUSINESS NAME]</span> ("Seller," "we," "us," or "our") through <span class="fill">[WEBSITE URL]</span> (the "Site"). By completing a purchase, you ("Buyer," "you," or "your") agree to be bound by these Terms.</p>
+
+    <p><strong>1. LICENSE GRANT</strong></p>
+    <p>1.1 Upon completing your purchase and receiving full payment, Seller grants you a <strong>limited, non-exclusive, non-transferable, revocable personal license</strong> to access and use the Product solely for your own personal or internal business purposes, subject to the restrictions set forth in these Terms.</p>
+    <p>1.2 This license does not include the right to resell, sublicense, redistribute, or transfer the Product to any third party.</p>
+
+    <p><strong>2. PERMITTED USES</strong></p>
+    <p>You may: (a) Download and store one (1) copy of the Product for your personal use; (b) Use templates, swipe files, or frameworks from the Product to create your own original work; (c) Use strategies or information from the Product to operate and grow your own business; (d) Reference or adapt the concepts in the Product for your clients if you are a consultant or service provider, provided you do not resell the Product itself.</p>
+
+    <p><strong>3. PROHIBITED USES</strong></p>
+    <p>You may NOT: (a) Resell, redistribute, upload, or share the Product with any third party, whether for payment or for free; (b) Upload the Product to any file-sharing platform, torrent site, or cloud storage with public access; (c) Use the Product to create a competing product that is substantially similar in content or structure; (d) Remove, alter, or obscure any copyright notices or proprietary legends on the Product; (e) Transfer your license to another individual or entity; (f) Share login credentials or access links with anyone not covered by your purchase; (g) Use the Product in any way that violates applicable law or third-party rights.</p>
+    <p>Violation of these prohibited uses may result in immediate revocation of your license, legal action, and claims for damages.</p>
+
+    <p><strong>4. NO-REFUND POLICY</strong></p>
+    <p>4.1 Due to the immediate digital delivery nature of our Products, <strong>all sales are final</strong>. We do not offer refunds, exchanges, or credits except as required by applicable law or in cases of technical failure that prevents access to a Product after purchase.</p>
+    <p>4.2 By completing your purchase, you acknowledge that you have read the product description, reviewed any available previews or samples, and understand what you are purchasing.</p>
+    <p>4.3 If you experience a technical issue preventing access to your Product, contact us at <span class="fill">[YOUR EMAIL]</span> within 30 days of purchase and we will work to resolve the issue or, at our sole discretion, issue a store credit.</p>
+    <p>4.4 Chargebacks or payment disputes initiated without first contacting us may result in permanent account termination and legal action to recover funds.</p>
+
+    <p><strong>5. INTELLECTUAL PROPERTY OWNERSHIP</strong></p>
+    <p>5.1 All Products, including all content, design, code, copy, frameworks, and materials therein, are the exclusive intellectual property of Seller and are protected by copyright, trademark, and other applicable intellectual property laws.</p>
+    <p>5.2 Your purchase grants you only the limited license described in Section 1. No ownership rights are transferred to you at any time.</p>
+
+    <p><strong>6. DISCLAIMER OF WARRANTIES</strong></p>
+    <p>6.1 THE PRODUCTS ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, SELLER DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+    <p>6.2 SELLER DOES NOT WARRANT THAT THE PRODUCTS WILL MEET YOUR SPECIFIC REQUIREMENTS, PRODUCE ANY PARTICULAR RESULT, OR BE ERROR-FREE.</p>
+    <p>6.3 Any testimonials, income examples, or results mentioned in our marketing are not guarantees of your results. Individual results will vary based on effort, experience, and market conditions.</p>
+
+    <p><strong>7. LIMITATION OF LIABILITY</strong></p>
+    <p>7.1 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SELLER'S TOTAL LIABILITY TO YOU FOR ANY CLAIM ARISING OUT OF OR RELATED TO THESE TERMS OR ANY PRODUCT SHALL NOT EXCEED THE AMOUNT ACTUALLY PAID BY YOU FOR THAT PRODUCT.</p>
+    <p>7.2 IN NO EVENT SHALL SELLER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, EVEN IF SELLER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+
+    <p><strong>8. GOVERNING LAW</strong></p>
+    <p>These Terms are governed by the laws of the State of <span class="fill">[YOUR STATE]</span>. Any disputes shall be resolved exclusively in the state or federal courts located in <span class="fill">[YOUR COUNTY, STATE]</span>, and you consent to personal jurisdiction in those courts.</p>
+
+    <p><strong>9. CHANGES TO TERMS</strong></p>
+    <p>We reserve the right to update these Terms at any time. Updated Terms will be posted to the Site with a new "Last Updated" date. Continued purchase or use of Products after any such update constitutes your acceptance of the revised Terms.</p>
+
+    <p><strong>10. CONTACT</strong></p>
+    <p>For questions about these Terms or your purchase, contact us at: <span class="fill">[YOUR EMAIL ADDRESS]</span></p>
+  </div>
+</div>
+
+<!-- SECTION 5: COACHING AGREEMENT -->
+<div class="section">
+  <div class="section-num">Section 05</div>
+  <h2>Coaching / Consulting Service Agreement</h2>
+  <p>Use this for 1:1 coaching engagements, consulting retainers, or any service where you're being paid for your time, expertise, and guidance. The results disclaimer and liability sections are especially important in coaching — never skip them.</p>
+
+  <div class="contract-block">
+    <h4>COACHING AND CONSULTING SERVICE AGREEMENT</h4>
+    <p>This Coaching and Consulting Service Agreement ("Agreement") is entered into as of <span class="fill">[DATE]</span>, by and between:</p>
+    <p><strong>Coach/Consultant:</strong> <span class="fill">[YOUR FULL LEGAL NAME OR BUSINESS ENTITY]</span> ("Coach"), and</p>
+    <p><strong>Client:</strong> <span class="fill">[CLIENT FULL NAME]</span> ("Client").</p>
+
+    <p><strong>1. SCOPE OF SERVICES</strong></p>
+    <p>1.1 Coach agrees to provide the following coaching/consulting services ("Services") to Client:</p>
+    <p>
+      Program Name: <span class="fill">[e.g., Creator Business Accelerator / 1:1 Strategy Coaching]</span><br>
+      Program Duration: <span class="fill">[e.g., 8 weeks / 3 months / ongoing month-to-month]</span><br>
+      Session Frequency: <span class="fill">[e.g., Two (2) 60-minute video calls per month]</span><br>
+      Session Platform: <span class="fill">[Zoom / Google Meet / phone]</span><br>
+      Async Support: <span class="fill">[e.g., Unlimited Voxer access during business hours M–F; 1 email response per week with 48-hour turnaround; none]</span><br>
+      Materials Provided: <span class="fill">[e.g., worksheets, templates, resource library access]</span>
+    </p>
+    <p>1.2 Sessions will be scheduled in advance via <span class="fill">[Calendly / Acuity / email scheduling]</span>. Client is responsible for scheduling sessions within the program period. Unused sessions do not roll over.</p>
+
+    <p><strong>2. PAYMENT TERMS</strong></p>
+    <p>2.1 Client agrees to pay Coach a total program fee of <span class="fill">[$AMOUNT]</span>.</p>
+    <p>2.2 Payment Schedule: <span class="fill">[CHOOSE ONE:]</span><br>
+      Option A: Full payment of <span class="fill">[$AMOUNT]</span> due upon execution of this Agreement.<br>
+      Option B: Payment plan of <span class="fill">[$AMOUNT/month]</span> for <span class="fill">[N]</span> months, with the first payment due upon execution and subsequent payments on the same calendar date each month.<br>
+      Option C: Retainer of <span class="fill">[$AMOUNT/month]</span>, billed on the <span class="fill">[1st / 15th]</span> of each month, auto-renewing unless cancelled per Section 4.
+    </p>
+    <p>2.3 Payments are collected via <span class="fill">[Stripe / PayPal / ACH / Invoice]</span>. For payment plan clients, Coach reserves the right to pause access to services if a payment is more than <span class="fill">[5]</span> days late.</p>
+    <p>2.4 <strong>No Refunds:</strong> Due to the time-intensive nature of coaching services, all fees are non-refundable once the first session has occurred. If Client cancels before the first session, Coach will refund 100% of any amounts paid minus a <span class="fill">[$150]</span> administrative fee.</p>
+    <p>2.5 If Client is on a payment plan and ceases payments before the program is complete, the full remaining balance becomes immediately due. Coach may pursue collection and Client remains liable for the full contracted amount.</p>
+
+    <p><strong>3. CANCELLATION AND RESCHEDULING POLICY</strong></p>
+    <p>3.1 Client must provide at least <span class="fill">[48 hours]</span> written notice to cancel or reschedule a session. Sessions cancelled with less than <span class="fill">[48 hours]</span> notice will be forfeited (counted as used).</p>
+    <p>3.2 Coach may reschedule a session with at least <span class="fill">[24 hours]</span> notice. Coach will make a good-faith effort to find a mutually convenient substitute time.</p>
+    <p>3.3 If Coach cancels a session without offering a substitute time within 7 days, Client may request a pro-rata credit.</p>
+
+    <p><strong>4. PROGRAM TERMINATION</strong></p>
+    <p>4.1 Either Party may terminate this Agreement with <span class="fill">[30 days']</span> written notice. Upon termination by Client, no refund of fees already paid will be issued unless otherwise specified in Section 2.4.</p>
+    <p>4.2 Coach reserves the right to terminate this Agreement immediately and without refund if Client: (a) engages in abusive, threatening, or harassing behavior toward Coach; (b) fails to make two or more consecutive payments; or (c) violates the confidentiality provisions of Section 7.</p>
+
+    <p><strong>5. RESULTS DISCLAIMER</strong></p>
+    <p>5.1 Client acknowledges and understands that coaching and consulting services are educational and advisory in nature. Coach makes no guarantees, representations, or warranties regarding Client's results, income, business growth, or any other outcome.</p>
+    <p>5.2 Any testimonials or examples of results described by Coach or Coach's prior clients represent exceptional outcomes that may not be typical and are not a guarantee of Client's results.</p>
+    <p>5.3 Client's results are entirely dependent on Client's own effort, implementation, circumstances, market conditions, and numerous other factors outside of Coach's control. Client assumes full responsibility for the decisions Client makes and the actions Client takes.</p>
+    <p>5.4 Nothing in this Agreement or in Coach's services constitutes legal, financial, tax, medical, or psychological advice. Client should consult appropriate licensed professionals for such guidance.</p>
+
+    <p><strong>6. INTELLECTUAL PROPERTY</strong></p>
+    <p>6.1 All materials, frameworks, worksheets, training content, and methodologies provided by Coach in connection with this Agreement are Coach's proprietary intellectual property. Coach grants Client a personal, non-transferable license to use these materials solely for Client's own business purposes.</p>
+    <p>6.2 Client may not share, distribute, reproduce, or sell Coach's proprietary materials to third parties.</p>
+
+    <p><strong>7. CONFIDENTIALITY</strong></p>
+    <p>7.1 Both Parties agree to hold in strict confidence all non-public information shared by the other Party during the course of this engagement ("Confidential Information"), including but not limited to business strategies, financial details, personal challenges, and client information.</p>
+    <p>7.2 Coach will not disclose Client's personal or business information to third parties except: (a) with Client's prior written consent; (b) as required by law; or (c) to the extent necessary to provide the Services (e.g., a business partner or contractor who is bound by equivalent confidentiality obligations).</p>
+    <p>7.3 Client acknowledges that Coach works with multiple clients and that general strategies or frameworks discussed may be used with other clients, provided that Client's specific Confidential Information is not disclosed.</p>
+
+    <p><strong>8. NON-SOLICITATION</strong></p>
+    <p>8.1 During the term of this Agreement and for a period of <span class="fill">[12 months]</span> following its termination, Client agrees not to directly solicit, hire, or engage any employee, contractor, or business partner of Coach whom Client became aware of through this engagement.</p>
+
+    <p><strong>9. LIMITATION OF LIABILITY</strong></p>
+    <p>9.1 Coach's total liability for any claim arising from this Agreement shall not exceed the total fees paid by Client in the three (3) months preceding the event giving rise to the claim. In no event shall Coach be liable for indirect, incidental, or consequential damages.</p>
+
+    <p><strong>10. GOVERNING LAW</strong></p>
+    <p>This Agreement is governed by the laws of the State of <span class="fill">[YOUR STATE]</span>.</p>
+
+    <p><strong>SIGNATURES</strong></p>
+    <p>
+      Coach: _______________________________ Date: ____________<br>
+      <span class="fill">[COACH NAME / ENTITY]</span><br><br>
+      Client: _______________________________ Date: ____________<br>
+      <span class="fill">[CLIENT NAME]</span>
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 6: AFFILIATE DISCLOSURES -->
+<div class="section">
+  <div class="section-num">Section 06</div>
+  <h2>Affiliate Disclosure Templates (FTC-Compliant)</h2>
+  <p>The FTC requires "clear and conspicuous" disclosure of material connections — including affiliate relationships — anytime you recommend a product and stand to earn compensation. "Material connection" includes: affiliate commissions, free products, sponsored trips, equity stakes, or employment relationships. The disclosure must appear before the recommendation, not buried in footers. Here are ready-to-use templates for five contexts.</p>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#9888;</div>
+    <div class="callout-text"><strong>FTC Rule:</strong> Disclosures must be "clear and conspicuous" — meaning a reasonable consumer notices them without having to look for them. Burying a disclosure in the 14th sentence of a blog post does not count. Placing "#ad" in a sea of other hashtags likely does not count. When in doubt, disclose earlier and more prominently.</div>
+  </div>
+
+  <h3>1. Blog / Article Disclosure</h3>
+  <p>Place this at the very top of any blog post containing affiliate links, before the first recommendation.</p>
+  <div class="formula">Disclosure: This post contains affiliate links, which means I may earn a commission at no extra cost to you if you click through and make a purchase. I only recommend products and services I genuinely use and believe in. Thank you for supporting this blog.</div>
+
+  <h3>2. YouTube Video Disclosure</h3>
+  <p>State verbally within the first 30 seconds of the video AND include in the video description above the fold (before "Show More").</p>
+  <div class="formula">VERBAL (say this near the start of the video):
+"Quick heads-up — some links in the description are affiliate links. If you buy through them, I get a small commission at no extra cost to you. I only link things I actually use."
+
+DESCRIPTION (place above "Show More"):
+⚡ AFFILIATE DISCLOSURE: Some links below are affiliate links. I may earn a commission if you purchase through them — at no additional cost to you. I only recommend products I personally use and trust.</div>
+
+  <h3>3. Email Newsletter Disclosure</h3>
+  <p>Include in any email that contains affiliate links or sponsored recommendations. Place it near the top, ideally in a distinct visual block.</p>
+  <div class="formula">📬 Disclosure: This email contains affiliate links and/or sponsored recommendations. If you purchase through my links, I may earn a commission at no extra cost to you. I only recommend tools and products I genuinely use in my own business.</div>
+
+  <h3>4. TikTok / Instagram Disclosure</h3>
+  <p>Use the platform's built-in "Paid Partnership" label when available. Additionally include in the caption:</p>
+  <div class="formula">For a sponsored post (paid):
+"[Brand] sent me this / sponsored this post — all opinions are genuinely my own. #ad #sponsored"
+
+For affiliate (commission-based only):
+"Heads up: affiliate link in bio — I earn a small commission if you buy, at no extra cost to you. #affiliate #affiliatelink"
+
+For gifted/PR (free product, no payment):
+"[Brand] gifted me this product. Not paid to post — just sharing because I genuinely like it. #gifted #pr"</div>
+
+  <h3>5. Podcast Disclosure</h3>
+  <p>State verbally at the beginning of any episode containing affiliate offers or sponsorships, and include in show notes.</p>
+  <div class="formula">VERBAL (say at episode start or before the ad read):
+"Before we get started — this episode is brought to you by [Brand], and some of the links in our show notes are affiliate links. If you use those links to purchase, we may earn a commission at no extra cost to you."
+
+SHOW NOTES:
+DISCLOSURE: This episode contains sponsored content from [Brand] and/or affiliate links. Purchasing through our links supports the show at no additional cost to you. We only partner with brands we believe in.</div>
+</div>
+
+<!-- SECTION 7: DMCA TAKEDOWN -->
+<div class="section">
+  <div class="section-num">Section 07</div>
+  <h2>DMCA Takedown Notice Template</h2>
+  <p>The Digital Millennium Copyright Act (DMCA) gives you a legal mechanism to force platforms and website hosts to remove content that infringes your copyright. You don't need a lawyer to send a DMCA notice — but the notice must contain specific required elements to be legally valid. Here's how to do it correctly.</p>
+
+  <h3>When to Use a DMCA Takedown</h3>
+  <p>Use a DMCA notice when someone has copied or stolen: your videos and reposted them on YouTube, TikTok, Instagram, etc. without credit or permission; your written content (blog posts, captions, email copy); your photos, graphics, or artwork; your course content, ebooks, or paid products; your podcast episodes.</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Before sending a DMCA notice:</strong> Take a screenshot of the infringing content with the URL and timestamp visible. Note the date you first created the original work. If you have a registration with the US Copyright Office, have that number ready (registration strengthens your claim but is not required).</div>
+  </div>
+
+  <h3>Step-by-Step DMCA Process</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Find the Platform's Designated DMCA Agent</div>
+        <div class="step-desc">Every major platform has a DMCA reporting system. YouTube: youtube.com/copyright_complaint_form. Instagram/Meta: help.instagram.com (search "report copyright"). TikTok: tiktok.com/legal/report/Copyright. For websites, use the US Copyright Office's DMCA Agent registry at dmca.copyright.gov/osp.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Use the Platform's Built-In Reporting Tool First</div>
+        <div class="step-desc">Most platforms (YouTube, Instagram, TikTok) have web forms for copyright reports. These are faster than a formal written notice and often result in removal within 24–72 hours. Use the form before escalating to a formal letter.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">If the Form Fails, Send a Formal Written Notice</div>
+        <div class="step-desc">If the online form doesn't work, or for website hosts, send a formal DMCA takedown letter to the platform's or host's DMCA/legal email or mailing address. Use the template below.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Follow Up</div>
+        <div class="step-desc">Platforms typically respond within 10–14 business days. If no action is taken, follow up once. If still no action, consult an attorney about additional options including a court order.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Counter-Notices</div>
+        <div class="step-desc">If the infringer files a counter-notice claiming the use was authorized or fair use, the platform may restore the content in 10–14 business days unless you file a court action. At this point, consult a lawyer.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>DMCA Takedown Notice Template</h3>
+  <div class="contract-block">
+    <h4>DMCA TAKEDOWN NOTICE</h4>
+    <p>Date: <span class="fill">[DATE]</span></p>
+    <p>To: <span class="fill">[PLATFORM NAME]</span> DMCA Agent / Copyright Department<br>
+    Address/Email: <span class="fill">[PLATFORM'S DMCA EMAIL OR ADDRESS]</span></p>
+
+    <p><strong>Re: Notice of Copyright Infringement Under 17 U.S.C. § 512(c)</strong></p>
+
+    <p>I am writing to notify you of copyright infringement occurring on your platform. I am the copyright owner (or an authorized agent of the copyright owner) of the content described below, and I have a good-faith belief that the use of my copyrighted work on your platform is not authorized by the copyright owner, its agent, or the law.</p>
+
+    <p><strong>1. IDENTIFICATION OF COPYRIGHTED WORK</strong></p>
+    <p>
+      Description of Original Work: <span class="fill">[e.g., "A YouTube video titled 'How I Made $10,000 in 30 Days' originally published on my channel on [DATE]"]</span><br>
+      Original URL / Location: <span class="fill">[URL to YOUR original content]</span><br>
+      Date of Creation/Publication: <span class="fill">[DATE]</span>
+    </p>
+
+    <p><strong>2. IDENTIFICATION OF INFRINGING MATERIAL</strong></p>
+    <p>
+      URL of Infringing Content: <span class="fill">[DIRECT URL to the infringing post/video/page]</span><br>
+      Description of Infringing Content: <span class="fill">[Describe exactly what was copied — e.g., "The entire 12-minute video was re-uploaded without modification"]</span><br>
+      Account/Profile of Infringer: <span class="fill">[Username or profile URL of the infringer]</span>
+    </p>
+
+    <p><strong>3. CONTACT INFORMATION</strong></p>
+    <p>
+      Full Legal Name: <span class="fill">[YOUR FULL NAME]</span><br>
+      Address: <span class="fill">[YOUR ADDRESS]</span><br>
+      Email: <span class="fill">[YOUR EMAIL]</span><br>
+      Phone: <span class="fill">[YOUR PHONE (optional)]</span>
+    </p>
+
+    <p><strong>4. STATEMENT OF GOOD FAITH</strong></p>
+    <p>I have a good-faith belief that use of the copyrighted material described above is not authorized by the copyright owner, its agent, or the law.</p>
+
+    <p><strong>5. STATEMENT OF ACCURACY</strong></p>
+    <p>I swear, under penalty of perjury, that the information in this notification is accurate and that I am the copyright owner or am authorized to act on behalf of the copyright owner of an exclusive right that is allegedly infringed.</p>
+
+    <p><strong>Electronic Signature:</strong> <span class="fill">[YOUR FULL LEGAL NAME]</span><br>
+    Date: <span class="fill">[DATE]</span></p>
+
+    <p><em>Note: Under Section 512(f) of the DMCA, any person who knowingly misrepresents that material is infringing may be subject to liability for damages.</em></p>
+  </div>
+</div>
+
+<!-- SECTION 8: INVOICE TEMPLATE -->
+<div class="section">
+  <div class="section-num">Section 08</div>
+  <h2>Invoice &amp; Payment Terms Template</h2>
+  <p>A professional invoice is your legal record of services rendered and payment owed. It also defines the terms under which late fees apply. Use this structure for every paid engagement.</p>
+
+  <h3>Invoice Structure</h3>
+  <div class="contract-block">
+    <h4>INVOICE</h4>
+    <p>
+      <strong>From:</strong><br>
+      <span class="fill">[YOUR NAME / BUSINESS NAME]</span><br>
+      <span class="fill">[YOUR ADDRESS]</span><br>
+      <span class="fill">[YOUR EMAIL]</span><br>
+      <span class="fill">[YOUR PHONE (optional)]</span><br>
+      Tax ID / EIN: <span class="fill">[YOUR TAX ID, if applicable]</span>
+    </p>
+    <p>
+      <strong>Bill To:</strong><br>
+      <span class="fill">[CLIENT / BRAND NAME]</span><br>
+      <span class="fill">[ACCOUNTS PAYABLE CONTACT NAME]</span><br>
+      <span class="fill">[CLIENT ADDRESS]</span><br>
+      <span class="fill">[CLIENT EMAIL]</span>
+    </p>
+    <p>
+      Invoice #: <span class="fill">[INVOICE NUMBER — use sequential numbering, e.g., INV-2026-001]</span><br>
+      Invoice Date: <span class="fill">[DATE]</span><br>
+      Due Date: <span class="fill">[DATE — typically 15 or 30 days from invoice date]</span><br>
+      Project/Campaign: <span class="fill">[CAMPAIGN OR PROJECT NAME]</span>
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="fill">[Deliverable description, e.g., "1x YouTube Integration, 60-second mid-roll"]</span></td><td>1</td><td><span class="fill">$X,XXX</span></td><td><span class="fill">$X,XXX</span></td></tr>
+        <tr><td><span class="fill">[Deliverable 2, e.g., "2x Instagram Reels (organic usage, 6-month license)"]</span></td><td>2</td><td><span class="fill">$XXX</span></td><td><span class="fill">$X,XXX</span></td></tr>
+        <tr><td><span class="fill">[Additional line item if applicable, e.g., "Paid Ad Usage License — Meta, 90-day term"]</span></td><td>1</td><td><span class="fill">$XXX</span></td><td><span class="fill">$XXX</span></td></tr>
+        <tr><td><strong>TOTAL</strong></td><td></td><td></td><td><strong><span class="fill">$X,XXX</span></strong></td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Payment Instructions:</strong><br>
+    Payment Method: <span class="fill">[ACH / Wire / PayPal / Venmo for Business / Check payable to...]</span><br>
+    Bank / Account Details: <span class="fill">[Provide separately via secure method — never include full bank details in a public invoice]</span></p>
+  </div>
+
+  <h3>Standard Payment Terms Language</h3>
+  <p>Copy these terms and paste them into the footer or notes section of your invoice.</p>
+  <div class="formula">PAYMENT TERMS: Net [15/30] — Payment is due within [15/30] calendar days of the invoice date. All amounts are in USD.
+
+LATE FEES: Invoices not paid within [15/30] days of the due date will accrue a late fee of 1.5% per month (18% per annum) on the outstanding balance, beginning on the first day past due.
+
+KILL FEE: If this project is cancelled after work has commenced, a kill fee of [25%/50%/100%] of the total invoice amount is due depending on stage of completion, per our signed Agreement dated [DATE].
+
+DISPUTES: Any billing disputes must be raised in writing within [10] business days of invoice receipt. Chargebacks initiated without prior written notice of dispute may result in additional collection fees.
+
+Questions? Contact [YOUR EMAIL].</div>
+
+  <h3>Kill Fee Language for Invoices</h3>
+  <p>If you're invoicing a kill fee after a project was cancelled, use this language in the description line:</p>
+  <div class="formula">Description: Kill Fee — [PROJECT NAME]
+Per Section [X] of the [DATE] agreement between [YOUR NAME] and [CLIENT NAME], a kill fee equal to [50%] of the contracted total is due upon cancellation following commencement of work. Original contracted total: $[AMOUNT]. Kill fee owed: $[AMOUNT].</div>
+</div>
+
+<!-- SECTION 9: NEGOTIATION GUIDE -->
+<div class="section">
+  <div class="section-num">Section 09</div>
+  <h2>Negotiation Guide: Terms, Red Flags &amp; Rate Anchoring</h2>
+  <p>Knowing the contract language is only half the battle. Knowing how to negotiate — what to push back on, what to hold firm on, and how to protect your rates — is what separates creators who get taken advantage of from creators who build sustainable business relationships.</p>
+
+  <h3>What Terms Are Negotiable</h3>
+  <p>Most terms in a brand's standard contract are negotiable. Brands send boilerplate knowing that most creators won't push back. Here's what you can and should negotiate:</p>
+
+  <table>
+    <thead>
+      <tr><th>Term</th><th>What Brands Often Ask For</th><th>What You Should Push For</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Usage Rights Duration</td><td>Perpetual / forever</td><td>6–12 months, then renewal at additional fee</td></tr>
+      <tr><td>Paid Ad Usage</td><td>Included in flat fee</td><td>Separate fee, typically 30–100% of base rate per 90-day period</td></tr>
+      <tr><td>Exclusivity</td><td>Broad category exclusivity, 6–12 months</td><td>Narrow category, 30–60 days, additional exclusivity fee</td></tr>
+      <tr><td>Revision Rounds</td><td>Unlimited revisions</td><td>2 rounds maximum; additional rounds billed separately</td></tr>
+      <tr><td>Approval Rights</td><td>Brand has final say on all content</td><td>Brand may provide feedback; Creator retains editorial control</td></tr>
+      <tr><td>Content Ownership</td><td>Brand owns all content created under the deal</td><td>Creator retains ownership; Brand gets limited license only</td></tr>
+      <tr><td>Payment Timeline</td><td>Net 60 or Net 90</td><td>Net 15 or Net 30; 50% upfront for deals over $2,500</td></tr>
+      <tr><td>Morality Clause</td><td>Brand can terminate without pay if Creator's "reputation" suffers</td><td>Limit to actions directly related to criminal conviction; remove vague language</td></tr>
+      <tr><td>Non-Compete</td><td>Can't work with any competitors for 12+ months</td><td>Must be defined as direct competitors only; 30–60 days max</td></tr>
+    </tbody>
+  </table>
+
+  <h3>How to Push Back Professionally</h3>
+  <p>The goal is to protect yourself without blowing up the deal. Use these scripts:</p>
+
+  <div class="card">
+    <div class="card-title">On Perpetual Usage Rights</div>
+    <div class="card-desc">"I noticed the contract includes perpetual usage rights — I'm happy to offer a 12-month license which is my standard. If you'd like to extend beyond that, I can offer a renewal option at $[X] per additional year. Does that work for you?"</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">On Adding Paid Ad Rights</div>
+    <div class="card-desc">"I see paid advertising usage is included in the current draft. My rate for organic usage is $[X], but paid ad usage is licensed separately at $[Y] per platform per 90 days, as the asset will be actively generating revenue for you. Happy to add that as a separate line item."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">On Net 60 Payment Terms</div>
+    <div class="card-desc">"My standard payment terms are Net 30. I'm not able to extend to Net 60 for this engagement — but I can offer a 50/50 split with half due on signing and half due upon delivery, which keeps cash flow manageable on both sides. Would that work?"</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">On Unlimited Revisions</div>
+    <div class="card-desc">"I've removed 'unlimited revisions' and replaced it with two rounds, which is my standard. Additional rounds are $[X] each. In practice, two rounds is more than sufficient for most campaigns — I haven't gone beyond that with the last dozen brands I've worked with."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">On Broad Exclusivity</div>
+    <div class="card-desc">"I can accommodate exclusivity for a focused time window, but the current language is quite broad — it would prevent me from working with businesses in [broad category]. I'd need that narrowed to direct competitors (companies specifically offering [product]) for a 30-day post-publication window, and I'd add an exclusivity fee of $[X] for that."</div>
+  </div>
+
+  <h3>Red Flag Clauses to Watch For</h3>
+  <div class="callout yellow">
+    <div class="callout-icon">&#9888;</div>
+    <div class="callout-text"><strong>Always read contracts in full before signing.</strong> The problematic language is almost never in the obvious sections — it's buried in boilerplate.</div>
+  </div>
+
+  <div class="system">
+    <div class="system-header">
+      <div class="system-icon" style="background:rgba(255,59,48,.1)">&#9888;</div>
+      <div class="system-name">Red Flag Clauses — Walk Away or Heavily Negotiate</div>
+    </div>
+    <div class="system-body">
+      <ul>
+        <li>"Creator assigns all intellectual property rights to Brand" — This means they OWN your content outright. Refuse. You grant a license; you never assign copyright without a buyout premium.</li>
+        <li>"Brand may use Creator's name, likeness, and voice for any marketing purpose in perpetuity" — This is a blanket likeness release. Limit it to the specific deliverables and time period only.</li>
+        <li>"Creator may not post about competing products for 12 months following the campaign" — One campaign should not lock up your entire content calendar for a year. Push to 30–60 days, narrowly defined competitors only.</li>
+        <li>"Brand may modify deliverables at its sole discretion" — This lets them change what you said, put words in your mouth, or alter your message. Strike entirely.</li>
+        <li>"Payment is contingent upon Brand's approval of content quality" — This creates an indefinite payment hold. Replace with a defined approval window; non-response = approval.</li>
+        <li>"Creator is responsible for all third-party claims arising from Brand's use of content" — You are indemnifying them for how THEY use your content. This is unacceptable. Each party indemnifies for their own acts only.</li>
+        <li>"Brand may terminate without payment if Creator's social media engagement falls below [threshold]" — Do not accept metrics-based payment contingencies. Payment is for deliverables, not for performance you can't control.</li>
+        <li>Vague morality clauses ("Brand may terminate if Creator engages in conduct Brand deems harmful to its reputation") — Demand specificity. Acceptable triggers: criminal conviction, confirmed fraudulent activity. Not acceptable: brand's subjective judgment.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Rate Anchoring Tactics</h3>
+  <p>Rate anchoring is the practice of establishing the first number in a negotiation to set the psychological baseline. Whoever anchors first has more control over the final outcome.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Always Anchor First With Your Rate</div>
+        <div class="step-desc">When brands ask "What are your rates?" — don't say "It depends" or ask them for their budget. State your rate first. "My integrated YouTube package starts at $3,500." You can negotiate down from there; it's very hard to negotiate up from a low anchor they set.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Anchor High (Aim for 20–30% above your target)</div>
+        <div class="step-desc">If you want $2,000, open at $2,500–$2,600. This gives you room to "meet them in the middle" at your actual target, and they feel like they got a deal.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Price Usage Rights Separately and Visibly</div>
+        <div class="step-desc">Itemize your invoice: Base content fee + Paid Ad Usage + Exclusivity Fee. This makes the premium for extra usage rights feel logical rather than arbitrary, and trains brands to understand that usage costs more.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">The "Package Down" Approach</div>
+        <div class="step-desc">If a brand pushes back on price, don't just reduce the rate — reduce the scope. "I can do $2,000 instead of $2,500 if we remove the Instagram Story sequence and reduce to one revision round." This protects your per-unit rate.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">The "What Does Your Budget Look Like?" Redirect</div>
+        <div class="step-desc">If you genuinely don't know where to anchor (new niche, unusual deliverable), it's okay to ask: "What budget have you allocated for this campaign?" This gives you data. If their budget is higher than your target, anchor at or above their budget. If lower, you know whether the deal is worth pursuing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">&#10003;</div>
+    <div class="callout-text"><strong>Final reminder:</strong> You are not just selling content. You are selling access to your audience, your credibility, your voice, and your creative labor. Price accordingly. The creator who undercharges trains their entire client base to undervalue them.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">REMbyDesign / GetScrewedScore</div>
+  <div class="doc-footer-note">Creator Legal Pack &mdash; For informational purposes only. Not legal advice. &copy; 2026 REMbyDesign. All rights reserved.</div>
+</div>
+
+</div><!-- end .page -->
+</body>
+</html>
