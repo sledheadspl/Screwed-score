@@ -1,7 +1,22 @@
-import { ArrowRight, Download, Cpu, FileText, TrendingUp, Layout, Zap, Star } from 'lucide-react'
+'use client'
 
-const PRODUCTS = [
+import { useState } from 'react'
+import { ArrowRight, Download, Cpu, FileText, TrendingUp, Layout, Zap, Star, Loader2 } from 'lucide-react'
+
+interface Product {
+  id: string
+  icon: React.ComponentType<{ className?: string }>
+  category: string
+  title: string
+  desc: string
+  price: string
+  badge: string | null
+  badgeColor: string
+}
+
+const PRODUCTS: Product[] = [
   {
+    id: 'creator-os',
     icon: Layout,
     category: 'Systems',
     title: 'Creator OS Bundle',
@@ -11,6 +26,7 @@ const PRODUCTS = [
     badgeColor: 'rgba(0,229,255,0.8)',
   },
   {
+    id: 'content-pipeline',
     icon: Cpu,
     category: 'Automation',
     title: 'Content Pipeline Pro',
@@ -20,6 +36,7 @@ const PRODUCTS = [
     badgeColor: '',
   },
   {
+    id: 'brand-deal',
     icon: FileText,
     category: 'Templates',
     title: 'Brand Deal Negotiation Pack',
@@ -29,6 +46,7 @@ const PRODUCTS = [
     badgeColor: '',
   },
   {
+    id: 'revenue-dashboard',
     icon: TrendingUp,
     category: 'Analytics',
     title: 'Revenue Dashboard Kit',
@@ -38,6 +56,7 @@ const PRODUCTS = [
     badgeColor: 'rgba(48,209,88,0.8)',
   },
   {
+    id: 'social-assets',
     icon: Download,
     category: 'Assets',
     title: 'Social Media Asset Pack',
@@ -47,6 +66,7 @@ const PRODUCTS = [
     badgeColor: '',
   },
   {
+    id: 'launch-sequence',
     icon: Zap,
     category: 'Systems',
     title: 'Launch Sequence Playbook',
@@ -77,6 +97,94 @@ const VALUE_BLOCKS = [
     color: '#ffd60a',
   },
 ]
+
+function ProductCard({ product }: { product: Product }) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const Icon = product.icon
+
+  const handleBuy = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/product-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: product.id }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.url) {
+        setError(data.error ?? 'Something went wrong. Please try again.')
+        setLoading(false)
+        return
+      }
+      window.location.href = data.url
+    } catch {
+      setError('Network error. Please try again.')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div
+      className="glass-card rounded-2xl p-6 space-y-4 transition-all duration-300 hover:border-white/10 flex flex-col"
+      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center"
+            style={{ background: 'rgba(0,229,255,0.07)', border: '1px solid rgba(0,229,255,0.12)' }}>
+            <Icon className="w-4 h-4 text-cyan-400" />
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-brand-sub/50">
+            {product.category}
+          </span>
+        </div>
+        {product.badge && (
+          <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full"
+            style={{
+              background: `${product.badgeColor}15`,
+              color: product.badgeColor,
+              border: `1px solid ${product.badgeColor}30`,
+            }}>
+            {product.badge}
+          </span>
+        )}
+      </div>
+
+      <div className="space-y-1.5 flex-1">
+        <p className="font-bold text-brand-text">{product.title}</p>
+        <p className="text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>
+          {product.desc}
+        </p>
+      </div>
+
+      {error && (
+        <p className="text-xs text-red-400">{error}</p>
+      )}
+
+      <div className="flex items-center justify-between pt-2 border-t border-brand-border/30">
+        <span className="text-xl font-black text-brand-text">{product.price}</span>
+        <button
+          onClick={handleBuy}
+          disabled={loading}
+          className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{
+            background: 'rgba(0,229,255,0.1)',
+            color: '#00E5FF',
+            border: '1px solid rgba(0,229,255,0.2)',
+          }}
+        >
+          {loading ? (
+            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Redirecting…</>
+          ) : (
+            <>Get it <ArrowRight className="w-3.5 h-3.5" /></>
+          )}
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export default function ProductivityPage() {
   return (
@@ -167,43 +275,8 @@ export default function ProductivityPage() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PRODUCTS.map(({ icon: Icon, category, title, desc, price, badge, badgeColor }) => (
-              <div key={title}
-                className="glass-card rounded-2xl p-6 space-y-4 transition-all duration-300 hover:border-white/10 flex flex-col"
-                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center"
-                      style={{ background: 'rgba(0,229,255,0.07)', border: '1px solid rgba(0,229,255,0.12)' }}>
-                      <Icon className="w-4 h-4 text-cyan-400" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-brand-sub/50">
-                      {category}
-                    </span>
-                  </div>
-                  {badge && (
-                    <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full"
-                      style={{ background: `${badgeColor}15`, color: badgeColor, border: `1px solid ${badgeColor}30` }}>
-                      {badge}
-                    </span>
-                  )}
-                </div>
-                <div className="space-y-1.5 flex-1">
-                  <p className="font-bold text-brand-text">{title}</p>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>{desc}</p>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-brand-border/30">
-                  <span className="text-xl font-black text-brand-text">{price}</span>
-                  <button className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:opacity-80"
-                    style={{
-                      background: 'rgba(0,229,255,0.1)',
-                      color: '#00E5FF',
-                      border: '1px solid rgba(0,229,255,0.2)',
-                    }}>
-                    Get it <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
+            {PRODUCTS.map(product => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </section>
@@ -217,7 +290,7 @@ export default function ProductivityPage() {
               ))}
             </div>
             <p className="text-xl sm:text-2xl font-bold text-brand-text/80 leading-relaxed">
-              "The Creator OS Bundle alone saved me 15 hours a week. The content pipeline runs itself."
+              &ldquo;The Creator OS Bundle alone saved me 15 hours a week. The content pipeline runs itself.&rdquo;
             </p>
             <p className="text-sm text-brand-sub/50">— Jordan R., Full-time Creator</p>
           </div>
