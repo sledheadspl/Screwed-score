@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Course Blueprint — REMbyDesign</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:60px 32px}
+.doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+.doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+.doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+.doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+.doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+.toc ol{padding-left:20px}
+.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+.section{margin-bottom:64px}
+.section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+p{color:rgba(242,242,242,.65);margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.system{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.system-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.system-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.system-name{font-size:16px;font-weight:700;color:var(--text)}
+.system-body{padding:20px 24px}
+.system-body ul{padding-left:0;list-style:none}
+.system-body li{font-size:13px;color:rgba(242,242,242,.55);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.system-body li:last-child{border-bottom:none}
+.system-body li::before{content:'→';color:var(--cyan);flex-shrink:0;margin-top:1px}
+.formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+tr:last-child td{border-bottom:none}
+.callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+.callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+.callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+.callout-text strong{color:var(--text)}
+.steps{margin:20px 0}
+.step{display:flex;gap:16px;margin-bottom:20px}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+.step-content{padding-top:4px}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.roadmap-week{border-left:2px solid var(--border);padding-left:20px;margin-bottom:28px;position:relative}
+.roadmap-week::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg)}
+.roadmap-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.roadmap-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+.roadmap-tasks{font-size:13px;color:rgba(242,242,242,.5)}
+.roadmap-tasks li{margin-bottom:4px}
+.doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+.doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+@media print{body{background:#fff;color:#000}.page{padding:20px}.formula{background:#f5f5f5;color:#0070c0}}
+.score-row{display:grid;grid-template-columns:1fr 80px 80px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;color:rgba(242,242,242,.6)}
+.score-row:last-child{border-bottom:none}
+.score-label{font-weight:600;color:rgba(242,242,242,.8)}
+.score-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--cyan);font-family:'SF Mono','Fira Code',monospace;font-size:12px;text-align:center}
+.score-max{color:var(--sub);font-size:12px;text-align:center}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}.score-row{grid-template-columns:1fr 60px 60px}}
+.fill-field{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:8px 0;font-size:13px;color:rgba(242,242,242,.4);font-style:italic}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-right:6px}
+.tag.green{background:rgba(48,209,88,.15);color:var(--green)}
+.tag.yellow{background:rgba(255,214,10,.15);color:var(--yellow)}
+.tag.red{background:rgba(255,59,48,.15);color:var(--red)}
+.tag.cyan{background:rgba(0,229,255,.1);color:var(--cyan)}
+.email-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.email-header{padding:14px 20px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.email-num{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+.email-subject{font-size:14px;font-weight:700;color:var(--text)}
+.email-body{padding:20px;font-size:13px;color:rgba(242,242,242,.6);line-height:1.8}
+.email-body p{margin-bottom:12px;color:rgba(242,242,242,.6)}
+.email-body .ps{color:rgba(242,242,242,.4);font-style:italic;margin-top:16px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-badge">&#9670; REMbyDesign Premium</div>
+    <h1 class="doc-title">Digital Course Blueprint</h1>
+    <p class="doc-subtitle">End-to-end system to outline, build, and sell an online course. Curriculum framework, sales page template, pricing strategy, and launch timeline.</p>
+    <div class="doc-meta">
+      <span>End-to-end system</span>
+      <span>Sales page template</span>
+      <span>Launch timeline</span>
+      <span>REMbyDesign &copy; 2026</span>
+    </div>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li>Course Concept Validation</li>
+      <li>Curriculum Architecture Framework</li>
+      <li>The Full Course Outline Template</li>
+      <li>Production Workflow</li>
+      <li>Pricing Strategy</li>
+      <li>Sales Page Template</li>
+      <li>Pre-Launch &amp; Launch Timeline (12 Weeks)</li>
+      <li>Email Launch Sequence (7 Emails)</li>
+      <li>Post-Launch Optimization</li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-num">Section 01</div>
+    <h2>Course Concept Validation</h2>
+    <p>Before you record a single minute of video, you need proof that people will pay for your course. Skipping validation is the single most expensive mistake course creators make. This section gives you the exact tools to confirm demand before you invest weeks of your life building something.</p>
+
+    <h3>The Idea Scoring Matrix</h3>
+    <p>Score your course idea across eight dimensions. A score of 70+ means proceed to pre-sell. 50–69 means iterate the concept. Under 50 means pivot.</p>
+
+    <div class="card">
+      <div class="score-row" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border);padding-bottom:8px">
+        <div>Dimension</div><div style="text-align:center">Score</div><div style="text-align:center">Max</div>
+      </div>
+      <div class="score-row"><span class="score-label">Personal expertise depth (years, results, specificity)</span><span class="score-input">__</span><span class="score-max">/15</span></div>
+      <div class="score-row"><span class="score-label">Audience demand signals (search volume, community questions)</span><span class="score-input">__</span><span class="score-max">/15</span></div>
+      <div class="score-row"><span class="score-label">Measurable transformation (specific, before-and-after outcome)</span><span class="score-input">__</span><span class="score-max">/15</span></div>
+      <div class="score-row"><span class="score-label">Willingness to pay (competing products exist at $97+)</span><span class="score-input">__</span><span class="score-max">/15</span></div>
+      <div class="score-row"><span class="score-label">Your distribution advantage (audience, email list, network)</span><span class="score-input">__</span><span class="score-max">/10</span></div>
+      <div class="score-row"><span class="score-label">Competitive differentiation (angle, methodology, personality)</span><span class="score-input">__</span><span class="score-max">/10</span></div>
+      <div class="score-row"><span class="score-label">Content deliverability (can you build this in 60 days?)</span><span class="score-input">__</span><span class="score-max">/10</span></div>
+      <div class="score-row"><span class="score-label">Long-term interest (will you still care about this in 2 years?)</span><span class="score-input">__</span><span class="score-max">/10</span></div>
+      <div class="score-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:12px"><span class="score-label" style="color:var(--cyan)">TOTAL SCORE</span><span class="score-input" style="border-color:rgba(0,229,255,.4)">__</span><span class="score-max" style="color:var(--text);font-weight:700">/100</span></div>
+    </div>
+
+    <h3>Audience Demand Signals — Where to Look</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Search-Based Signals</div>
+        <div class="card-desc">
+          Google Trends: topic trending upward over 12 months<br><br>
+          Ubersuggest / Ahrefs: keyword search volume &gt;1,000/mo for your core topic<br><br>
+          YouTube: search your topic — videos with 50K+ views from non-celebrity creators<br><br>
+          Reddit / Quora: questions about your topic getting 50+ upvotes regularly
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Community-Based Signals</div>
+        <div class="card-desc">
+          Facebook Groups: group with 5,000+ members actively discussing your topic<br><br>
+          Twitter/X: people tweeting about the problem your course solves<br><br>
+          Discord servers dedicated to your niche with active daily messages<br><br>
+          Udemy / Skillshare: existing courses with 1,000+ reviews (demand confirmed)
+        </div>
+      </div>
+    </div>
+
+    <h3>The 5-Question Pre-Sell Survey</h3>
+    <p>Post this survey to your audience before building anything. Aim for at least 30 responses. Use Typeform, Google Forms, or a simple Instagram Story poll series.</p>
+
+    <div class="card">
+      <div class="card-title">Survey Template — Copy This Exactly</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p style="margin-bottom:10px"><strong style="color:var(--cyan)">Question 1 (Problem Identification)</strong><br>
+        "When it comes to [your topic], what is the single biggest challenge you're struggling with right now?" <em style="color:var(--sub)">(Open text — read every answer, look for patterns)</em></p>
+        <p style="margin-bottom:10px"><strong style="color:var(--cyan)">Question 2 (Outcome Desire)</strong><br>
+        "If you could wake up 90 days from now having solved [problem], what would be different about your life or business?" <em style="color:var(--sub)">(Open text — this becomes your sales copy)</em></p>
+        <p style="margin-bottom:10px"><strong style="color:var(--cyan)">Question 3 (Current Solutions)</strong><br>
+        "What have you already tried to solve this? What worked, what didn't?" <em style="color:var(--sub)">(Open text — reveals your competitive gap)</em></p>
+        <p style="margin-bottom:10px"><strong style="color:var(--cyan)">Question 4 (Willingness to Pay)</strong><br>
+        "If a step-by-step course could get you [specific outcome] in [timeframe], what would that be worth to you?" <br>— Under $50 &nbsp; — $50–$150 &nbsp; — $150–$300 &nbsp; — $300–$500 &nbsp; — $500+ <em style="color:var(--sub)">(Multiple choice)</em></p>
+        <p style="margin-bottom:0"><strong style="color:var(--cyan)">Question 5 (Format Preference)</strong><br>
+        "How do you prefer to learn?" <br>— Short video lessons (10–15 min) &nbsp; — Longer deep-dives (30–60 min) &nbsp; — Written guides + templates &nbsp; — Live coaching calls &nbsp; — A mix of everything <em style="color:var(--sub)">(Multiple choice)</em></p>
+      </div>
+    </div>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>Key insight:</strong> The language people use in Question 1 and 2 is your sales copy. Copy their exact words into your headline, bullet points, and email subject lines. Nobody describes your course better than the people who need it.</div>
+    </div>
+
+    <h3>Competitive Gap Analysis</h3>
+    <p>Find the gap between what currently exists and what your audience actually wants. This is your positioning.</p>
+
+    <table>
+      <thead>
+        <tr><th>Competitor Course</th><th>Price</th><th>Format</th><th>What They Miss</th><th>Your Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[Course Name]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">$___</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[video/text]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[what's missing]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[your angle]</td></tr>
+        <tr><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[Course Name]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">$___</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[video/text]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[what's missing]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[your angle]</td></tr>
+        <tr><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[Course Name]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">$___</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[video/text]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[what's missing]</td><td class="fill-field" style="padding:10px 14px;font-style:italic;color:rgba(242,242,242,.3)">[your angle]</td></tr>
+      </tbody>
+    </table>
+
+    <p>Common gaps to look for: no community component, overly theoretical with no templates, no personalization for different skill levels, outdated strategies, no implementation support, too long and overwhelming, or too surface-level for serious practitioners.</p>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section">
+    <div class="section-num">Section 02</div>
+    <h2>Curriculum Architecture Framework</h2>
+    <p>Most creators build courses backwards — they list everything they know and turn it into lessons. The outcome-first method flips this. You start with the end result and reverse-engineer the path to get there.</p>
+
+    <h3>The Outcome-First Design Method</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Define the primary transformation</div>
+          <div class="step-desc">Write one sentence: "By the end of this course, students will be able to [specific action] so that [specific result]." Example: "By the end of this course, students will be able to launch a profitable Etsy shop generating $2,000/month so that they can leave their 9-5 within 12 months." If you can't write this sentence clearly, your course concept isn't ready.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Map the skill/knowledge prerequisites</div>
+          <div class="step-desc">Work backwards. What does the student need to know or have done immediately before achieving the final outcome? That's your last module. What do they need before that? Keep going until you reach where they are now — their starting point. Each step backward is a module.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Identify the confidence killers</div>
+          <div class="step-desc">What are the 3–5 things that would make a student quit before finishing? Identify them upfront and explicitly address each one in the curriculum. These become your "overcome the objection" lessons — positioned before the student encounters the obstacle.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Assign a win to every module</div>
+          <div class="step-desc">Every module must end with a student taking an action and having something to show for it — a completed template, a published post, a sent email, a configured tool. Courses fail when students feel like they're consuming without making progress. Build in visible wins.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Cut ruthlessly</div>
+          <div class="step-desc">Every lesson must answer yes to: "Does this directly move the student toward the primary transformation?" If it's interesting but not essential, cut it. You can release it as a bonus, a future module, or a separate product. Completion rates drop 40% for every extra hour of content above the optimal length.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Module Structure Formula</h3>
+    <p>Every module in your course should follow this consistent structure so students know exactly what to expect:</p>
+    <div class="formula">MODULE STRUCTURE
+─────────────────────────────────────────
+1. Module Overview (2–3 min video)
+   → What you'll learn in this module
+   → Why it matters to the transformation
+   → What you'll be able to do by the end
+
+2. Core Lessons (3–7 lessons per module)
+   → Each lesson = one concept or one action
+   → Lesson structure: context → content → application
+   → End every lesson with a single clear takeaway
+
+3. Action Assignment (worksheet / template / task)
+   → The specific thing they must do before module 3
+   → Tied directly to a real-world outcome
+
+4. Module Recap (optional, 1–2 min)
+   → Summary of key concepts
+   → Preview of next module
+   → Encouragement / re-commitment prompt</div>
+
+    <h3>Lesson Types — When to Use Each</h3>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(0,229,255,.1)">&#127909;</div>
+        <div class="system-name">Video Lessons</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Use for: demonstrations, walkthroughs, anything that benefits from seeing it done in real time</li>
+          <li>Ideal length: 8–15 minutes for instructional content; under 5 minutes for concept explanations</li>
+          <li>When to avoid: for reference material the student will return to repeatedly (use written guides instead)</li>
+          <li>Best practices: show your screen or your face — not both simultaneously unless you have high production value</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(48,209,88,.1)">&#128196;</div>
+        <div class="system-name">Worksheets &amp; Templates</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Use for: planning, strategy, brainstorming, anything requiring student input and reflection</li>
+          <li>Format: Google Doc or PDF with fillable fields — always include an example of a completed version</li>
+          <li>When to use: after a concept video, to help students apply the idea to their own situation</li>
+          <li>Power move: templates students can immediately use in their business (not just exercises)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,214,10,.1)">&#9997;</div>
+        <div class="system-name">Quizzes &amp; Knowledge Checks</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Use for: reinforcing key concepts, identifying gaps before advancing to next module</li>
+          <li>Ideal placement: end of each module (not every lesson — that becomes annoying)</li>
+          <li>Format: 5–8 questions max; mix multiple choice with short answer</li>
+          <li>When to avoid: at the end of action-based modules where the output is the "test"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,59,48,.1)">&#127970;</div>
+        <div class="system-name">Live Calls &amp; Q&amp;A Sessions</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Use for: cohort-based courses, premium tiers, troubleshooting, accountability</li>
+          <li>Frequency: weekly for 4–8 week cohorts; bi-weekly works for longer programs</li>
+          <li>Structure: 15-min recap → 30-min hot seat / Q&amp;A → 15-min preview of next week</li>
+          <li>Record everything: replays are often more valuable than the live session for students in different time zones</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Ideal Course Length by Price Point</h3>
+    <table>
+      <thead>
+        <tr><th>Price Range</th><th>Ideal Total Video</th><th>Modules</th><th>Supplemental Materials</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>$27 – $97</td><td>1–3 hours</td><td>3–5 modules</td><td>1–2 worksheets or templates</td></tr>
+        <tr><td>$97 – $297</td><td>3–6 hours</td><td>5–7 modules</td><td>Full resource library (templates, checklists, swipe files)</td></tr>
+        <tr><td>$297 – $997</td><td>6–12 hours</td><td>7–10 modules</td><td>Templates + community access + bonus content</td></tr>
+        <tr><td>$997 – $2,997</td><td>10–20 hours</td><td>8–12 modules</td><td>Everything above + live calls or coaching component</td></tr>
+        <tr><td>$3,000+</td><td>Varies</td><td>12+ modules</td><td>High-touch coaching, 1:1 calls, done-with-you elements</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-text"><strong>Completion rate insight:</strong> The average self-paced course completion rate is 15%. Courses with community + live elements average 65–80%. If your price is above $297, you should have at least one synchronous touchpoint — even a monthly group call — to justify the investment and get student results that become testimonials.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section">
+    <div class="section-num">Section 03</div>
+    <h2>The Full Course Outline Template</h2>
+    <p>Use this fill-in-the-blank structure for any course. Replace every bracketed item with your specific content. The learning outcome statements at the end of each module are critical — they're what you write on your sales page.</p>
+
+    <div class="card">
+      <div class="card-title">WELCOME MODULE — "Start Here"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Purpose:</strong> Orient, inspire, and commit the student to the journey</p>
+        <p><strong>Lesson 1:</strong> Welcome &amp; My Story — Why I created this course and who it's for</p>
+        <p><strong>Lesson 2:</strong> How to Use This Course — Recommended pace, workflow, and mindset</p>
+        <p><strong>Lesson 3:</strong> Your Starting Point Assessment — [fillable worksheet to document baseline metrics]</p>
+        <p><strong>Lesson 4:</strong> Your 90-Day Commitment — Goal-setting exercise; student writes their primary outcome</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> Student has set their goal, understands the roadmap, and is ready to begin</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MODULE 1 — "[Foundation / Mindset / Core Concept]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Theme:</strong> [The foundational knowledge they need before doing anything else]</p>
+        <p><strong>Lesson 1:</strong> [Why the old approach fails and what this method does differently]</p>
+        <p><strong>Lesson 2:</strong> [The core framework / model you'll use throughout the course] — name your framework</p>
+        <p><strong>Lesson 3:</strong> [The most common mistake beginners make and how to avoid it]</p>
+        <p><strong>Lesson 4:</strong> [Your first small action — something they can complete today]</p>
+        <p><strong>Action Assignment:</strong> [Worksheet: "The [Your Framework] Audit" — evaluate their current situation]</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> "By the end of Module 1, you'll have [specific deliverable] and know exactly [specific knowledge]."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MODULE 2 — "[Research / Discovery / Setup]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Theme:</strong> [Gathering the inputs they need to execute — research, tools, positioning]</p>
+        <p><strong>Lesson 1:</strong> [How to identify / find / research ___]</p>
+        <p><strong>Lesson 2:</strong> [The tools and systems you'll use — setup walkthrough]</p>
+        <p><strong>Lesson 3:</strong> [How to evaluate options / make the right choice for your situation]</p>
+        <p><strong>Lesson 4:</strong> [Case study: how I or a student did this — show the real thing]</p>
+        <p><strong>Action Assignment:</strong> [Template: "The [Topic] Research Tracker" — a Google Sheet they fill out]</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> "By the end of Module 2, you'll have [specific research / setup] complete and be ready to [next step]."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MODULE 3 — "[The Core Skill / Primary Method]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Theme:</strong> [The main thing they're paying you to teach — the core transformation driver]</p>
+        <p><strong>Lesson 1:</strong> [Step 1 of the process — with screen share or demonstration]</p>
+        <p><strong>Lesson 2:</strong> [Step 2 of the process — go deeper than you think you need to]</p>
+        <p><strong>Lesson 3:</strong> [Step 3 — the part most courses skip or rush through]</p>
+        <p><strong>Lesson 4:</strong> [The advanced version / what to do when it doesn't work as expected]</p>
+        <p><strong>Lesson 5:</strong> [Your full workflow demonstrated from start to finish in real time]</p>
+        <p><strong>Action Assignment:</strong> [Their first real attempt at the core skill — with a submission mechanism]</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> "By the end of Module 3, you'll have [produced your first ___] and have a repeatable process you can use every time."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MODULE 4 — "[Optimization / Refinement / Scale]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Theme:</strong> [Moving from doing it to doing it well — quality, speed, or leverage]</p>
+        <p><strong>Lesson 1:</strong> [How to evaluate your output against a quality benchmark]</p>
+        <p><strong>Lesson 2:</strong> [The 3 variables that most influence your results — and how to dial each one]</p>
+        <p><strong>Lesson 3:</strong> [How to build systems and templates so you can do this faster]</p>
+        <p><strong>Lesson 4:</strong> [Student case study — before and after with real numbers]</p>
+        <p><strong>Action Assignment:</strong> [Audit checklist — they review their Module 3 work against standards]</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> "By the end of Module 4, you'll know exactly what separates average results from exceptional ones and have a system to reach the higher level."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MODULE 5 — "[Distribution / Monetization / Results]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Theme:</strong> [Getting the output into the world and generating the promised result]</p>
+        <p><strong>Lesson 1:</strong> [Where and how to distribute / sell / publish / deploy]</p>
+        <p><strong>Lesson 2:</strong> [The promotion or visibility strategy — how to get traction]</p>
+        <p><strong>Lesson 3:</strong> [How to measure results and know what's working]</p>
+        <p><strong>Lesson 4:</strong> [What to do when results are slow — troubleshooting protocol]</p>
+        <p><strong>Action Assignment:</strong> [Launch it: they publish, submit, or deploy their first real thing]</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> "By the end of Module 5, you'll have [real-world outcome] live and generating [result]."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MODULE 6 — "[Growth / Advanced Strategies / Long-Term System]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Theme:</strong> [How to compound results over time — automation, delegation, scaling]</p>
+        <p><strong>Lesson 1:</strong> [The long-term roadmap — what this looks like at 6 months, 12 months, 2 years]</p>
+        <p><strong>Lesson 2:</strong> [Advanced strategy #1 — only for students who have completed previous modules]</p>
+        <p><strong>Lesson 3:</strong> [Advanced strategy #2]</p>
+        <p><strong>Lesson 4:</strong> [How to build a team or use tools to remove yourself from the execution]</p>
+        <p><strong>Action Assignment:</strong> [90-day growth plan — they map out their next quarter using a template]</p>
+        <p><strong style="color:var(--cyan)">Module Outcome:</strong> "By the end of Module 6, you'll have a repeatable, scalable system that generates [result] without requiring your constant attention."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">BONUS MODULE — "[VIP Content / Special Topics]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong>Purpose:</strong> Overdeliver on the promise — content that wasn't promised but adds significant value</p>
+        <p><strong>Bonus 1:</strong> [Interview with an expert in your space — 30–45 minutes]</p>
+        <p><strong>Bonus 2:</strong> [A full swipe file, template pack, or resource library]</p>
+        <p><strong>Bonus 3:</strong> [A mini-course on a related topic that amplifies the main result]</p>
+        <p><strong>Bonus 4:</strong> [Access to a private community — Slack, Circle, Discord, or Facebook Group]</p>
+        <p><strong style="color:var(--cyan)">Purpose:</strong> Bonuses reduce refund requests, increase completion rates, and generate testimonials about overdelivery.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section">
+    <div class="section-num">Section 04</div>
+    <h2>Production Workflow</h2>
+    <p>You do not need a professional studio to make a great course. You need consistent lighting, clear audio, and a workflow that keeps you moving. Here is the exact production system, from equipment to upload.</p>
+
+    <h3>Equipment by Budget Tier</h3>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(48,209,88,.1)">&#128176;</div>
+        <div class="system-name">Starter Tier — $0–$300 Total Budget</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li><strong>Camera:</strong> Your smartphone (iPhone 12+ or Android equivalent) on a $15 phone mount tripod</li>
+          <li><strong>Microphone:</strong> BOYA BY-M1 lavalier mic ($25) — plugs directly into your phone's headphone jack or USB-C</li>
+          <li><strong>Lighting:</strong> Sit facing a window. Natural daylight is free and looks better than cheap ring lights</li>
+          <li><strong>Background:</strong> Decluttered wall, bookshelf, or use your screen recording only (no camera face)</li>
+          <li><strong>Screen recording:</strong> OBS Studio (free) or Loom (free tier) for screen-based lessons</li>
+          <li><strong>Editing:</strong> DaVinci Resolve (free) or iMovie (free on Mac) — learn 5 cuts and you're done</li>
+          <li><strong>Slides:</strong> Google Slides (free) — use a dark background and 24pt+ font only</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,214,10,.1)">&#9889;</div>
+        <div class="system-name">Mid-Tier — $300–$1,500 Total Budget</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li><strong>Camera:</strong> Sony ZV-E10 ($650) or Logitech Brio 4K webcam ($200) for desk-based recording</li>
+          <li><strong>Microphone:</strong> Rode NT-USB Mini ($99) or Shure MV7 ($249) — USB direct to computer</li>
+          <li><strong>Lighting:</strong> Elgato Key Light ($200) or equivalent — consistent, adjustable, no window dependency</li>
+          <li><strong>Background:</strong> Dedicated corner of a room with intentional setup; acoustic panels optional ($80)</li>
+          <li><strong>Screen recording:</strong> Screenflow ($129 Mac) or Camtasia ($300) — built-in editing, cleaner workflow</li>
+          <li><strong>Editing:</strong> Screenflow or Final Cut Pro ($300 one-time) — significantly faster than DaVinci for tutorials</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(0,229,255,.1)">&#127381;</div>
+        <div class="system-name">Pro Tier — $1,500–$5,000 Total Budget</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li><strong>Camera:</strong> Sony A7C ($1,800) or Sony ZV-E1 ($2,200) with a 35mm f/1.8 lens — cinematic depth of field</li>
+          <li><strong>Microphone:</strong> Rode NT1 into Focusrite Scarlett Solo ($280 combo) — broadcast-quality audio</li>
+          <li><strong>Lighting:</strong> Two-light setup: Elgato Key Light + Aputure MC fill light — professional separation</li>
+          <li><strong>Acoustic treatment:</strong> Proper acoustic panels on recording wall — reduces reverb entirely</li>
+          <li><strong>Teleprompter:</strong> Parrot Teleprompter ($150) — read scripts without looking away from lens</li>
+          <li><strong>Editor:</strong> Hire a video editor on Fiverr or Upwork at $20–$50/hr after your content is proven</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Recording SOP (Standard Operating Procedure)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Prepare your script or outline the night before</div><div class="step-desc">Never record without a script or detailed bullet outline. Scripts give you control. Bullets give you energy. Pick based on your delivery style. Write at a 6th-grade reading level — this is easier to speak and easier to understand.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Run a 30-second test recording first</div><div class="step-desc">Check audio levels (aim for peaks at –12dB to –6dB), confirm your lighting, verify your frame is right. This 30 seconds saves you from re-recording entire lessons due to a single technical issue you didn't catch.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Record in batches — 3–5 lessons per session</div><div class="step-desc">Your energy and delivery quality peak in the first 90 minutes of recording. Schedule 2-hour blocks. Do not try to record an entire module in one day — your voice gets tired and your performance drops noticeably by lesson 6.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Clap at the start of each take</div><div class="step-desc">This gives your editor a visual sync point for audio/video alignment and a clear marker of where each take begins. Say "Module 3, Lesson 2, Take 1" before each recording so your editor never has confusion about file identity.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Don't stop for small mistakes</div><div class="step-desc">Pause, take a breath, and repeat the sentence. Your editor will cut the mistake. Stopping mid-sentence and starting the whole lesson over wastes enormous time. The pause gives the editor a clean cut point.</div></div></div>
+    </div>
+
+    <h3>Slide Design Principles</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Do This</div>
+        <div class="card-desc">
+          One idea per slide, maximum<br><br>
+          Dark background (#1a1a1a or similar) — easier on the eyes for long viewing<br><br>
+          Font size minimum 28pt for body text, 40pt+ for headlines<br><br>
+          Use your brand colors as highlights only — not as backgrounds<br><br>
+          Leave 40px of margin on all edges — content too close to edges looks amateur<br><br>
+          Use real screenshots and examples — not stock images or clipart
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Avoid This</div>
+        <div class="card-desc">
+          Bullet point walls — 6+ bullets per slide<br><br>
+          Small text under 20pt — unreadable on mobile<br><br>
+          Animations and transitions — distracting and look dated<br><br>
+          White backgrounds — causes eye strain in dark recording environments<br><br>
+          Mixing more than 2 font families in one presentation<br><br>
+          Slide numbers that don't relate to your course structure
+        </div>
+      </div>
+    </div>
+
+    <h3>Platform Upload Workflow</h3>
+
+    <table>
+      <thead>
+        <tr><th>Platform</th><th>File Format</th><th>Max File Size</th><th>Best For</th><th>Key Setting</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Kajabi</td><td>MP4 (H.264)</td><td>No limit</td><td>High-ticket courses with community</td><td>Enable "Drip" per module release schedule</td></tr>
+        <tr><td>Teachable</td><td>MP4 (H.264)</td><td>2GB per file</td><td>Mid-range courses, strong affiliate tools</td><td>Set completion requirements per lecture</td></tr>
+        <tr><td>Podia</td><td>MP4 / MOV</td><td>No limit</td><td>Simple courses + digital downloads combo</td><td>Bundle multiple products easily</td></tr>
+        <tr><td>Gumroad</td><td>Any format</td><td>16GB total</td><td>Low-ticket, high-volume, or mini-courses</td><td>Use membership for recurring revenue</td></tr>
+        <tr><td>Thinkific</td><td>MP4 (H.264)</td><td>2GB per file</td><td>Communities + certificates of completion</td><td>Enable student progress tracking reports</td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula">VIDEO EXPORT SETTINGS (works on all platforms)
+─────────────────────────────────────────────
+Format:     MP4 (H.264 codec)
+Resolution: 1920×1080 (1080p) minimum
+Frame rate: 30fps (29.97)
+Bitrate:    8–12 Mbps for high motion / 4–6 Mbps for screen recording
+Audio:      AAC, 44.1kHz, Stereo, 192kbps
+Color:      Rec. 709 (standard for web delivery)</div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section">
+    <div class="section-num">Section 05</div>
+    <h2>Pricing Strategy</h2>
+    <p>Pricing is not about what your course is worth. It's about what transformation you're selling, who you're selling it to, and how you structure the offer. Most creators underprice their courses by 3–5x because they compare themselves to free YouTube content instead of the outcome they deliver.</p>
+
+    <h3>The 4 Pricing Tiers</h3>
+
+    <div class="card">
+      <div class="card-title">Tier 1 — Self-Study &nbsp;<span class="tag cyan">$97 – $297</span></div>
+      <div class="card-desc" style="margin-top:10px">
+        <p>Core course content only: video lessons, worksheets, templates. No community, no live access, no coaching. The student gets the content and figures it out on their own.</p>
+        <p><strong>When to use this tier:</strong> Your first launch, validating the content, or as the entry-level offer in a multi-tier stack. This tier builds your testimonials base.</p>
+        <p><strong>What to include:</strong> All core modules + bonus module + resource library + lifetime access + updates for 12 months.</p>
+        <p><strong>Positioning:</strong> "The complete system, at your own pace." Attract self-starters who are confident learners.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 2 — With Community &nbsp;<span class="tag green">$297 – $597</span></div>
+      <div class="card-desc" style="margin-top:10px">
+        <p>Everything in Tier 1 plus access to a private community (Circle, Slack, or Discord) where students ask questions, share progress, and hold each other accountable.</p>
+        <p><strong>Why this works:</strong> Community increases completion rates from ~15% to 50%+. Students who complete courses leave testimonials. Testimonials sell more courses. The community pays for itself.</p>
+        <p><strong>Your role:</strong> Post once per week in the community with a prompt, tip, or win spotlight. Respond to questions within 48 hours. This takes 30–60 minutes per week.</p>
+        <p><strong>Positioning:</strong> "The system plus a room full of people doing it with you." Attract students who know they need accountability.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 3 — With Coaching &nbsp;<span class="tag yellow">$597 – $1,997</span></div>
+      <div class="card-desc" style="margin-top:10px">
+        <p>Everything in Tier 2 plus access to group coaching calls (bi-weekly or monthly). Students can submit questions in advance, get on hot seats, and receive direct feedback on their work.</p>
+        <p><strong>Call structure:</strong> 60 minutes total — 15 min recap of the week's content, 35 min hot seat Q&amp;A (3–4 students per call), 10 min wins and previews.</p>
+        <p><strong>Limit group size:</strong> Cap this tier at 30–50 students per cohort to preserve call quality. Scarcity also helps conversion.</p>
+        <p><strong>Positioning:</strong> "The system, the community, and direct access to [Your Name]." Attract serious students who want accountability from the expert, not just peers.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 4 — VIP / Done-With-You &nbsp;<span class="tag red">$2,000 – $10,000+</span></div>
+      <div class="card-desc" style="margin-top:10px">
+        <p>Everything in Tier 3 plus 1:1 access: private calls (2–4 per month), direct messaging access, personalized feedback on their work, and a custom roadmap for their specific situation.</p>
+        <p><strong>Capacity:</strong> You can only support 3–8 VIP students at a time while maintaining your own business. Price accordingly.</p>
+        <p><strong>Positioning:</strong> "We do this together. I treat your results like they're my own." Attract students for whom time is more valuable than money and who need a partner, not just a teacher.</p>
+        <p><strong>Conversion path:</strong> VIP students often come from your Tier 2/3 alumni who completed the course and want to go deeper. Offer a "graduation upgrade" to your best students.</p>
+      </div>
+    </div>
+
+    <h3>Price Anchoring Strategy</h3>
+    <p>Always present your pricing in a tier stack on your sales page, even if you're only launching one tier. Showing a $2,000 option makes your $497 option feel like a deal. The anchor is the psychological baseline for evaluating value.</p>
+
+    <div class="formula">PRICE ANCHORING DISPLAY ORDER
+─────────────────────────────────────
+[Most Expensive Tier]   $2,000    "VIP"       → shown first
+[Middle Tier]           $497      "Complete"  → shown second (YOUR TARGET)
+[Entry Tier]            $197      "Essential" → shown third
+
+Result: The middle tier (your primary offer) appears as the
+rational, value-maximizing choice. Most buyers choose the middle.
+This is called the "Goldilocks effect" — not too cheap, not too expensive.</div>
+
+    <h3>Payment Plan Math</h3>
+    <p>Always offer a payment plan for anything over $297. Payment plans increase your total sales volume by 30–60% because they lower the upfront psychological barrier. Here's how to structure them profitably:</p>
+
+    <table>
+      <thead>
+        <tr><th>Full Price</th><th>Payment Plan</th><th>Plan Total</th><th>Premium</th><th>Logic</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>$297</td><td>3 × $109</td><td>$327</td><td>+10%</td><td>Covers credit card fees and churn risk</td></tr>
+        <tr><td>$497</td><td>3 × $179</td><td>$537</td><td>+8%</td><td>Slight premium rewards upfront payers</td></tr>
+        <tr><td>$997</td><td>4 × $277</td><td>$1,108</td><td>+11%</td><td>Standard for mid-premium courses</td></tr>
+        <tr><td>$1,997</td><td>6 × $377</td><td>$2,262</td><td>+13%</td><td>Higher premium for high churn risk</td></tr>
+        <tr><td>$2,997</td><td>12 × $297</td><td>$3,564</td><td>+19%</td><td>Monthly model encourages engagement</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Beta Pricing — Your First Launch</h3>
+    <div class="callout green">
+      <div class="callout-icon">&#128640;</div>
+      <div class="callout-text"><strong>Beta pricing strategy:</strong> For your first cohort, price at 40–60% of your intended full price in exchange for weekly feedback, testimonials, and the willingness to participate in a "live build." Announce: "This is the beta cohort — you're getting the course at a discount because I'm refining it as we go. In exchange, I need your honest feedback and a testimonial if it delivers results." Beta students become your most loyal advocates because they feel ownership in the product.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section">
+    <div class="section-num">Section 06</div>
+    <h2>Sales Page Template</h2>
+    <p>A long-form sales page for a course priced at $197+ should be 1,500–3,000 words. Every section below does a specific psychological job. Don't skip sections and don't rearrange them — the sequence matters.</p>
+
+    <h3>Hero Section</h3>
+    <div class="card">
+      <div class="card-title">Headline Formulas (pick one, fill in your specifics)</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p style="margin-bottom:8px"><span class="tag cyan">Formula A</span> <strong style="color:var(--text)">How to [Achieve Specific Result] in [Timeframe] Without [Common Frustration]</strong><br>
+        Example: "How to Build a $5,000/Month Freelance Business in 90 Days Without Cold Calling Anyone"</p>
+        <p style="margin-bottom:8px"><span class="tag cyan">Formula B</span> <strong style="color:var(--text)">The [Specific System] That [Target Audience] Are Using to [Achieve Result]</strong><br>
+        Example: "The 6-Step Framework That New Real Estate Investors Are Using to Close Their First Deal in 60 Days"</p>
+        <p style="margin-bottom:8px"><span class="tag cyan">Formula C</span> <strong style="color:var(--text)">Finally: A [Course Type] for [Specific Person] Who Wants [Specific Result] and Is Done With [Specific Frustration]</strong><br>
+        Example: "Finally: A Complete Course for Introverted Entrepreneurs Who Want Consistent Clients Without Showing Up on Instagram Every Day"</p>
+        <p style="margin-bottom:0"><span class="tag cyan">Formula D</span> <strong style="color:var(--text)">The Exact [Method/System/Blueprint] I Used to [Your Proof Point] — Now Available as a Step-by-Step Course</strong><br>
+        Example: "The Exact Email Strategy I Used to Add $80,000 in Annual Revenue — Now Available as a Step-by-Step Course"</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Hero Subheadline (one sentence, 20 words max)</div>
+      <div class="card-desc">
+        "A [X]-module course that takes you from [starting point] to [end point] with [key differentiator]."<br><br>
+        Example: "A 7-module course that takes you from zero followers to your first 10,000 engaged fans with a 2-hour-per-week content system."
+      </div>
+    </div>
+
+    <h3>Problem Agitation Section</h3>
+    <p>This section makes the reader feel deeply understood. It names their specific pain — not generic frustration. Use the exact language from your survey responses.</p>
+    <div class="card">
+      <div class="card-title">Problem Section Template — "If You're Reading This, You Know Exactly What I'm Talking About"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p>You've been [trying to do the thing] for [timeframe].</p>
+        <p>You've tried [approach 1] — it didn't work. You've tried [approach 2] — it worked for a week, then stopped. You've watched [YouTube / read blogs / taken the cheap course] and somehow, you're still stuck at [specific frustrating result].</p>
+        <p>Meanwhile, you're watching other people — people with less experience than you, less knowledge than you — seem to [achieve the result] effortlessly.</p>
+        <p>You're not lazy. You're not stupid. You're not missing some magic gene. You're missing a <strong style="color:var(--text)">system</strong>. A specific, step-by-step system designed for exactly your situation — not a generic framework built for someone else's business.</p>
+        <p>That's exactly what [Course Name] is.</p>
+      </div>
+    </div>
+
+    <h3>Solution Reveal Section</h3>
+    <div class="card">
+      <div class="card-title">Solution Section Template — "Introducing [Course Name]"</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong style="color:var(--text)">[Course Name]</strong> is a [X]-module, [format] course that gives you [specific deliverable] so you can [primary outcome] — even if [biggest objection].</p>
+        <p>Inside, you'll get:</p>
+        <p>&#10003; [Core benefit 1 — specific and results-oriented]<br>
+        &#10003; [Core benefit 2 — addresses a specific pain point]<br>
+        &#10003; [Core benefit 3 — unique to your methodology]<br>
+        &#10003; [Core benefit 4 — a tangible template or asset]<br>
+        &#10003; [Core benefit 5 — the transformation they're buying]</p>
+      </div>
+    </div>
+
+    <h3>Curriculum Breakdown Section</h3>
+    <p>List every module with a one-sentence outcome statement for each. This section often sells the course on its own for analytically-minded buyers who need to see the full scope before committing.</p>
+    <div class="card">
+      <div class="card-title">Curriculum Section Template</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p><strong style="color:var(--cyan)">MODULE 1: [Title]</strong><br>
+        [2 sentences: what they'll learn and what they'll have by the end]</p>
+        <p><strong style="color:var(--cyan)">MODULE 2: [Title]</strong><br>
+        [2 sentences]</p>
+        <p>[Repeat for each module]</p>
+        <p><strong style="color:var(--text)">PLUS THESE BONUSES:</strong><br>
+        Bonus 1: [Name] — [Value statement] (Value: $[X])<br>
+        Bonus 2: [Name] — [Value statement] (Value: $[X])<br>
+        Bonus 3: [Name] — [Value statement] (Value: $[X])</p>
+        <p><strong style="color:var(--green)">Total value: $[X]. Your investment today: $[Price].</strong></p>
+      </div>
+    </div>
+
+    <h3>Instructor Bio Section</h3>
+    <div class="card">
+      <div class="card-title">Bio Template — Make It About Them, Not You</div>
+      <div class="card-desc" style="margin-top:12px">
+        <p>"Hi, I'm [Name]."</p>
+        <p>"I'm a [specific role] who has [specific, credible achievement with numbers]. I've [done the thing you're teaching] for [X years], and I've helped [X number of people] achieve [the result]."</p>
+        <p>"But here's what you need to know about me: I wasn't always good at this. [Brief story of your struggle — you were where your student is now]. That struggle is exactly why I built [Course Name] the way I did — I built the course I wish I had."</p>
+        <p>"My students have [specific student results]. And now I'm here to help you do the same."</p>
+      </div>
+    </div>
+
+    <h3>FAQ Section — Answer the Real Objections</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Q: I'm a beginner. Will this work for me?</div>
+        <div class="card-desc">A: [Course Name] was specifically designed for [beginner-friendly statement]. Module 1 starts from [specific starting point] — no prior [X] required. That said, if you're more advanced, you can skip ahead to [specific module] where we cover [advanced topic].</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Q: How long will it take to see results?</div>
+        <div class="card-desc">A: Students who complete Modules 1–3 typically see [first result] within [timeframe]. Full results — [primary outcome] — take [realistic timeframe] for most students. The timeline depends on how consistently you apply the system, not on luck or talent.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Q: What if I don't have time?</div>
+        <div class="card-desc">A: The course is designed for [X hours per week]. Each lesson is [X–X] minutes. Most students complete the whole course in [timeframe] by dedicating [X hours] on weekends. You also have lifetime access — go at any pace that works for you.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Q: Is there a refund policy?</div>
+        <div class="card-desc">A: Yes. You have [X] days to request a full refund if you complete the first three modules and feel the course isn't right for you. We ask that you complete the work because the results are in the doing — not the watching.</div>
+      </div>
+    </div>
+
+    <h3>Testimonial Section Guidelines</h3>
+    <div class="callout cyan">
+      <div class="callout-icon">&#128172;</div>
+      <div class="callout-text"><strong>What makes a testimonial actually sell:</strong> Specificity beats praise. "This was amazing!" does nothing. "I followed Module 3 and landed my first paying client 11 days later at $1,500" converts. Collect testimonials with a form that asks: What was your situation before? What specifically did you do? What happened as a result? Give exact numbers wherever possible.</div>
+    </div>
+
+    <h3>Call-to-Action Sections</h3>
+    <p>Place a CTA button after: the hero section, after the curriculum section, after the testimonials, and at the bottom of the page. Use the same button copy throughout. Examples:</p>
+    <div class="formula">STRONG CTA BUTTON COPY EXAMPLES
+─────────────────────────────────────────────
+"Yes, I Want [Specific Outcome] — Enroll Now"
+"Get Instant Access to [Course Name]"
+"Start [Course Name] Today — $[Price]"
+"Claim Your Spot in [Course Name]"
+"I'm Ready to [Primary Transformation] — Join Now"
+
+AVOID:
+"Buy Now"  ← no emotion, no benefit
+"Click Here"  ← zero context
+"Learn More"  ← not a commitment CTA</div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section">
+    <div class="section-num">Section 07</div>
+    <h2>Pre-Launch &amp; Launch Timeline — 12 Weeks</h2>
+    <p>This calendar takes you from idea validation through your first open cart. Every week has specific, non-negotiable actions. The entire system assumes you have zero audience and are building from scratch. If you already have an email list or social following, compress the first 4 weeks.</p>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Weeks 1–2 — Validation Phase</div>
+      <div class="roadmap-title">Confirm demand before you build anything</div>
+      <div class="roadmap-tasks"><ul>
+        <li>Post the 5-question pre-sell survey to your social audience, email list, or relevant communities</li>
+        <li>Run 5–10 "discovery calls" — 20-minute conversations with ideal students asking about their problems</li>
+        <li>Score your course idea using the Idea Scoring Matrix from Section 1</li>
+        <li>Complete the competitive gap analysis — identify your positioning angle</li>
+        <li>Write your one-sentence course transformation statement</li>
+        <li>Decision gate: if fewer than 20 survey responses or score under 60, adjust concept before proceeding</li>
+      </ul></div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Weeks 3–4 — Waitlist Build Phase</div>
+      <div class="roadmap-title">Announce and collect interested buyers before the course exists</div>
+      <div class="roadmap-tasks"><ul>
+        <li>Create a one-page "interest page" with your headline, outcome statement, and email opt-in form</li>
+        <li>Announce the course publicly: "I'm building [Course Name] — here's what it covers. Join the waitlist for early access and a 30% discount."</li>
+        <li>Post 3 pieces of "pre-launch content" per week: teach something from the course curriculum, prove your expertise</li>
+        <li>Send one email per week to your list about the problem your course solves — don't mention the course, just educate</li>
+        <li>Waitlist goal: 100+ email subscribers before proceeding to beta launch. If under 100, extend this phase by 2 weeks.</li>
+      </ul></div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Weeks 5–7 — Content Production Phase</div>
+      <div class="roadmap-title">Build the course while continuing to build the audience</div>
+      <div class="roadmap-tasks"><ul>
+        <li>Record Welcome Module and Modules 1–3 first (enough for beta launch)</li>
+        <li>Build your worksheets and templates for Modules 1–3</li>
+        <li>Set up your course platform (Kajabi / Teachable / Podia) and upload content</li>
+        <li>Continue posting 3x per week on your primary social platform — show behind-the-scenes of building</li>
+        <li>Send 2 emails to your waitlist: one teaching a concept from the course, one "sneak peek" of the curriculum</li>
+        <li>Set up your sales page using the template in Section 6 — even if it's not perfect yet</li>
+      </ul></div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Weeks 8–9 — Beta Cohort Phase</div>
+      <div class="roadmap-title">Sell to your waitlist at 50% off — your first paying students</div>
+      <div class="roadmap-tasks"><ul>
+        <li>Send the Beta Launch Email to your waitlist (see Section 8, Email 1): waitlist-only early access, 50% off, closes in 72 hours</li>
+        <li>Goal: 10–30 beta students paying. At $99 beta price, that's $990–$2,970 before you've finished building</li>
+        <li>Start your live beta cohort: release modules weekly, host weekly live Q&amp;A calls</li>
+        <li>Finish recording Modules 4–6 during this phase — stay 1 week ahead of your cohort</li>
+        <li>Collect feedback after every module — use a 3-question form: What was most useful? What was confusing? What's missing?</li>
+        <li>Document every win, breakthrough, and "aha moment" from beta students — these become your testimonials</li>
+      </ul></div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Weeks 10–11 — Pre-Launch Warm-Up</div>
+      <div class="roadmap-title">Build anticipation for the full launch with your broader audience</div>
+      <div class="roadmap-tasks"><ul>
+        <li>Post beta student results and testimonials publicly (with permission)</li>
+        <li>Send 3 pre-launch emails to your full list (Emails 2–4 in Section 8): problem story, student case study, cart-open announcement</li>
+        <li>Run a free live workshop or webinar on your primary content topic — pitch the course at the end</li>
+        <li>Open a new waitlist for non-beta buyers — collect 200+ new names if possible</li>
+        <li>Update your sales page with real testimonials from beta students</li>
+        <li>Finalize your price for full launch (remove beta discount — full price only)</li>
+      </ul></div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 12 — Open Cart (5-Day Launch)</div>
+      <div class="roadmap-title">Sell hard for 5 days. The urgency is real and non-negotiable.</div>
+      <div class="roadmap-tasks"><ul>
+        <li>Day 1 (Monday): Cart Open email — "Doors are open" (Email 4). Post publicly: "Enrollment is open."</li>
+        <li>Day 2 (Tuesday): Social proof day — post 3 student testimonials across platforms</li>
+        <li>Day 3 (Wednesday): Mid-cart email — address the most common objection (Email 5). Live AMA on Instagram/YouTube.</li>
+        <li>Day 4 (Thursday): Urgency email — "2 days left" (Email 6). Focus on what they lose by not enrolling.</li>
+        <li>Day 5 (Friday): Final close — 2 emails: morning (12 hours left) and evening (2 hours left) (Email 7). Cart closes at midnight.</li>
+        <li>Post-launch: Send a "cart is closed" email to non-buyers with a waitlist for the next cohort</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section">
+    <div class="section-num">Section 08</div>
+    <h2>Email Launch Sequence — 7 Emails</h2>
+    <p>These emails are written as usable templates. Replace every bracketed item with your specifics. The tone is direct, personal, and non-desperate. Do not use marketing speak. Write like you're talking to one person you respect.</p>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 1 — Week 8, Day 1 (Beta / Waitlist Only)</span>
+        <span class="email-subject">Subject: You're first (the doors are open)</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>A few weeks ago, you told me you were interested in [Course Name] when I asked about it.</p>
+        <p>Today, before I announce it to anyone else, I'm opening the doors to you first.</p>
+        <p>Here's the deal: as a founding member, you get in at [Beta Price] — that's 50% off the full price of [Full Price].</p>
+        <p>You also get something the regular students won't: direct access to me during the live cohort. Weekly group calls. The ability to shape the curriculum in real time. And the knowledge that you helped build something that a lot of people are going to benefit from.</p>
+        <p>What you get inside [Course Name]:<br>
+        → [Module 1 outcome]<br>
+        → [Module 2 outcome]<br>
+        → [Module 3 outcome]<br>
+        → [Bonus or community]</p>
+        <p>This founding member price expires in <strong>72 hours</strong>. After that, it's gone — permanently.</p>
+        <p>Enroll here: [LINK]</p>
+        <p>Any questions? Just reply to this email. I answer every one.</p>
+        <p>— [Your Name]</p>
+        <p class="ps">P.S. If you're on the fence, the best thing I can tell you is this: the price goes up and the personal access goes down after this cohort. The founding member experience is a one-time thing.</p>
+      </div>
+    </div>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 2 — Week 10, Day 1 (Pre-Launch, Full List)</span>
+        <span class="email-subject">Subject: The real reason [common problem] keeps happening</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>I want to tell you something most people in [your space] won't say out loud:</p>
+        <p>[Describe the uncomfortable truth about why people struggle with the problem your course solves. Be specific. Use data or a personal story. This should be 3–4 paragraphs of genuine value — not a teaser for the course, but a real insight.]</p>
+        <p>Example: "The reason most freelancers never hit $5K/month isn't their skills. It's that they're pricing per hour instead of per outcome. The moment I switched to value-based pricing, my income tripled in 60 days. Not because I worked more — because I charged for the result, not the time."</p>
+        <p>I'm sharing this because [Course Name] is opening for enrollment in [X days], and I want you to understand what you're actually getting before I ever ask you to buy anything.</p>
+        <p>Next email, I'll share what happened when [beta student name] used this approach. Real numbers, real timeline.</p>
+        <p>— [Your Name]</p>
+        <p class="ps">P.S. If you already know you want in: [link to a waitlist or "early access" form]</p>
+      </div>
+    </div>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 3 — Week 10, Day 4 (Pre-Launch, Case Study)</span>
+        <span class="email-subject">Subject: [Student first name]'s results after 3 weeks</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>I want to introduce you to [Beta Student Name].</p>
+        <p>[2–3 sentences describing their starting point — where they were before, what they'd tried, what wasn't working]</p>
+        <p>They enrolled in the beta cohort of [Course Name] three weeks ago.</p>
+        <p>Here's what happened:</p>
+        <p>[Specific result 1 with number and timeframe]<br>
+        [Specific result 2 with number and timeframe]<br>
+        [Quote from the student — use their exact words]</p>
+        <p>They didn't have any advantages you don't have. They just followed the system in the right order.</p>
+        <p>Enrollment opens to the public on [DATE] at [PRICE].</p>
+        <p>If you want to be notified the moment doors open: [waitlist link]</p>
+        <p>— [Your Name]</p>
+      </div>
+    </div>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 4 — Week 12, Day 1 (Cart Open)</span>
+        <span class="email-subject">Subject: [Course Name] is open — here's everything you need to know</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>It's here. [Course Name] is officially open.</p>
+        <p>Here's the complete breakdown of what you're getting:</p>
+        <p>[List every module with a one-line outcome]<br>
+        [List every bonus with value]<br>
+        [List any community or coaching access]</p>
+        <p>The investment: <strong>[Price]</strong> (or [X] payments of [payment plan amount])</p>
+        <p>Enrollment closes: <strong>[Date, Time, Timezone]</strong></p>
+        <p>Why does it close? Because this is a cohort course. I'm running live calls with everyone who joins during this window. After it closes, the next opportunity to join won't be until [Next Launch Date or "later this year"].</p>
+        <p>Enroll here: [LINK]</p>
+        <p>— [Your Name]</p>
+        <p class="ps">P.S. If you have any questions before deciding — literally any questions — reply to this email. I'm here.</p>
+      </div>
+    </div>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 5 — Week 12, Day 3 (Mid-Cart Objection Handler)</span>
+        <span class="email-subject">Subject: "I don't have time for a course right now"</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>I've gotten a few replies over the last two days from people saying some version of: "This looks amazing, but I just don't have the time right now."</p>
+        <p>I hear you. And I want to give you the most honest answer I can:</p>
+        <p>[Course Name] is designed to be completed in [X hours per week]. Most lessons are [X–Y] minutes. There is no live session you're required to attend (all calls are recorded). You can start and stop on your own schedule.</p>
+        <p>But here's what I really want you to think about: if you don't have time to invest in [the skill this course teaches], you definitely don't have time to keep doing [the inefficient thing they're currently doing].</p>
+        <p>[Course Name] is designed to give you that time back — permanently.</p>
+        <p>Two days left: [LINK]</p>
+        <p>— [Your Name]</p>
+      </div>
+    </div>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 6 — Week 12, Day 4 (Urgency)</span>
+        <span class="email-subject">Subject: 24 hours left (and what happens if you don't)</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>Enrollment in [Course Name] closes tomorrow at midnight.</p>
+        <p>I want to be direct with you: if you're still thinking about it, the question isn't "should I do this?" The question is: "what happens if I don't?"</p>
+        <p>In 90 days, you're going to be somewhere. You're either going to have [specific result from taking the course] — or you're going to be exactly where you are right now, still dealing with [specific pain point].</p>
+        <p>The system works. The beta students have proven it. The only variable is whether you decide to use it.</p>
+        <p>If you're in: [LINK]<br>
+        If you're not sure: reply to this email and tell me what's holding you back. Seriously.</p>
+        <p>— [Your Name]</p>
+        <p class="ps">P.S. After tomorrow at midnight, you'll need to join the waitlist for the next cohort. No exceptions — I'm not keeping the cart open to be nice. The live call schedule is set and I can't add people mid-program.</p>
+      </div>
+    </div>
+
+    <div class="email-block">
+      <div class="email-header">
+        <span class="email-num">Email 7 — Week 12, Day 5 (Final Close — send twice: 10am and 8pm)</span>
+        <span class="email-subject">Subject: Closing tonight at midnight</span>
+      </div>
+      <div class="email-body">
+        <p>Hey [First Name],</p>
+        <p>Today is the last day to join [Course Name].</p>
+        <p>Enrollment closes at midnight [Timezone].</p>
+        <p>If you've been going back and forth — this is your moment. Not because I'm pressuring you, but because making a decision (in either direction) is better than staying in limbo.</p>
+        <p>If yes: [LINK] — take the step.<br>
+        If no: totally fine — reply and I'll put you on the waitlist for next time.</p>
+        <p>Either way, I appreciate you following along this week. The content I shared in these emails is a fraction of what's inside the course.</p>
+        <p>— [Your Name]</p>
+        <p class="ps">P.S. The evening version of this email (if you're reading this in the afternoon): you have until midnight. [LINK]</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section">
+    <div class="section-num">Section 09</div>
+    <h2>Post-Launch Optimization</h2>
+    <p>Most creators celebrate the launch, deliver the course, and then do nothing until the next launch. That's leaving 70% of the revenue on the table. Here's what to do in the 90 days after your first launch to set up the long game.</p>
+
+    <h3>Testimonial Collection System</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Send a "Week 2 Check-In" email to all students</div><div class="step-desc">Ask: "What's your biggest win from the first two modules?" This surfaces early results and gives you shareable content before the course is even done. Respond personally to every reply — this builds loyalty.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Send a formal testimonial request at end of course</div><div class="step-desc">Use a 4-question form: (1) What was your situation before the course? (2) What specific modules or lessons were most impactful? (3) What results have you achieved? (4) Who would you recommend this course to? This structure generates testimonials that sell.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Create a "Wins Board" in your community</div><div class="step-desc">Designate a channel or thread where students post results. Screenshot and share publicly (with permission). This creates a social proof engine that runs itself and makes other students more likely to share their own wins.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Reach out personally to top students for video testimonials</div><div class="step-desc">Identify your top 5–10 students. Send a personal voice note or email asking for a 60-second video testimonial. Provide a simple prompt: "Tell me who you are, what you were struggling with, what you did in the course, and what happened." Video testimonials convert 3–5x better than written ones.</div></div></div>
+    </div>
+
+    <h3>Refund Handling Protocol</h3>
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>Expect a 2–8% refund rate</strong> on your first launch. This is normal. Do not take refunds personally — they are data. When processing a refund, always reply with: "Done — your refund is processed. I'd genuinely appreciate knowing what didn't work for you, if you're willing to share. No pressure." Most people will tell you. This feedback is gold for improving the next version.</div>
+    </div>
+
+    <h3>Course Update Cadence</h3>
+    <table>
+      <thead>
+        <tr><th>Timeline</th><th>Update Type</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>30 days post-launch</td><td>Quick fixes</td><td>Re-record any lessons that got consistent confusion questions. Add clarifying notes to worksheets.</td></tr>
+        <tr><td>90 days post-launch</td><td>Content refresh</td><td>Add new case studies, update any tool walkthroughs that have changed, add one bonus lesson based on top student questions.</td></tr>
+        <tr><td>6 months post-launch</td><td>Version 2.0</td><td>Full review of completion data by module. Re-record low-completion modules. Add new content if industry has changed. Bump price 10–20%.</td></tr>
+        <tr><td>12 months post-launch</td><td>Major update or retire</td><td>Evaluate whether to run another cohort, go evergreen, or replace with a new product. Don't run a course that's more than 18 months without a meaningful update.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Passive Sales Setup — Evergreen Webinar</h3>
+    <p>Once you've run 2+ live launches and have 10+ strong testimonials, convert your launch process into an automated evergreen funnel. This is how course creators generate revenue without running launch campaigns.</p>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(0,229,255,.1)">&#9889;</div>
+        <div class="system-name">Evergreen Webinar Funnel Architecture</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Record a 45–60 minute "workshop" that teaches 3 high-value concepts from your course — end with a pitch for the full course</li>
+          <li>Host it on EverWebinar or WebinarKit ($99–$199/month) — simulates a live experience with automated "chat" and Q&amp;A</li>
+          <li>Drive traffic via: a pinned post/link in bio, a lead magnet opt-in that redirects to the webinar registration, paid ads once you know your conversion rate</li>
+          <li>Set the webinar to run every 15–30 minutes so visitors can join "just starting" at any time</li>
+          <li>Create a 5-email post-webinar sequence for those who registered but didn't buy — use the email sequence from Section 8, compressed into 72 hours</li>
+          <li>A well-optimized evergreen webinar converts 3–8% of registrants into buyers — with a $497 course and 100 registrants/month, that's $1,500–$4,000/month on autopilot</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#128200;</div>
+      <div class="callout-text"><strong>Revenue benchmark targets:</strong> Launch 1 (beta): $2,000–$8,000. Launch 2 (full launch): $10,000–$30,000. Launch 3+ (with social proof + warm list): $20,000–$80,000. Evergreen (monthly, no launch): $3,000–$15,000/month. These are achievable ranges for a solo creator with a sub-5,000 audience when execution is tight. The system is the multiplier — not the audience size.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign / GetScrewedScore</div>
+    <div class="doc-footer-note">Digital Course Blueprint &mdash; $119 &mdash; &copy; 2026. For personal use only.</div>
+  </div>
+
+</div>
+</body>
+</html>
