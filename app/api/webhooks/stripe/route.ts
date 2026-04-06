@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createServiceClient } from '@/lib/supabase'
+import { sendProductDeliveryEmail, PRODUCT_CATALOG } from '@/lib/email/product-delivery'
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY environment variable is required')
@@ -34,6 +35,34 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     switch (event.type) {
+
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session
+        const productId = session.metadata?.product_id
+
+        // Only handle one-time product purchases (not scan credits or subscriptions)
+        if (productId && productId in PRODUCT_CATALOG) {
+          const customerEmail =
+            session.customer_details?.email ??
+            (typeof session.customer_email === 'string' ? session.customer_email : null)
+
+          if (customerEmail) {
+            const result = await sendProductDeliveryEmail({
+              toEmail: customerEmail,
+              productId,
+              stripeSessionId: session.id,
+            })
+            if (!result.ok) {
+              // Log but don't return 500 — Stripe would retry and re-send the email
+              console.error('[stripe-webhook] Product delivery failed:', result.error)
+            }
+          } else {
+            console.warn('[stripe-webhook] No customer email for session:', session.id)
+          }
+        }
+        break
+      }
+
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription
         await supabase.from('revoked_subscriptions').upsert(
