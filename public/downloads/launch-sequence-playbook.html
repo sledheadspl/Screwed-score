@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Launch Sequence Playbook — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:800px;margin:0 auto;padding:60px 32px}
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+  .doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px}.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none}.toc a:hover{color:var(--cyan)}
+  .section{margin-bottom:64px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+  h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+  h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+  .callout-text strong{color:var(--text)}
+  .steps{margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:20px}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+  .step-content{padding-top:4px}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+  tr:last-child td{border-bottom:none}
+  .email-template{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+  .email-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--sub)}
+  .email-header span{color:rgba(242,242,242,.7)}
+  .email-body{padding:20px;font-size:13px;color:rgba(242,242,242,.65);line-height:1.9;white-space:pre-wrap}
+  .email-body strong{color:var(--cyan)}
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-badge">Premium Digital Product</div>
+    <h1 class="doc-title">Launch Sequence Playbook</h1>
+    <p class="doc-subtitle">Step-by-step digital product launch system with email sequences, content plan, and optimization framework — from zero to open cart.</p>
+    <div class="doc-meta">
+      <span>Value: $89</span>
+      <span>REMbyDesign</span>
+      <span>Version 1.0</span>
+      <span>2026 Edition</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#framework">The 6-Phase Launch Framework</a></li>
+      <li><a href="#prepre">Pre-Pre-Launch: Weeks 1–4</a></li>
+      <li><a href="#pre">Pre-Launch: Weeks 5–6</a></li>
+      <li><a href="#launchweek">Launch Week Email Sequence (7 Emails)</a></li>
+      <li><a href="#content">Launch Week Content Calendar</a></li>
+      <li><a href="#postlaunch">Post-Launch: Weeks 1–2</a></li>
+      <li><a href="#metrics">Launch Metrics &amp; Optimization</a></li>
+      <li><a href="#relaunch">Re-Launch Strategy</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="framework">
+    <div class="section-num">Section 01</div>
+    <h2>The 6-Phase Launch Framework</h2>
+    <p>Most failed launches fail in the preparation phase — not the launch week itself. The cart opens and the creator wonders why no one is buying. The answer is almost always the same: not enough people knew, cared, or were primed. This framework eliminates that problem by treating launch as a 6-week campaign, not a 7-day event.</p>
+
+    <div class="card">
+      <div class="card-title">Phase Overview</div>
+      <div class="card-desc">
+        <strong style="color:var(--cyan)">Phase 1 — Pre-Pre-Launch (Weeks 1-4, 6 weeks before):</strong> Audience research, product validation, waitlist building, content strategy creation. The unsexy foundation that determines everything.<br><br>
+        <strong style="color:var(--cyan)">Phase 2 — Pre-Launch (Weeks 5-6):</strong> Intensive content push, email warm-up sequence (3 emails), social proof gathering, cart preview and urgency setup.<br><br>
+        <strong style="color:var(--cyan)">Phase 3 — Launch Week:</strong> Cart opens. 7-email sequence. Heavy content on all platforms. Daily monitoring and adjustment.<br><br>
+        <strong style="color:var(--cyan)">Phase 4 — Post-Launch (Weeks 1-2 after close):</strong> Buyer onboarding, social proof capture, refund policy execution, upsell opportunity.<br><br>
+        <strong style="color:var(--cyan)">Phase 5 — Optimization (Ongoing):</strong> Analyze what worked, fix what didn't, improve conversion rate for the next launch.<br><br>
+        <strong style="color:var(--cyan)">Phase 6 — Re-Launch:</strong> Evergreen or open/close cart model. Repeat the machine with improved assets and a larger list.
+      </div>
+    </div>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>The 80% rule:</strong> 80% of your launch revenue will come from your email list, not your social media. Build your list before you build your product. A 1,000-person email list that knows you will consistently outperform a 50,000-follower social account with no list. Every week you delay building the list is a week of lost launch potential.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="prepre">
+    <div class="section-num">Section 02</div>
+    <h2>Pre-Pre-Launch: Weeks 1–4</h2>
+    <p>This is the phase nobody talks about and everybody skips. The creators who do this work consistently outperform those who don't — often by 3-5x on conversion rate.</p>
+
+    <h3>Week 1: Audience Research and Validation</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Run an audience survey</div><div class="step-desc">Send a 5-question survey to your email list or post in your community. Questions: (1) What's your #1 challenge with [topic]? (2) What have you already tried? (3) What would a "perfect solution" look like? (4) What would you pay for that solution? (5) What's your biggest fear about [topic]? Use Google Forms or Typeform. Aim for 30+ responses minimum before proceeding.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Mine comments, DMs, and forums</div><div class="step-desc">Spend 2 hours reading: your YouTube comments from the last 30 videos, your Instagram DMs, Reddit threads in your niche, relevant Facebook groups, Amazon reviews for books in your space. Copy exact phrases your audience uses to describe their problems. These phrases become your sales copy.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Validate the product concept</div><div class="step-desc">You need at least one of these three signals before building: (a) 50+ people have expressed this exact problem in their own words, (b) a competitor product on this topic is actively selling (market validation), or (c) someone has offered to pay you for this solution before you built it. If you have none of these signals, go back to research.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Write the sales page promise before building</div><div class="step-desc">Write the headline and first paragraph of your sales page before you build the product. This forces clarity on what you're actually selling. If you can't write a compelling headline, your product isn't defined enough yet. The headline format: "[Name of Product]: [What it is] that helps [target person] [achieve outcome] [in timeframe / without obstacle]."</div></div></div>
+    </div>
+
+    <h3>Week 2: Waitlist Building Infrastructure</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Build your waitlist landing page</div><div class="step-desc">One-page design. Elements: Headline (the transformation), 3 bullet points (what they'll get), who it's for (1 sentence), waitlist form (first name + email only), optional: early-bird incentive (10-20% discount for waitlist signups at launch). Tools: ConvertKit, MailerLite, or Carrd for the page.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Write the waitlist confirmation email</div><div class="step-desc">This email goes out immediately on signup. Content: Thank them, confirm what they signed up for, set expectations ("I'll email you [X] days before doors open with a special early-bird offer"), give them something now (a free tip, a piece of content, a resource) to reward the action and increase open rate for future emails.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set up your email platform tags</div><div class="step-desc">Tag every waitlist signup with "Waitlist - [Product Name]" in your email platform. This segment gets your pre-launch sequence. Never send launch emails to your entire list without segmenting — irrelevant emails to uninterested subscribers tanks your deliverability.</div></div></div>
+    </div>
+
+    <h3>Weeks 3–4: Content Strategy and List Growth</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Publish 4 pieces of content directly related to your product topic</div><div class="step-desc">These pieces should: solve a real problem in the space, demonstrate your authority, and naturally lead to "the full system" you're about to launch. Every piece should link to your waitlist page. End every video with "I'm building something for people dealing with exactly this — link in bio/description."</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Run a challenge, workshop, or free training</div><div class="step-desc">A free 3-5 day challenge or a single free live training is the fastest waitlist builder in the creator economy. Price: $0. Requirement: email signup. Topic: directly related to the product you're launching. End the free training with a preview of your paid offer. This warms your audience and proves your teaching ability at the same time.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set a waitlist goal and track weekly</div><div class="step-desc">Minimum viable launch requires: 500 waitlist subscribers for a sub-$100 product, 200 waitlist subscribers for a $100-$500 product, 100 qualified waitlist subscribers for a $500+ product. If you're below these thresholds heading into Week 4, extend your pre-pre-launch by 2 additional weeks before opening the cart.</div></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="pre">
+    <div class="section-num">Section 03</div>
+    <h2>Pre-Launch: Weeks 5–6</h2>
+    <p>The pre-launch phase is where you shift from building awareness to creating desire. Your audience knows something is coming. Now you make them want it.</p>
+
+    <h3>Pre-Launch Content Calendar (14 Days)</h3>
+    <table>
+      <thead>
+        <tr><th>Day</th><th>Platform</th><th>Content</th><th>Goal</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Day 1 (Mon)</td><td>Email + Instagram</td><td>Pre-Launch Email 1 (see below) + Story: "Something is coming"</td><td>Announce + build curiosity</td></tr>
+        <tr><td>Day 2</td><td>YouTube</td><td>Value video directly related to product topic — end with waitlist CTA</td><td>Warm cold audience, grow waitlist</td></tr>
+        <tr><td>Day 3</td><td>LinkedIn + Twitter</td><td>Thread/post: "The problem that made me build [Product Name]" — personal story</td><td>Emotional connection + waitlist growth</td></tr>
+        <tr><td>Day 4</td><td>Instagram Stories</td><td>Behind-the-scenes: building the product, sneak peek of content</td><td>Investment + social proof by proximity</td></tr>
+        <tr><td>Day 5</td><td>Email</td><td>Pre-Launch Email 2 (see below)</td><td>Deepen desire + handle doubts early</td></tr>
+        <tr><td>Day 6</td><td>TikTok + Reels</td><td>"The mistake I made before building this" — relatable short video</td><td>Reach new audience, waitlist growth</td></tr>
+        <tr><td>Day 7</td><td>Instagram Feed + Pinterest</td><td>Quote card: powerful line from product topic</td><td>Brand awareness + saves</td></tr>
+        <tr><td>Day 8</td><td>YouTube Community</td><td>Poll: "What's your biggest challenge with [topic]?" — validates product publicly</td><td>Engagement + social proof</td></tr>
+        <tr><td>Day 9</td><td>Email</td><td>Pre-Launch Email 3 (see below) — "Doors open in 5 days"</td><td>Urgency + social proof</td></tr>
+        <tr><td>Day 10</td><td>All platforms</td><td>Social proof day: share testimonials from beta users or early feedback screenshots</td><td>Trust + FOMO</td></tr>
+        <tr><td>Day 11</td><td>Instagram Stories</td><td>Countdown sticker: "Opening in 3 days" + FAQ from waitlist</td><td>Urgency + objection handling</td></tr>
+        <tr><td>Day 12</td><td>LinkedIn</td><td>Carousel: "What's inside [Product Name]" — show 5-6 key components</td><td>Desire + specificity</td></tr>
+        <tr><td>Day 13</td><td>Email + Stories</td><td>Reminder: "Tomorrow at 9AM — cart opens for early birds"</td><td>Anticipation + action priming</td></tr>
+        <tr><td>Day 14</td><td>All platforms</td><td>LAUNCH DAY — Cart opens. Deploy Launch Week Email 1 at 9AM.</td><td>Revenue</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Pre-Launch Email Sequence (3 Emails)</h3>
+
+    <div class="email-template">
+      <div class="email-header">Pre-Launch Email 1 &nbsp;|&nbsp; <span>Subject: I've been building something for you</span> &nbsp;|&nbsp; Send: Day 1 of pre-launch</div>
+      <div class="email-body">Hi [FIRST NAME],
+
+I've been working on something for the past [NUMBER] weeks, and I want to tell you about it before anyone else hears.
+
+It started because of a conversation I kept having — over and over — in my DMs, in my comments, in real life. People would tell me: "[EXACT QUOTE FROM YOUR AUDIENCE RESEARCH — the core problem in their words]."
+
+I'd give them an answer. They'd say it helped. Then they'd come back with the same question, framed a different way. And I realized: there was no place where all of this lived together. No single resource someone could go to and have the full picture.
+
+So I built it.
+
+[PRODUCT NAME] is [one sentence description — what it is and what it does]. It's designed specifically for [TARGET PERSON], and it covers [3-4 specific things they'll get or be able to do].
+
+I'm not opening it to everyone. I'm opening it first to people who've been waiting for it — which means you.
+
+Doors open [DATE]. Waitlist members get [X% off / first access / a bonus] that won't be available after the first [24/48] hours.
+
+You're already on the waitlist, so you'll hear from me first.
+
+Talk soon,
+[YOUR NAME]
+
+P.S. — If you have a question you've been wanting to ask about [TOPIC], reply to this email. I read everything, and your question might end up in the FAQ I'm putting together for launch week.</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Pre-Launch Email 2 &nbsp;|&nbsp; <span>Subject: Why I almost didn't make this</span> &nbsp;|&nbsp; Send: Day 5 of pre-launch</div>
+      <div class="email-body">Hi [FIRST NAME],
+
+I want to be honest with you about something.
+
+When I first had the idea for [PRODUCT NAME], I talked myself out of it three times.
+
+The first time I thought: "Who am I to teach this? There are people who know this better than I do."
+
+The second time I thought: "It's too much work. I'll do it later."
+
+The third time I thought: "What if nobody buys it?"
+
+All three of those thoughts were fear dressed up as logic. And I almost let fear win.
+
+Here's what changed my mind. [SHORT PERSONAL STORY — 3-4 sentences — a specific moment, result, or realization that made you commit to building it. Be specific. Vague inspiration stories are ignored; specific turning points are remembered.]
+
+That's when I realized: I had already figured something out that took me [TIME PERIOD] to learn. And I had the chance to hand that same understanding to someone who was at the beginning of that road.
+
+The chance to skip that learning curve — to not make the mistakes I made — is worth a lot. More than I charge for this.
+
+[PRODUCT NAME] opens [DATE] at [TIME]. Early bird pricing ($[PRICE] instead of $[REGULAR PRICE]) is available for the first [24/48] hours to waitlist members only.
+
+If you've been thinking about it, that window is your moment.
+
+[YOUR NAME]
+
+P.S. — Here's what [BETA USER or early access person] said after going through it: "[SPECIFIC TESTIMONIAL — even if it's from someone you gave free access to for feedback. Quote exactly.]"</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Pre-Launch Email 3 &nbsp;|&nbsp; <span>Subject: 5 days. Here's what's inside.</span> &nbsp;|&nbsp; Send: Day 9 of pre-launch</div>
+      <div class="email-body">Hi [FIRST NAME],
+
+Doors open in 5 days. I want to make sure you know exactly what's inside [PRODUCT NAME] before launch day — so you can decide if it's right for you.
+
+Here's what you get:
+
+[COMPONENT 1 — name it + 1 sentence on what it does for them]
+[COMPONENT 2 — name it + 1 sentence on what it does for them]
+[COMPONENT 3 — name it + 1 sentence on what it does for them]
+[COMPONENT 4 — name it + 1 sentence on what it does for them]
+[COMPONENT 5 (bonus if applicable) — name it + 1 sentence]
+
+Total value: $[COMBINED VALUE]. Your price: $[YOUR PRICE].
+
+This is for you if:
+— You've been [struggling with specific problem]
+— You've tried [common solution that doesn't work] and hit a wall
+— You want [specific outcome] without [common obstacle or sacrifice]
+
+This is NOT for you if:
+— You're looking for [something your product doesn't do]
+— You're not willing to [required effort or prerequisite]
+
+I'd rather be honest about who this is built for than have you buy something that's wrong for your situation.
+
+Launch day is [DATE]. Waitlist early-bird price: $[PRICE] for the first [24/48] hours.
+
+Reply to this email with any questions. I answer personally.
+
+[YOUR NAME]</div>
+    </div>
+
+    <h3>Social Proof Gathering (Pre-Launch)</h3>
+    <div class="card">
+      <div class="card-title">3 Ways to Get Testimonials Before Launch</div>
+      <div class="card-desc">
+        1. Give 5-10 people early access in exchange for honest written feedback. Ask specifically: "What result did you get? How long did it take? Who would you recommend this to?" Testimonials with a result + timeframe convert far better than general praise.<br><br>
+        2. Mine your existing content comments for social proof. If someone commented "this changed how I think about [topic]" on a relevant video — screenshot it with permission and use it.<br><br>
+        3. Survey your waitlist after they sign up: "What made you sign up?" The responses are often more persuasive than scripted testimonials because they're in your audience's own words and reflect their actual motivation.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="launchweek">
+    <div class="section-num">Section 04</div>
+    <h2>Launch Week Email Sequence — 7 Complete Emails</h2>
+    <p>These emails are written to be sent as-is with your specifics filled in. The sequence is tested and deliberate — do not skip emails, do not reorder them.</p>
+
+    <div class="email-template">
+      <div class="email-header">Email 1 — Day 1 (Monday, 9:00 AM) &nbsp;|&nbsp; <span>Subject: [PRODUCT NAME] is open — here's your early-bird link</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+Today's the day.
+
+[PRODUCT NAME] is officially open, and because you've been on the waitlist, you have access to early-bird pricing right now.
+
+Your link: [CHECKOUT URL]
+Your price: $[EARLY BIRD PRICE] (regular price: $[REGULAR PRICE])
+This price disappears: [DATE] at [TIME]
+
+Here's what you're getting:
+
+[PRODUCT NAME] is [one sentence description]. It gives you [SPECIFIC OUTCOME] by walking you through [METHOD/APPROACH] — step by step, without [COMMON OBSTACLE/CONFUSION].
+
+Inside, you'll find:
+— [KEY COMPONENT 1] — so you can [mini-outcome]
+— [KEY COMPONENT 2] — so you can [mini-outcome]
+— [KEY COMPONENT 3] — so you can [mini-outcome]
+— [KEY COMPONENT 4] — so you can [mini-outcome]
+
+I built this because I kept watching people [describe the problem they were facing], and I knew there was a cleaner, faster way through it.
+
+The early-bird window is [24/48] hours. After that, the price goes up and the bonus [if applicable] goes away.
+
+Get access here: [CHECKOUT URL]
+
+If you have any questions before you decide, reply to this email. I'll answer fast.
+
+To your next level,
+[YOUR NAME]
+
+P.S. — [BETA USER NAME] went through this and [specific result]. I want that for you too.</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 2 — Day 2 (Tuesday, 10:00 AM) &nbsp;|&nbsp; <span>Subject: The honest story behind [PRODUCT NAME]</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+I want to tell you something I don't usually share publicly.
+
+[BEGIN PERSONAL STORY — this should be 3-5 paragraphs about a real struggle you had with the exact problem your product solves. Be specific. Name a time, a place, a feeling. Tell us what was at stake.]
+
+For me, the turning point was [SPECIFIC MOMENT OR REALIZATION]. I remember [specific sensory detail — what you were doing, where you were, what made this moment stick].
+
+That moment led directly to what became [PRODUCT NAME]. Everything in it is built around what I actually needed at that point — not what sounds good in a sales page, but what would have actually helped.
+
+The system inside [PRODUCT NAME] is the version of me that already knew the answer, reaching back to hand it to the version of me who was still figuring it out.
+
+If you're at that earlier stage right now — if [PROBLEM YOUR AUDIENCE HAS] is something you're dealing with — this was made for you.
+
+[PRODUCT NAME] is open through [DATE]. $[EARLY BIRD PRICE] for [HOURS REMAINING] more hours, then it goes to $[REGULAR PRICE].
+
+Get access: [CHECKOUT URL]
+
+I'm grateful for everyone who's already joined. If you have a question before you decide, just reply. I'm here.
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 3 — Day 3 (Wednesday, 10:00 AM) &nbsp;|&nbsp; <span>Subject: Your questions, answered honestly</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+I've gotten a lot of replies since we opened. Thank you — I love hearing from you. A few questions have come up more than once, so I want to answer them here:
+
+---
+
+"Is this for beginners or people who already know the basics?"
+
+[Honest, specific answer. Name what level of experience is a good fit and what level might struggle. Do not oversell who it's for.]
+
+---
+
+"How long will it take to get through?"
+
+[Specific time estimate. E.g., "Most people work through the core material in [X] hours. The full system, done at a reasonable pace, takes about [X] days/weeks. But the framework section alone can be applied the same day you read it."]
+
+---
+
+"What if I buy it and it's not right for me?"
+
+[State your refund policy clearly. E.g., "I offer a [X]-day no-questions-asked refund. If you go through it and it's not what you needed, email me and I'll refund you in full. I'd rather lose a sale than have someone pay for something that wasn't the right fit."]
+
+---
+
+"I've tried [COMPETING SOLUTION/COMMON APPROACH] before and it didn't work. How is this different?"
+
+[Genuine differentiation. What does your approach do that the common approach doesn't? Be specific about the mechanism, not just the promise.]
+
+---
+
+"I'm interested but the timing isn't great right now."
+
+I hear you. But I want to be direct: the product will cost $[REGULAR PRICE] after [DATE]. If the lower price would make a difference for you, today is the day to act on it. The material will be available whenever you're ready to dig in.
+
+Still have a question? Reply here. I'm personally reading every email this week.
+
+[YOUR NAME]
+[CHECKOUT URL — $PRICE through DATE]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 4 — Day 4 (Thursday, 10:00 AM) &nbsp;|&nbsp; <span>Subject: What [CUSTOMER NAME] got out of it</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+I wanted to share something that came in from someone who went through [PRODUCT NAME].
+
+"[FULL TESTIMONIAL — quoted exactly. Include: what they were dealing with before, what they did with the product, and what changed. Specific results outperform vague praise every time. If you have a result with a number — even a small one — lead with that.]"
+— [FIRST NAME, TITLE or CONTEXT, e.g., "Sarah, freelance designer, 2 years in business"]
+
+[If you have more than one testimonial, add a second one here. Even a shorter one. Two voices are more powerful than one.]
+
+"[SECOND TESTIMONIAL — 2-3 sentences, specific]"
+— [ATTRIBUTION]
+
+Here's what I want you to notice about what [NAME] said: [PULL OUT THE MOST SPECIFIC LINE FROM THE TESTIMONIAL AND CONNECT IT TO WHAT YOU THINK YOUR READER IS FEELING RIGHT NOW].
+
+You might be in a similar place. You might be wondering if this is the right move, if it'll work for your specific situation, if now is the right time.
+
+The honest answer is: I can't promise results because results depend on what you do with what's inside. What I can tell you is that [PRODUCT NAME] gives you a clear system — and [NAME]'s results came from applying it.
+
+If you're ready to apply it, the door is still open:
+
+[CHECKOUT URL] — $[PRICE] through [DATE/TIME]
+
+[YOUR NAME]
+
+P.S. — If you've already purchased, thank you. You'll receive a separate email today with your onboarding details.</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 5 — Day 5 (Friday, 10:00 AM) &nbsp;|&nbsp; <span>Subject: Checking in — quick note from me</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+Quick check-in from me.
+
+[PRODUCT NAME] has been open for 5 days now. [NUMBER] people have already joined — which is [HONEST REACTION — humbling / exciting / exactly what I hoped for].
+
+I'm writing today because a handful of people have replied this week to say they're interested but haven't pulled the trigger yet. Usually it's one of these reasons:
+
+1. They're not sure it's right for their specific situation.
+2. They're waiting for the "right time."
+3. They're worried it's too advanced (or not advanced enough) for where they are.
+
+If any of those are you, I want to help you figure it out — not to sell you, but because I'd rather you make the right decision than the fast one.
+
+Just reply and tell me where you're stuck. I'll give you an honest answer.
+
+Cart closes [DATE] at [TIME]. That's [X] days from now.
+
+If you're in: [CHECKOUT URL] — $[PRICE]
+
+If you're unsure: just reply to this email. I'll respond today.
+
+[YOUR NAME]
+
+P.S. — The price goes up to $[REGULAR PRICE] at close. The content doesn't change. The only difference is the price.</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 6 — Day 6 (Saturday, 9:00 AM) &nbsp;|&nbsp; <span>Subject: Closing tomorrow. Here's what I want you to know.</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+[PRODUCT NAME] closes tomorrow at [TIME].
+
+I want to write you something different for this email. Not a rundown of features. Not another testimonial. Something more honest.
+
+I know what it feels like to find something that looks like exactly what you need — and then talk yourself out of it. I've done it. I've watched other people do it. And I've seen what happens afterward:
+
+The problem doesn't go away. It stays. And a few months later, you're in the same place, maybe further behind, wishing you'd made a different decision when you had the chance.
+
+I'm not writing this to pressure you. I'm writing it because I know the cost of inaction better than the cost of a bad purchase. A bad purchase teaches you something. Inaction just delays the lesson.
+
+[PRODUCT NAME] is for people who've decided they're ready to take the step — not people who need to be convinced. If you're still reading this email, you already know whether this is for you.
+
+If it is: [CHECKOUT URL] — $[PRICE] today, $[REGULAR PRICE] if we ever open again.
+
+If it's not: I respect that completely. Stay on my list. I'll keep making free content that helps.
+
+Cart closes: [DATE] at [TIME]
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 7a — Day 7 Morning (Sunday, 8:00 AM) &nbsp;|&nbsp; <span>Subject: Today's the last day — [specific time] close</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+Last day.
+
+[PRODUCT NAME] closes tonight at [TIME — e.g., 11:59 PM EST].
+
+Here's a fast summary of everything you get:
+
+[PRODUCT NAME] — $[PRICE]
+
+Includes:
+✓ [COMPONENT 1]
+✓ [COMPONENT 2]
+✓ [COMPONENT 3]
+✓ [COMPONENT 4]
+✓ [BONUS if applicable]
+
+[X]-day money-back guarantee. No risk.
+
+If this is for you — if you've been dealing with [THE PROBLEM] and you're ready to have a clear path through it — tonight is your night.
+
+[CHECKOUT URL]
+
+Closes: [TIME] tonight.
+
+I hope to see you on the other side.
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Email 7b — Day 7 Final (Sunday, 9:00 PM or 2 hrs before close) &nbsp;|&nbsp; <span>Subject: 2 hours left</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+Two hours.
+
+At [TIME CLOSE], the cart closes and this price goes away.
+
+If you've been waiting to decide — this is the moment. Not because I'm trying to rush you, but because there's no more waiting after tonight.
+
+One link: [CHECKOUT URL]
+One price: $[PRICE]
+One deadline: [TIME]
+
+That's it from me.
+
+Whatever you decide, I'm grateful you've been reading this week.
+
+[YOUR NAME]
+
+P.S. — If you get in right before close and have any issues with the checkout, email me immediately at [YOUR EMAIL]. I'll sort it out.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="content">
+    <div class="section-num">Section 05</div>
+    <h2>Launch Week Content Calendar</h2>
+    <p>This is the full content plan for launch week — every platform, every day. These posts complement the email sequence. They reach people who missed the emails and reinforce the message for people who got them.</p>
+
+    <table>
+      <thead>
+        <tr><th>Day</th><th>Platform</th><th>Content / Hook</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Monday (Launch)</td><td>Instagram Stories (3 slides)</td><td>Slide 1: "It's open." — Slide 2: What's inside (3 bullets) — Slide 3: Link + countdown sticker</td></tr>
+        <tr><td>Monday</td><td>Twitter/X</td><td>"After [X] months of building, [PRODUCT NAME] is live. Thread on what's inside and why I built it:"</td></tr>
+        <tr><td>Monday</td><td>YouTube Community</td><td>"[PRODUCT NAME] is officially open. Here's the one thing that makes it different from everything else in this space: [DIFFERENTIATOR]. Link in bio."</td></tr>
+        <tr><td>Tuesday</td><td>Instagram Reel / TikTok</td><td>"I spent [TIME] building this so you don't have to spend [LONGER TIME] figuring it out on your own. Here's what's inside in 60 seconds:" — quick walkthrough Reel</td></tr>
+        <tr><td>Tuesday</td><td>LinkedIn</td><td>Full post: "The story behind [PRODUCT NAME]" — your personal story from Email 2, reformatted for LinkedIn. End with the link.</td></tr>
+        <tr><td>Wednesday</td><td>Instagram Stories</td><td>FAQ story: answer 3-4 questions about the product in text slides. End with link.</td></tr>
+        <tr><td>Wednesday</td><td>Twitter/X</td><td>"Most common question I've gotten this week about [PRODUCT NAME]: '[QUESTION].' The honest answer: [ANSWER]." — builds trust mid-launch</td></tr>
+        <tr><td>Thursday</td><td>Instagram Feed</td><td>Quote card featuring a testimonial from a buyer or beta user. Caption: "[NAME] went through [PRODUCT NAME] and [result in their words]. Doors close [DATE]. Link in bio."</td></tr>
+        <tr><td>Thursday</td><td>TikTok / Reel</td><td>"This is what [PRODUCT NAME] actually teaches" — screen share or talking head showing a specific technique or concept from inside the product (a preview)</td></tr>
+        <tr><td>Friday</td><td>Instagram Stories</td><td>Countdown sticker: "[X] days left at early-bird price." + Poll: "Have you checked out [PRODUCT NAME] yet?" Yes / No — follow up DM everyone who says No with a personal message</td></tr>
+        <tr><td>Friday</td><td>LinkedIn</td><td>Carousel: "What's inside [PRODUCT NAME]" — 6-8 slides showing component by component. End slide: "Closes [DATE]. Link in bio."</td></tr>
+        <tr><td>Saturday</td><td>TikTok / Reel</td><td>"Last 2 days — here's what [PRODUCT NAME] will actually do for you" — direct, specific, honest. No hype language.</td></tr>
+        <tr><td>Saturday</td><td>Twitter/X</td><td>"Closing tomorrow: [PRODUCT NAME]. If you've been on the fence — here's the most honest thing I can tell you about whether it's right for you: [HONEST POSITIONING]"</td></tr>
+        <tr><td>Sunday (Close)</td><td>Instagram Stories (4 slides)</td><td>Slide 1: "Closing tonight at [TIME]" — Slide 2: What you're getting — Slide 3: What happens after it closes — Slide 4: Final link with countdown</td></tr>
+        <tr><td>Sunday</td><td>Twitter/X</td><td>"[PRODUCT NAME] closes in [X] hours. Final chance at $[PRICE]. After tonight: [WHAT HAPPENS NEXT — price goes up / waitlist reopens / available again in X months]. [LINK]"</td></tr>
+        <tr><td>Sunday</td><td>YouTube Community</td><td>"Cart closes tonight. If this has been on your radar all week — tonight's the moment. [LINK] | Questions? Reply here, I'm watching."</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#9889;</div>
+      <div class="callout-text"><strong>DM strategy:</strong> On Days 1, 3, and 7 of launch week, personally DM everyone who engaged with your Stories (especially poll respondents) who hasn't purchased. Message: "Hey [NAME] — saw you were curious about [PRODUCT NAME]. Any questions I can answer? Happy to help you figure out if it's right for you." This is not spam — it's service. Personal DMs during launch consistently convert at 15-30%.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="postlaunch">
+    <div class="section-num">Section 06</div>
+    <h2>Post-Launch: Weeks 1–2</h2>
+    <p>The launch is not over when the cart closes. What happens in the first two weeks after determines your refund rate, your testimonials, and your next launch.</p>
+
+    <h3>Buyer Onboarding Sequence (3 Emails)</h3>
+
+    <div class="email-template">
+      <div class="email-header">Onboarding Email 1 — Immediately on Purchase &nbsp;|&nbsp; <span>Subject: Welcome to [PRODUCT NAME] — here's where to start</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+You're in. Welcome to [PRODUCT NAME].
+
+Your access link: [PRODUCT ACCESS URL]
+[If there's a password]: Password: [PASSWORD or "you'll set your own on first login"]
+
+Here's where to start:
+
+Don't try to consume everything at once. Start with [SPECIFIC FIRST MODULE / CHAPTER / SECTION]. It's [SHORT DESCRIPTION OF WHY TO START THERE — e.g., "the foundation everything else builds on" or "the quickest win in the whole system"].
+
+A few things to know:
+
+— [Important logistical detail — e.g., "Downloads are in Module 3 under Resources"]
+— [Access duration if applicable — e.g., "You have lifetime access, including all future updates"]
+— [Community or support info — e.g., "For questions, email support@[yourdomain].com"]
+— [Refund reminder if desired — e.g., "You have [X] days to request a refund if it's not right for you — just email me"]
+
+One more thing: I'd love to hear what you think as you go through it. Reply to any email in this series and I'll see it.
+
+Let's get you some results.
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Onboarding Email 2 — Day 3 After Purchase &nbsp;|&nbsp; <span>Subject: How's it going? (honest check-in)</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+It's been a few days since you joined [PRODUCT NAME]. I wanted to check in.
+
+Where are you in the material? Have you had a chance to dive in yet?
+
+If you have — I'd love to hear your first impression. Genuinely. Not a testimonial, just a quick reply about where you are and what you're finding useful (or not). It helps me improve this for the next cohort, and it gives me a real sense of how people are experiencing it.
+
+If you haven't started yet — no judgment. Life gets busy. But I want to make sure you get value from this, so here's a nudge: start with just [FIRST MODULE/SECTION]. It takes [X MINUTES] and it will give you an immediate clarity on [SPECIFIC QUICK WIN].
+
+That one piece alone is worth the investment. The rest builds on it.
+
+If there's anything in the way — a question, a tech issue, something that's unclear — reply here and I'll sort it out.
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Onboarding Email 3 — Day 7 After Purchase &nbsp;|&nbsp; <span>Subject: Your week-1 check-in + a small favor</span></div>
+      <div class="email-body">Hi [FIRST NAME],
+
+One week in. How are you doing with [PRODUCT NAME]?
+
+I hope you've had a chance to work through at least [FIRST SECTION/MODULE]. If you have, I want to ask you something.
+
+What's working? What's clicked?
+
+I ask because I'm constantly improving this, and the best feedback comes from people who are actively in it. If you've had any "aha" moment — even a small one — I'd love to hear it.
+
+Also: if you're getting value from [PRODUCT NAME], I'd be grateful for a quick review or testimonial. It doesn't have to be long — even 2-3 sentences on what changed or what you've applied. You can reply to this email or [leave a review at LINK if applicable].
+
+I use real feedback from real people in everything I create next, and your voice matters in that.
+
+One last thing: if you have a question, a sticky point, or anything in the material that isn't clear — reply here and I'll give you a personal answer. That's still my job after you've purchased.
+
+Thank you for trusting me with your time and money. I don't take either lightly.
+
+[YOUR NAME]</div>
+    </div>
+
+    <h3>Social Proof Capture System</h3>
+    <div class="card">
+      <div class="card-title">Getting Testimonials That Actually Convert</div>
+      <div class="card-desc">
+        Use this exact question in your Day-7 email or in a post-purchase survey (Typeform or Google Forms, linked in Onboarding Email 3):<br><br>
+        "What was your situation before you got [PRODUCT NAME], and what has changed (or what do you now understand) after going through it?"<br><br>
+        This question structure forces before/after framing, which is the structure that converts best in testimonials. Generic "I loved it, 5 stars" testimonials have almost no persuasive effect. A specific before/after story with a named outcome converts.
+      </div>
+    </div>
+
+    <h3>Refund Handling</h3>
+    <div class="card">
+      <div class="card-title">Refund Protocol</div>
+      <div class="card-desc">
+        Process all refund requests within 24 hours. No questions asked if within your stated policy window. When someone requests a refund, reply with: "No problem at all — refund processed. I'd love to understand why it wasn't the right fit if you're open to sharing, but there's no pressure and no requirement. I hope we cross paths again." This response generates goodwill, reduces chargeback risk, and occasionally keeps the customer (who reconsidered after feeling heard). Never fight refunds or require proof of "trying" the product — it damages your reputation far more than the lost revenue.
+      </div>
+    </div>
+
+    <h3>Upsell Opportunity: Week 2</h3>
+    <div class="card">
+      <div class="card-title">When and How to Upsell</div>
+      <div class="card-desc">
+        If you have a higher-ticket offer (coaching, a more advanced product, a community), introduce it in Onboarding Email 3 or as a standalone email in Week 2. The pitch: "If you've gone through [PRODUCT NAME] and you want support implementing it with direct feedback from me, [HIGHER OFFER] might be the right next step." Only pitch people who've had time to start and are engaged. Upselling to buyers before they've had a chance to open the product is a fast way to lose trust.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="metrics">
+    <div class="section-num">Section 07</div>
+    <h2>Launch Metrics &amp; Optimization</h2>
+    <p>Track these numbers during and after every launch. They tell you exactly where to improve for next time.</p>
+
+    <h3>Core Launch Metrics</h3>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>How to Calculate</th><th>Why It Matters</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Waitlist-to-Buyer Rate</td><td>Buyers ÷ Waitlist subscribers</td><td>Measures how well you warmed your list</td></tr>
+        <tr><td>Email Open Rate (launch week)</td><td>Opens ÷ Delivered</td><td>Subject line quality + list health</td></tr>
+        <tr><td>Email Click Rate (launch week)</td><td>Clicks ÷ Delivered</td><td>Copy quality + offer clarity</td></tr>
+        <tr><td>Sales Page Conversion Rate</td><td>Purchases ÷ Unique page visits</td><td>How well the page sells on its own</td></tr>
+        <tr><td>Refund Rate</td><td>Refunds ÷ Total purchases</td><td>Product-market fit + expectation alignment</td></tr>
+        <tr><td>Revenue per Subscriber</td><td>Total revenue ÷ Waitlist size</td><td>Overall launch efficiency</td></tr>
+        <tr><td>Day 1 Revenue % of Total</td><td>Day 1 revenue ÷ Total launch revenue</td><td>Urgency effectiveness; healthy is 30-40%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Conversion Rate Benchmarks by List Size</h3>
+    <div class="formula">Waitlist-to-Buyer Conversion Benchmarks:
+
+Cold list (low engagement, minimal warm-up):     0.5–1.5%
+Average list (some warm-up, decent engagement):  2–4%
+Warm list (highly engaged, great pre-launch):    5–10%
+Hot list (community built, strong relationship): 10–20%+
+
+Revenue Per Subscriber Benchmarks:
+Budget product ($27-$97):    $1.50–$5.00 per waitlist sub
+Mid-range ($97-$297):        $3.00–$10.00 per waitlist sub
+Premium ($297+):             $8.00–$25.00+ per waitlist sub
+
+Email Sequence Benchmarks (launch week):
+Open rate:         35-55% (your list knows you and expects these)
+Click rate:        5-15% (highly engaged during launch window)
+Unsubscribe rate:  0.5-2% per email (3%+ = your content/offer misalignment)
+
+Sales Page Conversion:
+Warm traffic (from email):    3-8% is solid, 10%+ is excellent
+Cold traffic (from social):   0.5-2% typical, 3%+ is strong</div>
+
+    <h3>What a "Successful" Launch Looks Like</h3>
+    <div class="card">
+      <div class="card-title">Success Benchmarks by Scale</div>
+      <div class="card-desc">
+        <strong style="color:var(--cyan)">First launch (list under 500):</strong> A successful first launch generates 20-50 buyers. This is not a failure scenario — it's proof of concept. Your job is to learn, refine, and repeat with a larger list. Many 7-figure creator businesses started with a $2,100 launch.<br><br>
+        <strong style="color:var(--cyan)">Growing creator (list 500-2,000):</strong> Expect 25-120 buyers at 2-6% conversion. Revenue $2,500-$12,000 for a $97 product. This is the stage where testimonials start compounding and refund rates stabilize.<br><br>
+        <strong style="color:var(--cyan)">Established creator (list 2,000-10,000):</strong> Expect 80-500 buyers at 2-5% conversion. Revenue $8,000-$50,000 for a $100-$200 product. Launch optimization has significant ROI at this scale — improving conversion from 2% to 3% is a 50% revenue increase.<br><br>
+        <strong style="color:var(--cyan)">Large creator (list 10,000+):</strong> Six-figure launches are achievable with a well-optimized funnel, strong social proof, and list engagement above 30% open rate. At this scale, the email sequence quality and sales page conversion rate are the primary levers.
+      </div>
+    </div>
+
+    <h3>Post-Launch Debrief (Do This Within 1 Week of Close)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Pull all metrics into a single document</div><div class="step-desc">Waitlist size at launch, total buyers, conversion rate, total revenue, refund count, refund rate, email open rates by day, email click rates by day, best-performing email (highest click rate), worst-performing email.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Identify your conversion bottleneck</div><div class="step-desc">Low open rates = subject lines or sender name recognition issue. High open rates, low click rates = email copy issue (body didn't sell the click). High click rates, low sales page conversion = sales page issue. High conversion but low buyer numbers = list size/warmth issue. Fix the bottleneck first for next launch.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Collect all feedback and testimonials</div><div class="step-desc">Read every reply to every launch email. Note objections that came up more than twice — these go into your next FAQ email. Note praise that sounds specific — these become testimonials. Note confusion — these indicate clarity problems in the sales page or product.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Set the date for your next launch</div><div class="step-desc">The best time to plan your next launch is immediately after the current one closes. Set a date 60-90 days out. Start building toward it now.</div></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section" id="relaunch">
+    <div class="section-num">Section 08</div>
+    <h2>Re-Launch Strategy</h2>
+    <p>Your first launch is proof of concept. Your second launch is optimization. Your third launch is a system. Here is how to think about each model.</p>
+
+    <h3>Model 1: Live Launch — Open / Close Cart</h3>
+    <div class="card">
+      <div class="card-title">Open/Close Cart Model</div>
+      <div class="card-desc">
+        Launch 2-4 times per year, each with a defined open and close date. Benefits: urgency drives conversions (people buy when there's a deadline, not when it's always available), you can improve the product and email sequence between launches, and you build anticipation with each cycle.<br><br>
+        Typical cadence: Open 2x/year for sub-$200 products. Open 1-2x/year for $200+ products. Each subsequent launch to the same audience converts at 30-50% lower than the first launch — compensate by growing your list between launches.<br><br>
+        Between launches: run a waitlist, run a free challenge, publish consistently, and funnel every new subscriber into a waitlist sequence so they're primed before the cart opens.
+      </div>
+    </div>
+
+    <h3>Model 2: Evergreen Funnel (Always Open)</h3>
+    <div class="card">
+      <div class="card-title">Evergreen Funnel Setup</div>
+      <div class="card-desc">
+        An evergreen funnel lets new subscribers automatically go through your launch sequence on a rolling basis — as if every day is launch day for someone new. Setup:<br><br>
+        1. Drive traffic to a lead magnet (free resource) that is directly related to your product.<br>
+        2. Lead magnet subscribers go into an automated email sequence (your pre-launch warm-up emails + launch week emails, rewritten to work without real-time urgency).<br>
+        3. Use a "pseudo-deadline" via Deadline Funnel or ThriveCart — each subscriber gets a personalized 7-day window from when they sign up, not a real launch date.<br>
+        4. Product is always available at full price (no early-bird — those are live launch tactics only).<br><br>
+        Evergreen funnels convert at lower rates (0.5-2% vs. 2-8% for live launches) but generate revenue 24/7 without ongoing effort. Best for proven products with strong social proof and a steady flow of new subscribers.
+      </div>
+    </div>
+
+    <h3>Model 3: Hybrid — Live Launch + Evergreen</h3>
+    <div class="card">
+      <div class="card-title">The Recommended Model for Most Creators</div>
+      <div class="card-desc">
+        Run 1-2 live launches per year for maximum revenue spikes and fresh social proof. Between launches, keep the product available via an evergreen funnel at full price (no discount — discounts are reserved for live launch urgency). This hybrid generates consistent baseline revenue between launches while preserving the emotional peak and conversion boost of live launch events.<br><br>
+        Messaging for between launches: "This product is available now at the full price of $[PRICE]. When I run the next live launch in [TIMEFRAME], I'll open early-bird pricing for the waitlist first. If you want to join now at full price, [LINK]. If you want to wait for the next launch, [WAITLIST LINK]."
+      </div>
+    </div>
+
+    <h3>Re-Launch Improvements Checklist</h3>
+    <div class="card">
+      <div class="card-title">What to Improve Before Each Re-Launch</div>
+      <div class="card-desc">
+        — Update testimonials: Replace generic praise with specific before/after results gathered from your first buyer cohort<br>
+        — Rewrite the subject line of your lowest-performing email from launch 1<br>
+        — Update your sales page FAQ with objections that came up repeatedly in email replies<br>
+        — Add any product improvements or new components since the last launch<br>
+        — Review your waitlist building strategy — did it bring in the right people, or did you attract people who were never going to buy?<br>
+        — Adjust your price if your conversion data supports it: under 1% conversion often signals the price is too high or the audience-product fit is off; over 10% conversion often signals you could charge more<br>
+        — Create one new piece of launch content that doesn't exist yet: a case study, a comparison post, a video walkthrough of a product section
+      </div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>The compounding launch:</strong> Each launch builds on the one before it. Better testimonials. A bigger list. A more refined email sequence. Reduced refund rate. By your third launch of the same product to a growing audience, the system largely runs itself — your job is to grow the list and show up in the emails. That is the long game.</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign — Launch Sequence Playbook</div>
+    <div class="doc-footer-note">Personal use license. Do not redistribute.</div>
+  </div>
+
+</div>
+</body>
+</html>

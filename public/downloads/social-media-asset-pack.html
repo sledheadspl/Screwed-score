@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Social Media Asset Pack — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:800px;margin:0 auto;padding:60px 32px}
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+  .doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px}.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none}.toc a:hover{color:var(--cyan)}
+  .section{margin-bottom:64px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+  h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+  h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+  .callout-text strong{color:var(--text)}
+  .steps{margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:20px}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+  .step-content{padding-top:4px}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+  tr:last-child td{border-bottom:none}
+  .email-template{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+  .email-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--sub)}
+  .email-header span{color:rgba(242,242,242,.7)}
+  .email-body{padding:20px;font-size:13px;color:rgba(242,242,242,.65);line-height:1.9;white-space:pre-wrap}
+  .email-body strong{color:var(--cyan)}
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-badge">Premium Digital Product</div>
+    <h1 class="doc-title">Social Media Asset Pack</h1>
+    <p class="doc-subtitle">200+ Canva template specifications for premium positioning across every platform — dimensions, design rules, and build systems.</p>
+    <div class="doc-meta">
+      <span>Value: $37</span>
+      <span>REMbyDesign</span>
+      <span>Version 1.0</span>
+      <span>2026 Edition</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#principles">Premium Positioning Principles</a></li>
+      <li><a href="#youtube">YouTube Assets</a></li>
+      <li><a href="#instagram">Instagram Assets</a></li>
+      <li><a href="#linkedin">LinkedIn Assets</a></li>
+      <li><a href="#tiktok">TikTok Assets</a></li>
+      <li><a href="#twitter">Twitter/X Assets</a></li>
+      <li><a href="#audit">Brand Consistency Checklist</a></li>
+      <li><a href="#canva">Canva Quick-Build System</a></li>
+      <li><a href="#color">Color Psychology for Creators</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="principles">
+    <div class="section-num">Section 01</div>
+    <h2>Premium Positioning Principles</h2>
+    <p>Premium brands are not premium because they spent more money. They are premium because every design decision signals intentionality. These five principles are the difference between a profile that looks built and one that looks assembled.</p>
+
+    <div class="card">
+      <div class="card-title">Principle 1: Contrast</div>
+      <div class="card-desc">
+        Contrast is the most powerful tool in design. It creates visual hierarchy, directs the eye, and makes elements readable. There are three types of contrast you must master:<br><br>
+        <strong style="color:var(--text)">Value contrast:</strong> Light vs. dark. Your text must be legible against your background — WCAG AA standard requires a contrast ratio of at least 4.5:1. Use Coolors.co/contrast-checker before finalizing any color combination.<br><br>
+        <strong style="color:var(--text)">Size contrast:</strong> Large elements vs. small elements. A thumbnail that uses the same size for the title and your face is visually inert. One element must dominate — everything else is subordinate.<br><br>
+        <strong style="color:var(--text)">Color contrast:</strong> Your accent color should appear on less than 20% of the design. The moment your accent color covers more than 20%, it stops being an accent and starts being noise. High-contrast pops work because they are rare.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Principle 2: Whitespace</div>
+      <div class="card-desc">
+        Whitespace (negative space) is not empty space — it is a design element. Brands that look cluttered are brands that don't trust their whitespace. Every element needs breathing room. Rules:<br><br>
+        Maintain a minimum 8% margin from any edge on thumbnails. Never let text touch the border of a graphic. When in doubt, remove an element before adding one. Luxury brands use 40-60% whitespace in their assets. This signals confidence — the brand doesn't need to fill every pixel to prove its value.<br><br>
+        In Canva: use the ruler and guides feature (View > Rulers and Guides) to set consistent margins on every template. A 40px margin on a 1080x1080 canvas is 3.7% — aim for at least 60px (5.5%) on most templates.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Principle 3: Visual Hierarchy</div>
+      <div class="card-desc">
+        Every design should have one primary element, one secondary element, and everything else as supporting detail. The viewer's eye should move in a clear sequence. Test your hierarchy by squinting at the design from arm's length — the first thing you see at a glance is your primary element. Is that the right thing? If not, adjust size, weight, or contrast until it is.<br><br>
+        For thumbnails: hierarchy is almost always 1st = your face (emotion), 2nd = the title text, 3rd = any graphic elements. For carousels: hierarchy is 1st = slide headline, 2nd = supporting body text, 3rd = visual or icon. For profile banners: 1st = your name/brand, 2nd = value proposition, 3rd = visual elements.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Principle 4: Consistency</div>
+      <div class="card-desc">
+        Consistency builds recognition. Recognition builds trust. Trust converts browsers to followers. You cannot build recognition if every post looks different. Consistency means: the same 2-3 fonts used across all platforms, the same color palette (3-5 colors maximum), the same general layout structure for recurring content types (quote cards always look the same, tutorial posts always look the same), and the same filter or preset for all photography/video.<br><br>
+        Create a master brand style guide (even a single Canva page) with your fonts, colors (hex codes), and layout principles. Pin it. Reference it before every design. Break it deliberately when you want to, not accidentally.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Principle 5: Motion Intent</div>
+      <div class="card-desc">
+        In video and animated content, every motion should be purposeful. Unnecessary animations look amateur. Purposeful motion directs attention, reveals information in sequence, or creates emphasis. Rules for motion design:<br><br>
+        Use motion to reveal, not to decorate. Text that slides in should reveal new information — not just animate because animations are possible. Keep motion under 300ms for transitions (anything longer feels sluggish). Use a single consistent easing curve (ease-in-out is the safest) across all animations in a piece. In Canva Presentations: stick to one transition type per deck. Mixing dissolves, slides, and spins in a single deck signals lack of control.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="youtube">
+    <div class="section-num">Section 02</div>
+    <h2>YouTube Assets</h2>
+
+    <h3>Dimensions Master Reference</h3>
+    <table>
+      <thead>
+        <tr><th>Asset</th><th>Dimensions</th><th>Format</th><th>Max Size</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Thumbnail</td><td>1280 x 720px</td><td>JPG or PNG</td><td>2MB</td></tr>
+        <tr><td>Channel Art / Banner</td><td>2560 x 1440px</td><td>JPG or PNG</td><td>6MB</td></tr>
+        <tr><td>Profile Picture</td><td>800 x 800px</td><td>JPG or PNG</td><td>2MB</td></tr>
+        <tr><td>End Card Background</td><td>1920 x 1080px</td><td>JPG or PNG</td><td>2MB</td></tr>
+        <tr><td>Lower Third Graphic</td><td>1920 x 1080px (full frame)</td><td>PNG (transparent)</td><td>Exported per frame</td></tr>
+        <tr><td>Video (minimum)</td><td>1920 x 1080px (1080p)</td><td>MP4, H.264</td><td>256GB</td></tr>
+        <tr><td>Community Post Image</td><td>1080 x 1080px</td><td>JPG or PNG</td><td>2MB</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Channel Art Design Spec</h3>
+    <div class="card">
+      <div class="card-title">Safe Zone Guide — Critical</div>
+      <div class="card-desc">
+        YouTube Channel Art displays differently across devices. The full 2560x1440px image shows on TV. A 1546x423px strip shows on desktop. A 1546x423px (same strip, cropped) shows on tablet. Only 1235x338px guaranteed shows on all devices including mobile.<br><br>
+        Safe zone rule: Keep all text and logo in the center 1235x338px area. Everything outside this zone will be cropped on mobile. On desktop you have more room — use the outer zone for background design elements, not critical information.<br><br>
+        In Canva: Create guide lines at x=662.5px, x=1897.5px (horizontal) and y=551px, y=889px (vertical) to mark your safe zone. Lock these guides before designing.
+      </div>
+    </div>
+
+    <h3>Thumbnail Design System</h3>
+    <div class="card">
+      <div class="card-title">Thumbnail Color Rules</div>
+      <div class="card-desc">
+        Use maximum 3 colors per thumbnail. One dominant background or image, one accent color for text highlight or graphic pop, one text color (usually white or near-white). Avoid using the same color palette as adjacent thumbnails that appear next to yours in search — contrast against your neighbors, not just within your own design. Yellow, red, and cyan are the highest-visibility thumbnail accent colors. Blue and green work in specific niches but are weaker at stopping the scroll.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Thumbnail Font Rules</div>
+      <div class="card-desc">
+        Maximum 2 fonts: one bold/display font for the main title (Impact, Montserrat ExtraBold, Bebas Neue, Anton) and one clean sans-serif for supporting text if needed. Title text: minimum 80pt on a 1280x720 canvas. Text must be readable at thumbnail size (roughly 200x113px in sidebar). Test readability by scaling your design to 20% before finalizing. Avoid cursive, script, or thin-weight fonts — they become illegible at small sizes.
+      </div>
+    </div>
+
+    <h3>10 Thumbnail Formulas That Get Clicks</h3>
+    <div class="card">
+      <div class="card-title">Full Formula Set with Design Notes</div>
+      <div class="card-desc">
+        <strong style="color:var(--cyan)">1. The Number Promise</strong> — "[Large bold number] + [Result word]" e.g., "47 TOOLS." Face expression: neutral/confident. Background: solid dark color. Works in every niche.<br><br>
+        <strong style="color:var(--cyan)">2. The Mistake Frame</strong> — "WRONG" or "STOP" in red on left side, your shocked/concerned face on right. High urgency. Works especially in finance, fitness, tech.<br><br>
+        <strong style="color:var(--cyan)">3. Before/After Split</strong> — Vertical split line down the center. Left = before state (desaturated or negative). Right = after state (vibrant, positive). Works in transformation niches.<br><br>
+        <strong style="color:var(--cyan)">4. The Curiosity Gap</strong> — Partial information revealed. "Why everyone is [BLANK]ing [TOPIC]" with face looking off-screen at something. The viewer must click to complete the thought.<br><br>
+        <strong style="color:var(--cyan)">5. The Tutorial Proof</strong> — Screenshot of finished result (a dashboard, a design, a stat) + "How I Did This" text. Proof-first format builds immediate credibility.<br><br>
+        <strong style="color:var(--cyan)">6. The Comparison</strong> — Two product/concept images side by side with "VS" text between them. Works for reviews, comparisons, debates.<br><br>
+        <strong style="color:var(--cyan)">7. The Story Setup</strong> — Your face in a strong emotional reaction (surprised, excited, devastated) + "What Happened When I [Did X]." Narrative setup forces click to get resolution.<br><br>
+        <strong style="color:var(--cyan)">8. The Income/Metric Reveal</strong> — Large dollar amount or key metric displayed prominently (e.g., "$14,300 / month") + your face looking at the number. Works in business, investing, creator niches. Use real numbers only.<br><br>
+        <strong style="color:var(--cyan)">9. The Tool/Interface</strong> — Actual software screenshot with an arrow pointing to a specific feature + "This Changed Everything." Demonstrates specificity and authority.<br><br>
+        <strong style="color:var(--cyan)">10. The Warning/Alert</strong> — Red warning icon (triangle or circle with !) + "DO NOT [X] Until You See This." Highest urgency frame. Use sparingly to maintain credibility.
+      </div>
+    </div>
+
+    <h3>Lower Third Specifications</h3>
+    <div class="card">
+      <div class="card-title">Lower Third Design Spec</div>
+      <div class="card-desc">
+        A lower third occupies the bottom 20-25% of the 1920x1080 frame. Design on a 1920x1080 canvas with a transparent background. Export as PNG sequence or as a static PNG overlay. Safe zone for lower third text: 1760x216px centered at x=80, y=810. Font: match your thumbnail font system for consistency. Animation (if used in editing): slide in from left at 200ms ease-out, hold for 3-5 seconds, slide out left at 150ms ease-in. Keep lower third visible for 3-5 seconds minimum for viewers to read it.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="instagram">
+    <div class="section-num">Section 03</div>
+    <h2>Instagram Assets</h2>
+
+    <h3>Full Dimensions Guide</h3>
+    <table>
+      <thead>
+        <tr><th>Asset</th><th>Dimensions</th><th>Ratio</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Feed Post (Square)</td><td>1080 x 1080px</td><td>1:1</td><td>Standard, safe across all displays</td></tr>
+        <tr><td>Feed Post (Portrait)</td><td>1080 x 1350px</td><td>4:5</td><td>Recommended — takes more feed real estate</td></tr>
+        <tr><td>Feed Post (Landscape)</td><td>1080 x 566px</td><td>1.91:1</td><td>Least real estate; avoid unless horizontal is essential</td></tr>
+        <tr><td>Stories / Reels</td><td>1080 x 1920px</td><td>9:16</td><td>Full screen. Safe zone: center 1080x1420px</td></tr>
+        <tr><td>Reel Cover / Thumbnail</td><td>1080 x 1920px</td><td>9:16</td><td>Displays cropped to 1:1 in grid</td></tr>
+        <tr><td>Carousel Slides</td><td>1080 x 1080px</td><td>1:1</td><td>Or 1080x1350 portrait — stay consistent per carousel</td></tr>
+        <tr><td>Highlight Cover</td><td>1080 x 1920px</td><td>9:16</td><td>Center icon within 250px circle area</td></tr>
+        <tr><td>Profile Picture</td><td>320 x 320px (min)</td><td>1:1</td><td>Displays as 110x110 on mobile — keep design simple</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Grid Strategy: 3-Post Color Patterns</h3>
+    <div class="card">
+      <div class="card-title">Pattern A: Dark-Dark-Light</div>
+      <div class="card-desc">Posts 1 and 2 of each row use your dark background brand colors. Post 3 uses a lighter tone or photo-based image. Creates a rhythm of depth and breath as the eye moves across the grid. Best for brands with a strong dark aesthetic.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pattern B: Accent-Neutral-Accent</div>
+      <div class="card-desc">Alternating pattern where every third post uses a brand accent color, with neutral (dark, gray, or photo) posts in between. Creates visual rhythm without full saturation. Best for brands that want to pop without looking chaotic.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pattern C: Checkerboard</div>
+      <div class="card-desc">Strict alternating: post 1 = graphic/text, post 2 = photo/lifestyle, post 3 = graphic/text, post 4 = photo. Simple, effective, requires consistent production of both graphic and photographic content types.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Row-Level Planning in Canva</div>
+      <div class="card-desc">Use Canva's new "Grid" feature to preview how posts will look side by side. Create a 3240x1080px canvas (3 squares wide), paste in your next 3 posts, and screenshot it for approval before publishing. This prevents accidental grid clashes (e.g., two near-identical color posts side by side).</div>
+    </div>
+
+    <h3>Story Slide Sequences</h3>
+    <div class="card">
+      <div class="card-title">Sequence 1: The Micro-Lesson (5 slides)</div>
+      <div class="card-desc">Slide 1 — Hook: "Most people do this wrong. Here's the fix." (large bold text on brand color background)<br>Slide 2 — Problem: Explain the mistake in 2 lines<br>Slide 3 — Solution: The correct approach in 2-3 lines<br>Slide 4 — Example: A screenshot, example, or result<br>Slide 5 — CTA: "Save this." or "Watch the full breakdown at [link in bio]"</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Sequence 2: The Poll Engagement Series (3 slides)</div>
+      <div class="card-desc">Slide 1 — Question slide with Instagram Poll sticker: "Which do you do?" or "What's your biggest challenge?" (2 clear poll options)<br>Slide 2 — Posted 24 hours later, showing poll results + your take: "X% said [answer]. Here's what I've found..."<br>Slide 3 — CTA: "I'm making a video about this. Follow for it." or "Link in bio for the full breakdown."</div>
+    </div>
+
+    <h3>Caption Template</h3>
+    <div class="card">
+      <div class="card-title">High-Engagement Caption Structure</div>
+      <div class="card-desc">
+        Line 1: Hook (must work before "more" cut — 125 characters max)<br>
+        Line 2: [Blank line]<br>
+        Lines 3-8: Value delivery — 3-5 key points, each on its own line, starting with an icon or dash<br>
+        Line 9: [Blank line]<br>
+        Line 10: Question to invite comments ("What's been your experience?")<br>
+        Line 11: [Blank line]<br>
+        Lines 12+: Hashtags — 3-5 highly relevant, not 30 generic. Put hashtags at the bottom, not embedded in the caption body.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="linkedin">
+    <div class="section-num">Section 04</div>
+    <h2>LinkedIn Assets</h2>
+
+    <h3>Dimensions</h3>
+    <table>
+      <thead>
+        <tr><th>Asset</th><th>Dimensions</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Profile Banner</td><td>1584 x 396px</td><td>4:1 ratio. Displays 1128x191 on mobile — design with mobile crop in mind</td></tr>
+        <tr><td>Profile Photo</td><td>400 x 400px minimum</td><td>Displays circular — keep face centered, no text</td></tr>
+        <tr><td>Post Image (landscape)</td><td>1200 x 627px</td><td>Standard inline post image</td></tr>
+        <tr><td>Post Image (square)</td><td>1080 x 1080px</td><td>Higher engagement than landscape for educational content</td></tr>
+        <tr><td>Article Cover</td><td>1920 x 1080px</td><td>16:9 — used as header for LinkedIn Articles</td></tr>
+        <tr><td>Carousel / Document</td><td>1080 x 1080px per slide</td><td>PDF format, up to 300 pages. 8-12 slides is optimal.</td></tr>
+        <tr><td>Company Logo</td><td>300 x 300px</td><td>PNG with transparent background</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Professional Tone Guide</h3>
+    <div class="card">
+      <div class="card-title">The LinkedIn Voice Formula</div>
+      <div class="card-desc">
+        LinkedIn rewards substance and specificity. The best-performing content sounds like a smart colleague sharing something they actually learned — not a brand talking at you. Rules:<br><br>
+        Write at a 7th-grade reading level. Short sentences. Plain words. No jargon unless your audience lives in that world.<br>
+        Share specific numbers, dates, results whenever possible. "I grew revenue by 40%" outperforms "I significantly increased revenue."<br>
+        Use first person. Your personal experience and opinion outperforms generic advice.<br>
+        Never write "I am excited to announce" — this is the most overused phrase on LinkedIn and signals low signal content. Lead with the thing itself, not your excitement about it.
+      </div>
+    </div>
+
+    <h3>5 Carousel Templates with Slide Structures</h3>
+    <div class="card">
+      <div class="card-title">Carousel 1: The Numbered List</div>
+      <div class="card-desc">
+        Slide 1: Title — "[Number] [Thing] That [Result]" + your name/logo in corner<br>
+        Slides 2-[N+1]: One point per slide. Large number on left, point title in bold, 1-2 sentence explanation below. Same layout every slide.<br>
+        Last slide: Summary + CTA — "Save this for later" or "Follow [handle] for more on [topic]"
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Carousel 2: The Framework / System</div>
+      <div class="card-desc">
+        Slide 1: Framework name + tagline — "The [NAME] Framework: [What it does]"<br>
+        Slide 2: Overview diagram or visual showing how pieces connect<br>
+        Slides 3-6: One step or phase per slide. Step name (large), step explanation (3-4 lines), optional icon or visual<br>
+        Slide 7: Real example or case study applying the framework<br>
+        Slide 8: CTA — "Download the full guide at [link]" or "Comment [word] and I'll send you the template"
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Carousel 3: The Myth vs. Reality</div>
+      <div class="card-desc">
+        Slide 1: "X Myths About [Topic] — Debunked"<br>
+        Slides 2-[N]: Two-section layout per slide. Top half = Myth (in red or warning color, label = "MYTH"). Bottom half = Reality (in green, label = "REALITY"). 3-5 myth/reality pairs total.<br>
+        Last slide: Takeaway + your authority positioning + CTA
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Carousel 4: The Step-by-Step Process</div>
+      <div class="card-desc">
+        Slide 1: "How to [Achieve X Outcome] in [Time / Steps]"<br>
+        Slides 2-[N]: One step per slide. Large step number in brand accent color, bold step title, 2-3 lines of explanation, optional sub-bullet for tools or notes<br>
+        Second-to-last slide: What to expect / what success looks like<br>
+        Last slide: CTA with your handle and "Save this for when you're ready to start"
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Carousel 5: The Comparison / Decision Guide</div>
+      <div class="card-desc">
+        Slide 1: "Should You [Option A] or [Option B]? Here's How to Decide."<br>
+        Slides 2-3: Split-frame design. Left = Option A. Right = Option B. One attribute per slide (cost, time, scalability, etc.)<br>
+        Slide 4: "Best for [Person A Type]" on left, "Best for [Person B Type]" on right<br>
+        Slide 5: Your recommendation with reasoning<br>
+        Slide 6: CTA
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="tiktok">
+    <div class="section-num">Section 05</div>
+    <h2>TikTok Assets</h2>
+
+    <h3>Dimensions</h3>
+    <table>
+      <thead>
+        <tr><th>Asset</th><th>Dimensions</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Video</td><td>1080 x 1920px (9:16)</td><td>H.264 MP4, up to 10 minutes</td></tr>
+        <tr><td>Video Cover / Thumbnail</td><td>1080 x 1920px</td><td>Displays cropped in grid — design with center 1080x1080 as essential zone</td></tr>
+        <tr><td>Profile Photo</td><td>200 x 200px minimum</td><td>Circular display — bold, recognizable design</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Safe Zone for Text Overlays</h3>
+    <div class="card">
+      <div class="card-title">TikTok UI Overlay Safe Zones</div>
+      <div class="card-desc">
+        TikTok's UI overlaps your video with several elements. Design around these zones:<br><br>
+        Bottom: 300px from bottom is partially covered by caption, hashtags, and audio info. Keep critical text above this line.<br>
+        Right edge: 120px from right is covered by the interaction buttons (like, comment, share). Never place key content in this column.<br>
+        Top: 80px from top is covered by the Following/For You tab bar. Keep clear.<br><br>
+        Safe text zone: Center 840x1540px area. All on-screen text for key messages must live inside this zone. This is your design canvas for text within the full 1080x1920 frame.
+      </div>
+    </div>
+
+    <h3>Hook Text Formulas for On-Screen Text</h3>
+    <div class="card">
+      <div class="card-title">Opening Hook Overlays (appear in first 1.5 seconds)</div>
+      <div class="card-desc">
+        "Stop scrolling if you [RELEVANT CONDITION]"<br>
+        "This is why you're [PROBLEM] — and the fix is simple"<br>
+        "POV: You just discovered [THING]"<br>
+        "Things I wish I knew before [EXPERIENCE]"<br>
+        "Watch until the end — the [NUMBER] tip is the best one"<br>
+        "Reply to [USERNAME] who asked [QUESTION]" (uses social proof + context)<br>
+        "[NUMBER] [TOPIC] tips in [NUMBER] seconds"<br>
+        "The [TOPIC] hack I use every [TIME PERIOD]"<br><br>
+        Design rule: Hook text should be white or near-white, bold sans-serif, minimum 72pt, with a dark drop shadow or dark background strip for legibility. Never use thin fonts on video — they disappear.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">On-Screen Text Best Practices</div>
+      <div class="card-desc">
+        Appear/disappear: Text should appear within 0.5 seconds of being spoken and disappear when the next point is spoken. Text that stays on screen too long becomes wallpaper — viewers stop reading it.<br><br>
+        Maximum 6-8 words per text overlay. More than this and viewers can't read it at the pace the video moves.<br><br>
+        Use contrast animation sparingly: bold words in a different color (your accent) to emphasize, but maximum 1-2 emphasized words per overlay. Emphasizing everything emphasizes nothing.<br><br>
+        Caption vs. text overlay: TikTok's auto-captions are for accessibility. On-screen text overlays are for engagement and emphasis. Use both — they serve different functions.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="twitter">
+    <div class="section-num">Section 06</div>
+    <h2>Twitter / X Assets</h2>
+
+    <h3>Dimensions</h3>
+    <table>
+      <thead>
+        <tr><th>Asset</th><th>Dimensions</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Profile Header</td><td>1500 x 500px</td><td>3:1 ratio. Keep key content in center 1200x400px safe zone</td></tr>
+        <tr><td>Profile Photo</td><td>400 x 400px</td><td>Displays circular, minimum 200x200px</td></tr>
+        <tr><td>Inline Image (single)</td><td>1200 x 675px</td><td>16:9 — preferred aspect ratio for single image tweets</td></tr>
+        <tr><td>Inline Image (2 images)</td><td>1200 x 675px each</td><td>Displays side by side, each cropped to ~600x675</td></tr>
+        <tr><td>Inline Image (square)</td><td>1080 x 1080px</td><td>Works well for quote cards and infographics</td></tr>
+        <tr><td>Thread Graphics</td><td>1200 x 675px</td><td>Consistent ratio across the thread for professional look</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Thread Formatting Guide</h3>
+    <div class="card">
+      <div class="card-title">Thread Structure Template</div>
+      <div class="card-desc">
+        Tweet 1 (Hook): State the big insight, contrarian claim, or promised outcome. Include the number of items in the thread ("8 things I learned / a thread"). No more than 240 characters total — ideally under 200 so it's readable at a glance.<br><br>
+        Tweets 2-[N-1]: One point per tweet. Start each with the number and a bullet indicator "2/ " or "2." Each tweet should be standalone — a reader who jumps in mid-thread should be able to understand that tweet without reading the previous ones.<br><br>
+        Second-to-last tweet: The contrarian take or the hardest truth from the thread. This is your most quotable tweet — make it count.<br><br>
+        Last tweet: The ask. "If you found this useful, follow me for [cadence] on [topic]." or "RT the first tweet to share this with your audience." Never make the ask earlier — earn it.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Image Ratios for Threads</div>
+      <div class="card-desc">
+        If you include an image in a thread tweet, use 1200x675px consistently across all image tweets in the thread. Mixing portrait and landscape images in a thread looks sloppy. For data/stat images, use a dark background matching your brand with a single large number or chart — clean, minimal, readable on a small mobile screen.
+      </div>
+    </div>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#9889;</div>
+      <div class="callout-text"><strong>Thread reply hack:</strong> After your thread gains early traction (50+ impressions on Tweet 1), reply to your own thread with a summary tweet: "TL;DR: [3-sentence summary of the whole thread]." This extends the life of the thread, helps late arrivals, and Twitter/X's algorithm treats it as new engagement signal.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="audit">
+    <div class="section-num">Section 07</div>
+    <h2>Brand Consistency Checklist</h2>
+    <p>Run this audit on your profiles every 90 days. For each question, answer yes or no. Any "no" is an action item before you publish another piece of content.</p>
+
+    <div class="card">
+      <div class="card-title">20-Question Brand Audit</div>
+      <div class="card-desc">
+        <strong style="color:var(--cyan)">Visual Consistency</strong><br>
+        1. Do all my profile photos across platforms show the same face/logo and are updated within the last 12 months?<br>
+        2. Is my username/handle consistent across every platform?<br>
+        3. Do I use the same 2-3 fonts across all my graphics on all platforms?<br>
+        4. Are my brand colors (hex codes) saved and consistently applied — no eyedropping different shades each time?<br>
+        5. Does my profile banner/header image look professional on both desktop and mobile?<br><br>
+
+        <strong style="color:var(--cyan)">Content Design</strong><br>
+        6. Do my quote cards all follow the same template (not redesigned from scratch each time)?<br>
+        7. Do my carousel slides follow a consistent slide format (not a new design per carousel)?<br>
+        8. Are my thumbnails visually recognizable as mine even without reading the title?<br>
+        9. Is there visible whitespace in my graphics, or are they over-crowded?<br>
+        10. Do my graphics maintain a minimum 4.5:1 contrast ratio between text and background?<br><br>
+
+        <strong style="color:var(--cyan)">Bio &amp; Messaging</strong><br>
+        11. Does my bio on every platform describe who I help and what they get in 2 sentences or fewer?<br>
+        12. Are all my bio links active and directing to the correct destination?<br>
+        13. Does my bio include a CTA or reason to follow?<br>
+        14. Is my value proposition the same across platforms, or does it contradict itself?<br><br>
+
+        <strong style="color:var(--cyan)">Profile Completeness</strong><br>
+        15. Is my profile on every active platform 100% filled in (no blank fields)?<br>
+        16. Are my highlight covers on Instagram branded (not generic gray circles)?<br>
+        17. Is my pinned post/tweet/content current and representative of my best work?<br>
+        18. Do I have a featured link or link-in-bio page that is organized and current?<br><br>
+
+        <strong style="color:var(--cyan)">Cross-Platform Coherence</strong><br>
+        19. Would a new person finding me on any single platform understand what I do and who I am without clicking away?<br>
+        20. If a brand manager looked at all my profiles back to back, would they see one consistent creator brand, or several different personalities?
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section" id="canva">
+    <div class="section-num">Section 08</div>
+    <h2>Canva Quick-Build System</h2>
+    <p>Once you build your master templates, every new piece of content should take under 10 minutes per platform. Here is the exact system.</p>
+
+    <h3>Step 1: Set Up Your Brand Kit</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Access Brand Kit (Canva Pro)</div><div class="step-desc">Go to Brand Kit in the left sidebar. Add your brand colors (paste exact hex codes). Upload your logo in multiple formats: full color, white version, and icon-only version. Add your fonts — primary (for headlines) and secondary (for body text).</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Create a Brand Colors Palette</div><div class="step-desc">Your palette should have: 1 primary dark background color, 1 primary light/text color, 1-2 accent colors, 1 neutral color. Name each swatch in Canva so collaborators or editors can find the right color quickly.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Upload Brand Assets Folder</div><div class="step-desc">Upload to Canva Media: your photo in 2-3 common poses/expressions, your logo, any recurring graphic elements (arrows, lines, icons you use repeatedly). Tag them so they're searchable.</div></div></div>
+    </div>
+
+    <h3>Step 2: Build Master Templates for Each Asset Type</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create one master template per asset type</div><div class="step-desc">Required templates: YouTube Thumbnail, Instagram Feed Post (4:5), Instagram Reel Cover, Instagram Carousel Slide, LinkedIn Post Image, Twitter Header, Quote Card, TikTok Text Overlay. Each template must use your Brand Kit colors and fonts.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Lock non-editable elements</div><div class="step-desc">In each template, right-click non-editable design elements (background color, logo placement, layout structure) and select "Lock." This prevents accidental changes when creating variations and enforces consistency.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Create a "Templates Hub" design file</div><div class="step-desc">Create a single Canva file named "MASTER TEMPLATES — DO NOT PUBLISH." Each page = one template. This is your single source of truth. When you need a new graphic, duplicate the relevant page and work in a new file — never edit the master directly.</div></div></div>
+    </div>
+
+    <h3>Step 3: The 10-Minute Build Process</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Duplicate the master template (30 sec)</div><div class="step-desc">Open your Templates Hub. Find the right template page. Duplicate it into a new file named for the specific piece (e.g., "Thumbnail — Creator Pipeline Tips — 2026-04-07").</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Replace content (5 min)</div><div class="step-desc">Update the text (title, any supporting copy). Swap the photo if needed (pull from your Brand Assets folder). Adjust any colors if using a variant. Do not redesign — only replace content within the existing structure.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Check and export (2 min)</div><div class="step-desc">Zoom out to 50% and check at a glance: is the hierarchy clear? Is the text readable? Is there enough whitespace? Export at the correct dimensions and file format per platform specs above.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Create variants if needed (2 min)</div><div class="step-desc">For platforms that share the same design with different crops (Instagram feed vs. story), use Canva's "Resize" feature to generate variants from the same base design. Review each crop before downloading.</div></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section" id="color">
+    <div class="section-num">Section 09</div>
+    <h2>Color Psychology for Creators</h2>
+    <p>Color is the fastest brand signal. A viewer forms a color-based first impression in under 90 milliseconds. Here is what different colors communicate and which creator niches they work best in.</p>
+
+    <table>
+      <thead>
+        <tr><th>Color</th><th>Perception</th><th>Best Niches</th><th>Avoid If</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Black / Dark</td><td>Luxury, authority, sophistication, premium</td><td>Finance, tech, fashion, high-end coaching</td><td>Your niche is health/wellness or kids' content</td></tr>
+        <tr><td>White / Light</td><td>Clean, minimal, honest, approachable</td><td>Lifestyle, wellness, education, design</td><td>You want to appear bold or aggressive</td></tr>
+        <tr><td>Electric Blue/Cyan</td><td>Innovation, trust, technology, intelligence</td><td>Tech, SaaS, AI, creator tools</td><td>You're in a warm/emotional niche</td></tr>
+        <tr><td>Deep Navy</td><td>Stability, trust, professionalism</td><td>Finance, law, consulting, business</td><td>You want to appear cutting-edge or creative</td></tr>
+        <tr><td>Bright Yellow</td><td>Energy, optimism, attention, caution</td><td>Marketing, motivation, kids, food</td><td>You're building a luxury or premium perception</td></tr>
+        <tr><td>Gold / Amber</td><td>Wealth, prestige, achievement, warmth</td><td>Luxury, finance, real estate, entrepreneurship</td><td>You want to appear approachable and budget-friendly</td></tr>
+        <tr><td>Electric Green</td><td>Growth, money, innovation, nature</td><td>Finance, sustainability, health, tech</td><td>You're in a traditionally conservative niche</td></tr>
+        <tr><td>Red / Orange</td><td>Urgency, passion, energy, food, danger</td><td>Gaming, food, fitness, entertainment</td><td>You want to convey calm, trust, or premium positioning</td></tr>
+        <tr><td>Purple</td><td>Creativity, spirituality, royalty, mystery</td><td>Beauty, wellness, astrology, coaching</td><td>You're in a data-heavy or finance-forward niche</td></tr>
+        <tr><td>Earth Tones (tan, rust)</td><td>Authenticity, organic, grounded, warm</td><td>Wellness, food, lifestyle, sustainability</td><td>You want a modern/tech look</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Niche-Specific Palette Recommendations</h3>
+    <div class="card">
+      <div class="card-title">Business / Creator Economy</div>
+      <div class="card-desc">Primary: #080808 (near black) — Secondary: #F2F2F2 (off white) — Accent: #00E5FF (electric cyan) or #FFD60A (gold). This is the palette that signals premium, modern, and authoritative in the creator/business space. It photographs well on screen and holds up across platforms.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Finance / Investing</div>
+      <div class="card-desc">Primary: #0A1628 (deep navy) — Secondary: #FFFFFF — Accent: #30D158 (money green) or #FFD700 (gold). Conveys trust, wealth, and seriousness. Avoid bright reds or oranges which suggest volatility or danger — not what people want from their finance content creator.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Health / Wellness</div>
+      <div class="card-desc">Primary: #F9F6F0 (warm cream) — Secondary: #2D2D2D — Accent: #4CAF50 (natural green) or #E07B5F (warm terracotta). Signals organic, natural, clean, and trustworthy. Avoid high-contrast dark palettes — they signal pharmaceutical/medical rather than holistic wellness.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Gaming / Entertainment</div>
+      <div class="card-desc">Primary: #0D0D0D (true black) — Secondary: #FFFFFF — Accent: #FF3B30 (bright red) or #8A2BE2 (electric purple) with neon highlights. High contrast, high energy. Gaming brands lean into the futuristic aesthetic — sharp angles, gradient accents, and glowing effects are on-brand.</div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>The 60-30-10 rule:</strong> In any design or brand system, use your primary color for 60% of the visual space, your secondary color for 30%, and your accent color for only 10%. This ratio creates visual harmony and ensures your accent color actually does its job — which is to create emphasis, not decoration.</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign — Social Media Asset Pack</div>
+    <div class="doc-footer-note">Personal use license. Do not redistribute.</div>
+  </div>
+
+</div>
+</body>
+</html>

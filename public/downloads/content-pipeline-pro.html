@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Content Pipeline Pro — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:800px;margin:0 auto;padding:60px 32px}
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+  .doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px}.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none}.toc a:hover{color:var(--cyan)}
+  .section{margin-bottom:64px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+  h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+  h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+  .callout-text strong{color:var(--text)}
+  .steps{margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:20px}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+  .step-content{padding-top:4px}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+  tr:last-child td{border-bottom:none}
+  .email-template{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+  .email-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--sub)}
+  .email-header span{color:rgba(242,242,242,.7)}
+  .email-body{padding:20px;font-size:13px;color:rgba(242,242,242,.65);line-height:1.9;white-space:pre-wrap}
+  .email-body strong{color:var(--cyan)}
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-badge">Premium Digital Product</div>
+    <h1 class="doc-title">Content Pipeline Pro</h1>
+    <p class="doc-subtitle">End-to-end content automation system. Ideation to production to distribution to repurposing — all systematized.</p>
+    <div class="doc-meta">
+      <span>Value: $147</span>
+      <span>REMbyDesign</span>
+      <span>Version 1.0</span>
+      <span>2026 Edition</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#stage1">The 5-Stage Content Pipeline</a></li>
+      <li><a href="#repurpose">The 1→12 Repurposing Framework</a></li>
+      <li><a href="#automation">8 Automation Workflows</a></li>
+      <li><a href="#calendar">Content Calendar Template</a></li>
+      <li><a href="#platforms">Platform-Specific Best Practices</a></li>
+      <li><a href="#metrics">Metrics Dashboard Setup</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="stage1">
+    <div class="section-num">Section 01</div>
+    <h2>The 5-Stage Content Pipeline</h2>
+    <p>A content pipeline is not a content calendar. A calendar tells you what to post and when. A pipeline tells you where every piece of content comes from, how it gets made, and where it ends up. These five stages run in sequence — and once you build this machine, the bottleneck shifts from "I don't know what to make" to "I can't publish fast enough."</p>
+
+    <h3>Stage 1: Ideation</h3>
+    <p><strong style="color:var(--text)">Input:</strong> Audience data, competitor analysis, trending search terms, your own experience</p>
+    <p><strong style="color:var(--text)">Output:</strong> A populated idea backlog with at least 30 validated topics</p>
+    <p><strong style="color:var(--text)">Tools:</strong> TubeBuddy / VidIQ, AnswerThePublic, SparkToro, Reddit, YouTube comments, Twitter/X search</p>
+
+    <div class="card">
+      <div class="card-title">Ideation Protocol (Weekly, 30 min)</div>
+      <div class="card-desc">Every Monday morning, spend 30 minutes filling your idea backlog. Use the following sources in rotation: (1) Pull top-performing comments from your last 4 posts — look for questions people are asking. (2) Search YouTube for your niche keyword, sort by "This week" — identify gaps in the top 10 results. (3) Check Reddit in your niche subreddit — find the upvoted questions with few answers. (4) Review your last analytics report — find the video/post with highest watch time and make a sequel or deep dive. (5) Check Google Trends for related rising queries in your category.</div>
+    </div>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#9889;</div>
+      <div class="callout-text"><strong>Validation rule:</strong> An idea passes ideation only if it meets 2 of these 3 criteria: (a) someone has asked this question publicly, (b) a competitor video on this topic has over 100K views, (c) there is a clear search keyword with low-competition results on page 1.</div>
+    </div>
+
+    <h3>Stage 2: Creation</h3>
+    <p><strong style="color:var(--text)">Input:</strong> Validated idea from backlog + content brief</p>
+    <p><strong style="color:var(--text)">Output:</strong> Raw draft (script, outline, or written piece)</p>
+    <p><strong style="color:var(--text)">Tools:</strong> Notion (briefs), Google Docs (scripts), Claude / ChatGPT (first-draft assist), Descript (audio-to-text transcription)</p>
+
+    <div class="card">
+      <div class="card-title">Content Brief Template</div>
+      <div class="card-desc">Every piece of content starts with a brief. Field set: Working Title | Core Question Answered | Target Viewer/Reader (1 sentence) | Hook (first 3 seconds or first line) | 3-5 Key Points | CTA | SEO Keywords | Related Pieces to Link | Estimated Length | Deadline. A brief that takes 10 minutes to write saves 2 hours of aimless creation.</div>
+    </div>
+
+    <h3>Stage 3: Production</h3>
+    <p><strong style="color:var(--text)">Input:</strong> Finished draft</p>
+    <p><strong style="color:var(--text)">Output:</strong> Publish-ready asset (edited video, designed graphic, formatted post)</p>
+    <p><strong style="color:var(--text)">Tools:</strong> CapCut / DaVinci Resolve / Premiere Pro, Canva, Descript, Adobe Lightroom, Riverside.fm</p>
+
+    <div class="card">
+      <div class="card-title">Production Batch Model</div>
+      <div class="card-desc">Never produce one piece at a time. Batch all creation in a single weekly session (3-5 hours). Record 3-4 videos back to back. Write 4-5 social posts in one sitting. Edit everything in a single editing session the next day. This reduces context-switching cost by ~60% and cuts total production time nearly in half versus producing piece-by-piece across the week.</div>
+    </div>
+
+    <h3>Stage 4: Distribution</h3>
+    <p><strong style="color:var(--text)">Input:</strong> Published primary piece (the "pillar")</p>
+    <p><strong style="color:var(--text)">Output:</strong> Content live across all relevant platforms, scheduled in advance</p>
+    <p><strong style="color:var(--text)">Tools:</strong> Buffer, Later, Publer, Metricool, YouTube Studio scheduler, LinkedIn native scheduler</p>
+
+    <div class="card">
+      <div class="card-title">Distribution Sequence</div>
+      <div class="card-desc">Publish your pillar piece first (YouTube video, blog post, or long-form LinkedIn article). Within 24 hours, distribute derivative pieces: Twitter thread goes live same day. LinkedIn post goes out the following morning. Newsletter section drops within 48 hours. Instagram Reel within 3 days. Pinterest + YouTube Community post within 5 days. This staggered cadence maximizes algorithmic surface area without flooding your audience at once.</div>
+    </div>
+
+    <h3>Stage 5: Repurposing</h3>
+    <p><strong style="color:var(--text)">Input:</strong> Distributed pillar piece + performance data</p>
+    <p><strong style="color:var(--text)">Output:</strong> 12 derivative pieces per pillar (see Section 2 for full breakdown)</p>
+    <p><strong style="color:var(--text)">Tools:</strong> Opus Clip (auto-clip extraction), Canva (graphics), ChatGPT (reformatting), Castmagic (transcription + repurpose)</p>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>Pipeline flywheel:</strong> Once you run this system for 60 days, your idea backlog starts feeding itself. High-performing repurposed pieces generate new comments and questions — which go directly back into Stage 1 as validated ideas. The pipeline compounds.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="repurpose">
+    <div class="section-num">Section 02</div>
+    <h2>The 1&#8594;12 Repurposing Framework</h2>
+    <p>One long-form pillar piece — a YouTube video, podcast episode, or 2,000-word blog post — contains enough raw material to generate 12 additional pieces of content. Here is the exact breakdown with formulas for each output.</p>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>Prerequisite:</strong> Your pillar piece must be at least 8 minutes (video) or 1,500 words (written) to yield enough material for all 12 derivatives without the content feeling thin or repetitive.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 1 &amp; 2 — Reels / Shorts (2 clips)</div>
+      <div class="card-desc">
+        Extract the two strongest 30-60 second moments from your pillar. Formula: [Provocative statement or question] + [3-sentence payoff] + [CTA to full video]. Use Opus Clip to auto-identify peak-engagement moments. Add captions with CapCut or Descript. Hook must appear in the first 1.5 seconds — either as on-screen text or spoken word. Best clips come from: the moment you counter a common belief, the moment you share a specific result or number, or the moment you tell a personal story with a clear lesson.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 3 — Twitter/X Thread</div>
+      <div class="card-desc">
+        Formula: Tweet 1 (hook) = "I [did X / learned X / discovered X] and it changed how I [outcome]. Here's what most people get wrong: [thread]" — Tweet 2-7 = one key point per tweet, each standalone and punchy, max 2 sentences each — Tweet 8 = the contrarian insight or the hardest truth from your piece — Tweet 9 = "If you got value from this, follow me for [niche topic]. I post [frequency] about [topic]." Use numbers in your hook tweet whenever possible. Threads with a number ("7 things I learned...") outperform generic openers by 3-4x.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 4 — LinkedIn Post</div>
+      <div class="card-desc">
+        Formula: Line 1 = your most counterintuitive finding or result (no period after — forces the "see more" click) — Lines 2-4 = context/setup — Lines 5-10 = the 3-5 lessons in plain language, each starting on a new line with a dot bullet — Final line = a genuine question to invite comments ("What's your experience with this?"). LinkedIn rewards dwell time, so aim for 150-250 words. Posts with a question at the end get 40-60% more comments on average.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 5 — Newsletter Section</div>
+      <div class="card-desc">
+        Formula: 150-250 word summary of the pillar's main insight, written in first person with a personal angle not included in the original. Structure: [Personal hook — why this mattered to me this week] + [The core insight in 2-3 sentences] + [One actionable takeaway readers can use today] + [Link to full piece with reason to click: "If you want the full breakdown including the 8-step system, it's all here."]. Do NOT just copy-paste from the pillar. The newsletter version should feel like a private note to a friend.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Outputs 6 &amp; 7 — Quote Cards (2 graphics)</div>
+      <div class="card-desc">
+        Pull two quotable sentences from your pillar — the kind that standalone without context. Formula for selecting quotes: (a) it makes someone stop scrolling, (b) it's 20 words or fewer, (c) it challenges a belief or reveals a surprising truth. Design in Canva: dark background, your brand color accent, quote in large sans-serif bold, your handle at the bottom. Post on Instagram feed, Pinterest, and Twitter as standalone images. These consistently get saved and shared at 3-5x the rate of regular posts.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 8 — Blog Post / Article</div>
+      <div class="card-desc">
+        Expand or slightly reframe the pillar for SEO. Formula: Use your primary keyword in the title, first 100 words, one H2, and meta description. Add 2-3 internal links to related content. Add 1-2 external links to authoritative sources. Add a FAQ section at the bottom targeting "People Also Ask" queries from Google. If your pillar was a video, get a transcript (Descript or Castmagic), clean it up, add headers, and that is your first draft. Target 1,500-2,500 words for maximum SEO indexing surface.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 9 — Pinterest Pin</div>
+      <div class="card-desc">
+        Create a vertical graphic (1000x1500px) with a listicle-style title. Formula: "[Number] [Outcome] Tips / [Niche] Mistakes / Ways to [Result]" — use your pillar's key points as the list items. Pinterest is a search engine, so the title and description must contain your target keyword. Pins with step-by-step lists and number titles consistently outperform decorative or lifestyle pins in educational niches. Link directly to your blog post or YouTube video, not your homepage.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Output 10 — YouTube Community Post</div>
+      <div class="card-desc">
+        Formula: Ask a question that relates to your pillar topic to drive engagement. "Quick question for the community — [related question from your pillar topic]. Drop your answer below — I'll share what I've learned in [day] in a new video." OR share a single stat, tip, or insight from the pillar with: "Full video dropping [day] — here's the one thing I want you to know beforehand: [insight]." Community posts boost channel visibility and warm the audience before a new video drops.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Outputs 11 &amp; 12 — Story Slides (2 sequences)</div>
+      <div class="card-desc">
+        Sequence 1 — Engagement poll: Slide 1 = provocative question (poll sticker), Slide 2 = your take, Slide 3 = swipe up / link to full piece. Sequence 2 — Micro-lesson: Slide 1 = "Stop doing X" or "Most people don't know this..." (hook), Slide 2 = setup/problem, Slide 3 = solution or insight, Slide 4 = CTA. Stories are consumed fast — use large text, minimal words per slide (max 15), and high contrast backgrounds. Add location or hashtag stickers for minor reach boosts.
+      </div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>Total output:</strong> 1 pillar piece becomes 13 pieces of content across 7+ platforms. If you publish 2 pillar pieces per month, you have 26 pieces of derivative content — enough to maintain daily posting on 3-4 platforms simultaneously, with zero creative burnout.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="automation">
+    <div class="section-num">Section 03</div>
+    <h2>8 Automation Workflows</h2>
+    <p>These workflows are built for Make (formerly Integromat) or Zapier. Each one eliminates a manual recurring task. Set up all 8 once and they run indefinitely.</p>
+
+    <h3>Workflow 1: YouTube Video Published &#8594; Repurpose Checklist</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: YouTube — Watch Channel for New Videos</div><div class="step-desc">Connect your YouTube account. Set trigger to fire when a new video is published to your channel (not unlisted or private).</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: Notion — Create Database Item</div><div class="step-desc">Create a new page in your Repurpose Queue database. Map fields: Title = video title, URL = video link, Status = "Needs Repurposing", Published Date = today.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Notion — Add Checklist to Page</div><div class="step-desc">Use a template block (or Make's text module) to append your 12-piece repurposing checklist as checkboxes inside the new Notion page.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Action: Gmail / Slack — Send Notification</div><div class="step-desc">Send yourself or your team a message: "New video published: [Title]. Repurpose checklist ready in Notion. [Link]"</div></div></div>
+    </div>
+
+    <h3>Workflow 2: Blog Post Published &#8594; Social Posts Queued</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: RSS Feed — New Item from Blog URL</div><div class="step-desc">Use your blog's RSS feed (yourdomain.com/feed) as the trigger. Make checks this every 15 minutes.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: OpenAI / Claude — Generate Social Captions</div><div class="step-desc">Pass the blog post title + first 500 characters to GPT-4 or Claude. Prompt: "Write 3 social media captions for this article — one for Twitter (under 240 chars), one for LinkedIn (150 words, professional tone), one for Instagram (casual, with 5 hashtags). Article: [title + excerpt]"</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Buffer — Create Posts</div><div class="step-desc">Create one post per platform using the generated captions. Set publish times to your optimal posting windows (see Section 5).</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Action: Google Sheets — Log Entry</div><div class="step-desc">Add a row to your Content Log sheet: Date, Blog Title, Blog URL, Twitter Caption, LinkedIn Caption, Instagram Caption, Status = Queued.</div></div></div>
+    </div>
+
+    <h3>Workflow 3: Content Calendar &#8594; Weekly Schedule Email</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: Schedule — Every Sunday at 8:00 AM</div><div class="step-desc">Set a time-based trigger to fire once weekly on Sunday morning.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: Google Sheets — Get Rows for This Week</div><div class="step-desc">Filter your Content Calendar sheet for rows where the Publish Date column falls within the next 7 days. Pull: Title, Platform, Date, Status.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Gmail — Send Formatted Email</div><div class="step-desc">Send yourself a formatted weekly brief: "This week's content schedule: [list of pieces, platform, day]. Pieces still in draft: [any with Status=Draft]. Reminders: [any with deadlines in next 48 hours]."</div></div></div>
+    </div>
+
+    <h3>Workflow 4: Instagram Post &#8594; Pinterest Auto-Post</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: Instagram Business — New Media Posted</div><div class="step-desc">Connect your Instagram Business account. Trigger fires when a new feed post goes live (not a Story or Reel).</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Filter: Check Image Ratio</div><div class="step-desc">Add a filter: only continue if media_type = IMAGE (not VIDEO). Pinterest performs best with static images in a 2:3 or 1:1 ratio.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Pinterest — Create Pin</div><div class="step-desc">Map fields: Image URL = Instagram image URL, Title = first 50 characters of Instagram caption, Description = full caption (Pinterest allows 500 chars), Board = your niche board, Link = your blog or YouTube URL.</div></div></div>
+    </div>
+
+    <h3>Workflow 5: New Video Idea &#8594; Content Brief Auto-Created</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: Notion — New Database Item Created in Idea Bank</div><div class="step-desc">When you add a new idea to your Notion Idea Bank with Status = "Approved," the workflow fires.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: OpenAI — Generate Content Brief</div><div class="step-desc">Prompt: "Create a content brief for a YouTube video titled '[idea title]'. Include: hook options (3 variants), 5 key talking points, suggested CTA, related keywords, estimated length, and thumbnail concept." Pass the idea title from Notion.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Notion — Update Page with Brief</div><div class="step-desc">Write the generated brief back to the Notion page. Change Status to "Brief Ready." Assign a due date of 7 days from today.</div></div></div>
+    </div>
+
+    <h3>Workflow 6: Viewer Comment &#8594; Idea Capture</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: YouTube — New Comment on Channel</div><div class="step-desc">Connect YouTube. Filter: only process comments that contain one of these phrases: "can you make a video about," "what about," "have you covered," "would love to see," or contain a question mark.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: Notion — Create Item in Idea Bank</div><div class="step-desc">Add the comment text as the idea title. Tag it as Source = "Audience Comment." Mark Status = "To Evaluate." Include a link to the original comment.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Google Sheets — Log the Comment</div><div class="step-desc">Add a row to your Audience Insights sheet: Date, Video Title, Commenter, Comment Text, Idea Captured (Yes/No).</div></div></div>
+    </div>
+
+    <h3>Workflow 7: Monthly Analytics Pull &#8594; Google Sheets Report</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: Schedule — 1st of Every Month at 6:00 AM</div><div class="step-desc">Time-based trigger for monthly reporting.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: YouTube Analytics — Get Monthly Report</div><div class="step-desc">Pull: total views, watch time (hours), subscribers gained/lost, top 5 videos by views, average view duration, impression click-through rate (CTR), revenue (if monetized).</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Google Sheets — Append Monthly Data Row</div><div class="step-desc">Write all pulled metrics to a new row in your Analytics History sheet. This builds your longitudinal data set automatically with zero manual entry.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Action: Gmail — Send Monthly Summary</div><div class="step-desc">Send yourself a formatted summary of the pulled data for a quick monthly pulse check.</div></div></div>
+    </div>
+
+    <h3>Workflow 8: Content Gap Analysis &#8594; Weekly Topic Suggestions</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: Schedule — Every Friday at 9:00 AM</div><div class="step-desc">Weekly trigger to run your gap analysis every end-of-week.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: Google Sheets — Read Your Content Log</div><div class="step-desc">Pull all published content from your Content Log. Extract the topics and keywords already covered.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: OpenAI — Generate Gap Analysis</div><div class="step-desc">Prompt: "I create content about [your niche]. Here are the topics I've already covered: [list]. Based on common questions in this niche, suggest 5 topics I have NOT yet covered that have high audience demand. Format as a numbered list with a 1-sentence rationale for each."</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Action: Notion — Add 5 Ideas to Idea Bank</div><div class="step-desc">Create 5 new items in your Notion Idea Bank, one per suggested topic. Status = "To Evaluate," Source = "AI Gap Analysis."</div></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="calendar">
+    <div class="section-num">Section 04</div>
+    <h2>Content Calendar Template</h2>
+    <p>Your content calendar is the command center of your pipeline. It should live in Google Sheets or Notion, updated every Monday, and reflect at minimum the next 4 weeks of planned content.</p>
+
+    <h3>Column Structure (Google Sheets)</h3>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Data Type</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Week #</td><td>Number</td><td>ISO week number (auto-fill with WEEKNUM formula)</td></tr>
+        <tr><td>Publish Date</td><td>Date</td><td>Exact scheduled publish date</td></tr>
+        <tr><td>Platform</td><td>Dropdown</td><td>YouTube, Instagram, LinkedIn, TikTok, Twitter, Newsletter, Blog</td></tr>
+        <tr><td>Content Type</td><td>Dropdown</td><td>Long-form, Reel/Short, Thread, Carousel, Newsletter, Story, Community Post</td></tr>
+        <tr><td>Title / Hook</td><td>Text</td><td>Working title or first line of hook</td></tr>
+        <tr><td>Status</td><td>Dropdown</td><td>Idea, Brief, In Draft, In Production, Scheduled, Published</td></tr>
+        <tr><td>Pillar Video</td><td>Text / URL</td><td>Which pillar piece this is derived from (if applicable)</td></tr>
+        <tr><td>Owner</td><td>Text</td><td>Your name or team member responsible</td></tr>
+        <tr><td>SEO Keyword</td><td>Text</td><td>Primary keyword target (especially for YouTube and Blog)</td></tr>
+        <tr><td>Notes</td><td>Text</td><td>Thumbnail notes, B-roll needed, collab info, etc.</td></tr>
+        <tr><td>Views / Reach</td><td>Number</td><td>Fill in 7 days after publish</td></tr>
+        <tr><td>Engagement Rate</td><td>Percentage</td><td>Fill in 7 days after publish</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Example Week Layout</h3>
+    <table>
+      <thead>
+        <tr><th>Day</th><th>Platform</th><th>Type</th><th>Title / Hook</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Monday</td><td>YouTube</td><td>Long-form</td><td>Why 90% of Creators Fail Before 10K Subscribers</td></tr>
+        <tr><td>Monday</td><td>Twitter/X</td><td>Thread</td><td>I studied 50 failed creator channels. Here's the pattern: [thread]</td></tr>
+        <tr><td>Tuesday</td><td>LinkedIn</td><td>Long post</td><td>The uncomfortable truth about content consistency nobody wants to hear</td></tr>
+        <tr><td>Wednesday</td><td>Instagram</td><td>Reel</td><td>This one mistake is killing your channel growth (60-sec clip from Monday video)</td></tr>
+        <tr><td>Wednesday</td><td>Newsletter</td><td>Section</td><td>What I learned studying failed channels + link to YouTube</td></tr>
+        <tr><td>Thursday</td><td>TikTok</td><td>Short</td><td>Second clip from Monday video — "The retention trick"</td></tr>
+        <tr><td>Friday</td><td>Pinterest</td><td>Static Pin</td><td>10 Creator Mistakes That Kill Growth (infographic)</td></tr>
+        <tr><td>Friday</td><td>YouTube</td><td>Community Post</td><td>Poll: "What's your biggest content challenge right now?"</td></tr>
+        <tr><td>Saturday</td><td>Instagram</td><td>Quote Card</td><td>Best pullquote from Monday video</td></tr>
+        <tr><td>Sunday</td><td>Instagram</td><td>Story (2 slides)</td><td>Micro-lesson: "The 3-second rule for hooks" + poll</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#9889;</div>
+      <div class="callout-text"><strong>Monthly review rule:</strong> On the last Friday of each month, review every row published that month. Sort by Views/Reach descending. Identify the top 2 performers — these topics get sequels or deep dives next month. Identify the bottom 2 — diagnose whether it was the topic, the hook, the format, or the platform before you kill the format entirely.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="platforms">
+    <div class="section-num">Section 05</div>
+    <h2>Platform-Specific Best Practices</h2>
+
+    <h3>YouTube</h3>
+    <div class="card">
+      <div class="card-title">Format Specs</div>
+      <div class="card-desc">Thumbnail: 1280x720px, JPG or PNG, under 2MB. Video: 1920x1080 minimum (4K preferred), MP4, H.264. Title: 60 characters max. Description: First 150 characters visible before "Show More" — put your CTA and keyword here. Tags: 5-8 highly relevant tags, not 30 generic ones.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Best Posting Times</div>
+      <div class="card-desc">Friday 12PM-3PM EST or Saturday 9AM-12PM EST for general audiences. Business/creator niches skew toward Tuesday and Thursday 8AM-10AM. Upload 2-4 hours before your target peak window — YouTube takes time to index and begin distribution.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">10 Thumbnail Hook Formulas</div>
+      <div class="card-desc">
+        1. The Number Promise: "17 Tools That Changed My Business" — number + bold color contrast<br>
+        2. The Mistake Frame: "I Was Wrong About [Topic]" — your surprised face + bold text<br>
+        3. The Before/After Split: Two side-by-side images showing transformation<br>
+        4. The Curiosity Gap: "Why Everyone Is Wrong About [X]" — cryptic enough to need the click<br>
+        5. The Tutorial Proof: Screenshot of result + "How I Did This"<br>
+        6. The Comparison: "X vs Y — Which Is Better?" — two opposing visuals<br>
+        7. The Story Setup: Your face looking shocked/excited + "What Happened When I..."<br>
+        8. The Income Reveal: Dollar amount or metric prominently displayed<br>
+        9. The Tool/Hack: Product or interface screenshot + "This Changed Everything"<br>
+        10. The Warning: Red warning icon + "Stop Doing X" — high urgency, high CTR
+      </div>
+    </div>
+
+    <h3>Instagram</h3>
+    <div class="card">
+      <div class="card-title">Format Specs &amp; Ratios</div>
+      <div class="card-desc">Feed square: 1080x1080px. Feed portrait (recommended): 1080x1350px. Reel: 1080x1920px. Story: 1080x1920px. Carousel: up to 10 slides, any aspect ratio (portrait recommended). Keep safe zone: stay 150px from all edges on Stories and Reels to avoid UI overlay.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Grid Strategy: 3-Post Color Patterns</div>
+      <div class="card-desc">Plan your grid in rows of 3. Each row should follow a consistent tone: Row pattern A = dark-dark-light (creates visual rhythm). Row pattern B = brand color-neutral-brand color (alternating pops). Maintain your brand palette across all feed posts. Profiles with a cohesive grid convert browsers to followers at 2-3x the rate of inconsistent grids.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Best Posting Times</div>
+      <div class="card-desc">Monday, Wednesday, Friday: 9AM-11AM and 7PM-9PM local time. Reels: Tuesday and Thursday 12PM-2PM consistently outperform other windows. Stories: 8AM-10AM for weekday morning reach. Always post Reels at the beginning of the week — the algorithm prioritizes new Reels for 24-48 hours post-upload.</div>
+    </div>
+
+    <h3>LinkedIn</h3>
+    <div class="card">
+      <div class="card-title">Format Specs</div>
+      <div class="card-desc">Profile banner: 1584x396px. Post images: 1200x627px (landscape) or 1080x1080px (square). Carousel PDFs: 1080x1080px slides, max 300 pages, PDF format. Document posts (carousels) currently get the highest organic reach of any format on LinkedIn.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Best Posting Times</div>
+      <div class="card-desc">Tuesday, Wednesday, Thursday between 8AM-10AM or 12PM-1PM in your target audience's timezone. LinkedIn engagement drops sharply on weekends — only post Friday if you need the extra slot. Never post after 5PM on weekdays.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Hook Formula for LinkedIn</div>
+      <div class="card-desc">The LinkedIn algorithm cuts text after 3 lines. Your first 3 lines must be a complete hook. Formula: [Bold declarative statement or contrarian claim]. [One sentence that creates tension or curiosity]. [Promise of what follows: "Here's what I've learned:"] — Never start with "I" as your first word. Never start with a question. Lead with your insight, not your setup.</div>
+    </div>
+
+    <h3>TikTok</h3>
+    <div class="card">
+      <div class="card-title">Format Specs</div>
+      <div class="card-desc">Video: 1080x1920px (9:16). Length: 15-60 seconds performs best for non-educational content. Educational: 60-3 minutes. Caption: 150 characters visible, 2,200 max. Use 3-5 hashtags — one broad (#marketing), one niche (#creatortips), one trending. Do NOT stuff hashtags — TikTok's algorithm deprioritizes spammy tag usage.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Best Posting Times</div>
+      <div class="card-desc">6AM-10AM EST (catches morning scroll) and 7PM-10PM EST (prime evening usage). Post 1-2x per day for fastest growth. TikTok is the only platform where daily posting consistently outperforms 3x/week even for accounts with small audiences.</div>
+    </div>
+
+    <h3>Twitter / X</h3>
+    <div class="card">
+      <div class="card-title">Format Specs</div>
+      <div class="card-desc">Header image: 1500x500px. Post images: 1200x675px (16:9) or 1080x1080px (square). Thread: up to 25 tweets per thread (optimal: 7-12 tweets). Images attached to tweets get 2-3x more impressions than text-only posts.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Best Posting Times</div>
+      <div class="card-desc">Monday-Friday, 8AM-10AM and 12PM-1PM EST. Threads launched on weekday mornings outperform evening launches by 40-60% in engagement. Avoid posting after 8PM — your content will be buried by morning. The "golden window" for threads is Tuesday 9AM EST.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Thread Formatting Guide</div>
+      <div class="card-desc">Tweet 1: Hook (must work standalone). Number your tweets at the start (1/, 2/). Use line breaks — never write walls of text. End on a strong insight, not a fizzle. The last tweet should be the most quotable. Reply to your own thread with a summary after it gains traction to extend reach.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="metrics">
+    <div class="section-num">Section 06</div>
+    <h2>Metrics Dashboard Setup</h2>
+    <p>Tracking everything means tracking nothing. These are the only metrics you need per platform, plus a weekly review process to keep your pipeline improving.</p>
+
+    <h3>Metrics That Matter: By Platform</h3>
+    <table>
+      <thead>
+        <tr><th>Platform</th><th>Primary Metrics</th><th>Secondary Metrics</th><th>Ignore</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>YouTube</td><td>AVD%, CTR, Watch Hours</td><td>Subscribers gained, Revenue RPM</td><td>Total views (vanity)</td></tr>
+        <tr><td>Instagram</td><td>Reach, Saves, Profile visits</td><td>Story replies, Shares</td><td>Likes, Follower count</td></tr>
+        <tr><td>LinkedIn</td><td>Impressions, Comments, Reposts</td><td>Profile views, Connection requests</td><td>Reactions (likes)</td></tr>
+        <tr><td>TikTok</td><td>Average Watch %, Shares, FYP ratio</td><td>Comments, Followers gained</td><td>Likes</td></tr>
+        <tr><td>Twitter/X</td><td>Impressions, Link clicks, Replies</td><td>Follows, Bookmarks</td><td>Likes</td></tr>
+        <tr><td>Newsletter</td><td>Open rate, Click rate, Unsubscribes</td><td>Reply rate, Forward rate</td><td>Total subscriber count</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Weekly Check-In Process (15 minutes every Monday)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Pull Last Week's Numbers</div><div class="step-desc">Open your analytics dashboard (or Metricool for cross-platform). Note the primary metric for each platform. Record in your Google Sheets Analytics History tab.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Identify the Week's Winner</div><div class="step-desc">Which single piece of content had the highest reach or engagement relative to expectations? Note the topic, format, platform, and hook. This informs what to replicate.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Identify the Week's Underperformer</div><div class="step-desc">Which piece fell flat? Diagnose: was it the hook, the topic, the format, the platform, or the timing? One-word diagnosis goes in your Notes column.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Set This Week's Experiment</div><div class="step-desc">Based on last week's winner, set one deliberate experiment for this week: a new thumbnail style, a different hook format, a posting time shift, or a new content type.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Update Your Content Calendar</div><div class="step-desc">Confirm all content for the coming week is in "Scheduled" or "In Production" status. No piece should still be in "Idea" status if it publishes within 72 hours.</div></div></div>
+    </div>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>The 30-day rule:</strong> Do not make platform or format decisions based on fewer than 30 days of data. A single bad week means nothing. A 4-week trend is actionable signal. Most creators abandon formats too early because they mistake a bad week for a bad strategy.</div>
+    </div>
+
+    <h3>Benchmark Reference</h3>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Underperforming</th><th>Average</th><th>Strong</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>YouTube CTR</td><td>Under 3%</td><td>3-6%</td><td>7%+</td></tr>
+        <tr><td>YouTube AVD%</td><td>Under 35%</td><td>35-50%</td><td>55%+</td></tr>
+        <tr><td>Instagram Reach Rate</td><td>Under 10%</td><td>10-20%</td><td>25%+</td></tr>
+        <tr><td>Instagram Save Rate</td><td>Under 1%</td><td>1-3%</td><td>4%+</td></tr>
+        <tr><td>LinkedIn Impressions/Post</td><td>Under 500</td><td>500-5K</td><td>10K+</td></tr>
+        <tr><td>Email Open Rate</td><td>Under 20%</td><td>20-35%</td><td>40%+</td></tr>
+        <tr><td>Email Click Rate</td><td>Under 1.5%</td><td>1.5-3%</td><td>4%+</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign — Content Pipeline Pro</div>
+    <div class="doc-footer-note">Personal use license. Do not redistribute.</div>
+  </div>
+
+</div>
+</body>
+</html>

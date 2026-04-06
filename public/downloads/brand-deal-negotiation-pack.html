@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Brand Deal Negotiation Pack — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:800px;margin:0 auto;padding:60px 32px}
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+  .doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px}.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none}.toc a:hover{color:var(--cyan)}
+  .section{margin-bottom:64px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+  h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+  h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+  .callout-text strong{color:var(--text)}
+  .steps{margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:20px}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+  .step-content{padding-top:4px}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+  tr:last-child td{border-bottom:none}
+  .email-template{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+  .email-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--sub)}
+  .email-header span{color:rgba(242,242,242,.7)}
+  .email-body{padding:20px;font-size:13px;color:rgba(242,242,242,.65);line-height:1.9;white-space:pre-wrap}
+  .email-body strong{color:var(--cyan)}
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-badge">Premium Digital Product</div>
+    <h1 class="doc-title">Brand Deal Negotiation Pack</h1>
+    <p class="doc-subtitle">12 proven email scripts and contract templates for brand partnerships — know your worth, ask for it, and get it.</p>
+    <div class="doc-meta">
+      <span>Value: $49</span>
+      <span>REMbyDesign</span>
+      <span>Version 1.0</span>
+      <span>2026 Edition</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#framework">The Negotiation Framework</a></li>
+      <li><a href="#rates">Rate Calculator</a></li>
+      <li><a href="#templates">All 12 Email Templates</a></li>
+      <li><a href="#contract">Brand Partnership Contract Template</a></li>
+      <li><a href="#redflags">Red Flags Checklist</a></li>
+      <li><a href="#scripts">Negotiation Scripts</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="framework">
+    <div class="section-num">Section 01</div>
+    <h2>The Negotiation Framework</h2>
+    <p>The biggest mistake creators make in brand deals is treating negotiation like a transaction. It is not. It is a relationship framing exercise. How you position yourself before money is ever discussed determines whether you are treated as a vendor or a partner — and partners get paid significantly more.</p>
+
+    <h3>Positioning: Be the Prize</h3>
+    <p>Brands work with creators at scale. They have templated outreach and standard rate cards. If you respond like every other creator — eager, fast, asking "how much is the budget?" — you will receive the standard (lowest) offer. Your first job is to signal that your audience is valuable and hard to access any other way.</p>
+
+    <div class="card">
+      <div class="card-title">Positioning Moves That Work</div>
+      <div class="card-desc">
+        1. Lead with audience specifics, not follower count. "My audience is 78% female, ages 25-34, household income $65K+, primarily in the US and UK" is worth 5x more to a brand than "I have 40K followers."<br><br>
+        2. Reference past partnership wins. "My last integration with [Category Brand] saw a 4.2% link click rate versus their typical 1.1% platform average." Numbers beat vibes every time.<br><br>
+        3. Never reveal your floor rate. "What's your budget?" tells the brand you have no set pricing and will negotiate down. Instead, send your rate card and let them come to you.
+      </div>
+    </div>
+
+    <h3>Rate Card Strategy</h3>
+    <p>Your rate card is the first move in the negotiation. It should exist as a clean PDF or Notion page, sent proactively before any call or negotiation begins. A rate card accomplishes three things: it establishes you as a professional, it anchors the conversation at your rates (not theirs), and it filters out brands who cannot afford you before you waste time on a call.</p>
+
+    <div class="card">
+      <div class="card-title">Rate Card Must-Have Fields</div>
+      <div class="card-desc">
+        Platform | Content Type | Deliverable | Base Rate | What's Included | Add-On Options<br><br>
+        Example row: YouTube | Long-form Integration | 60-90 second mid-roll mention + pinned comment + 30-day link in description | $3,500 | Script approval, 1 revision round, performance report at 30 days | Exclusivity: +30%, Whitelisting: +25%, Additional deliverable: +$800
+      </div>
+    </div>
+
+    <h3>Anchor High — The 20% Rule</h3>
+    <p>Whatever your true target rate is, your published rate should be 20-25% higher. This creates room for brands to "negotiate you down" (which feels like a win for their procurement team) while you land exactly where you wanted to be. Brands expect to negotiate. Your job is to make sure the negotiation lands in your favor.</p>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#9889;</div>
+      <div class="callout-text"><strong>The silence move:</strong> After you state your rate, stop talking. Silence feels uncomfortable, but the next person to speak usually makes a concession. If a brand says "that's a bit high," your response is: "I understand — what's your budget for this activation?" That shifts the burden back to them to reveal their ceiling.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="rates">
+    <div class="section-num">Section 02</div>
+    <h2>Rate Calculator</h2>
+    <p>Use this formula to calculate your base rate, then adjust for deliverable complexity and exclusivity. These are starting points — your niche, engagement rate, and audience quality all affect your ceiling significantly.</p>
+
+    <div class="formula">Base Rate Formula:
+Base Rate = (Avg Views ÷ 1,000) × CPM Rate × Deliverables Multiplier
+
+CPM Rate by Niche (what advertisers pay per 1,000 views):
+  Finance / Investing:     $20–$45 CPM
+  Business / Entrepreneurship: $18–$35 CPM
+  Tech / Software:         $15–$30 CPM
+  Health / Wellness:       $12–$25 CPM
+  Beauty / Fashion:        $10–$20 CPM
+  Lifestyle / Vlog:        $8–$15 CPM
+  Gaming:                  $5–$12 CPM
+
+Deliverables Multiplier:
+  Dedicated video (entire video about the brand): × 3.0
+  Long-form integration (60-90 sec mention):      × 1.5
+  Short-form / Reel / TikTok:                     × 0.8
+  Newsletter mention (full section):              × 0.6
+  Social post (Instagram / LinkedIn):             × 0.5
+
+Exclusivity Fee (add to base):
+  Category exclusivity (30 days):   + 25% of base rate
+  Category exclusivity (60 days):   + 40% of base rate
+  Full exclusivity (30 days):       + 50% of base rate
+
+Usage Rights (add to base):
+  Brand can repurpose content as paid ads: + 30%
+  Brand can post content to own channels:  + 20%
+  Brand can use in email marketing:        + 15%</div>
+
+    <h3>Rate Tiers by Audience Size</h3>
+    <table>
+      <thead>
+        <tr><th>Audience Size</th><th>YouTube Integration</th><th>Dedicated Video</th><th>Reel / Short</th><th>Newsletter</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>10K followers / 2K avg views</td><td>$300–$600</td><td>$800–$1,500</td><td>$150–$300</td><td>$100–$200</td></tr>
+        <tr><td>50K followers / 8K avg views</td><td>$1,200–$2,400</td><td>$3,000–$5,500</td><td>$500–$900</td><td>$350–$700</td></tr>
+        <tr><td>100K followers / 18K avg views</td><td>$2,500–$5,000</td><td>$6,500–$12,000</td><td>$900–$1,800</td><td>$700–$1,400</td></tr>
+        <tr><td>500K followers / 80K avg views</td><td>$8,000–$18,000</td><td>$25,000–$50,000</td><td>$3,000–$6,000</td><td>$2,500–$5,000</td></tr>
+        <tr><td>1M+ followers / 200K avg views</td><td>$20,000–$45,000</td><td>$60,000–$150,000</td><td>$8,000–$20,000</td><td>$6,000–$15,000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>Engagement over reach:</strong> A creator with 50K highly engaged followers in a specific niche routinely out-earns a creator with 300K followers in a broad lifestyle niche. If your engagement rate is above 5%, you can justify 1.5-2x the standard rates for your size tier.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="templates">
+    <div class="section-num">Section 03</div>
+    <h2>All 12 Email Templates</h2>
+    <p>These templates are written to be sent as-is with your variables filled in. Customize the tone to match your voice, but preserve the structure — it is tested and deliberate.</p>
+
+    <div class="email-template">
+      <div class="email-header">Template 1 &nbsp;|&nbsp; <span>Cold Outreach to Brand</span> &nbsp;|&nbsp; Subject: Partnership opportunity — [YOUR NAME] x [BRAND NAME]</div>
+      <div class="email-body"><strong>To:</strong> [Brand partnerships/marketing contact name]
+
+Hi [NAME],
+
+I've been using [BRAND PRODUCT] for [TIME PERIOD] — specifically [HOW YOU USE IT] — and it's become a regular part of how I [RELEVANT ACTIVITY].
+
+My channel/audience is [PLATFORM] focused on [NICHE], with [AVG VIEWS] average views per video and an audience that skews [DEMOGRAPHIC DETAIL — age, location, income if relevant].
+
+I'd love to explore a partnership. The fit feels natural — I've already been recommending your product organically, and a structured integration would let me give your team the reach, data, and creative direction to make it perform.
+
+I've attached my media kit. My rates and deliverable options are on page 3.
+
+Would it make sense to connect for 20 minutes this week or next?
+
+[YOUR NAME]
+[PLATFORM LINK]
+[MEDIA KIT LINK]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 2 &nbsp;|&nbsp; <span>Responding to Inbound Inquiry</span> &nbsp;|&nbsp; Subject: Re: Partnership Inquiry — [YOUR CHANNEL NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+Thanks for reaching out — I'm familiar with [BRAND] and have actually [used the product / featured the category / mentioned similar tools] before, so the timing is good.
+
+A few questions to make sure we're aligned before I put together a proposal:
+
+1. What are your primary KPIs for this activation — reach, click-throughs, conversions, or brand awareness?
+2. Do you have a timeline in mind for when the content would need to go live?
+3. Are you open to a dedicated integration, or is this more of a mention/sponsorship slot?
+
+Once I have a better sense of your goals, I can pull together a proposal that matches what you're trying to accomplish — including rate, deliverable, and timeline options.
+
+Looking forward to working together.
+
+[YOUR NAME]
+[PLATFORM LINK]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 3 &nbsp;|&nbsp; <span>Sending Your Media Kit</span> &nbsp;|&nbsp; Subject: Media Kit — [YOUR NAME] for [BRAND NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+Attached is my media kit. Here's a quick summary of what's inside:
+
+— Audience demographics: [KEY STAT — e.g., "82% US-based, 25-34 female, above-average household income"]
+— Platform performance: [KEY METRIC — e.g., "avg 14K views/video, 6.2% engagement rate"]
+— Past brand work: [PAST SPONSORS OR "First partnership opportunity"]
+— Deliverable menu: Integration options, rates, and add-ons are on page [X]
+
+The media kit covers my main platform ([PLATFORM]), but I'm also active on [SECONDARY PLATFORM] with [METRIC] — happy to discuss a multi-platform package if that's relevant.
+
+Let me know if you have questions about anything, or if it would help to jump on a quick call.
+
+[YOUR NAME]
+[MEDIA KIT LINK — backup if attachment fails]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 4 &nbsp;|&nbsp; <span>Counter-Offer (They Came In Low)</span> &nbsp;|&nbsp; Subject: Re: Partnership Proposal — Updated Terms</div>
+      <div class="email-body">Hi [NAME],
+
+Thanks for the offer — I appreciate you getting the proposal over quickly.
+
+I want to make this work, and I also want to be upfront: the figure you've proposed is below my rate for this deliverable. My standard rate for a [DELIVERABLE TYPE] is [YOUR RATE], which accounts for [BRIEF JUSTIFICATION — e.g., "dedicated production time, script development, 30-day link placement, and a post-campaign performance report"].
+
+I can meet you partway. Here are two options:
+
+Option A: [THEIR OFFER] for a reduced scope — [WHAT YOU REMOVE, e.g., "mention only, no dedicated link, no performance report"]
+
+Option B: [YOUR RATE] for the full deliverable as originally proposed, which gives your team the complete package and the data to evaluate performance.
+
+I'm genuinely excited about this partnership and I want us both to feel good about the terms. Which direction works better for your budget?
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 5 &nbsp;|&nbsp; <span>Asking for Revision / Approval Timeline</span> &nbsp;|&nbsp; Subject: Script Approval — [BRAND NAME] x [YOUR NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+I've completed the [script / draft / content outline] for our upcoming integration — [attached / linked here: LINK].
+
+A few notes on the integration:
+— The mention falls at [TIMESTAMP or LOCATION IN CONTENT]
+— I've incorporated [BRAND TALKING POINT 1] and [BRAND TALKING POINT 2] as discussed
+— The CTA directs viewers to [URL / PROMO CODE]
+
+Per our agreement, I've allowed [48 / 72] hours for your review. My current production schedule has this content going into editing on [DATE], so I'll need your approval or revision notes by [SPECIFIC DATE].
+
+If I don't hear back by [DATE], I'll proceed with the draft as written.
+
+Please reply with either "approved as-is" or your specific revision requests. To keep the timeline, I'm limiting revisions to one round as per our agreement.
+
+Thank you,
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 6 &nbsp;|&nbsp; <span>Following Up When They Go Quiet</span> &nbsp;|&nbsp; Subject: Quick follow-up — [BRAND NAME] partnership</div>
+      <div class="email-body">Hi [NAME],
+
+Following up on my last message from [DATE]. I know things get busy — just wanted to make sure this didn't fall through the cracks.
+
+We had discussed [SPECIFIC DELIVERABLE] going live around [DATE RANGE]. I want to make sure I can still accommodate your timeline, but I do need to confirm by [DEADLINE DATE] to hold the slot in my schedule.
+
+If the timing no longer works or the project has shifted, no worries at all — just let me know and I can look at future availability.
+
+Happy to jump on a quick call if that's easier than email.
+
+[YOUR NAME]
+[PHONE / CALENDLY LINK — optional]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 7 &nbsp;|&nbsp; <span>Declining Gracefully (But Leaving Door Open)</span> &nbsp;|&nbsp; Subject: Re: Partnership Inquiry — [YOUR NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+Thank you for thinking of me — I've genuinely looked at this one carefully.
+
+At this time, I'm not going to be able to move forward with this partnership. [CHOOSE ONE: The product isn't a close enough fit for my audience right now / The timeline doesn't work with my current schedule / The budget doesn't align with my current rates for this deliverable type.]
+
+I don't want to do a half-hearted integration — it wouldn't serve your brand or my audience well, and I'd rather decline now than deliver something that doesn't perform.
+
+I'd love to revisit this in [TIMEFRAME — e.g., "Q3" or "after my next content milestone"]. I'll keep your team on my radar, and I'd encourage you to reach out again when a future campaign comes up.
+
+Thank you again — I hope the campaign goes well.
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 8 &nbsp;|&nbsp; <span>Requesting Payment (Invoice Follow-Up)</span> &nbsp;|&nbsp; Subject: Invoice [INVOICE NUMBER] — [YOUR NAME] / [BRAND NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+I'm following up on Invoice #[NUMBER] for [AMOUNT], which was due on [DUE DATE]. I've attached a copy of the invoice for your reference.
+
+The content delivered on [DELIVERY DATE] included: [LIST DELIVERABLES BRIEFLY — e.g., "1x YouTube integration published [link], 1x Instagram post published [link], performance report sent [date]"].
+
+Could you confirm the payment status and let me know the expected payment date? If there's a specific AP contact I should loop in, I'm happy to reach out directly.
+
+I appreciate you flagging any issues quickly — I want to make sure everything is sorted on your end.
+
+Thank you,
+[YOUR NAME]
+[PAYMENT DETAILS / ACH INFO / PAYPAL — if not already on file]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 9 &nbsp;|&nbsp; <span>Delivering the Content</span> &nbsp;|&nbsp; Subject: Content Delivery — [BRAND NAME] Integration — [YOUR NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+The content is live. Here are all the details:
+
+Platform: [PLATFORM]
+Published URL: [LINK]
+Published: [DATE AND TIME]
+Integration timestamp: [e.g., "Mention begins at 4:22"]
+Promo code / tracked link: [CODE or URL]
+
+A few notes:
+— [Any relevant context about how you framed the brand, any ad disclosure language used, etc.]
+— The pinned comment directing viewers to the link is live at [LINK TO COMMENT]
+— [Any other deliverable details]
+
+I'll send you a performance report on [DATE — typically 7-14 days post-publish] with views, click data, and engagement breakdown for the integration window.
+
+Thank you for a smooth process — looking forward to the results.
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 10 &nbsp;|&nbsp; <span>Asking for Performance Report After Post</span> &nbsp;|&nbsp; Subject: Performance Data Request — [BRAND NAME] x [YOUR NAME] Campaign</div>
+      <div class="email-body">Hi [NAME],
+
+It's been [X] days since we published our integration — I hope your team has seen some positive signals on your end.
+
+Here's my performance summary for the partnership:
+
+Platform: [PLATFORM]
+Total views since publish: [NUMBER]
+Integration window views (first 30 days): [NUMBER]
+Link/promo code clicks: [NUMBER — if trackable]
+Engagement rate on the video/post: [%]
+
+I'd love to hear what you're seeing on your end — specifically [CHOOSE: click-through rates on the tracked link / promo code redemptions / site traffic from the campaign / conversion data if available]. This helps me understand how the integration landed and strengthens the case for a follow-up partnership.
+
+Any data you can share would be hugely helpful and kept confidential.
+
+Looking forward to hearing from you,
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 11 &nbsp;|&nbsp; <span>Pitching a Long-Term Partnership</span> &nbsp;|&nbsp; Subject: Long-Term Partnership Proposal — [BRAND NAME] x [YOUR NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+Our last integration [performed well / generated strong results — reference specific metric if you have it]. I've been thinking about how we could do more together, and I wanted to put a structured proposal in front of you.
+
+Long-term partnership concept: [NUMBER]-month ambassador arrangement
+
+What I'm proposing:
+— [X] integrations per month across [PLATFORMS]
+— Consistent brand presence in my content rather than one-off mentions
+— Monthly performance reports and quarterly strategy check-ins
+— Right of first refusal before I partner with a competitor in your category
+
+Why this works better for your brand: Audiences convert significantly better when they see consistent brand presence versus one-off mentions. A 3-month arrangement also allows me to build content around the product in a way that feels natural to my audience — which is what drives real performance.
+
+My rate for this arrangement: [MONTHLY RATE] per month, billed monthly, minimum [NUMBER]-month commitment.
+
+This is a meaningful discount from my one-off rate ([ONE-OFF RATE × INTEGRATIONS = COMPARISON FIGURE]), and it locks in your spot in my content calendar for the full term.
+
+Worth a call to discuss?
+
+[YOUR NAME]</div>
+    </div>
+
+    <div class="email-template">
+      <div class="email-header">Template 12 &nbsp;|&nbsp; <span>Referral Request After Successful Deal</span> &nbsp;|&nbsp; Subject: Quick ask — referral for [YOUR NAME]</div>
+      <div class="email-body">Hi [NAME],
+
+It was great working with [BRAND NAME] on the [CAMPAIGN] — I'm really happy with how the integration came out, and I appreciate how smooth the process was on your end.
+
+I wanted to ask a quick favor: do you know of any other brands or marketing teams who work with creators in [YOUR NICHE] space? I'm selectively opening up a few partnership slots for [NEXT QUARTER / NEXT SEASON], and a warm introduction from someone like you goes a long way.
+
+If anyone comes to mind, even a name and a "feel free to mention [YOUR NAME]" would be genuinely appreciated.
+
+And of course — if [BRAND] has any upcoming campaigns where I might be a fit, I'd love to hear about them early.
+
+Thank you again. Hope the campaign data looked good on your end.
+
+[YOUR NAME]</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="contract">
+    <div class="section-num">Section 04</div>
+    <h2>Brand Partnership Contract Template</h2>
+    <p>Use this template as your starting point. Always have a lawyer review contracts for high-value deals ($5K+). For smaller deals, this template covers the essential clauses that protect you.</p>
+
+    <div class="card">
+      <div class="card-title">BRAND PARTNERSHIP AGREEMENT</div>
+      <div class="card-desc">
+        This Brand Partnership Agreement ("Agreement") is entered into as of [DATE] between [CREATOR LEGAL NAME or BUSINESS NAME] ("Creator") and [BRAND LEGAL NAME] ("Brand").
+
+        <br><br><strong style="color:var(--cyan)">1. DELIVERABLES</strong><br>
+        Creator agrees to produce and publish the following content:<br>
+        — [DELIVERABLE 1: e.g., "One YouTube video (minimum 8 minutes) featuring Brand's product for a minimum of 60 seconds"]<br>
+        — [DELIVERABLE 2: e.g., "One Instagram Reel featuring Brand's product, minimum 30 seconds"]<br>
+        — [DELIVERABLE 3: e.g., "Pinned comment on YouTube video with Brand's tracked link for 30 days"]<br>
+        All content will include required FTC/ASA disclosure language ("This video is sponsored by [Brand]" or equivalent).
+
+        <br><br><strong style="color:var(--cyan)">2. COMPENSATION</strong><br>
+        Brand agrees to pay Creator [TOTAL AMOUNT] for the deliverables described in Section 1. Payment schedule: [e.g., 50% upon contract signing, 50% within 30 days of content delivery].
+
+        <br><br><strong style="color:var(--cyan)">3. PAYMENT TERMS</strong><br>
+        All invoices are due within [30/45/60] days of receipt. Late payments incur a [1.5%/2%] monthly fee on outstanding balances. Payments must be made via [ACH transfer / PayPal / wire transfer] to the details provided in Creator's invoice.
+
+        <br><br><strong style="color:var(--cyan)">4. CONTENT APPROVAL</strong><br>
+        Creator will submit content for Brand's review [48/72] hours before the scheduled publish date. Brand may request one round of revisions within [24/48] hours of receiving the draft. Approval will not be unreasonably withheld. If Brand does not respond within the review window, content will be published as submitted.
+
+        <br><br><strong style="color:var(--cyan)">5. PUBLISH DATE</strong><br>
+        Content will be published on or around [DATE]. Creator reserves the right to adjust the publish date by up to [3/5] business days with prior notice.
+
+        <br><br><strong style="color:var(--cyan)">6. USAGE RIGHTS</strong><br>
+        Creator grants Brand a [non-exclusive / exclusive] license to use the content for [PURPOSE — e.g., "Brand's owned social media channels"] for a period of [TERM — e.g., "12 months from publish date"]. This license does NOT include use of the content in paid advertising without a separate written agreement and additional whitelisting fee of [AMOUNT or %].
+
+        <br><br><strong style="color:var(--cyan)">7. EXCLUSIVITY</strong><br>
+        [OPTION A — No exclusivity: Creator is not restricted from working with competing brands.]<br>
+        [OPTION B — Category exclusivity: Creator will not publish sponsored content for direct competitors in [CATEGORY] for [X] days before and [X] days after the publish date.]<br>
+        Exclusivity terms beyond this agreement require a written addendum and additional compensation.
+
+        <br><br><strong style="color:var(--cyan)">8. EDITORIAL INDEPENDENCE</strong><br>
+        Creator retains full editorial control over content, tone, and format. Brand may provide talking points and product information but may not require Creator to make false or misleading claims. Creator will not post content that violates platform terms of service, applicable law, or Creator's own community standards.
+
+        <br><br><strong style="color:var(--cyan)">9. CANCELLATION</strong><br>
+        If Brand cancels this agreement after the contract is signed but before content production begins: Brand pays 25% of the total fee as a kill fee.<br>
+        If Brand cancels after content production has begun: Brand pays 50% of the total fee.<br>
+        If Brand cancels after content is submitted for review: Brand pays 100% of the total fee.<br>
+        Creator cancellation prior to delivery: Creator refunds any deposits received.
+
+        <br><br><strong style="color:var(--cyan)">10. REPRESENTATIONS</strong><br>
+        Each party represents that they have full authority to enter this agreement, that the content will not infringe any third-party rights, and that Creator has used / genuinely evaluated the product where this is stated in the content.
+
+        <br><br><strong style="color:var(--cyan)">11. GOVERNING LAW</strong><br>
+        This Agreement is governed by the laws of [YOUR STATE / COUNTRY].
+
+        <br><br><strong style="color:var(--cyan)">SIGNATURES</strong><br>
+        Creator: _________________________ Date: ____________<br>
+        Brand Representative: _________________________ Date: ____________<br>
+        Brand Representative Title: _________________________
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="redflags">
+    <div class="section-num">Section 05</div>
+    <h2>Red Flags Checklist</h2>
+    <p>These are warning signs that a deal is likely to be difficult, underpaying, or harmful to your brand. If you see 3 or more of these in a single offer, walk away.</p>
+
+    <div class="card">
+      <div class="card-title">15 Red Flags in Brand Deal Offers</div>
+      <div class="card-desc">
+        <strong style="color:var(--yellow)">1. No contract or just a "verbal agreement"</strong> — Always require a written agreement. No exceptions.<br><br>
+        <strong style="color:var(--yellow)">2. "We'll pay you in product" (for a significant deliverable)</strong> — Product-only compensation is appropriate for gifted reviews. For paid integrations, you need money.<br><br>
+        <strong style="color:var(--yellow)">3. Asks for unlimited usage rights</strong> — "We can use your content however we want, forever" is not a reasonable term. Always cap usage rights by scope and time.<br><br>
+        <strong style="color:var(--yellow)">4. Requires exclusivity without paying for it</strong> — Exclusivity costs money. If a brand asks you not to work with competitors for 90 days but doesn't add an exclusivity fee, they're taking something for free.<br><br>
+        <strong style="color:var(--yellow)">5. Wants to approve all your content (not just the integration)</strong> — Some brands try to insert approval rights over your non-sponsored content. This is a hard no.<br><br>
+        <strong style="color:var(--yellow)">6. "We'll pay after 60/90/net-120 days"</strong> — Net-30 is industry standard. Net-60 is a stretch. Net-90 or beyond is exploitative for small creators.<br><br>
+        <strong style="color:var(--yellow)">7. Demands you post a specific number of times with no additional pay</strong> — If the scope creeps during negotiation (one video becomes three posts), the compensation must increase.<br><br>
+        <strong style="color:var(--yellow)">8. "We're a startup, we can't afford your full rate but it's great exposure"</strong> — Exposure doesn't pay your hosting bill. If they can't afford your rate, they can afford a smaller deliverable at your rate.<br><br>
+        <strong style="color:var(--yellow)">9. Asks you to make performance claims not backed by evidence</strong> — "Say our product increases metabolism by 40%" with no study to back it up is both an FTC violation and a legal liability for you.<br><br>
+        <strong style="color:var(--yellow)">10. No contact name — only a generic info@ email</strong> — Legitimate brand partnerships come from a real person at the company. Generic email = likely low-quality outreach.<br><br>
+        <strong style="color:var(--yellow)">11. Requires you to buy the product and they'll "reimburse you"</strong> — Legitimate brands send product or provide a discount code. Asking you to purchase is a scam signal.<br><br>
+        <strong style="color:var(--yellow)">12. The brand has no web presence or very new social accounts</strong> — Do your due diligence. Check the brand's website, reviews, and BBB/Trustpilot before signing.<br><br>
+        <strong style="color:var(--yellow)">13. They want to write the script for you entirely</strong> — Brands can provide talking points and key messages. A fully scripted integration sounds fake, performs worse, and isn't your voice.<br><br>
+        <strong style="color:var(--yellow)">14. They require you to delete or edit the content after it publishes</strong> — Once published, removing content affects your analytics, SEO, and audience trust. Put a removal clause in writing — it should cost extra.<br><br>
+        <strong style="color:var(--yellow)">15. They contact you urgently and want a decision within 24 hours</strong> — Artificial urgency is a pressure tactic. Legitimate campaigns plan weeks ahead. Pressure for an immediate decision almost always means they're lowballing and hoping you don't have time to think.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="scripts">
+    <div class="section-num">Section 06</div>
+    <h2>Negotiation Scripts</h2>
+    <p>These are word-for-word responses for the most common pushback scenarios you'll encounter. Read these until they feel natural, then adapt them to your voice.</p>
+
+    <h3>Scenario 1: "Your rate is too high."</h3>
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <div class="card-desc">"I understand — and I want to find something that works for both of us. My rate reflects what I need to make the integration worth the opportunity cost for my audience. Can you tell me what budget you're working with? That'll help me tell you honestly whether we can make something work, or what scope would fit within that number."</div>
+    </div>
+
+    <h3>Scenario 2: "Can you do it for exposure / a testimonial?"</h3>
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <div class="card-desc">"I appreciate the offer, but I don't take on integrations without compensation — it's a matter of maintaining the right relationship with my audience and being fair to myself as a professional. If your budget is limited, I'd love to look at a smaller deliverable that fits what you can spend. What's the number you're working with?"</div>
+    </div>
+
+    <h3>Scenario 3: "We need unlimited usage rights."</h3>
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <div class="card-desc">"Unlimited usage rights aren't something I offer in a standard package — they're a significant add-on because they affect my ability to use that content in my own portfolio and because it changes the value of what I'm delivering. I can offer usage rights for [YOUR CHANNEL / BRAND'S OWNED CHANNELS] for 12 months at an additional [AMOUNT]. Paid ad whitelisting is a separate add-on at [AMOUNT]. Which usage scenario is most important to you?"</div>
+    </div>
+
+    <h3>Scenario 4: "We need the video to go live in 3 days."</h3>
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <div class="card-desc">"I can accommodate a rush timeline, but it requires a rush fee of [20-30%] added to the base rate — that covers rescheduling existing commitments and prioritizing your project in my production queue. If the timeline has any flexibility, [2 weeks] is my standard lead time, which wouldn't require the rush fee. Which works better for your campaign?"</div>
+    </div>
+
+    <h3>Scenario 5: "We want 3 revisions included."</h3>
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <div class="card-desc">"My standard package includes one round of revisions — that covers factual corrections, messaging alignment, and small adjustments. I've found that one round is sufficient for 95% of partnerships when we align on talking points before I script. Additional revision rounds are available at [AMOUNT] each. But honestly, if we do a quick 15-minute alignment call before I write, you'll likely find that one round covers everything you need."</div>
+    </div>
+
+    <h3>Scenario 6: "We need exclusivity for the whole year."</h3>
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <div class="card-desc">"Year-long exclusivity in my niche would significantly limit my partnership revenue — so the fee for that kind of arrangement would be substantially higher than a standard deal. I can do category exclusivity for 30 days at [RATE + 25%], or 60 days at [RATE + 40%]. Full-year exclusivity would need to be structured as an ambassador arrangement at [MONTHLY RATE × 12]. Would the shorter exclusivity window accomplish what you're trying to protect?"</div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>The reframe principle:</strong> Never let a brand define the negotiation as "creator asking for money." Reframe every conversation as "two professionals figuring out whether their goals align." This small mental shift changes your posture, and brands can feel it.</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign — Brand Deal Negotiation Pack</div>
+    <div class="doc-footer-note">Personal use license. Do not redistribute.</div>
+  </div>
+
+</div>
+</body>
+</html>

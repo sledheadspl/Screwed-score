@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creator OS Bundle — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:800px;margin:0 auto;padding:60px 32px}
+  /* Header */
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+  .doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  /* TOC */
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px;space-y:4px}
+  .toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none}
+  .toc a:hover{color:var(--cyan)}
+  /* Sections */
+  .section{margin-bottom:64px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+  h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+  h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  /* Cards */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  /* System blocks */
+  .system{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+  .system-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+  .system-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .system-name{font-size:16px;font-weight:700;color:var(--text)}
+  .system-tag{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-left:auto;padding:4px 10px;border-radius:100px}
+  .system-body{padding:20px 24px}
+  .system-body ul{padding-left:0;list-style:none}
+  .system-body li{font-size:13px;color:rgba(242,242,242,.55);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+  .system-body li:last-child{border-bottom:none}
+  .system-body li::before{content:'→';color:var(--cyan);flex-shrink:0;margin-top:1px}
+  /* Code/formula blocks */
+  .formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre}
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+  tr:last-child td{border-bottom:none}
+  /* Callout */
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+  .callout-text strong{color:var(--text)}
+  /* Steps */
+  .steps{counter-reset:step;margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:20px;position:relative}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+  .step-content{padding-top:4px}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  /* Roadmap */
+  .roadmap-week{border-left:2px solid var(--border);padding-left:20px;margin-bottom:28px;position:relative}
+  .roadmap-week::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg)}
+  .roadmap-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+  .roadmap-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+  .roadmap-tasks{font-size:13px;color:rgba(242,242,242,.5)}
+  .roadmap-tasks li{margin-bottom:4px}
+  /* Footer */
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}
+    .formula{background:#f5f5f5;color:#0070c0}.system{border:1px solid #ddd}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="doc-header">
+    <div class="doc-badge">✦ REMbyDesign · Productivity Digital Media</div>
+    <div class="doc-title">Creator OS Bundle</div>
+    <div class="doc-subtitle">Complete operating system for digital creators. Five interconnected systems to run your business like a machine — from content to cash flow.</div>
+    <div class="doc-meta">
+      <span>Version 1.0</span>
+      <span>97 pages of systems</span>
+      <span>Notion + Sheets ready</span>
+      <span>REMbyDesign © 2025</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#s1">How to Use This Bundle</a></li>
+      <li><a href="#s2">The 5 Creator Systems</a></li>
+      <li><a href="#s3">Notion Workspace Setup</a></li>
+      <li><a href="#s4">10 Essential Automations</a></li>
+      <li><a href="#s5">Templates & Frameworks</a></li>
+      <li><a href="#s6">90-Day Implementation Roadmap</a></li>
+    </ol>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section" id="s1">
+    <div class="section-num">Section 01</div>
+    <h2>How to Use This Bundle</h2>
+    <p>This bundle is not a collection of tips — it is a complete operating architecture for your creator business. Every system connects to every other system. Follow the setup order to get maximum value.</p>
+
+    <div class="callout cyan">
+      <div class="callout-icon">⚡</div>
+      <div class="callout-text"><strong>Implementation order matters.</strong> Build Systems 1 → 5 in sequence. Each system feeds the next. Skipping ahead creates gaps that cost time later.</div>
+    </div>
+
+    <h3>The Creator OS Philosophy</h3>
+    <p>Most creators operate reactively — responding to trends, creating content on the fly, managing their business from their inbox. The Creator OS flips this. You operate proactively, from systems, with your time protected at every layer.</p>
+
+    <div class="card">
+      <div class="card-title">The Four Principles</div>
+      <div class="card-desc">
+        <strong style="color:var(--text)">1. Capture everything.</strong> No idea, task, or insight lives in your head. It goes into the system.<br><br>
+        <strong style="color:var(--text)">2. Process weekly.</strong> One 90-minute weekly review keeps everything current. Nothing falls through.<br><br>
+        <strong style="color:var(--text)">3. Automate the repeatable.</strong> If you do it more than once, it should happen automatically.<br><br>
+        <strong style="color:var(--text)">4. Review and adjust.</strong> Monthly review: what worked, what didn't, what changes.
+      </div>
+    </div>
+
+    <h3>Tools Required</h3>
+    <table>
+      <thead><tr><th>Tool</th><th>Use</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Notion</td><td>Central OS hub (all databases)</td><td>Free / $8/mo Plus</td></tr>
+        <tr><td>Google Sheets</td><td>Revenue & metrics tracking</td><td>Free</td></tr>
+        <tr><td>Make (Integromat)</td><td>Automations</td><td>Free tier available</td></tr>
+        <tr><td>Zapier</td><td>Backup automations (simpler flows)</td><td>Free tier available</td></tr>
+        <tr><td>Google Calendar</td><td>Time blocking & deadlines</td><td>Free</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section" id="s2">
+    <div class="section-num">Section 02</div>
+    <h2>The 5 Creator Systems</h2>
+    <p>Your creator business runs on five interdependent systems. Miss one and you feel it everywhere.</p>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(0,229,255,.1)">📡</div>
+        <div>
+          <div class="system-name">System 1 — Content Engine</div>
+          <div style="font-size:12px;color:var(--sub)">Ideation → Creation → Publishing → Repurposing</div>
+        </div>
+        <div class="system-tag" style="background:rgba(0,229,255,.1);color:var(--cyan)">Core</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Content Idea Bank (Notion database capturing all ideas with status, format, platform)</li>
+          <li>Content Brief template (hook, outline, CTA, thumbnail concept, repurpose plan)</li>
+          <li>Editorial calendar with rolling 4-week view</li>
+          <li>Publishing checklist per platform (YouTube, Instagram, LinkedIn, TikTok)</li>
+          <li>Repurposing matrix: every long-form piece → 8+ short-form assets automatically</li>
+          <li>Performance tracking: views, engagement rate, revenue attribution per piece</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,214,10,.1)">💰</div>
+        <div>
+          <div class="system-name">System 2 — Revenue Engine</div>
+          <div style="font-size:12px;color:var(--sub)">Income streams → Tracking → Optimization</div>
+        </div>
+        <div class="system-tag" style="background:rgba(255,214,10,.1);color:var(--yellow)">Revenue</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Income stream tracker (products, brand deals, AdSense, subscriptions, services)</li>
+          <li>Monthly P&L dashboard with automated formulas</li>
+          <li>Brand deal pipeline (prospect → outreach → negotiation → signed → delivered → paid)</li>
+          <li>Product launch calendar integrated with content calendar</li>
+          <li>Revenue target tracker with progress bars and milestone alerts</li>
+          <li>Tax preparation bucket (auto-flag income over thresholds)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(48,209,88,.1)">⚙️</div>
+        <div>
+          <div class="system-name">System 3 — Operations Hub</div>
+          <div style="font-size:12px;color:var(--sub)">Tasks → Projects → People → Processes</div>
+        </div>
+        <div class="system-tag" style="background:rgba(48,209,88,.1);color:var(--green)">Ops</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Master task inbox (capture → triage → assign → track)</li>
+          <li>Project database with status, deadline, priority, and linked tasks</li>
+          <li>SOP library — every repeatable process documented once, used forever</li>
+          <li>Vendor/contractor database (name, rate, specialty, portfolio, contact)</li>
+          <li>Weekly review template (accomplishments, blockers, next week priorities)</li>
+          <li>Daily shutdown checklist ensuring clean handoff to tomorrow-you</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(167,139,250,.1)">📚</div>
+        <div>
+          <div class="system-name">System 4 — Learning Vault</div>
+          <div style="font-size:12px;color:var(--sub)">Input → Processing → Application → Retention</div>
+        </div>
+        <div class="system-tag" style="background:rgba(167,139,250,.1);color:#a78bfa">Growth</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Book notes database (title, key insights, action items, date read)</li>
+          <li>Course & video tracker with implementation status</li>
+          <li>Idea → Content pipeline (insights that become content pieces)</li>
+          <li>Second Brain inbox for web clips, articles, and research</li>
+          <li>Monthly learning review: what did I apply this month?</li>
+          <li>Skills development tracker with target levels and resources</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,59,48,.1)">🎯</div>
+        <div>
+          <div class="system-name">System 5 — Goals & Vision</div>
+          <div style="font-size:12px;color:var(--sub)">Vision → Annual → Quarterly → Weekly</div>
+        </div>
+        <div class="system-tag" style="background:rgba(255,59,48,.1);color:var(--red)">Strategy</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>3-year vision document (revenue, audience, lifestyle, impact targets)</li>
+          <li>Annual goal breakdown with quarterly milestones</li>
+          <li>OKR framework: objectives with 3 key results each, graded quarterly</li>
+          <li>Not-to-do list (as important as your to-do list)</li>
+          <li>Monthly scorecard: rate each area of business 1–10, identify gaps</li>
+          <li>Annual review template (wins, lessons, eliminations, upgrades)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section" id="s3">
+    <div class="section-num">Section 03</div>
+    <h2>Notion Workspace Setup</h2>
+    <p>Build your Creator OS in Notion using these exact database structures and formulas.</p>
+
+    <h3>Master Database Structure</h3>
+    <div class="callout yellow">
+      <div class="callout-icon">💡</div>
+      <div class="callout-text"><strong>Create these 6 databases first.</strong> Everything else is a view or filtered version of these core tables.</div>
+    </div>
+
+    <table>
+      <thead><tr><th>Database</th><th>Key Properties</th><th>Relations</th></tr></thead>
+      <tbody>
+        <tr><td><strong>📋 Tasks</strong></td><td>Status, Priority, Due Date, Project, Energy Level</td><td>→ Projects, Content</td></tr>
+        <tr><td><strong>📁 Projects</strong></td><td>Status, Phase, Revenue Goal, Deadline, Owner</td><td>→ Tasks, Content, Revenue</td></tr>
+        <tr><td><strong>📡 Content</strong></td><td>Platform, Format, Status, Publish Date, Views, Revenue</td><td>→ Projects, Ideas</td></tr>
+        <tr><td><strong>💡 Ideas</strong></td><td>Type, Score (1–10), Status, Platform, Date Captured</td><td>→ Content</td></tr>
+        <tr><td><strong>💰 Revenue</strong></td><td>Type, Amount, Date, Platform, Category, Tax Flag</td><td>→ Projects, Content</td></tr>
+        <tr><td><strong>🤝 Contacts</strong></td><td>Type, Company, Status, Last Contact, Deal Value</td><td>→ Revenue, Projects</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Essential Notion Formulas</h3>
+
+    <h4>Content Scoring Formula (Ideas Database)</h4>
+    <div class="formula">// Scores an idea 1-100 based on effort vs. potential
+if(prop("Potential") > 7 and prop("Effort") < 4,
+  "🔥 High Priority",
+  if(prop("Potential") > 5,
+    "📊 Medium Priority",
+    "🗄️ Archive"
+  )
+)</div>
+
+    <h4>Weekly Revenue Rollup (Revenue Database)</h4>
+    <div class="formula">// Sum revenue entries where date is within current week
+formatDate(now(), "W") == formatDate(prop("Date"), "W")</div>
+
+    <h4>Project Health Score (Projects Database)</h4>
+    <div class="formula">// Returns Red/Yellow/Green based on deadline proximity
+if(dateBetween(prop("Deadline"), now(), "days") < 3,
+  "🔴 At Risk",
+  if(dateBetween(prop("Deadline"), now(), "days") < 7,
+    "🟡 Watch",
+    "🟢 On Track"
+  )
+)</div>
+
+    <h4>Content Performance Rating (Content Database)</h4>
+    <div class="formula">// Grades content A–D based on views vs. your average
+if(prop("Views") > prop("Channel Avg") * 2, "A",
+  if(prop("Views") > prop("Channel Avg"), "B",
+    if(prop("Views") > prop("Channel Avg") * 0.5, "C", "D")
+  )
+)</div>
+
+    <h3>Recommended Views to Build</h3>
+    <div class="card"><div class="card-title">📅 Today View</div><div class="card-desc">Filter: Tasks where Due Date = Today AND Status ≠ Done. Sort by Priority. This is your daily cockpit.</div></div>
+    <div class="card"><div class="card-title">📡 Content Pipeline</div><div class="card-desc">Kanban view of Content database: Idea → Script → Recorded → Edited → Scheduled → Published. Drag between columns.</div></div>
+    <div class="card"><div class="card-title">💰 Revenue Dashboard</div><div class="card-desc">Gallery view grouped by Month. Formula property calculates running monthly total. Link to Google Sheets for charts.</div></div>
+    <div class="card"><div class="card-title">🔥 Weekly Priority Board</div><div class="card-desc">Filter: Tasks created this week OR due this week. Group by Project. Shows exactly where your week's effort goes.</div></div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section" id="s4">
+    <div class="section-num">Section 04</div>
+    <h2>10 Essential Automations</h2>
+    <p>These automations collectively save 10–15 hours per week once set up. Each one runs forever with zero maintenance.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">New YouTube Video → Auto-create repurposing tasks</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> YouTube channel — new video published · <strong>Action:</strong> Create 8 tasks in Notion (Instagram Reel, LinkedIn post, Twitter thread, Short, Blog post, Newsletter section, Quote card, Pinterest pin) all linked to the original video, due in 48 hours.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Brand deal inquiry email → CRM entry</div>
+          <div class="step-desc"><strong>Tool:</strong> Zapier · <strong>Trigger:</strong> Gmail — new email matching "brand deal" OR "partnership" OR "collaboration" · <strong>Action:</strong> Create record in Notion Contacts database with brand name, email, and status "Inbound Lead." Tag for weekly review.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Stripe payment → Revenue log + celebration</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> Stripe — payment succeeded · <strong>Action:</strong> Log to Notion Revenue database AND Google Sheets tab. If amount > $500, send Slack/Discord notification "💰 $X sale just landed."</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Weekly performance report auto-generated</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> Schedule — every Monday 8am · <strong>Action:</strong> Pull YouTube Analytics, Stripe revenue, and Notion task completion %. Compile into a formatted email/Slack message. No manual pulling numbers.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Content idea saved to Notion from anywhere</div>
+          <div class="step-desc"><strong>Tool:</strong> Zapier · <strong>Trigger:</strong> Email to ideas@yourdomain.com OR specific hashtag in notes app · <strong>Action:</strong> Create record in Notion Ideas database with captured text, date, and status "New." Review in weekly session.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Overdue tasks → Morning digest</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> Schedule — every weekday 7am · <strong>Action:</strong> Query Notion for tasks where Due Date is past AND Status ≠ Done. Format as a clean list and send to email/SMS. Urgency filter: tasks 3+ days overdue flagged in red.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">New subscriber → Welcome sequence trigger</div>
+          <div class="step-desc"><strong>Tool:</strong> Zapier · <strong>Trigger:</strong> ConvertKit/Beehiiv — new subscriber · <strong>Action:</strong> Tag subscriber based on which lead magnet they used. Enroll in corresponding 5-email welcome sequence. Add to segment in CRM.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <div class="step-title">Monthly revenue report to Google Sheets</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> Schedule — 1st of each month · <strong>Action:</strong> Pull all Notion Revenue entries from prior month. Calculate totals by category. Append row to Google Sheets dashboard. Update running annual total chart automatically.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">9</div>
+        <div class="step-content">
+          <div class="step-title">Published content → Social cross-post notifications</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> Notion Content database — status changed to "Published" · <strong>Action:</strong> Send reminder notifications to post to secondary platforms within 2 hours. Include caption template prefilled from the content brief.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">10</div>
+        <div class="step-content">
+          <div class="step-title">Weekly content schedule → Calendar blocks</div>
+          <div class="step-desc"><strong>Tool:</strong> Make · <strong>Trigger:</strong> Schedule — every Friday 5pm · <strong>Action:</strong> Pull next week's content from Notion. Create Google Calendar events for each creation/recording/editing session with 2-hour blocks. No manual scheduling needed.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section" id="s5">
+    <div class="section-num">Section 05</div>
+    <h2>Templates & Frameworks</h2>
+
+    <h3>Content Brief Template</h3>
+    <div class="card">
+      <div class="card-title">📄 Content Brief — [Title]</div>
+      <div class="card-desc" style="font-size:13px;line-height:2">
+        <strong style="color:var(--text)">Hook (first 3 seconds/words):</strong> _______________<br>
+        <strong style="color:var(--text)">Core Premise:</strong> What's the one thing this piece proves or teaches?<br>
+        <strong style="color:var(--text)">Target Person:</strong> Who specifically benefits from this? What's their frustration?<br>
+        <strong style="color:var(--text)">Outline:</strong> [Intro] → [Point 1] → [Point 2] → [Point 3] → [CTA]<br>
+        <strong style="color:var(--text)">CTA:</strong> What do I want them to do after?<br>
+        <strong style="color:var(--text)">Repurpose Plan:</strong> Reel? Thread? Newsletter? Blog?<br>
+        <strong style="color:var(--text)">SEO Keyword (if applicable):</strong> _______________<br>
+        <strong style="color:var(--text)">Publish Date:</strong> _______________ | <strong style="color:var(--text)">Platform:</strong> _______________
+      </div>
+    </div>
+
+    <h3>Weekly Review Template (90 minutes every Sunday)</h3>
+    <div class="card">
+      <div class="card-title">📋 Weekly Review</div>
+      <div class="card-desc" style="font-size:13px;line-height:2.2">
+        <strong style="color:var(--cyan)">CAPTURE (20 min)</strong><br>
+        → Clear all inboxes: email, notes, voice memos, texts, paper<br>
+        → Every open loop goes into Notion<br><br>
+        <strong style="color:var(--cyan)">CLARIFY (20 min)</strong><br>
+        → Process every new item: is it actionable? By when? By whom?<br>
+        → Assign due dates, priorities, and projects<br><br>
+        <strong style="color:var(--cyan)">REVIEW (30 min)</strong><br>
+        → Check all active projects: what's the next action?<br>
+        → Review last week: what did I complete? What slipped? Why?<br>
+        → Revenue check: where am I vs. monthly goal?<br><br>
+        <strong style="color:var(--cyan)">PLAN (20 min)</strong><br>
+        → Identify the 3 most important tasks for next week<br>
+        → Block time on the calendar for deep work<br>
+        → Set content publishing schedule for the week
+      </div>
+    </div>
+
+    <h3>Brand Deal Scoring Matrix</h3>
+    <table>
+      <thead><tr><th>Criteria</th><th>Score (1–5)</th><th>Weight</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Brand alignment with audience</td><td>___</td><td>30%</td><td>Will audience trust this?</td></tr>
+        <tr><td>Compensation vs. market rate</td><td>___</td><td>25%</td><td>CPM × views estimate</td></tr>
+        <tr><td>Creative freedom given</td><td>___</td><td>20%</td><td>Can you make it authentic?</td></tr>
+        <tr><td>Exclusivity requirements</td><td>___</td><td>15%</td><td>Does it block other deals?</td></tr>
+        <tr><td>Payment terms</td><td>___</td><td>10%</td><td>Net 30? Net 60? On delivery?</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--sub)">Weighted score below 60%: decline or renegotiate. Above 80%: prioritize.</p>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section" id="s6">
+    <div class="section-num">Section 06</div>
+    <h2>90-Day Implementation Roadmap</h2>
+    <p>Follow this sequence exactly. Each phase builds on the last.</p>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 1–2</div>
+      <div class="roadmap-title">Foundation: Build the Notion Workspace</div>
+      <div class="roadmap-tasks">
+        <li>Create 6 master databases (Tasks, Projects, Content, Ideas, Revenue, Contacts)</li>
+        <li>Set up 4 essential views per database</li>
+        <li>Enter all current active projects and tasks</li>
+        <li>Migrate existing content archive</li>
+      </div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 3–4</div>
+      <div class="roadmap-title">Revenue: Wire the Money System</div>
+      <div class="roadmap-tasks">
+        <li>Set up Revenue database and Google Sheets mirror</li>
+        <li>Log all existing income streams</li>
+        <li>Connect Stripe → Notion automation (Automation #3)</li>
+        <li>Establish monthly revenue target and tracking</li>
+      </div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 5–6</div>
+      <div class="roadmap-title">Content: Activate the Content Engine</div>
+      <div class="roadmap-tasks">
+        <li>Build content calendar with 4-week rolling view</li>
+        <li>Set up YouTube → repurposing tasks automation (Automation #1)</li>
+        <li>Create first 10 content briefs using the template</li>
+        <li>Establish publishing rhythm (days/times per platform)</li>
+      </div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 7–8</div>
+      <div class="roadmap-title">Automations: Deploy All 10</div>
+      <div class="roadmap-tasks">
+        <li>Build automations 1–5 in Make</li>
+        <li>Build automations 6–10 in Zapier or Make</li>
+        <li>Test each automation with live data</li>
+        <li>Document any custom steps in your SOP library</li>
+      </div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 9–10</div>
+      <div class="roadmap-title">Refinement: Weekly Review Habit</div>
+      <div class="roadmap-tasks">
+        <li>Complete first 2 full weekly reviews using the template</li>
+        <li>Identify what's working, what needs adjustment</li>
+        <li>Prune any unused databases or views</li>
+        <li>Document your personal SOPs based on your workflow</li>
+      </div>
+    </div>
+
+    <div class="roadmap-week">
+      <div class="roadmap-label">Week 11–12</div>
+      <div class="roadmap-title">Optimization: Review and Accelerate</div>
+      <div class="roadmap-tasks">
+        <li>90-day retrospective: what revenue did the system generate?</li>
+        <li>Identify highest-leverage content from performance data</li>
+        <li>Set Q2 goals using the OKR framework</li>
+        <li>Hire/delegate based on what the ops system surfaces</li>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-icon">🏆</div>
+      <div class="callout-text"><strong>By Day 90:</strong> You have a fully operational creator business that runs from systems, not willpower. Your content compounds, your revenue is visible, and your time is protected. This is the unfair advantage.</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign · Creator OS Bundle v1.0</div>
+    <div class="doc-footer-note">Licensed for personal use only. Not for redistribution.</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revenue Dashboard Kit — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:800px;margin:0 auto;padding:60px 32px}
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+  .doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px}.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none}.toc a:hover{color:var(--cyan)}
+  .section{margin-bottom:64px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+  h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+  h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+  .callout-text strong{color:var(--text)}
+  .steps{margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:20px}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+  .step-content{padding-top:4px}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+  tr:last-child td{border-bottom:none}
+  .email-template{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+  .email-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--sub)}
+  .email-header span{color:rgba(242,242,242,.7)}
+  .email-body{padding:20px;font-size:13px;color:rgba(242,242,242,.65);line-height:1.9;white-space:pre-wrap}
+  .email-body strong{color:var(--cyan)}
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-badge">Premium Digital Product</div>
+    <h1 class="doc-title">Revenue Dashboard Kit</h1>
+    <p class="doc-subtitle">Custom Google Sheets + Notion dashboard to consolidate income, track growth, surface opportunities, and make smarter financial decisions.</p>
+    <div class="doc-meta">
+      <span>Value: $67</span>
+      <span>REMbyDesign</span>
+      <span>Version 1.0</span>
+      <span>2026 Edition</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#architecture">Dashboard Architecture</a></li>
+      <li><a href="#income">Tab 1: Income Tracker</a></li>
+      <li><a href="#expenses">Tab 2: Expense Tracker</a></li>
+      <li><a href="#pl">Tab 3: Monthly P&amp;L</a></li>
+      <li><a href="#growth">Tab 4: Growth Dashboard</a></li>
+      <li><a href="#notion">Notion Mirror Setup</a></li>
+      <li><a href="#formulas">All Google Sheets Formulas</a></li>
+      <li><a href="#review">Monthly Review Process</a></li>
+      <li><a href="#optimize">Income Stream Optimization Guide</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="architecture">
+    <div class="section-num">Section 01</div>
+    <h2>Dashboard Architecture</h2>
+    <p>The Revenue Dashboard is built as a single Google Sheets workbook with 4 interconnected tabs. Data flows in one direction: you enter raw data in Tabs 1 and 2, and Tabs 3 and 4 pull from those automatically via formulas. You never manually enter anything into Tabs 3 or 4.</p>
+
+    <div class="card">
+      <div class="card-title">4-Tab Structure Overview</div>
+      <div class="card-desc">
+        <strong style="color:var(--cyan)">Tab 1 — Income Tracker:</strong> Every dollar of revenue you earn, logged individually with date, source, type, and tax info.<br><br>
+        <strong style="color:var(--cyan)">Tab 2 — Expense Tracker:</strong> Every business expense, categorized and flagged for tax deductibility.<br><br>
+        <strong style="color:var(--cyan)">Tab 3 — Monthly P&amp;L:</strong> Auto-generated profit and loss summary, month by month, year-to-date, with profit margins.<br><br>
+        <strong style="color:var(--cyan)">Tab 4 — Growth Dashboard:</strong> Month-over-month growth rates, revenue stream rankings, 12-month rolling totals, and forward projections.
+      </div>
+    </div>
+
+    <h3>Setup Instructions</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create a new Google Sheets file</div><div class="step-desc">Name it "Revenue Dashboard — [YEAR]." Create 4 tabs and name them exactly: Income, Expenses, P&amp;L, Growth. Tab order matters for formula references.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Set your fiscal year</div><div class="step-desc">In a "Settings" cell block at the top of the P&amp;L tab, define: Fiscal Year Start Month (cell B1), Tax Rate % (cell B2), Business Name (cell B3). All formulas will reference these cells so you can update once and it propagates everywhere.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Build each tab using the specs below</div><div class="step-desc">Follow sections 2-5 in order. Build Income first, then Expenses, then P&amp;L (which depends on both), then Growth (which depends on P&amp;L).</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Freeze header rows</div><div class="step-desc">On each data tab, freeze Row 1 (View > Freeze > 1 Row). This keeps your headers visible while scrolling through a full year of data.</div></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="income">
+    <div class="section-num">Section 02</div>
+    <h2>Tab 1: Income Tracker</h2>
+    <p>Every income entry is one row. Log income when it is received (cash basis), not when it is invoiced. This keeps your numbers grounded in actual cash flow.</p>
+
+    <h3>Column Headers (Row 1)</h3>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Header</th><th>Data Type</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>Date</td><td>Date (MM/DD/YYYY)</td><td>Date payment was received</td></tr>
+        <tr><td>B</td><td>Platform / Payer</td><td>Text</td><td>YouTube, Brand Name, Gumroad, Patreon, Client Name, etc.</td></tr>
+        <tr><td>C</td><td>Income Type</td><td>Dropdown</td><td>AdSense, Sponsorship, Digital Product, Coaching, Affiliate, Membership, Consulting, Other</td></tr>
+        <tr><td>D</td><td>Description</td><td>Text</td><td>Brief note — "August YouTube AdSense," "Nike integration — Invoice #42"</td></tr>
+        <tr><td>E</td><td>Gross Amount</td><td>Currency ($)</td><td>Amount received before any fees or taxes</td></tr>
+        <tr><td>F</td><td>Platform Fee %</td><td>Percentage</td><td>Gumroad takes 10%, Stripe 2.9%+30¢, PayPal 3.49%, etc.</td></tr>
+        <tr><td>G</td><td>Platform Fee $</td><td>Formula</td><td>=E2*F2 — auto-calculated</td></tr>
+        <tr><td>H</td><td>Net Amount</td><td>Formula</td><td>=E2-G2 — what you actually kept</td></tr>
+        <tr><td>I</td><td>Tax %</td><td>Percentage</td><td>Your estimated self-employment tax rate (typically 25-30%)</td></tr>
+        <tr><td>J</td><td>Tax Set-Aside $</td><td>Formula</td><td>=H2*I2 — transfer this to your tax account each time</td></tr>
+        <tr><td>K</td><td>Net After Tax</td><td>Formula</td><td>=H2-J2 — your spendable income</td></tr>
+        <tr><td>L</td><td>Running Total (Net)</td><td>Formula</td><td>=SUM($H$2:H2) — cumulative net income for the year</td></tr>
+        <tr><td>M</td><td>Month</td><td>Formula</td><td>=TEXT(A2,"MMMM YYYY") — used for P&amp;L tab lookups</td></tr>
+        <tr><td>N</td><td>Quarter</td><td>Formula</td><td>=CHOOSE(MONTH(A2),"Q1","Q1","Q1","Q2","Q2","Q2","Q3","Q3","Q3","Q4","Q4","Q4")</td></tr>
+        <tr><td>O</td><td>Notes</td><td>Text</td><td>Contract reference, invoice number, any relevant notes</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Income Type Dropdown Setup</h3>
+    <p>Select Column C, go to Data > Data Validation > Dropdown. Enter these options: AdSense, Sponsorship, Digital Product, Coaching, Affiliate, Membership, Consulting, Grant/Prize, Speaking Fee, Other.</p>
+
+    <div class="callout cyan">
+      <div class="callout-icon">&#9889;</div>
+      <div class="callout-text"><strong>Tax set-aside discipline:</strong> Every time you log income in Column J, immediately transfer that amount to a dedicated tax savings account. The most common financial mistake for solo creators is spending tax money before the bill comes. Treat Column J as money that was never yours.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="expenses">
+    <div class="section-num">Section 03</div>
+    <h2>Tab 2: Expense Tracker</h2>
+    <p>Track every business expense — no matter how small. A $12/month software subscription tracked across 12 months becomes $144 in tax deductions. Most creators undertrack expenses and overpay taxes by hundreds of dollars per year.</p>
+
+    <h3>Column Headers (Row 1)</h3>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Header</th><th>Data Type</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>Date</td><td>Date</td><td>Date of expense</td></tr>
+        <tr><td>B</td><td>Vendor / Payee</td><td>Text</td><td>Adobe, Canva, Amazon (equipment), etc.</td></tr>
+        <tr><td>C</td><td>Category</td><td>Dropdown</td><td>See category list below</td></tr>
+        <tr><td>D</td><td>Description</td><td>Text</td><td>"Adobe Creative Cloud annual," "Blue Yeti microphone," "Hosting renewal"</td></tr>
+        <tr><td>E</td><td>Amount</td><td>Currency ($)</td><td>Total amount paid</td></tr>
+        <tr><td>F</td><td>Deductible %</td><td>Percentage</td><td>100% for purely business items; prorated for mixed-use (e.g., home office = % of home)</td></tr>
+        <tr><td>G</td><td>Deductible Amount</td><td>Formula</td><td>=E2*F2</td></tr>
+        <tr><td>H</td><td>Tax Saved</td><td>Formula</td><td>=G2*P&amp;L!$B$2 (references your tax rate from P&amp;L settings)</td></tr>
+        <tr><td>I</td><td>Payment Method</td><td>Dropdown</td><td>Business Card, Personal Card, Bank Transfer, PayPal, Cash</td></tr>
+        <tr><td>J</td><td>Receipt Saved?</td><td>Dropdown</td><td>Yes / No — critical for audit protection</td></tr>
+        <tr><td>K</td><td>Month</td><td>Formula</td><td>=TEXT(A2,"MMMM YYYY")</td></tr>
+        <tr><td>L</td><td>Notes</td><td>Text</td><td>Business purpose note for any expense over $75</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Expense Category Dropdown</h3>
+    <div class="card">
+      <div class="card-title">Business Expense Categories (IRS-Aligned)</div>
+      <div class="card-desc">
+        Equipment &amp; Hardware — Cameras, mics, lighting, computers, hard drives, tripods<br>
+        Software &amp; Subscriptions — Adobe, Canva, editing software, scheduling tools, AI tools<br>
+        Platform Fees — Gumroad fees, Stripe fees, PayPal fees, marketplace commissions<br>
+        Marketing &amp; Advertising — Paid ads, promotion, PR outreach<br>
+        Education &amp; Training — Courses, books, conferences, coaching you receive<br>
+        Home Office — Prorated rent/mortgage, utilities, internet (% of home used for work)<br>
+        Travel — Business travel, mileage, accommodation for content trips<br>
+        Contractors — Editors, designers, VAs, anyone you pay for services<br>
+        Legal &amp; Professional — Accounting fees, legal fees, business insurance<br>
+        Website &amp; Hosting — Domain, hosting, website tools, email service providers<br>
+        Props &amp; Production — Items purchased specifically for content, sets, backgrounds<br>
+        Health Insurance — Self-employed health insurance premiums (100% deductible)<br>
+        Retirement — SEP-IRA or Solo 401k contributions<br>
+        Meals (Business) — 50% deductible for business meals with clients/collaborators<br>
+        Miscellaneous — Everything else; keep this category small for clean categorization
+      </div>
+    </div>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>Receipt rule:</strong> For any expense over $75, you need a receipt AND a note explaining the business purpose. "Adobe CC — video editing for channel" is sufficient. Keep all receipts in a dedicated Google Drive folder organized by month. Your future accountant will love you.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="pl">
+    <div class="section-num">Section 04</div>
+    <h2>Tab 3: Monthly P&amp;L</h2>
+    <p>This tab auto-generates from your Income and Expense data. Build the structure once — all the numbers populate automatically. It gives you a complete picture of every month's financial performance, side by side.</p>
+
+    <h3>P&amp;L Tab Structure</h3>
+    <p>Row 1: Settings block. Rows 3 onward: months across columns (Jan, Feb, Mar... Dec), then YTD total in a final column. Rows are your income/expense categories.</p>
+
+    <div class="formula">Settings Block (rows 1-2, fixed reference cells):
+B1: Fiscal Year Start    → 1 (January) or 4 (April), etc.
+B2: Tax Rate %          → 0.28 (28% estimated rate)
+B3: Business Name       → "Your Business Name"
+
+P&L Row Structure (Column A = Label, B-M = Jan-Dec, N = YTD):
+
+Row 5:  GROSS INCOME
+Row 6:  AdSense Revenue
+Row 7:  Sponsorships
+Row 8:  Digital Products
+Row 9:  Coaching / Consulting
+Row 10: Affiliates
+Row 11: Memberships
+Row 12: Other Income
+Row 13: [blank]
+Row 14: TOTAL GROSS INCOME      (SUM of rows 6-12 per column)
+Row 15: Platform Fees           (negative — pulled from Expense tab)
+Row 16: TOTAL NET INCOME        (Row 14 - Row 15)
+Row 17: [blank]
+Row 18: EXPENSES
+Row 19: Equipment & Hardware
+Row 20: Software & Subscriptions
+Row 21: Marketing & Advertising
+Row 22: Contractors
+Row 23: Education & Training
+Row 24: Home Office
+Row 25: Legal & Professional
+Row 26: Other Expenses
+Row 27: [blank]
+Row 28: TOTAL EXPENSES          (SUM of rows 19-26 per column)
+Row 29: [blank]
+Row 30: NET PROFIT              (Row 16 - Row 28)
+Row 31: PROFIT MARGIN %         (Row 30 / Row 14)
+Row 32: TAX SET-ASIDE           (Row 30 * B2)
+Row 33: TAKE-HOME (After Tax)   (Row 30 - Row 32)</div>
+
+    <h3>Key P&amp;L Formulas (Column B = January)</h3>
+    <div class="formula">AdSense Revenue (Row 6, Column B — January):
+=SUMPRODUCT((Income!$C$2:$C$1000="AdSense")*(Income!$M$2:$M$1000="January "&YEAR(TODAY())),Income!$H$2:$H$1000)
+
+Total Gross Income (Row 14, Column B):
+=SUM(B6:B12)
+
+Platform Fees from Expense tab (Row 15, Column B):
+=SUMPRODUCT((Expenses!$C$2:$C$1000="Platform Fees")*(Expenses!$K$2:$K$1000="January "&YEAR(TODAY())),Expenses!$E$2:$E$1000)*-1
+
+Total Expenses (Row 28, Column B):
+=SUMPRODUCT((Expenses!$K$2:$K$1000="January "&YEAR(TODAY())),Expenses!$G$2:$G$1000)*-1
+
+Net Profit (Row 30, Column B):
+=B16+B28
+
+Profit Margin % (Row 31, Column B):
+=IF(B14=0,0,B30/B14)
+Format this cell as Percentage.
+
+YTD Total (Column N, any row):
+=SUM(B[ROW]:M[ROW])
+
+Tax Set-Aside (Row 32, Column B):
+=IF(B30>0,B30*$B$2,0)
+Only calculate tax on positive profit months.</div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>Conditional formatting tip:</strong> Select Row 30 (Net Profit) across all months. Apply conditional formatting: positive values = green background, negative values = red background. At a glance you can see profitable vs. loss months for the entire year.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="growth">
+    <div class="section-num">Section 05</div>
+    <h2>Tab 4: Growth Dashboard</h2>
+    <p>This tab is your strategic lens. While the P&amp;L shows you what happened, the Growth Dashboard shows you velocity, trends, and what's working.</p>
+
+    <h3>Growth Dashboard Sections</h3>
+
+    <h4>Section A: Month-over-Month Revenue Growth</h4>
+    <div class="formula">MoM Growth % (for each month, starting Month 2):
+=IF(P&L!B30=0,"N/A",(P&L!C30-P&L!B30)/ABS(P&L!B30))
+Format as percentage. This tells you: did you grow or shrink vs. last month, and by how much?
+
+3-Month Rolling Average Revenue:
+=AVERAGE(P&L!B30,P&L!C30,P&L!D30)
+Recalculate per rolling window. Smooths out seasonal spikes.</div>
+
+    <h4>Section B: Income Stream Performance Ranking</h4>
+    <div class="formula">Best Performing Income Stream (by YTD total):
+=INDEX({"AdSense","Sponsorships","Digital Products","Coaching","Affiliates","Memberships"},
+ MATCH(MAX(P&L!N6,P&L!N7,P&L!N8,P&L!N9,P&L!N10,P&L!N11),
+ (P&L!N6,P&L!N7,P&L!N8,P&L!N9,P&L!N10,P&L!N11),0))
+
+% of Revenue per Stream:
+=P&L!N6/P&L!N14   (AdSense % of total — format as %)
+=P&L!N7/P&L!N14   (Sponsorships % of total)
+[Repeat for each stream]</div>
+
+    <h4>Section C: 12-Month Rolling Chart Setup</h4>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create a helper table in the Growth tab</div><div class="step-desc">Build a 2-column table: Column A = month label (auto-generated with TEXT formula), Column B = net profit for that month (pulled from P&amp;L tab). This will be the chart's data range.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Insert a line chart</div><div class="step-desc">Select the 2-column helper table. Insert > Chart > Line chart. Set X-axis to month labels, Y-axis to net profit. Add a secondary Y-axis series for cumulative YTD revenue (different color).</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Add a trendline</div><div class="step-desc">In chart editor, click the series > Add Trendline > Linear. This visualizes your growth trajectory and makes it easy to spot if you're trending up, flat, or down over the rolling 12 months.</div></div></div>
+    </div>
+
+    <h4>Section D: Revenue Projection Formula</h4>
+    <div class="formula">Simple linear projection (next month estimate):
+=FORECAST(MONTH(TODAY())+1,
+  {P&L!B30,P&L!C30,P&L!D30,P&L!E30,P&L!F30,P&L!G30},
+  {1,2,3,4,5,6})
+This fits a linear trend to your last 6 months and projects Month 7.
+
+Optimistic projection (last 3 months avg × 1.1):
+=AVERAGE(P&L!J30,P&L!K30,P&L!L30)*1.1
+
+Conservative projection (last 3 months avg × 0.9):
+=AVERAGE(P&L!J30,P&L!K30,P&L!L30)*0.9
+
+Annual projection (current monthly avg × 12):
+=AVERAGE(P&L!B30:P&L!L30)*12</div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="notion">
+    <div class="section-num">Section 06</div>
+    <h2>Notion Mirror Setup</h2>
+    <p>Notion is your human-readable dashboard — the place you review the data visually, add context, and make decisions. Google Sheets is the calculation engine. These two work together.</p>
+
+    <h3>Manual Sync Method (Most Reliable)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create a Notion database: "Monthly Revenue Reviews"</div><div class="step-desc">Properties: Month (text), Gross Revenue, Net Revenue, Total Expenses, Net Profit, Profit Margin %, Best Income Stream, Notes, Action Items, Status (dropdown: In Review / Complete).</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Create a master "Revenue Dashboard" Notion page</div><div class="step-desc">Embed your Monthly Revenue Reviews database in Gallery view. Pin your key metrics at the top with Notion's Callout blocks: YTD Revenue, YTD Profit, Best Month, Current Monthly Run Rate.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Monthly transfer (5 minutes)</div><div class="step-desc">On the 1st of each month, copy last month's P&amp;L numbers from Google Sheets into a new Notion database entry. This creates a searchable, annotatable history of every month — with your own notes and decisions attached.</div></div></div>
+    </div>
+
+    <h3>Automated Sync via Make (Advanced)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Trigger: Schedule — 1st of every month</div><div class="step-desc">Set a monthly time trigger in Make.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Action: Google Sheets — Get specific cell range</div><div class="step-desc">Pull the P&amp;L values for the previous month from your P&amp;L tab: gross revenue, net revenue, total expenses, net profit, profit margin.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Action: Notion — Create database page</div><div class="step-desc">Create a new page in your Monthly Revenue Reviews database. Map each pulled value to the correct Notion property. Set Month = previous month name, Status = "In Review."</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Action: Gmail — Send yourself a notification</div><div class="step-desc">"Your [MONTH] revenue summary is ready in Notion. [LINK]" — a nudge to actually open and review it.</div></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="formulas">
+    <div class="section-num">Section 07</div>
+    <h2>All Google Sheets Formulas — Master Reference</h2>
+    <p>Every formula used in this system, copy-paste ready. Replace column references with your actual columns if you adjust the layout.</p>
+
+    <div class="formula">--- INCOME TAB ---
+
+Platform Fee $ (Column G, Income tab):
+=E2*F2
+
+Net Amount received (Column H):
+=E2-G2
+
+Tax Set-Aside $ (Column J):
+=H2*I2
+
+Net After Tax (Column K):
+=H2-J2
+
+Running Total Net (Column L):
+=SUM($H$2:H2)
+
+Month label (Column M):
+=TEXT(A2,"MMMM YYYY")
+
+Quarter (Column N):
+=CHOOSE(MONTH(A2),"Q1","Q1","Q1","Q2","Q2","Q2","Q3","Q3","Q3","Q4","Q4","Q4")
+
+--- EXPENSE TAB ---
+
+Deductible Amount (Column G):
+=E2*F2
+
+Tax Saved (Column H) — references P&L settings tab for tax rate:
+=G2*'P&L'!$B$2
+
+Month label (Column K):
+=TEXT(A2,"MMMM YYYY")
+
+--- P&L TAB ---
+
+Income by type, by month (e.g., AdSense in January):
+=SUMPRODUCT((Income!$C$2:$C$2000="AdSense")*(MONTH(Income!$A$2:$A$2000)=1)*(YEAR(Income!$A$2:$A$2000)=YEAR(TODAY())),Income!$H$2:$H$2000)
+
+Change "AdSense" to any income type. Change =1 to =2 for February, etc.
+
+Total Gross Income per month (Row 14):
+=SUM(B6:B12)
+
+Total Expenses per month (Row 28) — deductible amounts:
+=SUMPRODUCT((MONTH(Expenses!$A$2:$A$2000)=1)*(YEAR(Expenses!$A$2:$A$2000)=YEAR(TODAY())),Expenses!$G$2:$G$2000)
+
+Net Profit (Row 30):
+=B16-B28
+
+Profit Margin % (Row 31):
+=IFERROR(B30/B14,0)
+
+Tax Set-Aside (Row 32):
+=IF(B30>0,B30*$B$2,0)
+
+Take-Home After Tax (Row 33):
+=B30-B32
+
+YTD Total (Column N):
+=SUM(B30:M30)   — adjust row number per label
+
+--- GROWTH TAB ---
+
+MoM Growth % (Month 2 onward):
+=IFERROR(('P&L'!C30-'P&L'!B30)/ABS('P&L'!B30),0)
+
+3-Month Rolling Average:
+=AVERAGE('P&L'!B30,'P&L'!C30,'P&L'!D30)
+
+% of Revenue per Income Stream:
+=IFERROR('P&L'!N6/'P&L'!N14,0)
+
+Best performing month (highest net profit):
+=INDEX({"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"},MATCH(MAX('P&L'!B30:M30),'P&L'!B30:M30,0))
+
+Worst performing month:
+=INDEX({"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"},MATCH(MIN('P&L'!B30:M30),'P&L'!B30:M30,0))
+
+Current monthly run rate (avg of completed months):
+=AVERAGEIF('P&L'!B30:M30,">"&0)</div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section" id="review">
+    <div class="section-num">Section 08</div>
+    <h2>Monthly Review Process</h2>
+    <p>Run this review on the 1st-3rd of every month. It takes 30 minutes when your data is clean. This is the most important habit in this entire kit — the dashboard only creates value if you actually look at it.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Verify Data Completeness (5 min)</div><div class="step-desc">Scroll through Income tab: is every payment from last month logged? Check your bank statements and payment platform dashboards (PayPal, Stripe, Gumroad, YouTube Studio). Scroll through Expense tab: are all recurring subscriptions logged? Check your credit card statement line by line.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Read the P&L for Last Month (5 min)</div><div class="step-desc">Open the P&amp;L tab. Focus on three numbers: Gross Revenue, Total Expenses, Net Profit. Compare to the previous month. Is the trend moving in the right direction? Note the Profit Margin — healthy for a solo creator business is 60-80%. Under 50% means your expenses need review.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Review Growth Dashboard (5 min)</div><div class="step-desc">Check MoM growth rate. Check which income stream produced the most revenue. Check the 12-month rolling chart — is the trend line sloping up? Note the projection for next month and set a revenue target accordingly.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Identify the Revenue Opportunity (5 min)</div><div class="step-desc">Which income stream grew the most last month? What caused it? Which stream declined or stayed flat? Is there a stream you haven't touched in 60+ days that used to perform? This is where your next month's energy should be allocated (see Section 9).</div></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Transfer Tax Set-Aside (2 min)</div><div class="step-desc">Look at Column J (Tax Set-Aside) total for last month on the P&amp;L tab. If you have not already been transferring per-transaction, do the lump transfer now to your tax savings account. Do not skip this step.</div></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-content"><div class="step-title">Update Notion &amp; Write Notes (8 min)</div><div class="step-desc">Create a new entry in your Notion Monthly Revenue Reviews database. Paste in last month's numbers. Write 3-5 bullet points: what worked, what didn't, what you're changing next month. Set your revenue target for the current month. Mark Status = Complete.</div></div></div>
+    </div>
+
+    <div class="callout yellow">
+      <div class="callout-icon">&#9888;</div>
+      <div class="callout-text"><strong>Don't skip slow months:</strong> The review is most important on bad months. A slow month you don't analyze is a slow month that will repeat. A slow month you understand becomes a lesson that prevents the next one.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section" id="optimize">
+    <div class="section-num">Section 09</div>
+    <h2>Income Stream Optimization Guide</h2>
+    <p>Your dashboard tells you what happened. This guide tells you what to do about it. Here is how to read the data and make strategic decisions about where to invest your energy.</p>
+
+    <h3>The 4 Income Stream Quadrants</h3>
+    <div class="card">
+      <div class="card-title">Quadrant 1: High Revenue + Growing — Double Down</div>
+      <div class="card-desc">If a stream is generating the most revenue AND its month-over-month trend is positive — this is your primary lever. Allocate more time, more promotion, and more optimization effort here. Do not get distracted by other streams while this one is performing. Most creators make the mistake of adding new streams before maximizing the one that's already working.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Quadrant 2: High Revenue + Declining — Defend and Diagnose</div>
+      <div class="card-desc">Your top earner is shrinking. This is a priority alert. Diagnose why: platform algorithm change? Market saturation? You stopped putting effort in? Competitor entered the space? For AdSense: check RPM trends in YouTube Studio. For Sponsorships: check your outreach cadence. For Products: check conversion rates and page traffic. Defend your highest earner before building anything new.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Quadrant 3: Low Revenue + Growing — Invest Selectively</div>
+      <div class="card-desc">A stream generating small revenue but trending upward is worth nurturing. Give it consistent attention — not all of your time, but enough to let the growth compound. Examples: an affiliate program that just started converting, a digital product with early traction, a new platform gaining momentum. Set a 90-day checkpoint: if it hasn't scaled meaningfully, deprioritize it.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Quadrant 4: Low Revenue + Declining — Cut or Ignore</div>
+      <div class="card-desc">An income stream generating low revenue that is also trending down is a time drain. Either make one final push to revive it (with a specific experiment and a deadline), or formally deprioritize it and stop tracking it actively. Focus is the real asset. Every stream you stop actively managing frees up bandwidth for your Quadrant 1 streams.</div>
+    </div>
+
+    <h3>When to Add a New Income Stream</h3>
+    <p>Only add a new income stream when your current highest-performing stream is generating consistent, predictable revenue for at least 3 consecutive months, AND you have operational capacity to develop something new without diluting your existing streams. The right time to launch a digital product is when your audience is actively asking for it AND your primary income is stable. Building on a shaky financial foundation rarely works.</p>
+
+    <div class="formula">Income Diversification Health Check:
+Healthy: Top 3 income streams each represent 20-40% of total revenue
+Warning: Single stream represents over 70% of total revenue (high risk)
+Critical: Single stream represents over 85% (one platform change = financial crisis)
+
+Target diversification for creators at scale:
+  AdSense / Platform Ad Revenue:  15-25%
+  Brand Deals / Sponsorships:     25-35%
+  Digital Products:               20-30%
+  Coaching / Consulting:          10-20%
+  Affiliates / Memberships:       5-15%</div>
+
+    <div class="callout green">
+      <div class="callout-icon">&#10003;</div>
+      <div class="callout-text"><strong>The 80/20 of income optimization:</strong> In almost every creator business, 80% of revenue comes from 20% of the income streams. Find your 20%, maximize it, and let the rest be nice supplemental income rather than your main focus. Clarity about your primary driver is worth more than a dozen half-optimized streams.</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">REMbyDesign — Revenue Dashboard Kit</div>
+    <div class="doc-footer-note">Personal use license. Do not redistribute.</div>
+  </div>
+
+</div>
+</body>
+</html>
