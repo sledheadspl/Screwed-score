@@ -52,6 +52,66 @@ export const PRODUCT_CATALOG: Record<string, {
     deliveryEnvKey: 'PRODUCT_LINK_LAUNCH_SEQUENCE',
     accentColor: '#ffd60a',
   },
+  'ai-prompt-vault': {
+    name: 'AI Prompt Vault',
+    tagline: '500+ battle-tested prompts for content, copy, and strategy.',
+    deliveryEnvKey: 'PRODUCT_LINK_AI_PROMPT_VAULT',
+    accentColor: '#00E5FF',
+  },
+  'newsletter-engine': {
+    name: 'Newsletter Growth Engine',
+    tagline: 'Templates, sequences, and a 90-day growth playbook.',
+    deliveryEnvKey: 'PRODUCT_LINK_NEWSLETTER_ENGINE',
+    accentColor: '#00E5FF',
+  },
+  'video-repurpose-kit': {
+    name: 'Video Repurposing Masterkit',
+    tagline: 'Turn one video into 15+ pieces of distributed content.',
+    deliveryEnvKey: 'PRODUCT_LINK_VIDEO_REPURPOSE_KIT',
+    accentColor: '#00E5FF',
+  },
+  'seo-content-matrix': {
+    name: 'SEO Content Matrix',
+    tagline: 'Research-to-publish content system engineered for organic traffic.',
+    deliveryEnvKey: 'PRODUCT_LINK_SEO_CONTENT_MATRIX',
+    accentColor: '#30d158',
+  },
+  'affiliate-stack': {
+    name: 'Affiliate Revenue Stack',
+    tagline: 'Plug-and-play systems to build passive affiliate income.',
+    deliveryEnvKey: 'PRODUCT_LINK_AFFILIATE_STACK',
+    accentColor: '#00E5FF',
+  },
+  'podcast-launch-kit': {
+    name: 'Podcast Launch Kit',
+    tagline: 'Launch and monetize a podcast in 30 days.',
+    deliveryEnvKey: 'PRODUCT_LINK_PODCAST_LAUNCH_KIT',
+    accentColor: '#ffd60a',
+  },
+  'creator-legal-pack': {
+    name: 'Creator Legal Pack',
+    tagline: 'Professional contracts and templates for online creators.',
+    deliveryEnvKey: 'PRODUCT_LINK_CREATOR_LEGAL_PACK',
+    accentColor: '#ffd60a',
+  },
+  'email-monetization': {
+    name: 'Email Monetization Playbook',
+    tagline: 'Convert your email list into predictable recurring revenue.',
+    deliveryEnvKey: 'PRODUCT_LINK_EMAIL_MONETIZATION',
+    accentColor: '#00E5FF',
+  },
+  'course-blueprint': {
+    name: 'Digital Course Blueprint',
+    tagline: 'End-to-end system to outline, build, and sell online courses.',
+    deliveryEnvKey: 'PRODUCT_LINK_COURSE_BLUEPRINT',
+    accentColor: '#30d158',
+  },
+  'time-blocking-system': {
+    name: 'Elite Time Blocking System',
+    tagline: 'Calendar architecture for creators who protect deep work.',
+    deliveryEnvKey: 'PRODUCT_LINK_TIME_BLOCKING_SYSTEM',
+    accentColor: '#00E5FF',
+  },
 }
 
 function buildEmailHtml(opts: {

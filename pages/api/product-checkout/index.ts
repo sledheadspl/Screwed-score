@@ -34,6 +34,56 @@ const PRODUCTS: Record<string, { name: string; description: string; unit_amount:
     description: 'Step-by-step digital product launch system. Email sequences, pre-launch content plan, and post-launch optimization framework.',
     unit_amount: 8900,
   },
+  'ai-prompt-vault': {
+    name: 'AI Prompt Vault',
+    description: '500+ battle-tested prompts for content creation, copywriting, strategy, and ideation. Plug directly into ChatGPT or Claude and produce elite output instantly.',
+    unit_amount: 7900,
+  },
+  'newsletter-engine': {
+    name: 'Newsletter Growth Engine',
+    description: 'Proven email templates, monetization sequences, and a 90-day growth playbook to turn your newsletter into a revenue-generating asset.',
+    unit_amount: 5900,
+  },
+  'video-repurpose-kit': {
+    name: 'Video Repurposing Masterkit',
+    description: 'Turn one long-form video into 15+ pieces of content. Includes SOP, cut templates, caption workflows, and a full distribution checklist.',
+    unit_amount: 4400,
+  },
+  'seo-content-matrix': {
+    name: 'SEO Content Matrix',
+    description: 'Research-to-publish content system engineered for organic traffic. Keyword clustering, content briefs, internal linking strategy, and a Notion tracker.',
+    unit_amount: 6900,
+  },
+  'affiliate-stack': {
+    name: 'Affiliate Revenue Stack',
+    description: 'Build passive affiliate income with plug-and-play systems. Includes link tracking setup, disclosure templates, content formats, and a monthly review SOP.',
+    unit_amount: 5400,
+  },
+  'podcast-launch-kit': {
+    name: 'Podcast Launch Kit',
+    description: 'Everything you need to launch and monetize a podcast in 30 days. Cover art brief, episode structure templates, sponsor pitch deck, and a distribution checklist.',
+    unit_amount: 7900,
+  },
+  'creator-legal-pack': {
+    name: 'Creator Legal Pack',
+    description: 'Professional contracts, disclaimers, and TOS templates written for online creators. Covers brand deals, coaching, digital products, and UGC agreements.',
+    unit_amount: 12900,
+  },
+  'email-monetization': {
+    name: 'Email Monetization Playbook',
+    description: 'Proven sequences, offer frameworks, and segmentation strategies to convert your email list into predictable recurring revenue — without burning out your audience.',
+    unit_amount: 8400,
+  },
+  'course-blueprint': {
+    name: 'Digital Course Blueprint',
+    description: 'End-to-end system to outline, build, and sell an online course. Includes curriculum framework, sales page template, pricing strategy, and launch timeline.',
+    unit_amount: 11900,
+  },
+  'time-blocking-system': {
+    name: 'Elite Time Blocking System',
+    description: 'Calendar architecture and Google Calendar templates built for creators who need to protect deep work. Includes weekly rhythm guide and energy audit worksheet.',
+    unit_amount: 3900,
+  },
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
