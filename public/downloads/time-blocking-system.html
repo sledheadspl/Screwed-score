@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Time Blocking System — REMbyDesign</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:60px 32px}
+.doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+.doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+.doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+.doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+.doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+.toc ol{padding-left:20px}
+.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+.section{margin-bottom:64px}
+.section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+p{color:rgba(242,242,242,.65);margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.system{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.system-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.system-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.system-name{font-size:16px;font-weight:700;color:var(--text)}
+.system-body{padding:20px 24px}
+.system-body ul{padding-left:0;list-style:none}
+.system-body li{font-size:13px;color:rgba(242,242,242,.55);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.system-body li:last-child{border-bottom:none}
+.system-body li::before{content:'→';color:var(--cyan);flex-shrink:0;margin-top:1px}
+.formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+tr:last-child td{border-bottom:none}
+.callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+.callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+.callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+.callout-text strong{color:var(--text)}
+.steps{margin:20px 0}
+.step{display:flex;gap:16px;margin-bottom:20px}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+.step-content{padding-top:4px}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.roadmap-week{border-left:2px solid var(--border);padding-left:20px;margin-bottom:28px;position:relative}
+.roadmap-week::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg)}
+.roadmap-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.roadmap-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+.roadmap-tasks{font-size:13px;color:rgba(242,242,242,.5)}
+.roadmap-tasks li{margin-bottom:4px}
+.doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+.doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+@media print{body{background:#fff;color:#000}.page{padding:20px}.formula{background:#f5f5f5;color:#0070c0}}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-right:6px}
+.tag.green{background:rgba(48,209,88,.15);color:var(--green)}
+.tag.yellow{background:rgba(255,214,10,.15);color:var(--yellow)}
+.tag.red{background:rgba(255,59,48,.15);color:var(--red)}
+.tag.cyan{background:rgba(0,229,255,.1);color:var(--cyan)}
+.schedule{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:24px}
+.schedule-header{padding:16px 24px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.schedule-title{font-size:16px;font-weight:800;color:var(--text)}
+.schedule-subtitle{font-size:12px;color:var(--sub);margin-top:2px}
+.schedule-day{border-bottom:1px solid var(--border)}
+.schedule-day:last-child{border-bottom:none}
+.schedule-day-header{padding:10px 24px;background:rgba(0,229,255,.04);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+.schedule-row{display:grid;grid-template-columns:90px 1fr;gap:0;border-bottom:1px solid rgba(255,255,255,.03)}
+.schedule-row:last-child{border-bottom:none}
+.schedule-time{padding:8px 16px 8px 24px;font-size:11px;font-weight:600;color:var(--sub);font-family:'SF Mono','Fira Code',monospace;white-space:nowrap}
+.schedule-block{padding:8px 24px 8px 16px;font-size:12px;color:rgba(242,242,242,.6);border-left:1px solid var(--border)}
+.block-deep{border-left-color:var(--cyan);color:rgba(0,229,255,.9);font-weight:600}
+.block-shallow{border-left-color:var(--yellow);color:rgba(255,214,10,.8)}
+.block-admin{border-left-color:var(--sub)}
+.block-off{border-left-color:rgba(255,255,255,.1);color:rgba(242,242,242,.3);font-style:italic}
+.block-focus{border-left-color:var(--green);color:rgba(48,209,88,.9);font-weight:600}
+.audit-field{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:6px 0;font-size:13px;color:rgba(242,242,242,.4);font-style:italic;min-height:36px}
+.audit-row{display:grid;grid-template-columns:120px repeat(7,1fr);gap:4px;margin-bottom:4px;font-size:11px}
+.audit-row.header{color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.audit-cell{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:6px 4px;text-align:center;color:rgba(242,242,242,.4)}
+.audit-cell.label{background:transparent;border:none;color:rgba(242,242,242,.5);text-align:left;font-weight:600;display:flex;align-items:center}
+@media(max-width:640px){.audit-row{grid-template-columns:80px repeat(7,1fr)}.schedule-row{grid-template-columns:70px 1fr}}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;color:rgba(242,242,242,.6)}
+.checklist-item:last-child{border-bottom:none}
+.check-box{width:18px;height:18px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-badge">&#9670; REMbyDesign Premium</div>
+    <h1 class="doc-title">Elite Time Blocking System</h1>
+    <p class="doc-subtitle">Calendar architecture and Google Calendar templates built for creators who protect deep work. Includes weekly rhythm guide and energy audit worksheet.</p>
+    <div class="doc-meta">
+      <span>5 calendar templates</span>
+      <span>Energy audit included</span>
+      <span>Deep work protocol</span>
+      <span>REMbyDesign &copy; 2026</span>
+    </div>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li>The Time Blocking Philosophy</li>
+      <li>The Energy Audit Worksheet</li>
+      <li>The 5 Calendar Architecture Templates</li>
+      <li>Google Calendar Setup Guide</li>
+      <li>The Deep Work Protocol</li>
+      <li>Batching System</li>
+      <li>The Weekly Planning Ritual</li>
+      <li>The Daily Shutdown Ritual</li>
+      <li>Quarterly Calendar Audit</li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-num">Section 01</div>
+    <h2>The Time Blocking Philosophy</h2>
+    <p>Most creator calendars don't fail because of bad discipline. They fail because of bad architecture. The calendar is a tool — and like any tool, using it wrong produces bad results regardless of how hard you work.</p>
+
+    <h3>Why Most Creator Calendars Fail</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Failure Mode 1: Reactive Scheduling</div>
+        <div class="card-desc">Calendar fills up with other people's priorities — calls, meetings, urgent requests. Deep work, which requires scheduling in advance, never gets a slot. Creative output decreases to near zero despite a "full" calendar.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Failure Mode 2: No Context Separation</div>
+        <div class="card-desc">Recording a podcast episode, answering emails, and taking a sales call are treated as equivalent tasks. They're not. Each requires a completely different cognitive state. Switching between them destroys the quality of all three.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Failure Mode 3: Ignoring Energy</div>
+        <div class="card-desc">Scheduling your most demanding creative work for 3pm because that's when your calendar was free — not because that's when you're sharp. Output at low-energy hours is 40–70% worse in quality and takes 2–3x longer to produce.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Failure Mode 4: No Protected Recovery</div>
+        <div class="card-desc">Running at maximum capacity every week with no margin. The first unexpected priority — a sick day, a platform change, a personal crisis — collapses the entire system because there was no slack built in.</div>
+      </div>
+    </div>
+
+    <h3>The 3 Types of Creator Work</h3>
+    <p>Every task on a creator's plate falls into one of three categories. Your calendar architecture must reflect this split — and the proportion allocated to each type changes your business trajectory entirely.</p>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(0,229,255,.1)">&#127947;</div>
+        <div class="system-name">Deep Work &mdash; Your highest-leverage output</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Definition: Cognitively demanding work that creates new value — writing, recording, creating, strategizing, coding, designing</li>
+          <li>Time requirement: Minimum 90-minute uninterrupted blocks. Optimal: 2–4 hours. Anything less is just warming up.</li>
+          <li>Cognitive cost: High — requires your best mental state. Do this when your energy is at peak (identified in Section 2)</li>
+          <li>Common examples: Writing a newsletter, recording a YouTube video, building a course module, designing a product, writing a sales page, developing a strategy</li>
+          <li>Calendar priority: FIRST. Block this before anything else. It's non-negotiable. If it doesn't get blocked, it doesn't happen.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,214,10,.1)">&#128257;</div>
+        <div class="system-name">Shallow Work &mdash; Necessary but not transformational</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Definition: Tasks that support your business but don't create new intellectual value — distribution, engagement, repurposing content</li>
+          <li>Time requirement: Can be done in 30–60 minute blocks. Tolerates interruptions better than deep work.</li>
+          <li>Cognitive cost: Low to medium — can be done at medium energy levels</li>
+          <li>Common examples: Posting to social media, scheduling content, responding to comments, repurposing long-form content, updating spreadsheets, sending routine emails</li>
+          <li>Calendar priority: SECOND. Batch these tasks together — never scatter them throughout the day</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="system">
+      <div class="system-header">
+        <div class="system-icon" style="background:rgba(255,59,48,.1)">&#128190;</div>
+        <div class="system-name">Admin Work &mdash; Essential maintenance</div>
+      </div>
+      <div class="system-body">
+        <ul>
+          <li>Definition: Operational tasks that keep the business running — invoicing, inbox management, tool maintenance, bookkeeping</li>
+          <li>Time requirement: 30–60 minutes per session. Ideally batched once per day or every other day.</li>
+          <li>Cognitive cost: Low — can be done at your lowest energy window of the day</li>
+          <li>Common examples: Replying to non-urgent emails, processing invoices, updating CRM, reviewing analytics, scheduling calls, filing receipts</li>
+          <li>Calendar priority: THIRD. These fill in the gaps after deep work and shallow work are blocked. Never let admin expand to fill the calendar.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Energy Management vs. Time Management</h3>
+    <p>The fundamental shift: stop asking "when do I have time?" and start asking "when do I have energy?" Time is fixed — you have 24 hours regardless. Energy is manageable. Your goal is to align your highest-value work with your highest-energy windows every single day.</p>
+
+    <div class="formula">THE CREATOR ENERGY-TIME ALIGNMENT PRINCIPLE
+──────────────────────────────────────────────────────
+Peak Energy Window    →  Deep Work (creation, writing, recording)
+Medium Energy Window  →  Shallow Work (distribution, engagement)
+Low Energy Window     →  Admin Work (email, invoices, scheduling)
+Depleted             →  Rest, movement, input (reading, learning)
+
+Breaking this alignment is the root cause of creative burnout.
+You're not tired — you're just doing deep work at low energy.

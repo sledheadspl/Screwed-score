@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Affiliate Revenue Stack — REMbyDesign</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:60px 32px}
+.doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+.doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+.doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+.doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+.doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+.toc ol{padding-left:20px}
+.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+.section{margin-bottom:64px}
+.section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+p{color:rgba(242,242,242,.65);margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.system{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.system-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.system-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.system-name{font-size:16px;font-weight:700;color:var(--text)}
+.system-body{padding:20px 24px}
+.system-body ul{padding-left:0;list-style:none}
+.system-body li{font-size:13px;color:rgba(242,242,242,.55);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.system-body li:last-child{border-bottom:none}
+.system-body li::before{content:'\2192';color:var(--cyan);flex-shrink:0;margin-top:1px}
+.formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+tr:last-child td{border-bottom:none}
+.callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+.callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+.callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+.callout-text strong{color:var(--text)}
+.steps{margin:20px 0}
+.step{display:flex;gap:16px;margin-bottom:20px}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+.step-content{padding-top:4px}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.roadmap-week{border-left:2px solid var(--border);padding-left:20px;margin-bottom:28px;position:relative}
+.roadmap-week::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg)}
+.roadmap-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.roadmap-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+.roadmap-tasks{font-size:13px;color:rgba(242,242,242,.5)}
+.roadmap-tasks li{margin-bottom:4px}
+.doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+.doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+@media print{body{background:#fff;color:#000}.page{padding:20px}.formula{background:#f5f5f5;color:#0070c0}}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-right:4px}
+.tag.green{background:rgba(48,209,88,.12);color:var(--green);border:1px solid rgba(48,209,88,.2)}
+.tag.yellow{background:rgba(255,214,10,.12);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
+.tag.cyan{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+.tag.red{background:rgba(255,59,48,.12);color:var(--red);border:1px solid rgba(255,59,48,.2)}
+.email-block{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin:16px 0}
+.email-meta{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:8px}
+.email-subject{font-size:15px;font-weight:700;color:var(--cyan);margin-bottom:16px}
+.email-body{font-size:13px;color:rgba(242,242,242,.6);line-height:1.8;white-space:pre-wrap}
+.checklist{list-style:none;padding:0;margin:16px 0}
+.checklist li{font-size:13px;color:rgba(242,242,242,.6);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:'\2610';color:var(--cyan);flex-shrink:0;font-size:14px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+.sop-step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start}
+.sop-num{font-size:20px;font-weight:900;color:var(--cyan);min-width:32px;line-height:1}
+.sop-content{}
+.sop-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.sop-detail{font-size:12px;color:rgba(242,242,242,.5);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="doc-header">
+  <div class="doc-badge">&#9679; Premium Digital Product</div>
+  <div class="doc-title">Affiliate Revenue Stack</div>
+  <div class="doc-subtitle">Plug-and-play systems to build passive affiliate income. Link tracking, disclosure templates, content formats, and a monthly review SOP.</div>
+  <div class="doc-meta">
+    <span>Passive income system</span>
+    <span>Legal disclosures included</span>
+    <span>Monthly review SOP</span>
+    <span>REMbyDesign &copy; 2026</span>
+    <span>$54</span>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li>The Affiliate Mindset</li>
+    <li>Program Selection Framework</li>
+    <li>Link Tracking &amp; Management System</li>
+    <li>Content Formats That Convert</li>
+    <li>The Disclosure Template Library</li>
+    <li>Email Affiliate Sequences</li>
+    <li>The Monthly Affiliate Review SOP</li>
+    <li>Scaling to $5K/Month</li>
+    <li>Tools Stack</li>
+  </ol>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-num">Section 01</div>
+  <h2>The Affiliate Mindset</h2>
+  <p>Most creators who try affiliate marketing make less than $200/month from it. They slap a few Amazon links into a blog post, wait, and wonder why nothing happens. The problem is not the niche, the traffic, or the programs. The problem is that they are treating affiliate marketing as an afterthought &mdash; a monetization layer bolted onto content that was designed for everything except selling.</p>
+  <p>This section reframes how you think about affiliate income so that every piece of content you create compounds toward it. The shift is not tactical. It is philosophical. Until you make this shift, no amount of link placement optimization will save your numbers.</p>
+
+  <h3>The Trust-First Model</h3>
+  <p>The highest-earning affiliate creators share one thing in common: their audience trusts their recommendations before money ever exchanges hands. That trust is built through consistent, honest, specific product opinions &mdash; not generic "this tool is great" endorsements. The moment your audience senses you are recommending something for the commission rather than for them, conversion rates crater and they start tuning out your CTAs entirely.</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#9888;</div>
+    <div class="callout-text"><strong>The trust equation:</strong> Specificity + Honesty + Consistency = Compounding trust. Vague praise earns nothing. "I use ConvertKit because of the visual automation builder and the fact that my broadcasts consistently hit a 42% open rate" earns clicks and real sales.</div>
+  </div>
+
+  <p>Building trust-first means you will sometimes recommend a competitor's product over your own affiliate partner, publicly note when pricing changed or a product degraded, and tell people when a tool stopped being worth it. This feels counterintuitive &mdash; but creators who operate this way see affiliate conversion rates 3&ndash;6x higher than those who don't, because their audience treats every recommendation as a genuine signal rather than a sponsored message.</p>
+
+  <h3>The Recurring vs. One-Time Commission Trap</h3>
+  <p>One of the single biggest leverage decisions in affiliate marketing is choosing programs with recurring commissions over one-time payouts. A one-time $50 commission requires you to keep generating new buyers forever. A 30% recurring commission on a $99/month SaaS tool earns you $29.70 every month from the same customer &mdash; and if that customer stays 18 months, you have made $534.60 from one referral.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Commission Model</th>
+        <th>Single Sale Value</th>
+        <th>12-Month Value (1 customer)</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Amazon Associates</td><td>$2&ndash;$15</td><td>$2&ndash;$15</td><td><span class="tag red">Low</span></td></tr>
+      <tr><td>One-time SaaS (30%)</td><td>$29&ndash;$150</td><td>$29&ndash;$150</td><td><span class="tag yellow">Medium</span></td></tr>
+      <tr><td>Recurring SaaS (20&ndash;40%)</td><td>$10&ndash;$40/mo</td><td>$120&ndash;$480</td><td><span class="tag green">High</span></td></tr>
+      <tr><td>High-ticket courses (30&ndash;50%)</td><td>$150&ndash;$1,000</td><td>$150&ndash;$1,000</td><td><span class="tag green">High</span></td></tr>
+      <tr><td>Hosting / annual tools</td><td>$50&ndash;$200</td><td>$50&ndash;$200</td><td><span class="tag yellow">Medium</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>The Passive Income Flywheel</h3>
+  <p>Affiliate income becomes truly passive when the content generating clicks is evergreen &mdash; meaning it ranks in search, lives in a permanent location on your site or channel, and does not require you to update it more than quarterly. A single "Best Email Marketing Tools" roundup post that ranks on page one of Google can drive thousands of dollars per month indefinitely.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Create content with buyer search intent</div>
+        <div class="step-desc">Target keywords like "[Tool] review", "[Category] best tools", "[Tool] vs [Tool]", "[Tool] alternative". These have buyer intent baked in. Someone searching "ConvertKit vs Mailchimp" is moments away from a purchase decision.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Place affiliate links in high-intent positions</div>
+        <div class="step-desc">First 300 words, in-context tool mentions, comparison table CTAs, and a dedicated "My Picks" section above the fold. Not just at the end of a 3,000-word post where 90% of readers never scroll.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Capture email from every affiliate page</div>
+        <div class="step-desc">Every affiliate post should have a lead magnet specific to the topic. Someone reading your ConvertKit review wants "The Email Setup Checklist." Build that list &mdash; then promote affiliate offers via email at near-zero marginal cost forever.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Reinvest 20% of revenue monthly into content upgrades</div>
+        <div class="step-desc">Upgrade posts already ranking in positions 4&ndash;15. Add screenshots, video embeds, updated pricing tables, comparison charts. Move them to page one. Compounding rankings = compounding income.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>The Three Creator Archetypes</h3>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">The Educator</div>
+      <div class="card-desc">Teaches how to use tools. Best formats: tutorials, how-to posts, YouTube walkthroughs. Highest conversion from warm audiences. Best programs: SaaS tools, courses, plugins. Weakness: requires existing audience trust.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">The Reviewer</div>
+      <div class="card-desc">Publishes in-depth comparisons and solo reviews. Best for SEO. Captures high buyer-intent traffic from search. Best formats: comparison posts, review posts. Strength: can monetize without an existing audience.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">The Curator</div>
+    <div class="card-desc">Maintains "best tools" resource pages, newsletters, and curated lists. High trust, low maintenance once built. Best for established creators with a loyal email list or YouTube channel. Best programs: recurring SaaS and high-ticket items that the audience already uses or aspires to use.</div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-num">Section 02</div>
+  <h2>Program Selection Framework</h2>
+  <p>Not all affiliate programs are worth your time. A program that pays 1% commission with a 1-day cookie on a $20 product will never build your income regardless of how much traffic you send. You need a systematic scoring process to identify the programs worth investing real content effort into versus the ones you mention once and forget.</p>
+
+  <h3>The 5-Factor Scoring Matrix</h3>
+  <p>Score each program 1&ndash;5 on each dimension. A perfect score is 32.5 (weighted). Any program under 18 is not worth being your primary focus. Under 12, avoid entirely unless it is a natural fit for existing content.</p>
+
+  <div class="formula">Program Score = (Commission Rate Score x 1.5) + Cookie Duration Score + Product Quality Score + EPC Score + Conversion Rate Score
+
+Scoring guide per factor (1-5):
+Commission Rate:   1 = &lt;5%    2 = 5-10%   3 = 10-20%  4 = 20-35%  5 = 35%+
+Cookie Duration:   1 = 1 day  2 = 7 days  3 = 30 days 4 = 60-90d  5 = 1yr+/lifetime
+Product Quality:   1 = poor   2 = average 3 = decent  4 = strong  5 = market-leading
+EPC (earn/click):  1 = &lt;$0.10 2 = $0.10+  3 = $0.30+  4 = $0.75+  5 = $1.50+
+Conversion Rate:   1 = &lt;0.5%  2 = 0.5-1%  3 = 1-2%    4 = 2-4%    5 = 4%+</div>
+
+  <h3>Top Programs by Niche</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Program</th>
+        <th>Niche</th>
+        <th>Commission</th>
+        <th>Cookie</th>
+        <th>Model</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>ConvertKit</td><td>Email / Creators</td><td>30% recurring</td><td>60 days</td><td>Recurring</td><td><span class="tag green">28/32</span></td></tr>
+      <tr><td>Kajabi</td><td>Courses / Creators</td><td>30% recurring</td><td>30 days</td><td>Recurring</td><td><span class="tag green">27/32</span></td></tr>
+      <tr><td>Teachable</td><td>Courses</td><td>30% recurring</td><td>90 days</td><td>Recurring</td><td><span class="tag green">27/32</span></td></tr>
+      <tr><td>Shopify</td><td>eCommerce</td><td>$58&ndash;$2,000/sale</td><td>30 days</td><td>One-time</td><td><span class="tag green">26/32</span></td></tr>
+      <tr><td>SEMrush</td><td>SEO / Marketing</td><td>40% recurring</td><td>120 days</td><td>Recurring</td><td><span class="tag green">30/32</span></td></tr>
+      <tr><td>Bluehost</td><td>Web Hosting</td><td>$65&ndash;$130/sale</td><td>90 days</td><td>One-time</td><td><span class="tag yellow">21/32</span></td></tr>
+      <tr><td>NordVPN</td><td>Privacy / Tech</td><td>40%+ recurring</td><td>30 days</td><td>Recurring</td><td><span class="tag green">26/32</span></td></tr>
+      <tr><td>Canva Pro</td><td>Design / Creators</td><td>$36/sale</td><td>30 days</td><td>One-time</td><td><span class="tag yellow">22/32</span></td></tr>
+      <tr><td>ClickFunnels</td><td>Marketing</td><td>40% recurring</td><td>30 days</td><td>Recurring</td><td><span class="tag yellow">23/32</span></td></tr>
+      <tr><td>Notion Affiliate</td><td>Productivity</td><td>Variable</td><td>90 days</td><td>One-time</td><td><span class="tag yellow">18/32</span></td></tr>
+      <tr><td>Amazon Associates</td><td>General</td><td>1&ndash;10%</td><td>24 hours</td><td>One-time</td><td><span class="tag red">10/32</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Pro tip:</strong> Before applying to any program, check their affiliate dashboard screenshots on YouTube or affiliate marketing forums. Some programs advertise high commissions but have broken tracking, slow payouts, or opaque dashboards. Product quality and reliability of the affiliate platform matter as much as the commission rate.</div>
+  </div>
+
+  <h3>How to Research EPC (Earnings Per Click)</h3>
+  <p>EPC is the most honest metric for gauging a program's real earning potential. If a program pays $100 per sale but converts at 0.1%, your EPC is $0.10. If a program pays $30 per sale but converts at 5%, your EPC is $1.50. You will earn 15x more from the second program for the same amount of traffic sent.</p>
+
+  <div class="formula">EPC = Total Affiliate Earnings / Total Clicks Sent
+
+Example: $450 earned / 600 clicks = $0.75 EPC
+Industry benchmark: $0.50+ EPC = worth scaling
+$1.00+ EPC = prioritize this program aggressively</div>
+
+  <p>To estimate EPC before you have data, check ShareASale, Impact, or CJ Affiliate dashboards which display network-wide EPC. Ask in affiliate marketing communities for real data. Or contact the affiliate manager directly &mdash; a reputable program will share approximate conversion rates with prospective affiliates.</p>
+
+  <h3>Application Strategy</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Apply with a website, not a social profile</div>
+        <div class="step-desc">Most high-quality programs require a website. Build a simple WordPress or Webflow site with 5&ndash;10 posts before applying. Your acceptance rate will double.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Write a custom application note</div>
+        <div class="step-desc">Tell them exactly how you plan to promote their product and the size/type of your audience. Affiliate managers approve creators who show a real plan, not blank applications.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Start generating traffic before negotiating rates</div>
+        <div class="step-desc">Once you are sending consistent clicks and driving sales, contact the affiliate manager and ask for a rate increase or a custom coupon. They will negotiate. Most creators never ask.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-num">Section 03</div>
+  <h2>Link Tracking &amp; Management System</h2>
+  <p>Sending raw affiliate URLs directly is amateur-level affiliate marketing. You lose the ability to track which content drives clicks, which clicks convert, and which campaigns deserve more effort. A proper link management system gives you the data to make smart decisions instead of guessing.</p>
+
+  <h3>Option A: Pretty Links (WordPress)</h3>
+  <p>Pretty Links is the standard for WordPress-based affiliate operations. Install the free version on your WordPress site and create redirect URLs under your own domain. Instead of sharing a long, ugly affiliate URL, you share something like yoursite.com/go/convertkit — which is cleaner, more trustworthy to readers, and trackable.</p>
+
+  <div class="system">
+    <div class="system-header">
+      <div class="system-icon" style="background:rgba(0,229,255,.1)">&#128279;</div>
+      <div class="system-name">Pretty Links Setup (5 steps)</div>
+    </div>
+    <div class="system-body">
+      <ul>
+        <li>Install Pretty Links plugin from WordPress repository (free tier sufficient for most creators)</li>
+        <li>Create a /go/ or /rec/ prefix structure: yoursite.com/go/[product-name]</li>
+        <li>Set all links to 301 redirect (permanent) for SEO value, or 307 for tracking accuracy</li>
+        <li>Enable click tracking in Pretty Links settings — records date, IP, referrer per click</li>
+        <li>Export monthly click reports as CSV for your review SOP (Section 07)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Option B: Custom Redirect System (No WordPress)</h3>
+  <p>If you do not use WordPress, you can create affiliate redirects using a simple HTML file hosted on your server, or through Netlify / Cloudflare Workers. This keeps everything under your domain without requiring WordPress.</p>
+
+  <div class="formula">Simple Netlify Redirect (netlify.toml):
+
+[[redirects]]
+  from = "/go/convertkit"
+  to = "https://convertkit.com?ref=YOURCODE"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/go/semrush"
+  to = "https://semrush.com/affiliates/?ref=YOURCODE"
+  status = 302
+  force = true</div>
+
+  <h3>UTM Parameter Structure</h3>
+  <p>UTM parameters let Google Analytics or any analytics platform tell you exactly which piece of content drove a click to your affiliate link. Without UTMs, you see traffic to your affiliate redirect URLs but cannot trace it back to the specific blog post, email, or social post that generated it.</p>
+
+  <div class="formula">Standard UTM Structure:
+yoursite.com/go/[product]?utm_source=[source]&utm_medium=[medium]&utm_campaign=[campaign]&utm_content=[content_id]
+
+Examples:
+yoursite.com/go/convertkit?utm_source=blog&utm_medium=tutorial&utm_campaign=email-tools-2026&utm_content=in-post-cta
+yoursite.com/go/convertkit?utm_source=email&utm_medium=newsletter&utm_campaign=march-promo&utm_content=email-3
+yoursite.com/go/convertkit?utm_source=youtube&utm_medium=description&utm_campaign=toolkit-video&utm_content=link-1
+
+Naming rules:
+- source: blog / email / youtube / instagram / twitter / podcast
+- medium: tutorial / review / comparison / newsletter / description / story
+- campaign: slug of the specific piece of content
+- content: placement identifier (cta-1, sidebar, footer, email-subject)</div>
+
+  <h3>Tracking Spreadsheet Structure</h3>
+  <p>Maintain one master affiliate tracking spreadsheet with these columns. Review it monthly as part of your SOP (Section 07).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Column</th>
+        <th>What to Track</th>
+        <th>Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Program Name</td><td>ConvertKit, SEMrush, etc.</td><td>Manual</td></tr>
+      <tr><td>Pretty Link URL</td><td>yoursite.com/go/convertkit</td><td>Pretty Links</td></tr>
+      <tr><td>Raw Affiliate URL</td><td>Full destination URL with ref code</td><td>Program dashboard</td></tr>
+      <tr><td>Monthly Clicks</td><td>Total clicks on this link</td><td>Pretty Links export</td></tr>
+      <tr><td>Program Conversions</td><td>Sales/signups per program's dashboard</td><td>Affiliate dashboard</td></tr>
+      <tr><td>Conversion Rate</td><td>Conversions / Clicks x 100</td><td>Calculated</td></tr>
+      <tr><td>Revenue This Month</td><td>Actual earnings</td><td>Affiliate dashboard</td></tr>
+      <tr><td>EPC</td><td>Revenue / Clicks</td><td>Calculated</td></tr>
+      <tr><td>Top Traffic Source</td><td>Which UTM medium drives most clicks</td><td>Analytics</td></tr>
+      <tr><td>Top Content Piece</td><td>Which post/video drives most clicks</td><td>Analytics</td></tr>
+      <tr><td>Status</td><td>Active / Paused / Testing / Scaling</td><td>Manual</td></tr>
+      <tr><td>Notes</td><td>Rate changes, promotions, seasonal notes</td><td>Manual</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Click-to-Sale Attribution</h3>
+  <p>Most affiliate programs only show you the number of sales, not which specific click converted. To close this attribution gap, you need to cross-reference your click data with your sales data by date and traffic source. This is not perfect but gets you close enough to make smart decisions.</p>
+
+  <div class="callout green">
+    <div class="callout-icon">&#10003;</div>
+    <div class="callout-text"><strong>Attribution shortcut:</strong> If a piece of content has 400 clicks and the affiliate program shows 8 sales in the same week, your site-wide conversion rate for that program is 2%. Now filter your Google Analytics for the week and identify which post drove the most traffic to that redirect URL. That post is your converter — double down on it.</div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-num">Section 04</div>
+  <h2>Content Formats That Convert</h2>
+  <p>Not all content formats drive affiliate sales at the same rate. After analyzing conversion data across hundreds of affiliate sites, these seven formats consistently outperform everything else. They are ranked here by average conversion rate, not by difficulty to produce.</p>
+
+  <h3>Format 1: Comparison Post (Highest converting)</h3>
+  <p>Head-to-head comparisons like "ConvertKit vs Mailchimp" capture readers who are actively choosing between two products. These convert at 2&ndash;5% because the reader has already decided to buy &mdash; they just need help choosing which one.</p>
+
+  <div class="card">
+    <div class="card-title">Comparison Post Template</div>
+    <div class="card-desc">
+      H1: [Tool A] vs [Tool B]: Which is Better for [Audience] in [Year]?<br><br>
+      Intro (200 words): Who this comparison is for + your experience using both tools<br>
+      Quick verdict box: "Best for X: Tool A | Best for Y: Tool B" (with CTAs)<br>
+      Feature comparison table: 8&ndash;12 features side by side with clear winner per row<br>
+      Section: Tool A in-depth (screenshots, pricing, pros/cons) + affiliate CTA<br>
+      Section: Tool B in-depth (screenshots, pricing, pros/cons) + affiliate CTA<br>
+      Section: Use case recommendations (who should pick each)<br>
+      Final verdict + primary CTA for your recommended tool<br>
+      FAQ (5&ndash;7 questions people actually search)
+    </div>
+  </div>
+
+  <h3>Format 2: Tutorial With Embedded Links</h3>
+  <p>How-to posts that teach a process while naturally using your affiliate tool as the vehicle. "How to Build Your First Email Funnel in ConvertKit" converts at 1.5&ndash;3.5% because readers following the tutorial need the tool you are teaching with.</p>
+
+  <div class="card">
+    <div class="card-title">Tutorial Post Template</div>
+    <div class="card-desc">
+      H1: How to [Accomplish Specific Goal] with [Tool Name]<br><br>
+      Intro: The problem the tutorial solves + "I'll be using [Tool] throughout this guide. You can get started free here: [link]"<br>
+      Prerequisites section: "You'll need: [Tool] account (free trial here: [link]), plus..."<br>
+      Step-by-step numbered sections with annotated screenshots<br>
+      Inline CTAs after steps that require the tool: "If you haven't signed up yet, here's my link: [link]"<br>
+      Results section: What the reader should have now<br>
+      Next steps: "To go further, check out [related tutorial]" + secondary CTA
+    </div>
+  </div>
+
+  <h3>Format 3: "Tools I Use" Resource Page</h3>
+  <p>A permanent resource page listing every tool you actually use, organized by category. This is a low-maintenance passive earner. Once it ranks or gets linked in your content and emails, it compounds over time with no additional effort. Update it quarterly.</p>
+
+  <div class="card">
+    <div class="card-title">Resource Page Template</div>
+    <div class="card-desc">
+      H1: Tools &amp; Resources I Actually Use (Updated [Month Year])<br><br>
+      Intro paragraph: "These are tools I personally pay for or have tested extensively. This page contains affiliate links — I earn a commission if you purchase, at no extra cost to you."<br><br>
+      Category: Email Marketing — [Tool name] + 2-sentence honest description + affiliate link<br>
+      Category: Website / Hosting — same format<br>
+      Category: Design — same format<br>
+      Category: SEO — same format<br>
+      Category: Analytics — same format<br>
+      Category: Social Media — same format<br>
+      Category: Finance / Payments — same format<br>
+      Bottom note: "Updated monthly. Tools I stop using are removed."
+    </div>
+  </div>
+
+  <h3>Format 4: Email Sequences</h3>
+  <p>Email sequences are the most powerful and underused affiliate format. A 5-email welcome sequence can generate recurring affiliate sales for every new subscriber you add to your list, indefinitely. See Section 06 for three complete written sequences.</p>
+
+  <h3>Format 5: YouTube Review</h3>
+  <p>A 10&ndash;20-minute in-depth review of a single tool. Video converts at 1&ndash;2.5% through description links. The key is keeping the review honest and showing the tool in live use &mdash; not reading bullet points from the pricing page. The description link gets clicks; the honesty creates trust that makes those clicks convert.</p>
+
+  <div class="card">
+    <div class="card-title">YouTube Review Structure</div>
+    <div class="card-desc">
+      0:00 &ndash; Hook: "[Tool] changed how I [do X]. Here's my honest review after [time] using it."<br>
+      0:30 &ndash; What you'll cover (quick overview with timestamps)<br>
+      1:00 &ndash; Who the tool is for (nail the viewer's situation)<br>
+      2:00 &ndash; Live walkthrough: dashboard, key features, actual workflow<br>
+      8:00 &ndash; Pricing breakdown + "is it worth it" verdict<br>
+      11:00 &ndash; Pros &amp; cons (be honest about the cons)<br>
+      13:00 &ndash; Comparison to main competitor (1 minute)<br>
+      14:00 &ndash; Final verdict + "link in description" CTA x2<br><br>
+      Description: Affiliate link in first 3 lines. Repeat at bottom after timestamps.
+    </div>
+  </div>
+
+  <h3>Format 6: Social Proof Post</h3>
+  <p>Share a real result you got using the affiliate tool &mdash; a screenshot of a metric, a before/after workflow comparison, a specific outcome. "I got X result using [Tool]" consistently drives clicks from followers who want the same result. Works best on Twitter/X, LinkedIn, and Instagram Stories. Conversion rate is lower (0.5&ndash;1.5%) but production cost is minimal and reach potential is high.</p>
+
+  <h3>Format 7: Resource Roundup</h3>
+  <p>"10 Best [Category] Tools for [Audience] in [Year]" posts rank well for broad search terms and can include multiple affiliate links at once. Lower intent per reader than a comparison post, but the volume of "best tools" searches compensates. Target 1,500&ndash;3,000 word posts with a clear recommendation hierarchy (Editor's Pick, Best for Budget, Best for Advanced Users).</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#128200;</div>
+    <div class="callout-text"><strong>Format priority rule:</strong> Start with Format 1 (comparisons) and Format 3 (resource page). They require the least audience trust to convert and can rank from a new site. Add Format 2 (tutorials) and Format 4 (email sequences) once you have 500+ email subscribers. Add Format 5 (YouTube) when you have a channel with 1,000+ subscribers for meaningful volume.</div>
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <div class="section-num">Section 05</div>
+  <h2>The Disclosure Template Library</h2>
+  <p>The FTC requires affiliate disclosures to be clear, conspicuous, and close to the affiliate links. "Conspicuous" means a reasonable reader would notice it before clicking the link. Hiding disclosures in footers, using tiny fonts, or burying them at the end of a long post are all non-compliant. These templates are written to FTC specifications. Copy and use them verbatim.</p>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#9888;</div>
+    <div class="callout-text"><strong>Legal note:</strong> These templates are provided for educational purposes. They represent current FTC guidelines as of 2026 but are not legal advice. For business-critical compliance decisions, consult a qualified attorney familiar with FTC endorsement guidelines.</div>
+  </div>
+
+  <h3>Blog Post Disclosure</h3>
+  <div class="email-block">
+    <div class="email-meta">Placement: Top of post, above first affiliate link</div>
+    <div class="email-body">This post contains affiliate links. If you purchase through my links, I may earn a commission at no additional cost to you. I only recommend tools I personally use and genuinely believe will help you.</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Short version (use when space is limited, above the fold)</div>
+    <div class="email-body">Affiliate disclosure: This post contains affiliate links — I earn a small commission if you purchase, at no extra cost to you.</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">In-text disclosure (use when dropping a specific link mid-paragraph)</div>
+    <div class="email-body">[This is an affiliate link — I earn a commission if you sign up, at no cost to you.]</div>
+  </div>
+
+  <h3>YouTube Video Description Disclosure</h3>
+  <div class="email-block">
+    <div class="email-meta">Placement: First 3 lines of video description, before any affiliate links</div>
+    <div class="email-body">DISCLOSURE: Some links in this description are affiliate links. If you purchase through them, I may earn a commission at no extra cost to you. I only recommend products I use myself and genuinely endorse.</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">In-video verbal disclosure (say this within the first 30 seconds)</div>
+    <div class="email-body">Quick heads up — some of the links in the description below are affiliate links, which means I earn a small commission if you use them. It doesn't cost you anything extra, and it helps support this channel. I only recommend tools I actually use.</div>
+  </div>
+
+  <h3>Email Newsletter Disclosure</h3>
+  <div class="email-block">
+    <div class="email-meta">Placement: Bottom of any email containing affiliate links</div>
+    <div class="email-body">Some links in this email are affiliate links. If you click and purchase, I earn a commission — at no extra cost to you. I only share tools and resources I personally use or have thoroughly vetted.</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Inline version (use when the email is primarily an affiliate promotion)</div>
+    <div class="email-body">Note: The link above is an affiliate link. I earn a commission if you sign up &mdash; it doesn't affect your price, and I wouldn't recommend it if I didn't use it myself.</div>
+  </div>
+
+  <h3>Social Media Disclosures</h3>
+  <div class="email-block">
+    <div class="email-meta">Twitter / X (character-conscious)</div>
+    <div class="email-body">Tool I've been using for [X]: [description] [link] (affiliate link)</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Instagram caption (before any affiliate link mention)</div>
+    <div class="email-body">#ad | This post contains affiliate links. Swipe up link is an affiliate link — I earn a commission if you purchase, at no extra cost to you. [Rest of caption...]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">LinkedIn post</div>
+    <div class="email-body">Disclosure: The link in this post is an affiliate link. If you purchase through it, I earn a commission at no additional cost to you. My recommendation is based on genuine personal use.</div>
+  </div>
+
+  <h3>Short-Form Video (TikTok / Instagram Reels / YouTube Shorts)</h3>
+  <div class="email-block">
+    <div class="email-meta">On-screen text overlay (required — verbal alone is insufficient per FTC)</div>
+    <div class="email-body">Text overlay to display for minimum 3 seconds at start of video:
+"This video contains affiliate links. I earn a commission at no cost to you."
+
+Verbal script (say within first 15 seconds):
+"This is an affiliate recommendation — link in bio, I earn a commission but it doesn't change your price."</div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">&#10003;</div>
+    <div class="callout-text"><strong>Compliance checklist:</strong> (1) Disclosure appears BEFORE the first affiliate link, not after. (2) It uses plain language — no cryptic terms like "SP" or "partner" without explanation. (3) It's visible on mobile without requiring scrolling. (4) On video, it's visible on screen, not just in the description. Check all four boxes every time.</div>
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-num">Section 06</div>
+  <h2>Email Affiliate Sequences</h2>
+  <p>These three sequences are written and ready to adapt. Replace [TOOL NAME], [YOUR NAME], [LINK], and bracketed placeholders with your own details. Each sequence is structured to build desire before asking for the click, which is why they convert substantially better than single "go buy this" emails.</p>
+
+  <h3>Sequence 1: Product Launch Promotion (5 Emails)</h3>
+  <p>Use when a tool you promote is running a limited-time sale, launching a new plan, or running a Black Friday offer. Send across 5 days.</p>
+
+  <div class="email-block">
+    <div class="email-meta">Email 1 of 5 &mdash; Day 1 &mdash; Announce</div>
+    <div class="email-subject">Something I wanted to tell you about early</div>
+    <div class="email-body">Hey [First Name],
+
+I don't send a lot of "deal" emails, so when I do, it's because I actually think it's worth your time.
+
+[TOOL NAME] &mdash; which I've been using for [TIME PERIOD] to [SPECIFIC BENEFIT] &mdash; just announced [OFFER DETAILS]. It starts today and ends [DATE].
+
+If you've been on the fence about [TOOL NAME], this is genuinely the best time to try it.
+
+Here's my honest take: [2-3 sentences on what you actually use it for and why it works for you. Be specific.]
+
+Link here: [AFFILIATE LINK]
+
+More details coming this week &mdash; but wanted to give you the heads-up first.
+
+&mdash; [YOUR NAME]
+
+P.S. This is an affiliate link. I earn a commission if you sign up &mdash; at no extra cost to you.</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 2 of 5 &mdash; Day 2 &mdash; The Story</div>
+    <div class="email-subject">The real reason I switched to [TOOL NAME]</div>
+    <div class="email-body">Hey [First Name],
+
+Quick story.
+
+Before [TOOL NAME], I was using [PREVIOUS TOOL/METHOD]. It was [honest description of the problem — slow, expensive, complicated, unreliable]. I spent [time/money/effort wasted].
+
+The thing that made me switch was [SPECIFIC FEATURE or MOMENT]. The first week I tried it, [SPECIFIC RESULT YOU GOT].
+
+That was [TIME AGO]. Since then [what has changed for you because of the tool].
+
+I'm sharing this because the [OFFER] they're running ends in [X DAYS] and if you're in a similar situation to where I was, this is a real solution.
+
+[AFFILIATE LINK]
+
+Talk tomorrow.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 3 of 5 &mdash; Day 3 &mdash; The Features</div>
+    <div class="email-subject">What [TOOL NAME] actually does (the short version)</div>
+    <div class="email-body">Hey [First Name],
+
+In case you haven't looked at [TOOL NAME] yet, here's what it does and why it matters for [AUDIENCE TYPE]:
+
+[FEATURE 1]: [One sentence on what it does and why you care about it]
+[FEATURE 2]: [One sentence]
+[FEATURE 3]: [One sentence]
+[FEATURE 4]: [One sentence]
+
+The one I use most is [FEATURE] because [SPECIFIC REASON TIED TO YOUR AUDIENCE'S SITUATION].
+
+The deal: [OFFER DETAILS]. Ends [DATE]. 
+
+[AFFILIATE LINK]
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 4 of 5 &mdash; Day 4 &mdash; Objection Handler</div>
+    <div class="email-subject">The most common question I get about [TOOL NAME]</div>
+    <div class="email-body">Hey [First Name],
+
+I've recommended [TOOL NAME] to a lot of people over the past [TIME PERIOD]. The most common question I get is:
+
+"Is it worth the price?"
+
+Here's my honest answer: [HONEST ANSWER. If there's a cheaper alternative that's better for some people, say so. It builds trust.]
+
+It's NOT the right fit if: [honest use case where someone shouldn't buy]
+It IS the right fit if: [your audience's most common situation]
+
+If you're in that second category, the [OFFER] they're running right now makes the decision significantly easier.
+
+[AFFILIATE LINK] &mdash; offer ends tomorrow.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 5 of 5 &mdash; Day 5 &mdash; Last Chance</div>
+    <div class="email-subject">Last call (ends tonight)</div>
+    <div class="email-body">Hey [First Name],
+
+The [OFFER] on [TOOL NAME] ends tonight at midnight.
+
+If you've been thinking about it: [AFFILIATE LINK]
+
+If it's not right for you: totally fine. I'll be back to regular content tomorrow.
+
+&mdash; [YOUR NAME]
+
+P.S. Here's what made this worth sharing for me: [One final, genuine, specific sentence about real value it gave you.]</div>
+  </div>
+
+  <h3>Sequence 2: Evergreen Tool Recommendation (3 Emails)</h3>
+  <p>Send this sequence to new subscribers in your welcome flow, or as a standalone sequence for a tool you recommend regardless of season. Use a 3-5 day send cadence.</p>
+
+  <div class="email-block">
+    <div class="email-meta">Email 1 of 3 &mdash; Day 1 &mdash; Welcome + Natural Mention</div>
+    <div class="email-subject">Welcome &mdash; here's what I use to [CORE OUTCOME]</div>
+    <div class="email-body">Hey [First Name],
+
+Welcome &mdash; glad you're here.
+
+Over the next few days I'm going to share [what your newsletter/content is about]. But first, a quick setup note.
+
+Most of what I teach requires [GENERAL CATEGORY: an email tool / a design tool / a CMS / etc.]. The one I use and recommend is [TOOL NAME].
+
+I've tried [2-3 alternatives] and kept coming back to [TOOL NAME] because [ONE SPECIFIC REASON].
+
+If you want to follow along with what I share, you can get started here: [AFFILIATE LINK]
+
+(This is an affiliate link &mdash; I earn a commission at no cost to you.)
+
+More soon.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 2 of 3 &mdash; Day 3 &mdash; Deeper Value</div>
+    <div class="email-subject">How I actually use [TOOL NAME] week to week</div>
+    <div class="email-body">Hey [First Name],
+
+Following up on [TOOL NAME] from my last email.
+
+A lot of people sign up for tools and don't get much out of them because they don't know the workflow. Here's exactly how I use it:
+
+Monday: [SPECIFIC TASK]
+Wednesday: [SPECIFIC TASK]
+Friday: [SPECIFIC TASK]
+
+The key feature I rely on most is [FEATURE] because [SPECIFIC REASON].
+
+Results I've gotten from this workflow: [SPECIFIC RESULT with numbers if possible]
+
+If you want to try it yourself: [AFFILIATE LINK]
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 3 of 3 &mdash; Day 7 &mdash; Case Study / Social Proof</div>
+    <div class="email-subject">What [READER TYPE] can do with [TOOL NAME] in 30 days</div>
+    <div class="email-body">Hey [First Name],
+
+Last note about [TOOL NAME] &mdash; I promise.
+
+I want to share what's possible in 30 days if you actually use it:
+
+[Short 3-4 sentence story about a result you or someone you know got. Specific numbers are gold here. "I went from X to Y in Z weeks using [specific feature]." ]
+
+The reason I mention this is [TOOL NAME] has a free trial / starter plan / money-back guarantee, so there's essentially no risk to finding out if it works for your situation.
+
+[AFFILIATE LINK]
+
+After this I'm getting back to [regular content topic]. Thanks for reading.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <h3>Sequence 3: Seasonal Sale Push (4 Emails, 4 Days)</h3>
+  <p>Deploy around Black Friday, Cyber Monday, back-to-school, New Year, or any seasonal event relevant to your niche. Urgency and specificity drive higher open rates during seasonal windows.</p>
+
+  <div class="email-block">
+    <div class="email-meta">Email 1 &mdash; 4 days before deal ends &mdash; Preview</div>
+    <div class="email-subject">Black Friday tools worth your attention (my list)</div>
+    <div class="email-body">Hey [First Name],
+
+I went through the Black Friday deals relevant to [AUDIENCE] so you don't have to.
+
+Most of them are noise. Here are the ones worth your time:
+
+1. [TOOL NAME] &mdash; [DEAL DESCRIPTION] &mdash; [AFFILIATE LINK] &mdash; [1 sentence why]
+2. [TOOL NAME 2] &mdash; [DEAL DESCRIPTION] &mdash; [AFFILIATE LINK 2] &mdash; [1 sentence why]
+3. [TOOL NAME 3] &mdash; [DEAL DESCRIPTION] &mdash; [AFFILIATE LINK 3] &mdash; [1 sentence why]
+
+All three are tools I actually use. Deals end [DATE].
+
+&mdash; [YOUR NAME]
+
+Affiliate disclosure: The links above are affiliate links. I earn a commission if you purchase &mdash; at no extra cost to you.</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 2 &mdash; 2 days before deal ends &mdash; Feature the best deal</div>
+    <div class="email-subject">The one Black Friday deal I'd prioritize</div>
+    <div class="email-body">Hey [First Name],
+
+Sent you a roundup two days ago. If you only have bandwidth for one thing, make it this:
+
+[TOOL NAME]: [DEAL SPECIFICS &mdash; "50% off annual plan" or "3 months free" etc.]
+
+Why this one: [3-4 sentences on what it does, who it's for, why the deal makes the math work in your favor. Be specific about the savings amount.]
+
+Normal price: [PRICE]. Deal price: [DEAL PRICE]. Savings: [AMOUNT].
+
+[AFFILIATE LINK]
+
+Deal ends [DATE AT TIME IN TIMEZONE].
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 3 &mdash; Day deal ends &mdash; Morning reminder</div>
+    <div class="email-subject">Today's the last day for [TOOL NAME] deal</div>
+    <div class="email-body">Hey [First Name],
+
+Quick reminder &mdash; the [TOOL NAME] [DEAL] ends today.
+
+If you've been on the fence: [AFFILIATE LINK]
+
+If not your thing: no worries at all.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 4 &mdash; Day deal ends &mdash; Evening final call</div>
+    <div class="email-subject">Last few hours (then I'm done talking about this)</div>
+    <div class="email-body">Hey [First Name],
+
+[TOOL NAME] deal expires at midnight tonight.
+
+[AFFILIATE LINK]
+
+That's it. Back to [regular content] tomorrow.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+  <div class="section-num">Section 07</div>
+  <h2>The Monthly Affiliate Review SOP</h2>
+  <p>The difference between creators who plateau at $500/month in affiliate income and those who build to $5K+ is not more content. It is a monthly review discipline that tells them exactly where to put their next hour of effort. Run this 12-step SOP on the first Monday of every month. It should take 60&ndash;90 minutes maximum.</p>
+
+  <div class="sop-step">
+    <div class="sop-num">01</div>
+    <div class="sop-content">
+      <div class="sop-title">Pull click data from Pretty Links / redirect system</div>
+      <div class="sop-detail">Export monthly click report. Record total clicks per link in your tracking spreadsheet. Note any links with zero clicks &mdash; these are candidates for removal or redirect URL changes. Flag any link with sudden click drops (may indicate a broken link).</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">02</div>
+    <div class="sop-content">
+      <div class="sop-title">Pull revenue data from all affiliate dashboards</div>
+      <div class="sop-detail">Log into every affiliate program and record: clicks (their count), conversions, and revenue for the month. If your click counts differ significantly from your link tracker, investigate &mdash; this can indicate click fraud or tracking issues. Record in your spreadsheet.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">03</div>
+    <div class="sop-content">
+      <div class="sop-title">Calculate conversion rates per program</div>
+      <div class="sop-detail">Conversions / Clicks = Conversion Rate. If below 0.5% for a program you are actively promoting, it is either a product-audience mismatch or the content is not converting. If above 3%, you should be sending more traffic to this program immediately.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">04</div>
+    <div class="sop-content">
+      <div class="sop-title">Calculate EPC per program</div>
+      <div class="sop-detail">Revenue / Clicks = EPC. Sort programs by EPC descending. The top EPC programs should get more content investment next month. Programs below $0.20 EPC should be examined critically &mdash; are they worth the content effort vs. a competing program?</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">05</div>
+    <div class="sop-content">
+      <div class="sop-title">Identify top traffic sources using Google Analytics</div>
+      <div class="sop-detail">Filter GA for traffic to your /go/ redirect URLs. Which posts, videos, or emails drove the most clicks? Record the top 3 content pieces per program. These are your "star performers" &mdash; update them, link to them internally, and create related content in this format.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">06</div>
+    <div class="sop-content">
+      <div class="sop-title">Audit top affiliate content for freshness</div>
+      <div class="sop-detail">Check your top 5 converting posts. Are pricing tables accurate? Have features changed? Did the tool launch anything new? Outdated content loses conversions and trust. Update any post where the information is more than 4 months stale.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">07</div>
+    <div class="sop-content">
+      <div class="sop-title">Check for ranking movement on key affiliate posts</div>
+      <div class="sop-detail">Use Google Search Console or SEMrush to check ranking positions for your affiliate content keywords. Posts that moved from page 2 to page 1 deserve celebration and an internal link push. Posts that dropped should be investigated &mdash; is a competitor outranking you with fresher or more detailed content?</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">08</div>
+    <div class="sop-content">
+      <div class="sop-title">Identify content gaps</div>
+      <div class="sop-detail">Look at which programs have high EPC but low total clicks. These are underserved in your content library. Ask: what keyword could I rank for that would send more of the right readers to this program? Schedule 1-2 new pieces next month targeting this gap.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">09</div>
+    <div class="sop-content">
+      <div class="sop-title">Review email affiliate performance</div>
+      <div class="sop-detail">Check opens, clicks, and conversions from any affiliate emails sent last month. What subject line got the best open rate? What email got the most clicks? What sequence had the best conversion rate? Log these learnings for future email campaigns.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">10</div>
+    <div class="sop-content">
+      <div class="sop-title">Check for new programs or rate changes</div>
+      <div class="sop-detail">Spend 10 minutes checking if any tools you already use have launched or improved their affiliate programs. Also check if any of your current programs changed commission rates &mdash; this happens, and not always in your favour. Adjust your priority list if needed.</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">11</div>
+    <div class="sop-content">
+      <div class="sop-title">Plan one split test for next month</div>
+      <div class="sop-detail">Pick one variable to test: a new CTA button vs. text link, a different placement for the first affiliate link, a new lead magnet on a top affiliate page, or a different email subject line format. Define what "winning" looks like before you run it (e.g., 15% higher CTR).</div>
+    </div>
+  </div>
+
+  <div class="sop-step">
+    <div class="sop-num">12</div>
+    <div class="sop-content">
+      <div class="sop-title">Set next month's targets and content plan</div>
+      <div class="sop-detail">Based on this month's data, set 3 targets for next month: a revenue target, a clicks target, and a content production target. Write down which 2 programs you are prioritizing and what specific content you will produce. Book these into your calendar now.</div>
+    </div>
+  </div>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#128203;</div>
+    <div class="callout-text"><strong>Monthly SOP time allocation:</strong> Steps 1-4: 15 min (data pull). Steps 5-7: 20 min (content audit). Steps 8-9: 10 min (gap analysis). Steps 10-12: 15 min (planning). Total: ~60 minutes. If it's taking longer, you have too many programs. Focus your portfolio to 5-8 primary programs maximum.</div>
+  </div>
+</div>
+
+<!-- SECTION 8 -->
+<div class="section">
+  <div class="section-num">Section 08</div>
+  <h2>Scaling to $5K/Month</h2>
+  <p>Getting to your first $500/month in affiliate revenue requires finding what works. Getting to $5,000/month requires a compounding strategy: doubling down on winners, negotiating better rates, and building dedicated infrastructure around your highest-performing programs.</p>
+
+  <h3>Phase 1: Find Your Winners (Months 1&ndash;3)</h3>
+  <p>In the first 90 days, your only job is to get data. Create content across 6&ndash;10 programs, run the monthly SOP, and identify which 2&ndash;3 programs have the highest EPC and conversion rate with your specific audience. Ignore everything else.</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#9733;</div>
+    <div class="callout-text"><strong>The 80/20 reality:</strong> In almost every affiliate portfolio, 80% of revenue comes from 20% of programs. For most creators, that means 1&ndash;3 programs account for the vast majority of income. Find those programs early and build a content engine around them specifically.</div>
+  </div>
+
+  <h3>Phase 2: Double Down on Winners (Months 3&ndash;6)</h3>
+  <p>Once you have identified your top 2 programs, allocate 60% of your new content production to them. This means:</p>
+
+  <div class="system">
+    <div class="system-header">
+      <div class="system-icon" style="background:rgba(48,209,88,.1)">&#9650;</div>
+      <div class="system-name">Doubling Down Playbook</div>
+    </div>
+    <div class="system-body">
+      <ul>
+        <li>Create a dedicated "deep review" post for each top program (3,000+ words, comprehensive, ranks for long-tail keywords)</li>
+        <li>Add the program to your email welcome sequence so every new subscriber sees it within 7 days of joining</li>
+        <li>Build a comparison post against the 2&ndash;3 most commonly searched alternatives ("X vs Y", "X vs Z")</li>
+        <li>Create a tutorial that uses the tool as the core workflow vehicle — not just mentioned, but essential</li>
+        <li>Add the tool to your "resources" page in the primary position with a dedicated description section</li>
+        <li>If you have YouTube, record a 10&ndash;15 minute review. Put the affiliate link in the first line of the description</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Phase 3: Negotiate Custom Rates (Month 4+)</h3>
+  <p>Once you are sending consistent conversions to a program, you have leverage. Most affiliates never use it. Contact the affiliate manager by email (not through a generic form) with your performance data and ask for:</p>
+  <ul style="padding-left:20px;margin:12px 0">
+    <li style="color:rgba(242,242,242,.6);margin-bottom:8px;font-size:13px">An increased commission rate (even 5% more compounds massively over time)</li>
+    <li style="color:rgba(242,242,242,.6);margin-bottom:8px;font-size:13px">A custom coupon code for your audience (drives conversions by giving readers a discount)</li>
+    <li style="color:rgba(242,242,242,.6);margin-bottom:8px;font-size:13px">An extended cookie duration (going from 30 to 90 days can increase conversions 20&ndash;40%)</li>
+    <li style="color:rgba(242,242,242,.6);margin-bottom:8px;font-size:13px">Early access to promotions and sales (so you can prepare content in advance)</li>
+    <li style="color:rgba(242,242,242,.6);margin-bottom:8px;font-size:13px">Co-marketing opportunities (guest post on their blog, joint webinar, featured in their newsletter)</li>
+  </ul>
+
+  <div class="formula">Negotiation email template:
+
+Subject: Affiliate performance + rate discussion &mdash; [Your Name]
+
+Hi [Affiliate Manager Name],
+
+I've been promoting [PROGRAM] for [TIME PERIOD] and wanted to share some results:
+- [X] clicks sent last month
+- [X] new customers referred (customer IDs: [list if you have them])
+- [X] total revenue generated for [PROGRAM] from my referrals
+
+I have [upcoming content / email sequence / YouTube video] planned that I expect to drive significant additional traffic.
+
+Given this performance, I'd love to discuss whether there's room to:
+1. Increase my commission rate from [X]% to [X+5]%
+2. Set up a custom discount code for my audience
+
+Would you have 15 minutes this week?
+
+Best, [YOUR NAME]</div>
+
+  <h3>Phase 4: Build Dedicated Landing Pages (Month 6+)</h3>
+  <p>For your top 1&ndash;2 programs, build a dedicated landing page on your site that exists purely to pre-sell the product and convert warm visitors. This page sits between your content and the affiliate link, allowing you to control the narrative completely.</p>
+
+  <div class="card">
+    <div class="card-title">Dedicated Landing Page Structure</div>
+    <div class="card-desc">
+      Headline: Why I Recommend [TOOL] to Every [AUDIENCE TYPE]<br>
+      Sub-headline: The honest take from someone who has been using it for [TIME]<br>
+      Your story section: 200 words on how you found the tool and what changed<br>
+      What it does section: Feature breakdown with screenshots and your own annotations<br>
+      Who it's for: 3&ndash;4 specific use cases your audience relates to<br>
+      Pricing breakdown: Current plans with your honest recommendation on which tier<br>
+      Pros and cons: Include real cons &mdash; it builds trust that converts<br>
+      FAQ: 5&ndash;7 real questions your audience asks<br>
+      CTA: "Get started with [TOOL]" button (affiliate link) &mdash; appears 3 times on page<br>
+      Disclosure: At the very top and bottom of the page
+    </div>
+  </div>
+
+  <h3>The $5K/Month Math</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Program</th>
+        <th>Monthly Clicks</th>
+        <th>Conv. Rate</th>
+        <th>Sales</th>
+        <th>EPC</th>
+        <th>Monthly Revenue</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Primary Recurring SaaS</td><td>1,200</td><td>2.5%</td><td>30</td><td>$0.90</td><td>$1,080</td></tr>
+      <tr><td>Secondary Recurring SaaS</td><td>800</td><td>2%</td><td>16</td><td>$0.75</td><td>$600</td></tr>
+      <tr><td>High-Ticket Course</td><td>400</td><td>1.5%</td><td>6</td><td>$1.80</td><td>$720</td></tr>
+      <tr><td>Hosting / Annual Tool</td><td>600</td><td>3%</td><td>18</td><td>$0.55</td><td>$330</td></tr>
+      <tr><td>Recurring MRR (existing)</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>$1,200</td></tr>
+      <tr><td>Email/Seasonal pushes</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>$400</td></tr>
+      <tr><td colspan="5" style="font-weight:700;color:var(--text)">Total Monthly Revenue</td><td style="font-weight:700;color:var(--green)">$4,330</td></tr>
+    </tbody>
+  </table>
+
+  <p>This model is achievable with 10&ndash;15 strong affiliate posts, an email list of 3,000+ engaged subscribers, and 6 months of consistent monthly SOP execution. The recurring MRR row is the compounding engine &mdash; it grows every month even without new content.</p>
+</div>
+
+<!-- SECTION 9 -->
+<div class="section">
+  <div class="section-num">Section 09</div>
+  <h2>Tools Stack</h2>
+  <p>Here is the complete toolkit for running a professional affiliate operation. All tools are listed with free and paid options so you can start at any budget level and upgrade as your income grows.</p>
+
+  <h3>Link Management</h3>
+  <table>
+    <thead>
+      <tr><th>Tool</th><th>Price</th><th>Best For</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Pretty Links (WP)</td><td>Free / $99/yr</td><td>WordPress sites</td><td>Best-in-class for WP. Free tier handles most needs.</td></tr>
+      <tr><td>ThirstyAffiliates (WP)</td><td>Free / $79/yr</td><td>WordPress sites</td><td>Better categorization than Pretty Links. Great for large portfolios.</td></tr>
+      <tr><td>Netlify Redirects</td><td>Free</td><td>Non-WP sites</td><td>Set up in 10 minutes. No tracking — pair with GA events.</td></tr>
+      <tr><td>Bitly</td><td>Free / $35/mo</td><td>Quick tracking</td><td>Not recommended as primary — links look spammy and break trust.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Analytics</h3>
+  <table>
+    <thead>
+      <tr><th>Tool</th><th>Price</th><th>Best For</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Google Analytics 4</td><td>Free</td><td>All creators</td><td>Track clicks to /go/ URLs as events. Set up goal funnels.</td></tr>
+      <tr><td>Google Search Console</td><td>Free</td><td>SEO tracking</td><td>Monitor ranking positions for affiliate keywords monthly.</td></tr>
+      <tr><td>SEMrush</td><td>$130/mo</td><td>Serious SEO</td><td>Keyword research, competitor analysis, rank tracking. Worth it at $2K+/mo revenue.</td></tr>
+      <tr><td>Ahrefs</td><td>$99/mo</td><td>Link research</td><td>Best backlink data. Use for finding who links to competitor affiliate content.</td></tr>
+      <tr><td>Plausible</td><td>$9/mo</td><td>Privacy-first analytics</td><td>Simple, clean, GDPR-friendly alternative to GA4.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Content Creation</h3>
+  <table>
+    <thead>
+      <tr><th>Tool</th><th>Price</th><th>Best For</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Surfer SEO</td><td>$89/mo</td><td>SEO-optimized writing</td><td>Real-time content score as you write. Increases ranking probability.</td></tr>
+      <tr><td>Screenpresso / Snagit</td><td>Free / $63 one-time</td><td>Screenshots</td><td>Annotated screenshots dramatically increase tutorial conversion rates.</td></tr>
+      <tr><td>Loom</td><td>Free / $12.50/mo</td><td>Video walkthroughs</td><td>Record quick tool demos to embed in affiliate posts.</td></tr>
+      <tr><td>Canva</td><td>Free / $16.99/mo</td><td>Comparison graphics</td><td>Use for side-by-side comparison images. High shareability.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Email Marketing (for sequences in Section 06)</h3>
+  <table>
+    <thead>
+      <tr><th>Tool</th><th>Price</th><th>Best For</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ConvertKit</td><td>Free &ndash; $29/mo+</td><td>Creator newsletters</td><td>Best tagging, automation, and affiliate-safe sending practices.</td></tr>
+      <tr><td>Beehiiv</td><td>Free &ndash; $39/mo+</td><td>Newsletter growth</td><td>Built-in growth tools. Good for discovery-based audience building.</td></tr>
+      <tr><td>ActiveCampaign</td><td>$29/mo+</td><td>Advanced automation</td><td>Most powerful automation logic. Overkill for under 5K subscribers.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <div class="callout-icon">&#9733;</div>
+    <div class="callout-text"><strong>Starter stack (under $30/month total):</strong> Pretty Links free + Google Analytics + Google Search Console + ConvertKit free tier (up to 1,000 subscribers) + Screenpresso free. This setup is sufficient to build to $2,000+/month in affiliate revenue before you need to upgrade anything.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">REMbyDesign / GetScrewedScore</div>
+  <div class="doc-footer-note">Affiliate Revenue Stack &mdash; $54 &mdash; &copy; 2026 &mdash; For personal use only. Do not redistribute.</div>
+</div>
+
+</div><!-- end .page -->
+</body>
+</html>

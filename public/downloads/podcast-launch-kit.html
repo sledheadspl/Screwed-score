@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Podcast Launch Kit — REMbyDesign</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--cyan:#00E5FF;--green:#30d158;--yellow:#ffd60a;--red:#ff3b30}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:60px 32px}
+.doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+.doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.05);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:24px}
+.doc-title{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+.doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:560px;line-height:1.6}
+.doc-meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+.toc ol{padding-left:20px}
+.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px}
+.section{margin-bottom:64px}
+.section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+h2{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+h3{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 12px}
+h4{font-size:14px;font-weight:700;color:rgba(242,242,242,.8);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+p{color:rgba(242,242,242,.65);margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.system{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.system-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.system-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.system-name{font-size:16px;font-weight:700;color:var(--text)}
+.system-body{padding:20px 24px}
+.system-body ul{padding-left:0;list-style:none}
+.system-body li{font-size:13px;color:rgba(242,242,242,.55);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.system-body li:last-child{border-bottom:none}
+.system-body li::before{content:'\2192';color:var(--cyan);flex-shrink:0;margin-top:1px}
+.formula{background:#0a0a0a;border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--cyan);margin:12px 0;overflow-x:auto;white-space:pre}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--surface);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(242,242,242,.6)}
+tr:last-child td{border-bottom:none}
+.callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+.callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+.callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.6}
+.callout-text strong{color:var(--text)}
+.steps{margin:20px 0}
+.step{display:flex;gap:16px;margin-bottom:20px}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--cyan);flex-shrink:0}
+.step-content{padding-top:4px}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+.roadmap-week{border-left:2px solid var(--border);padding-left:20px;margin-bottom:28px;position:relative}
+.roadmap-week::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg)}
+.roadmap-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.roadmap-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+.roadmap-tasks{font-size:13px;color:rgba(242,242,242,.5)}
+.roadmap-tasks li{margin-bottom:4px}
+.doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+.doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+@media print{body{background:#fff;color:#000}.page{padding:20px}.formula{background:#f5f5f5;color:#0070c0}}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-right:4px}
+.tag.green{background:rgba(48,209,88,.12);color:var(--green);border:1px solid rgba(48,209,88,.2)}
+.tag.yellow{background:rgba(255,214,10,.12);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
+.tag.cyan{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+.tag.red{background:rgba(255,59,48,.12);color:var(--red);border:1px solid rgba(255,59,48,.2)}
+.email-block{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin:16px 0}
+.email-meta{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:8px}
+.email-subject{font-size:15px;font-weight:700;color:var(--cyan);margin-bottom:16px}
+.email-body{font-size:13px;color:rgba(242,242,242,.6);line-height:1.8;white-space:pre-wrap}
+.checklist{list-style:none;padding:0;margin:16px 0}
+.checklist li{font-size:13px;color:rgba(242,242,242,.6);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px}
+.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:'\2610';color:var(--cyan);flex-shrink:0;font-size:14px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+.run-of-show{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.ros-header{padding:12px 18px;background:rgba(0,229,255,.06);border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase}
+.ros-row{display:flex;gap:16px;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
+.ros-row:last-child{border-bottom:none}
+.ros-time{color:var(--cyan);font-weight:700;min-width:70px;font-family:'SF Mono','Fira Code',monospace}
+.ros-content{color:rgba(242,242,242,.6);line-height:1.5}
+.checklist-section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:12px 0}
+.checklist-section-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:12px}
+.pitch-block{background:#0a0a0a;border:1px solid rgba(0,229,255,.12);border-radius:12px;padding:24px 28px;margin:16px 0}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="doc-header">
+  <div class="doc-badge">&#9679; Premium Digital Product</div>
+  <div class="doc-title">Podcast Launch Kit</div>
+  <div class="doc-subtitle">Everything to launch and monetize a podcast in 30 days. Cover art brief, episode structure templates, sponsor pitch deck, and distribution checklist.</div>
+  <div class="doc-meta">
+    <span>30-day launch system</span>
+    <span>Sponsor pitch template</span>
+    <span>8 episode templates</span>
+    <span>REMbyDesign &copy; 2026</span>
+    <span>$79</span>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li>Podcast Strategy Foundation</li>
+    <li>Technical Setup Guide</li>
+    <li>Cover Art Design Brief</li>
+    <li>The 8 Episode Structure Templates</li>
+    <li>Pre-Launch Checklist (50 Points)</li>
+    <li>Launch Week Playbook (Days 1&ndash;7)</li>
+    <li>The Sponsor Pitch Deck</li>
+    <li>Show Notes Template System</li>
+    <li>Growth &amp; Monetization Roadmap (Months 1&ndash;6)</li>
+  </ol>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-num">Section 01</div>
+  <h2>Podcast Strategy Foundation</h2>
+  <p>Most podcasts fail before they release a second season &mdash; not because the host is boring or the audio is bad, but because they launched without a clear strategy. They chose a topic too broad, a format that doesn't suit their natural energy, and a name that tells no one anything. This section gives you a framework to make the foundational decisions correctly the first time.</p>
+
+  <h3>Niche Selection Framework</h3>
+  <p>The best podcast niche sits at the intersection of three things: what you know deeply, what a specific audience needs, and what existing podcasts are failing to deliver. Your niche is not your topic &mdash; it is your specific angle on a topic for a specific listener.</p>
+
+  <div class="formula">Niche Formula:
+[TOPIC] + [SPECIFIC AUDIENCE] + [UNIQUE ANGLE OR FORMAT]
+
+Weak: "Marketing podcast"
+Strong: "Marketing strategy for independent consultants who hate social media"
+
+Weak: "Personal finance"
+Strong: "Money conversations for women in their 30s navigating salary negotiation"
+
+Weak: "Entrepreneurship"
+Strong: "Weekly 20-minute case studies on businesses that failed and what they learned"</div>
+
+  <h3>Niche Selection Exercise</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">List 5 topics you could talk about for 2 hours without notes</div>
+        <div class="step-desc">These are your genuine domains of knowledge or passion. Do not filter for "market demand" yet. Just brainstorm freely.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">For each topic, identify the specific listener who needs it most</div>
+        <div class="step-desc">Not "entrepreneurs" &mdash; "first-time founders with technical backgrounds who struggle with marketing." The more specific your listener, the more that listener will feel the show was made for them personally.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Search Apple Podcasts and Spotify for your top 2 topics</div>
+        <div class="step-desc">Look at the top 20 shows in the niche. What format do they all use? What are they all missing? What angle is not being covered? Your differentiation lives in the gaps you find.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Validate with a one-sentence pitch test</div>
+        <div class="step-desc">Write: "This podcast is for [SPECIFIC PERSON] who wants [SPECIFIC OUTCOME] and is tired of [COMMON FRUSTRATION WITH EXISTING OPTIONS]." If you cannot fill that in convincingly, narrow the niche further.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Show Format Decision Tree</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Format</th>
+        <th>Best If You Are...</th>
+        <th>Episode Length</th>
+        <th>Production Level</th>
+        <th>Guest Dependency</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Solo deep-dive</td><td>An expert, educator, or strong storyteller</td><td>15&ndash;45 min</td><td>Low</td><td>None</td></tr>
+      <tr><td>One-on-one interview</td><td>A great listener and conversationalist</td><td>30&ndash;60 min</td><td>Medium</td><td>High</td></tr>
+      <tr><td>Co-hosted / banter</td><td>Part of a natural duo with a co-host</td><td>30&ndash;60 min</td><td>Medium</td><td>Low</td></tr>
+      <tr><td>Panel discussion</td><td>A community connector or industry insider</td><td>45&ndash;75 min</td><td>High</td><td>Very High</td></tr>
+      <tr><td>Narrative / documentary</td><td>A writer, journalist, or storyteller</td><td>20&ndash;45 min</td><td>Very High</td><td>Medium</td></tr>
+      <tr><td>News roundup</td><td>An industry follower with hot takes</td><td>15&ndash;30 min</td><td>Low&ndash;Medium</td><td>None</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Format caution:</strong> Interview formats are the most popular but the hardest to differentiate. If you choose interviews, your differentiation must come from guest selection quality, the depth of your research, or a genuinely unique question format &mdash; not just the topic. "I ask questions other podcasters don't" only works if you actually do.</div>
+  </div>
+
+  <h3>Competitive Positioning</h3>
+  <p>Map your 3&ndash;5 closest competitors on two axes: (1) Beginner vs. Advanced audience, (2) Practical vs. Inspirational content. Find the quadrant that is underserved. This is your positioning. Put it in your show description, your cover art aesthetic, and your episode titles.</p>
+
+  <div class="card">
+    <div class="card-title">Positioning Statement Template</div>
+    <div class="card-desc">
+      "[SHOW NAME] is the podcast for [SPECIFIC AUDIENCE] who want [SPECIFIC OUTCOME]. Unlike [COMPETITOR TYPE], we [UNIQUE DIFFERENTIATOR]. Every [EPISODE CADENCE], you'll get [FORMAT PROMISE]. No [COMMON FRUSTRATION WITH COMPETITORS]."<br><br>
+      Example: "The Screwed Score Podcast is the show for independent creators who want real income data, not inspiration porn. Unlike most creator podcasts, we lead with numbers and skip the guru talk. Every Monday, you get one creator's real revenue breakdown. No fake transparency."
+    </div>
+  </div>
+
+  <h3>Naming Your Show</h3>
+  <p>A strong podcast name is specific enough to communicate the niche, memorable enough to be shared by word of mouth, and searchable enough to appear when someone looks for it on a platform. A weak name is either generic (The Business Podcast) or overly clever in a way that tells listeners nothing (The Prism Show).</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#128269;</div>
+    <div class="callout-text"><strong>Name checklist before committing:</strong> (1) Is it under 4 words? (2) Does it tell someone what the show is about? (3) Can it be easily spelled from hearing it? (4) Is it available on Apple Podcasts and Spotify? (5) Can you get the .com domain or a close variant? (6) Is the social handle available on at least 2 platforms?</div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-num">Section 02</div>
+  <h2>Technical Setup Guide</h2>
+  <p>You do not need expensive gear to launch a great podcast. You need the right gear for your budget and a recording environment that doesn't embarrass you. Listeners will tolerate a slightly imperfect microphone. They will not tolerate echo, background noise, or inconsistent volume. Environment matters more than equipment.</p>
+
+  <h3>Budget Tier 1: $0&ndash;$200</h3>
+  <div class="system">
+    <div class="system-header">
+      <div class="system-icon" style="background:rgba(48,209,88,.1)">&#127908;</div>
+      <div class="system-name">$0&ndash;$200 Starter Setup</div>
+    </div>
+    <div class="system-body">
+      <ul>
+        <li><strong>Microphone:</strong> Blue Yeti Nano ($99) or Samson Q2U ($60) &mdash; USB, plug-and-play. Samson Q2U is the better value: it has both USB and XLR output so it grows with you.</li>
+        <li><strong>Headphones:</strong> Any closed-back headphones you own. Sony MDR-7506 ($90) if you need to buy. Avoid AirPods for monitoring &mdash; they colour the sound.</li>
+        <li><strong>DAW (recording software):</strong> Audacity (free, Windows/Mac/Linux) or GarageBand (free, Mac). Both are fully capable for podcast production.</li>
+        <li><strong>Remote recording:</strong> Riverside.fm free tier (separate audio tracks per participant) or Zencastr free tier. Record locally for best quality.</li>
+        <li><strong>Editing:</strong> Audacity + free noise reduction plugins. Aim for under 2 hours editing per hour of raw audio before you consider outsourcing.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Budget Tier 2: $200&ndash;$800</h3>
+  <div class="system">
+    <div class="system-header">
+      <div class="system-icon" style="background:rgba(255,214,10,.1)">&#127908;</div>
+      <div class="system-name">$200&ndash;$800 Professional Setup</div>
+    </div>
+    <div class="system-body">
+      <ul>
+        <li><strong>Microphone:</strong> Shure MV7 ($249) &mdash; USB/XLR hybrid, broadcast-quality, built-in headphone monitoring. The single best purchase at this budget tier.</li>
+        <li><strong>Audio interface (if going XLR):</strong> Focusrite Scarlett Solo ($119) or Audient iD4 ($199). Required for XLR mics but adds professional preamp quality.</li>
+        <li><strong>Headphones:</strong> Beyerdynamic DT 770 Pro ($149) or Audio-Technica ATH-M50x ($149). Flat response, closed back, studio standard.</li>
+        <li><strong>DAW:</strong> Hindenburg Journalist ($95/yr) &mdash; purpose-built for podcasters. Automatic voice leveling, loudness metering, easy export. Or continue with Audacity/GarageBand.</li>
+        <li><strong>Remote recording:</strong> Riverside.fm Creator plan ($19/mo) &mdash; 4K video, separate audio tracks, local recording, transcript. Worth it for interview-based shows.</li>
+        <li><strong>Pop filter + boom arm:</strong> RODE PSA1 arm ($99) + basic pop filter ($15). Keeps mic at consistent distance, removes plosives, looks professional on video.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Budget Tier 3: $800+</h3>
+  <div class="system">
+    <div class="system-header">
+      <div class="system-icon" style="background:rgba(0,229,255,.1)">&#127908;</div>
+      <div class="system-name">$800+ Studio-Grade Setup</div>
+    </div>
+    <div class="system-body">
+      <ul>
+        <li><strong>Microphone:</strong> Shure SM7B ($399) &mdash; the industry standard for voice recording. Requires a good preamp due to low output. Add Cloudlifter ($149) if your interface doesn't have enough gain.</li>
+        <li><strong>Audio interface:</strong> Universal Audio Volt 276 ($299) or Focusrite Scarlett 2i2 ($169). The UA Volt has a vintage transformer mode that adds warmth to voice recordings.</li>
+        <li><strong>Acoustic treatment:</strong> 6&ndash;8 acoustic panels on walls and ceiling ($150&ndash;$300 DIY or $400 pre-made). Makes a larger sonic difference than mic upgrades above $300.</li>
+        <li><strong>Headphones:</strong> Sennheiser HD 600 ($299) or Beyerdynamic DT 880 Pro ($199). Semi-open for mixing, closed for recording.</li>
+        <li><strong>DAW:</strong> Adobe Audition ($55/mo with Creative Cloud) or Logic Pro ($199 one-time, Mac). Logic Pro is outstanding value for Mac users doing anything more than basic editing.</li>
+        <li><strong>Video camera (optional):</strong> Sony ZV-E10 ($550) + Elgato Key Light ($199). For shows that repurpose to YouTube or for clip content on social media.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Recording Environment Checklist</h3>
+  <p>The right room matters more than any gear under $500. Before your first recording session, work through this list:</p>
+  <ul class="checklist">
+    <li>Record in the smallest room available &mdash; smaller rooms have less reverb</li>
+    <li>Hang clothes in an open closet behind you &mdash; fabric absorbs echo without cost</li>
+    <li>Place a thick blanket or duvet on the floor under your recording position</li>
+    <li>Turn off HVAC 5 minutes before recording (you can turn it back on during breaks)</li>
+    <li>Close windows and doors. Check for external noise at the time of day you plan to record</li>
+    <li>Place the microphone 4&ndash;8 inches from your mouth, slightly off-axis to reduce plosives</li>
+    <li>Record a 30-second room tone (silence) at the start of each session for noise reduction</li>
+    <li>Use headphones while recording to catch any background noise in real time</li>
+    <li>Test record before every episode. Play it back on earbuds and speakers to check quality</li>
+  </ul>
+
+  <h3>Upload &amp; Distribution Workflow</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Export from DAW as 44.1kHz, 16-bit, mono WAV</div>
+        <div class="step-desc">Mono is correct for most voice-only podcasts. WAV preserves full quality before your host compresses to MP3.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Normalize loudness to -16 LUFS integrated</div>
+        <div class="step-desc">Apple Podcasts and Spotify normalize to -16 LUFS. If your file is louder, it gets turned down. Match the target and your episodes sound consistent across all platforms.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Upload to podcast host as MP3, 128kbps mono</div>
+        <div class="step-desc">Recommended hosts: Buzzsprout, Transistor, or Captivate. All provide an RSS feed for distribution. Buzzsprout has the best onboarding for new podcasters. Transistor is better for multi-show or team setups.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Add episode metadata before publishing</div>
+        <div class="step-desc">Title, description (use show notes template from Section 08), season/episode number, chapter markers if supported, transcript. Missing metadata reduces discoverability.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-num">Section 03</div>
+  <h2>Cover Art Design Brief</h2>
+  <p>Your cover art is the thumbnail that appears in every podcast app in the world. It is the first impression a potential listener gets before they ever hear your voice. Most podcast cover art fails for two reasons: it tries to communicate too much, or it looks like every other show in the category. This brief gives you the exact specs and principles to create art that stands out in a feed of thumbnails.</p>
+
+  <h3>Platform Specifications</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Minimum Size</th>
+        <th>Recommended Size</th>
+        <th>Format</th>
+        <th>Max File Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Apple Podcasts</td><td>1400 x 1400px</td><td>3000 x 3000px</td><td>JPG or PNG</td><td>512KB</td></tr>
+      <tr><td>Spotify</td><td>1400 x 1400px</td><td>3000 x 3000px</td><td>JPG or PNG</td><td>512KB</td></tr>
+      <tr><td>Google Podcasts</td><td>1400 x 1400px</td><td>3000 x 3000px</td><td>JPG or PNG</td><td>512KB</td></tr>
+      <tr><td>Amazon Music</td><td>1400 x 1400px</td><td>3000 x 3000px</td><td>JPG or PNG</td><td>512KB</td></tr>
+      <tr><td>iHeart Radio</td><td>1400 x 1400px</td><td>3000 x 3000px</td><td>JPG or PNG</td><td>500KB</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#9432;</div>
+    <div class="callout-text"><strong>Universal rule:</strong> Design at 3000 x 3000px and export at 300 DPI. Your art will be displayed at sizes as small as 55 x 55px in some contexts (Apple Watch, sidebar in podcast apps). It must remain legible and identifiable at thumbnail scale. Test your art at 100px wide before finalizing.</div>
+  </div>
+
+  <h3>Color Psychology for Podcasts</h3>
+  <p>Color triggers immediate emotional associations. Choose your cover art palette based on the emotional tone of your show, not just aesthetic preference.</p>
+  <table>
+    <thead>
+      <tr><th>Color</th><th>Association</th><th>Best For</th><th>Risk</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Deep Blue</td><td>Trust, authority, calm</td><td>Finance, leadership, tech</td><td>Common &mdash; differentiate with shade/pairing</td></tr>
+      <tr><td>Black / dark</td><td>Premium, sophisticated, edgy</td><td>Business, crime, true crime, culture</td><td>Hard to read text overlaid on dark at small sizes</td></tr>
+      <tr><td>Bright yellow / orange</td><td>Energy, optimism, accessibility</td><td>Motivational, lifestyle, comedy</td><td>Can read as "cheap" if paired with wrong fonts</td></tr>
+      <tr><td>Green</td><td>Growth, health, money</td><td>Wellness, environment, personal finance</td><td>Oversaturated in wellness category</td></tr>
+      <tr><td>Red</td><td>Urgency, passion, power</td><td>True crime, sports, political commentary</td><td>Aggressive &mdash; use sparingly as accent</td></tr>
+      <tr><td>Purple / violet</td><td>Creativity, mystery, luxury</td><td>Creative arts, spirituality, fiction</td><td>Less saturated in most podcast categories &mdash; opportunity</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Font Pairing Guide</h3>
+  <p>Use a maximum of two fonts in your cover art. One for the show name (display/heading font) and one for the tagline or episode descriptor (body font). Test that both are legible at 100px wide.</p>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Authority / Expertise Shows</div>
+      <div class="card-desc">
+        Display: Bebas Neue, Oswald, or Montserrat Bold<br>
+        Body: Inter or Source Sans Pro<br>
+        Pair with: Dark background, high contrast<br>
+        Avoid: Script fonts, anything with thin strokes
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Conversational / Lifestyle Shows</div>
+      <div class="card-desc">
+        Display: Playfair Display, Lora, or Abril Fatface<br>
+        Body: Raleway or Nunito<br>
+        Pair with: Warm, mid-saturation backgrounds<br>
+        Avoid: All-caps in body text, overly condensed fonts
+      </div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Tech / Startup / Analytical</div>
+      <div class="card-desc">
+        Display: Space Grotesk, DM Sans Extra Bold, or Syne<br>
+        Body: IBM Plex Sans or Inter<br>
+        Pair with: Dark or neutral background, minimal color<br>
+        Avoid: Decorative serifs, any font that reads as playful
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Creative / Arts / Culture</div>
+      <div class="card-desc">
+        Display: Anything with character &mdash; Righteous, Rubik, or custom display<br>
+        Body: Libre Baskerville or Crimson Text<br>
+        Pair with: Unexpected color combinations, texture<br>
+        Avoid: Playing it safe &mdash; this category rewards bold choices
+      </div>
+    </div>
+  </div>
+
+  <h3>Cover Art Design Brief Template</h3>
+  <p>Use this brief when working with a designer or generating art with AI tools (Midjourney, DALL-E, Ideogram).</p>
+
+  <div class="pitch-block">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:16px">Design Brief: Podcast Cover Art</div>
+
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Show Name:</strong> [SHOW NAME]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Tagline (if any):</strong> [TAGLINE — keep under 6 words]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Host Name:</strong> [YOUR NAME — include only if you are a known personal brand]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Audience:</strong> [Who listens — be specific: "indie founders, 25-40, bootstrapped SaaS"]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Tone/Mood:</strong> [3 words: e.g., "bold, practical, no-fluff" or "warm, curious, accessible"]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Primary Color:</strong> [Hex code or color family]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Secondary Color:</strong> [Hex code or "white" / "black"]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Font Preference:</strong> [From the guide above, or "designer's choice matching the tone"]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Visual Elements:</strong> [Abstract shapes? Photo of host? Icon/illustration? Texture?]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Shows I like visually:</strong> [Name 3 podcast covers with similar aesthetic — helps designer align faster]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Shows I want to look different from:</strong> [Name 2-3 competitors in your niche]</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:8px"><strong style="color:var(--text)">Deliverables:</strong> 3000x3000px JPG at 300 DPI + layered source file + 400x400px version for social</p>
+    <p style="font-size:13px;color:rgba(242,242,242,.6);margin-bottom:0"><strong style="color:var(--text)">Test requirement:</strong> Designer must provide a mock-up at 100px wide to confirm legibility</p>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-num">Section 04</div>
+  <h2>The 8 Episode Structure Templates</h2>
+  <p>Every episode structure below is a complete run-of-show. Times are guidelines &mdash; adjust to your target episode length. Use these as starting scripts for your first few episodes, then adapt them once you have found your natural rhythm. Consistent structure builds listener habit: when people know what to expect, they come back.</p>
+
+  <h3>Template 1: Solo Deep-Dive</h3>
+  <p>Best for: expertise-based shows, educational content, opinion pieces. Host speaks directly to audience with no guests. Requires the most preparation but is also the most independent to produce.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Solo Deep-Dive Run-of-Show (Target: 25 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;0:45</span><div class="ros-content"><strong>Hook.</strong> Open with the most compelling sentence from the entire episode. A stat, a counterintuitive claim, a story teaser. Do NOT start with "Welcome to [show name]."</div></div>
+    <div class="ros-row"><span class="ros-time">0:45&ndash;2:00</span><div class="ros-content"><strong>Promise + brief intro.</strong> "Today I'm going to show you exactly [SPECIFIC OUTCOME]." Then 30 seconds of show/host intro for new listeners.</div></div>
+    <div class="ros-row"><span class="ros-time">2:00&ndash;4:00</span><div class="ros-content"><strong>Context / Setup.</strong> Why this topic matters right now. The problem, the question, the gap you are filling. Set the stakes.</div></div>
+    <div class="ros-row"><span class="ros-time">4:00&ndash;20:00</span><div class="ros-content"><strong>Main content (3-4 segments).</strong> Divide your core content into 3&ndash;4 named sections. Announce each transition: "The second thing I want to cover is..." Treat each section as a mini-episode within the episode. Include one specific, memorable example per section.</div></div>
+    <div class="ros-row"><span class="ros-time">20:00&ndash;22:30</span><div class="ros-content"><strong>Summary + Key Takeaways.</strong> Briefly restate the 3 most important points. "If you take nothing else from today..."</div></div>
+    <div class="ros-row"><span class="ros-time">22:30&ndash;24:00</span><div class="ros-content"><strong>CTA.</strong> ONE call to action. Subscribe, leave a review, visit a URL, join the email list. Never more than one. Close with what's coming next episode.</div></div>
+    <div class="ros-row"><span class="ros-time">24:00&ndash;25:00</span><div class="ros-content"><strong>Outro.</strong> Brief sign-off. Consistent every episode. 30&ndash;45 seconds maximum. Sponsor spot can go here or at top of episode.</div></div>
+  </div>
+
+  <h3>Template 2: One-on-One Interview</h3>
+  <p>Best for: networking-based shows, learning from experts, story-driven content. Requires strong pre-interview research and a clear guest brief sent in advance. The quality of your questions determines the quality of the episode.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Interview Episode Run-of-Show (Target: 45 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;1:00</span><div class="ros-content"><strong>Teaser clip.</strong> 30&ndash;60 seconds of the most compelling moment from the interview. Pull it in editing. Best line, most surprising answer, strongest moment. Opens the episode mid-conversation.</div></div>
+    <div class="ros-row"><span class="ros-time">1:00&ndash;3:00</span><div class="ros-content"><strong>Host intro + guest intro.</strong> "I'm [HOST], this is [SHOW]. Today's guest is [GUEST NAME] &mdash; [2-3 sentence bio that explains why they're worth listening to]. What we cover today: [3 bullet points]."</div></div>
+    <div class="ros-row"><span class="ros-time">3:00&ndash;7:00</span><div class="ros-content"><strong>Origin story.</strong> "Before we get into [main topic], walk me through how you got to where you are today. The short version." Let the guest talk. Interrupt only to clarify, not to redirect.</div></div>
+    <div class="ros-row"><span class="ros-time">7:00&ndash;35:00</span><div class="ros-content"><strong>Core questions (4&ndash;6 prepared).</strong> Pre-write 8 questions, use 4&ndash;6. Leave room for follow-up. The best interviews sound like conversations, not questionnaires. After each answer, ask one genuine follow-up before moving to next prepared question.</div></div>
+    <div class="ros-row"><span class="ros-time">35:00&ndash;40:00</span><div class="ros-content"><strong>Rapid-fire / lightning round (optional).</strong> 5 quick questions, 1-sentence answers. Creates memorable, shareable moments. "Biggest mistake. Best book. Advice to your past self."</div></div>
+    <div class="ros-row"><span class="ros-time">40:00&ndash;43:00</span><div class="ros-content"><strong>Guest CTA.</strong> "Where can listeners find you / follow your work / get the resource you mentioned?" Give the guest 60 seconds to direct your audience.</div></div>
+    <div class="ros-row"><span class="ros-time">43:00&ndash;45:00</span><div class="ros-content"><strong>Host outro + main CTA.</strong> Thank guest, your one listener CTA, next episode preview, sign-off.</div></div>
+  </div>
+
+  <h3>Template 3: Panel Discussion</h3>
+  <p>Best for: roundtable debates, industry discussions, multi-perspective topics. Hardest to produce well &mdash; requires a strong facilitator to prevent crosstalk and ensure equal airtime.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Panel Discussion Run-of-Show (Target: 55 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;3:00</span><div class="ros-content"><strong>Host intro + panelist intros.</strong> One sentence per panelist. Do not read full bios &mdash; have them in the show notes. Frame the debate topic clearly: "Today we're debating [TOPIC]. [GUEST A] argues [POSITION A]. [GUEST B] argues [POSITION B]."</div></div>
+    <div class="ros-row"><span class="ros-time">3:00&ndash;10:00</span><div class="ros-content"><strong>Opening statements.</strong> 90&ndash;120 seconds each panelist states their core position. No interruptions. Host moderates order.</div></div>
+    <div class="ros-row"><span class="ros-time">10:00&ndash;40:00</span><div class="ros-content"><strong>Facilitated discussion (3 main questions).</strong> Pre-write 5 questions, plan to cover 3. Each question gets one opening answer (1 min) then open discussion (5 min). Host's job: redirect when panelists talk past each other, invite quieter panelists explicitly, maintain time discipline.</div></div>
+    <div class="ros-row"><span class="ros-time">40:00&ndash;50:00</span><div class="ros-content"><strong>Audience questions or pre-submitted questions.</strong> 3&ndash;5 questions. Tell guests in advance you'll include these so they can prepare thoughtful answers.</div></div>
+    <div class="ros-row"><span class="ros-time">50:00&ndash;53:00</span><div class="ros-content"><strong>Closing statements.</strong> 60 seconds each panelist to summarize their key position. Has any opinion changed? What's their final recommendation?</div></div>
+    <div class="ros-row"><span class="ros-time">53:00&ndash;55:00</span><div class="ros-content"><strong>Host summary + outro.</strong> Host summarizes the 3 key takeaways from the discussion. CTA + sign-off.</div></div>
+  </div>
+
+  <h3>Template 4: Listener Q&amp;A</h3>
+  <p>Best for: community-driven shows, trust-building, audience engagement. Collect questions via email, social media, or a Typeform link. Announce the Q&amp;A episode 1 week in advance to collect enough material.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Q&A Episode Run-of-Show (Target: 30 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;1:30</span><div class="ros-content"><strong>Intro.</strong> "This is our Q&amp;A episode for [MONTH]. I collected [X] questions and I'm answering the [10] best ones today. Let's get into it."</div></div>
+    <div class="ros-row"><span class="ros-time">1:30&ndash;27:00</span><div class="ros-content"><strong>Questions (10 questions, ~2.5 min each).</strong> Read the question, credit the asker by first name, give your answer. Group thematically if questions cluster around a topic. Your most detailed answer should be your middle one, not your last.</div></div>
+    <div class="ros-row"><span class="ros-time">27:00&ndash;29:00</span><div class="ros-content"><strong>Theme wrap + CTA.</strong> "A theme I noticed in today's questions is [THEME]. That tells me [AUDIENCE INSIGHT]." Then CTA: "Submit your question for next Q&amp;A at [URL / email / form]."</div></div>
+    <div class="ros-row"><span class="ros-time">29:00&ndash;30:00</span><div class="ros-content"><strong>Outro.</strong></div></div>
+  </div>
+
+  <h3>Template 5: Case Study</h3>
+  <p>Best for: results-driven shows, business/career podcasts, investigative content. Walk through one specific example in depth. Listeners learn principles through concrete stories, not abstractions.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Case Study Run-of-Show (Target: 30 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;1:00</span><div class="ros-content"><strong>Hook with outcome.</strong> State the result first: "By the end of this episode, you'll know exactly how [PERSON/COMPANY] went from [START STATE] to [END STATE]." Humans stay engaged when they know where the story is going.</div></div>
+    <div class="ros-row"><span class="ros-time">1:00&ndash;5:00</span><div class="ros-content"><strong>Background.</strong> Who is the subject? What was the situation before? What problem were they trying to solve? Set the scene with specifics &mdash; numbers, dates, context.</div></div>
+    <div class="ros-row"><span class="ros-time">5:00&ndash;20:00</span><div class="ros-content"><strong>The journey (3 phases).</strong> What did they try first? What failed and why? What pivot happened? What worked and why? Keep each phase to 5 minutes. Include specific data, quotes, and decision points.</div></div>
+    <div class="ros-row"><span class="ros-time">20:00&ndash;26:00</span><div class="ros-content"><strong>Results + analysis.</strong> What happened? What were the measurable outcomes? What does this teach us that we couldn't have inferred without this specific case?</div></div>
+    <div class="ros-row"><span class="ros-time">26:00&ndash;29:00</span><div class="ros-content"><strong>Listener application.</strong> "Here's how you can apply this in your own [situation]..." Give 2-3 actionable takeaways that go beyond the surface.</div></div>
+    <div class="ros-row"><span class="ros-time">29:00&ndash;30:00</span><div class="ros-content"><strong>CTA + outro.</strong></div></div>
+  </div>
+
+  <h3>Template 6: News Roundup</h3>
+  <p>Best for: fast-moving industries, tech, finance, creator economy. Short and consistent. Listeners come for your take, not just the news &mdash; ensure every story includes your actual opinion.</p>
+  <div class="run-of-show">
+    <div class="ros-header">News Roundup Run-of-Show (Target: 20 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;1:00</span><div class="ros-content"><strong>Intro.</strong> "Welcome to [SHOW]. This is the [DATE] edition. I've got [X] stories and [TIME] to cover them. Let's go." Efficiency signals respect for listener time.</div></div>
+    <div class="ros-row"><span class="ros-time">1:00&ndash;17:00</span><div class="ros-content"><strong>5 stories (2.5&ndash;3 min each).</strong> Per story: (1) What happened &mdash; 30 seconds. (2) Why it matters &mdash; 60 seconds. (3) Your take / prediction &mdash; 60 seconds. Total = ~2.5 min. The take is what differentiates you from a news ticker.</div></div>
+    <div class="ros-row"><span class="ros-time">17:00&ndash;19:00</span><div class="ros-content"><strong>Story of the Week.</strong> The one story you'd tell a friend. Slightly more opinion, slightly longer. This is the shareable moment of the episode.</div></div>
+    <div class="ros-row"><span class="ros-time">19:00&ndash;20:00</span><div class="ros-content"><strong>Outro + next edition preview.</strong></div></div>
+  </div>
+
+  <h3>Template 7: Narrative Storytelling</h3>
+  <p>Best for: documentary-style podcasts, long-form journalism, true crime. The most cinematic format. Requires the most production but creates the most loyal audiences.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Narrative Episode Run-of-Show (Target: 35 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;1:30</span><div class="ros-content"><strong>Cold open.</strong> Drop into a scene from the middle of the story. No context yet. Create tension or mystery. End on a cliffhanger. Then: "I'm [HOST]. This is [SHOW]."</div></div>
+    <div class="ros-row"><span class="ros-time">1:30&ndash;6:00</span><div class="ros-content"><strong>Setup / backstory.</strong> Now give context. Who is involved? Where and when does this take place? What are the stakes?</div></div>
+    <div class="ros-row"><span class="ros-time">6:00&ndash;26:00</span><div class="ros-content"><strong>The narrative arc.</strong> Rising action &rarr; complication &rarr; crisis &rarr; resolution. Use scene transitions: "Six months earlier..." or "Meanwhile, across town...". Include interview clips if available. Write for the ear, not the eye: concrete sensory detail, short sentences, active verbs.</div></div>
+    <div class="ros-row"><span class="ros-time">26:00&ndash;32:00</span><div class="ros-content"><strong>Resolution + meaning.</strong> What happened? What does this story mean? Why should the listener care? This is where the journalism meets the human truth.</div></div>
+    <div class="ros-row"><span class="ros-time">32:00&ndash;35:00</span><div class="ros-content"><strong>Epilogue + CTA.</strong> Where are the people now? Brief update. Then your CTA and outro music.</div></div>
+  </div>
+
+  <h3>Template 8: Repurposed Content</h3>
+  <p>Best for: creators who have existing video, blog, or course content. Convert your best-performing content into podcast episodes to extend reach with minimal new creation.</p>
+  <div class="run-of-show">
+    <div class="ros-header">Repurposed Content Run-of-Show (Target: 20 min)</div>
+    <div class="ros-row"><span class="ros-time">0:00&ndash;1:00</span><div class="ros-content"><strong>Intro.</strong> "Today I'm sharing [CONTENT TYPE] that originally appeared on [PLATFORM]. I've updated it for this format and added [NEW ELEMENT]." Transparency builds trust and acknowledges cross-platform listeners.</div></div>
+    <div class="ros-row"><span class="ros-time">1:00&ndash;16:00</span><div class="ros-content"><strong>Adapted content.</strong> Read and adapt your written content for the ear &mdash; rewrite all visual references ("as you can see" &rarr; "imagine"). Add voice colour: emphasis, pacing changes, brief ad-libs that were not in the original. This prevents the "reading a blog post" energy that kills engagement.</div></div>
+    <div class="ros-row"><span class="ros-time">16:00&ndash;19:00</span><div class="ros-content"><strong>Expanded section.</strong> Add 2&ndash;3 minutes of material not in the original: new examples, updates since publication, listener questions about the topic.</div></div>
+    <div class="ros-row"><span class="ros-time">19:00&ndash;20:00</span><div class="ros-content"><strong>CTA.</strong> Link to original content in show notes for listeners who want the written or video version.</div></div>
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <div class="section-num">Section 05</div>
+  <h2>Pre-Launch Checklist (50 Points)</h2>
+  <p>Do not publish your first episode until every item in this checklist is complete. Launching before you are ready means your first listeners get a broken or incomplete experience and never come back. You only get one first impression per listener.</p>
+
+  <div class="checklist-section">
+    <div class="checklist-section-title">Brand &amp; Identity (9 items)</div>
+    <ul class="checklist">
+      <li>Show name finalized and verified unique on Apple Podcasts and Spotify</li>
+      <li>Show description written (150&ndash;300 words, keyword-rich, audience-first)</li>
+      <li>Cover art completed at 3000x3000px, tested at 100px, exported under 512KB</li>
+      <li>Show category selected (pick primary and secondary if available)</li>
+      <li>Language and country set correctly in your podcast host settings</li>
+      <li>Show website or landing page live (even a single page is fine)</li>
+      <li>Social media handles claimed on Instagram, Twitter/X, and one other platform</li>
+      <li>Show email address created (hello@[showname].com or a Gmail variant)</li>
+      <li>Intro/outro music produced or licensed (royalty-free: Epidemic Sound, Artlist)</li>
+    </ul>
+  </div>
+
+  <div class="checklist-section">
+    <div class="checklist-section-title">Technical Setup (10 items)</div>
+    <ul class="checklist">
+      <li>Podcast hosting account created and configured (Buzzsprout, Transistor, or Captivate)</li>
+      <li>RSS feed generated and validated at castfeedvalidator.com</li>
+      <li>Custom domain connected to podcast host (optional but recommended)</li>
+      <li>Recording environment tested &mdash; no echo, no hum, no background noise</li>
+      <li>Audio levels calibrated &mdash; recorded levels peak between -12 and -6 dBFS</li>
+      <li>Loudness target set: -16 LUFS integrated for podcast export</li>
+      <li>MP3 export settings confirmed: 128kbps, 44.1kHz, mono (or stereo if music show)</li>
+      <li>Remote recording platform tested with a mock interview (Riverside, Zencastr, or Squadcast)</li>
+      <li>Backup recording method established (always record locally AND in the cloud)</li>
+      <li>Episode file naming convention established: [SHOWCODE]-EP[NUM]-[GUEST-LASTNAME].mp3</li>
+    </ul>
+  </div>
+
+  <div class="checklist-section">
+    <div class="checklist-section-title">Content (12 items)</div>
+    <ul class="checklist">
+      <li>Trailer episode recorded (60&ndash;90 seconds: what the show is, who it's for, why they should subscribe)</li>
+      <li>Minimum 3 episodes recorded, edited, and ready to publish on launch day</li>
+      <li>Episode 1 is your strongest content &mdash; it sets the bar for everything that follows</li>
+      <li>Show notes template created and applied to all launch episodes (see Section 08)</li>
+      <li>Timestamps written for each launch episode</li>
+      <li>Episode titles written: descriptive, specific, include a searchable keyword</li>
+      <li>Intro script recorded and mixed into each episode</li>
+      <li>Outro script recorded and mixed into each episode</li>
+      <li>All audio files QC'd: listen to the full episode on earbuds before uploading</li>
+      <li>Episode artwork created if using individual episode art (not required but improves click-through)</li>
+      <li>Transcripts generated for at least your first 3 episodes (Otter.ai, Descript, or Riverside auto-transcribe)</li>
+      <li>Content calendar built for first 8 episodes with topic and guest (if applicable) confirmed</li>
+    </ul>
+  </div>
+
+  <div class="checklist-section">
+    <div class="checklist-section-title">Platform Submissions (8 items)</div>
+    <ul class="checklist">
+      <li>Apple Podcasts submitted via Apple Podcasters Connect — approval takes 24&ndash;72 hours</li>
+      <li>Spotify submitted via Spotify for Podcasters — approval is usually same-day</li>
+      <li>Google Podcasts / YouTube Music submitted (note: Google Podcasts merged into YouTube Music in 2024 — submit your RSS there)</li>
+      <li>Amazon Music &amp; Audible submitted at podcasters.amazon.com — approval 3&ndash;5 business days</li>
+      <li>iHeart Radio submitted at iheartmedia.com/podcasts — approval 1&ndash;2 weeks</li>
+      <li>Pocket Casts submitted via pocketcasts.com/submit</li>
+      <li>Overcast submission (auto-discovers from Apple Podcasts once approved)</li>
+      <li>Podcast Index submitted at podcastindex.org for open ecosystem coverage</li>
+    </ul>
+  </div>
+
+  <div class="checklist-section">
+    <div class="checklist-section-title">Analytics &amp; Monetization Prep (6 items)</div>
+    <ul class="checklist">
+      <li>Podcast host analytics enabled and understood: downloads, listener retention, top episodes</li>
+      <li>Apple Podcasters analytics account connected to see Apple-specific listener data</li>
+      <li>Spotify for Podcasters analytics reviewed &mdash; separate and valuable data set</li>
+      <li>Email list integration set up: new subscriber form on your website linked to podcast content</li>
+      <li>Anchor/Patreon/Buy Me A Coffee page created if planning listener support from day one</li>
+      <li>Sponsor wish list of 5 target brands written down (you will need this for Section 07)</li>
+    </ul>
+  </div>
+
+  <div class="checklist-section">
+    <div class="checklist-section-title">Launch Readiness (5 items)</div>
+    <ul class="checklist">
+      <li>Launch date set and non-negotiable &mdash; perfection is the enemy of launch</li>
+      <li>Launch Week Playbook (Section 06) reviewed and social posts scheduled</li>
+      <li>Email to existing list drafted and scheduled for launch day</li>
+      <li>Guest outreach emails drafted for first 5 interview guests (if applicable)</li>
+      <li>Review ask script prepared for launch week (see Section 06)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-num">Section 06</div>
+  <h2>Launch Week Playbook (Days 1&ndash;7)</h2>
+  <p>The first 7 days of your podcast determine its long-term visibility. Apple Podcasts and Spotify both surface new shows to potential listeners in their first 30 days. The more reviews, listens, and followers you generate in launch week, the better placement you get in "New and Noteworthy" sections. Here is a day-by-day action plan with exact copy.</p>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 1 &mdash; Launch Day</div>
+    <div class="roadmap-title">Go live &amp; announce everywhere simultaneously</div>
+    <div class="roadmap-tasks">
+      <li>Publish episodes 1, 2, and 3 on your podcast host simultaneously (staggered release confuses the algorithm — publish all three at once for launch)</li>
+      <li>Email your existing list (see email template below)</li>
+      <li>Post on every social channel: Instagram, Twitter/X, LinkedIn, TikTok, Facebook Group if applicable</li>
+      <li>Text 10 friends personally and ask them to subscribe and leave a review today specifically</li>
+    </div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Day 1 &mdash; Email to Existing List</div>
+    <div class="email-subject">I just launched a podcast &#127908;</div>
+    <div class="email-body">Hey [First Name],
+
+Today's the day. I've been working on this for [TIME PERIOD] and I'm finally ready to share it.
+
+[SHOW NAME] is a podcast for [SPECIFIC AUDIENCE] who want [SPECIFIC OUTCOME]. 
+
+Here's what I published today:
+- Episode 1: [TITLE AND 1-SENTENCE DESCRIPTION]
+- Episode 2: [TITLE AND 1-SENTENCE DESCRIPTION]
+- Episode 3: [TITLE AND 1-SENTENCE DESCRIPTION]
+
+Listen wherever you get your podcasts: [LINK TO SHOW PAGE]
+
+Or directly on Apple Podcasts: [APPLE LINK]
+Or on Spotify: [SPOTIFY LINK]
+
+One ask: If you have 2 minutes this week, leaving a review on Apple Podcasts makes a real difference in helping new listeners find the show. Here's the direct link: [REVIEW LINK]
+
+Thank you for being here from the start. It means everything.
+
+&mdash; [YOUR NAME]</div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 2</div>
+    <div class="roadmap-title">Behind-the-scenes content + listener ask for reviews</div>
+    <div class="roadmap-tasks">
+      <li>Post a "making of" story/reel on Instagram: your recording setup, the bloopers, the preparation process. Humanize the launch.</li>
+      <li>Twitter/X: "I launched a podcast yesterday. Here's the one thing I wish I'd known before starting: [HONEST INSIGHT]." Thread performs well here.</li>
+      <li>Personally DM 20 people in your niche/community who would genuinely benefit from the show. Personalized message only &mdash; no copy-paste blast.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 3</div>
+    <div class="roadmap-title">Share a clip + guest outreach if interview show</div>
+    <div class="roadmap-tasks">
+      <li>Clip the best 60-second moment from Episode 1. Post as a Reel, TikTok, and Twitter video. Use captions (85% of social video is watched without sound).</li>
+      <li>If you have an interview format: send outreach emails to your first 5 target guests (template below).</li>
+      <li>LinkedIn post: "Why I started [SHOW NAME]" &mdash; personal, specific, professional. Link to first episode.</li>
+    </div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Day 3 &mdash; Guest Outreach Template</div>
+    <div class="email-subject">[Show Name] podcast &mdash; would love to have you on</div>
+    <div class="email-body">Hi [GUEST FIRST NAME],
+
+I launched [SHOW NAME] this week &mdash; a podcast for [AUDIENCE DESCRIPTION]. We're [X] episodes in with [EARLY TRACTION IF ANY &mdash; X subscribers, X downloads].
+
+I've been following your work on [SPECIFIC THING THEY DO] for [TIME PERIOD], and particularly [SPECIFIC PIECE OF THEIR WORK] resonated with me because [GENUINE REASON].
+
+I'd love to have you on for a conversation about [SPECIFIC TOPIC ANGLE that fits their expertise and your show]. I think our audience would particularly benefit from your perspective on [SPECIFIC QUESTION OR THEME].
+
+The format: approximately [LENGTH] minutes, remote recording via [PLATFORM]. Low prep for you &mdash; just a conversation.
+
+If you're open to it, I can send over a few date options. If not, no worries at all &mdash; I'll keep following your work either way.
+
+Best,
+[YOUR NAME]
+[SHOW NAME] | [SHOW URL]</div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 4</div>
+    <div class="roadmap-title">Community engagement + SEO</div>
+    <div class="roadmap-tasks">
+      <li>Post the episode topic/key insight as a question in 2&ndash;3 relevant online communities (Reddit, Facebook Groups, Slack groups, Discord servers). Do not lead with the podcast &mdash; start a genuine discussion, then mention the episode in a reply or naturally if it fits.</li>
+      <li>Publish your show notes as a blog post on your website for SEO. Full transcript if you have it.</li>
+      <li>Submit your show to 3 podcast directories you haven't yet reached (Stitcher, TuneIn, Castro, Podcast Addict).</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 5</div>
+    <div class="roadmap-title">Social proof &amp; cross-promotion</div>
+    <div class="roadmap-tasks">
+      <li>If you received any listener messages, DMs, or early reviews: screenshot and share them (with permission). Social proof in week one is enormously valuable for conversion.</li>
+      <li>Reach out to 3 peer creators in adjacent (not competing) niches and offer a guest swap or a simple shout-out exchange.</li>
+      <li>Post a second clip from Episode 2 or 3 to show the breadth of content.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 6</div>
+    <div class="roadmap-title">Review push</div>
+    <div class="roadmap-tasks">
+      <li>Post specifically asking for Apple Podcast reviews with step-by-step instructions. Most listeners want to leave reviews but don't know how. Walk them through it: "Open Apple Podcasts, search [SHOW NAME], tap the show, scroll down to ratings, tap 5 stars."</li>
+      <li>Offer a small incentive for reviews if your show has a community: "First 50 reviewers get [BONUS]." Screenshot your rating count at the end of the day as a milestone post.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Day 7</div>
+    <div class="roadmap-title">Week 1 wrap &amp; preview</div>
+    <div class="roadmap-tasks">
+      <li>Share first week numbers publicly: "We hit [X] downloads in our first 7 days. Thank you." Transparency is a growth engine &mdash; people want to be part of something growing.</li>
+      <li>Preview what's coming in the next 2 episodes. Build anticipation. If you have a guest confirmed, announce their name.</li>
+      <li>Email list: brief update on launch week + what's coming + one more review ask. Keep it under 150 words.</li>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+  <div class="section-num">Section 07</div>
+  <h2>The Sponsor Pitch Deck</h2>
+  <p>Sponsorship is the fastest path to meaningful podcast revenue. You do not need 100,000 downloads. Many independent sponsors will partner with shows doing 1,000&ndash;5,000 downloads per episode if the audience is highly specific and relevant. The key is how you pitch and how you frame your value.</p>
+
+  <h3>Rate Card by Download Tier</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Downloads per Episode</th>
+        <th>Pre-Roll (30s)</th>
+        <th>Mid-Roll (60s)</th>
+        <th>Post-Roll (30s)</th>
+        <th>Episode Sponsor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>500&ndash;1,000</td><td>$15&ndash;$30</td><td>$30&ndash;$50</td><td>$10&ndash;$20</td><td>$50&ndash;$100</td></tr>
+      <tr><td>1,000&ndash;5,000</td><td>$30&ndash;$100</td><td>$75&ndash;$200</td><td>$25&ndash;$75</td><td>$150&ndash;$400</td></tr>
+      <tr><td>5,000&ndash;15,000</td><td>$100&ndash;$250</td><td>$200&ndash;$600</td><td>$75&ndash;$200</td><td>$400&ndash;$1,200</td></tr>
+      <tr><td>15,000&ndash;50,000</td><td>$250&ndash;$800</td><td>$600&ndash;$2,000</td><td>$200&ndash;$600</td><td>$1,200&ndash;$4,000</td></tr>
+      <tr><td>50,000+</td><td>Negotiated</td><td>Negotiated</td><td>Negotiated</td><td>Custom package</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>CPM benchmark:</strong> Industry standard for podcast mid-roll is $18&ndash;$25 CPM (cost per 1,000 downloads). At 2,000 downloads/episode at $20 CPM: $40 per mid-roll ad. At 10,000 downloads at $20 CPM: $200 per mid-roll. Niche audiences command higher CPM &mdash; B2B shows often reach $40&ndash;$80 CPM.</div>
+  </div>
+
+  <h3>One-Page Pitch Template</h3>
+  <div class="pitch-block">
+    <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px">[SHOW NAME]</div>
+    <div style="font-size:13px;color:var(--cyan);margin-bottom:20px;font-weight:600">[TAGLINE]</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px">
+      <div style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:12px 16px;text-align:center">
+        <div style="font-size:24px;font-weight:900;color:var(--cyan)">[X,XXX]</div>
+        <div style="font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Downloads/Episode</div>
+      </div>
+      <div style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:12px 16px;text-align:center">
+        <div style="font-size:24px;font-weight:900;color:var(--cyan)">[XX%]</div>
+        <div style="font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Episode Completion Rate</div>
+      </div>
+      <div style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:8px;padding:12px 16px;text-align:center">
+        <div style="font-size:24px;font-weight:900;color:var(--cyan)">[X,XXX]</div>
+        <div style="font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Email Subscribers</div>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:rgba(242,242,242,.65);margin-bottom:16px"><strong style="color:var(--text)">About the show:</strong> [2&ndash;3 sentences on who the show is for, what it covers, and why listeners trust it. Lead with the audience, not the host.]</p>
+
+    <p style="font-size:13px;color:rgba(242,242,242,.65);margin-bottom:16px"><strong style="color:var(--text)">Audience profile:</strong> [Describe listener demographics, professional context, buying power, and specific pain points that align with sponsors in your niche. Be specific: "75% are founders or operators at early-stage companies, median age 32, majority US-based."]</p>
+
+    <p style="font-size:13px;color:rgba(242,242,242,.65);margin-bottom:20px"><strong style="color:var(--text)">Why [SPONSOR NAME]?</strong> [1&ndash;2 sentences on why this specific sponsor is a natural fit for your specific audience. Shows you've done your homework and aren't mass-pitching.]</p>
+
+    <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:12px">Sponsorship Options</div>
+    <table style="font-size:12px">
+      <thead>
+        <tr><th>Package</th><th>Includes</th><th>Rate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mid-Roll Spot</td><td>60-second host-read per episode</td><td>$[RATE]/episode</td></tr>
+        <tr><td>Episode Sponsor</td><td>Mid-roll + pre-roll + show notes mention + social post</td><td>$[RATE]/episode</td></tr>
+        <tr><td>Monthly Package (4 eps)</td><td>Episode Sponsor x 4 + dedicated email mention</td><td>$[RATE]/month</td></tr>
+        <tr><td>Custom</td><td>Bespoke campaign (series, bonus episodes, etc.)</td><td>Negotiated</td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:12px;color:rgba(242,242,242,.45);margin-top:16px;margin-bottom:0">[HOST NAME] &bull; [EMAIL] &bull; [SHOW URL] &bull; Media kit and additional analytics available on request.</p>
+  </div>
+
+  <h3>Sponsor Outreach Email Sequence (3 Emails)</h3>
+
+  <div class="email-block">
+    <div class="email-meta">Email 1 &mdash; Initial Outreach</div>
+    <div class="email-subject">[SHOW NAME] sponsorship &mdash; [COMPANY NAME] audience fit</div>
+    <div class="email-body">Hi [CONTACT NAME],
+
+I host [SHOW NAME], a podcast for [SPECIFIC AUDIENCE]. We're currently at [DOWNLOAD COUNT] downloads per episode with [COMPLETION RATE]% average episode completion.
+
+I've been a [COMPANY NAME] [user / customer / follower] for [TIME PERIOD], and I think there's a genuine audience alignment here: [1-2 sentences on why their product is a natural fit for your listeners — be specific about the listener's problem it solves].
+
+I'd love to explore a sponsorship arrangement. Our [EPISODE SPONSOR PACKAGE] includes a 60-second host-read mid-roll + pre-roll + show notes placement + social post. We're seeing [RELEVANT METRIC IF YOU HAVE IT — link clicks, promo code uses, etc.].
+
+I have a one-page media kit if that would be helpful. Is there someone on your team who handles podcast partnerships?
+
+Best,
+[YOUR NAME]
+[SHOW NAME] | [SHOW URL]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 2 &mdash; Follow-Up (Send 6 days after Email 1 if no reply)</div>
+    <div class="email-subject">Re: [SHOW NAME] sponsorship &mdash; quick follow-up</div>
+    <div class="email-body">Hi [CONTACT NAME],
+
+Following up on my note from last week about [SHOW NAME].
+
+Wanted to add: we just published [RECENT EPISODE TITLE] which touched directly on [TOPIC RELEVANT TO THEIR PRODUCT]. The audience response has been [BRIEF DESCRIPTION]. It's a good example of the kind of conversations our listeners are having.
+
+If podcast sponsorships aren't the right fit for [COMPANY NAME] right now, I completely understand &mdash; just wanted to make sure this didn't get lost.
+
+[YOUR NAME]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-meta">Email 3 &mdash; Final Follow-Up (Send 10 days after Email 2 if no reply)</div>
+    <div class="email-subject">Last note &mdash; [SHOW NAME]</div>
+    <div class="email-body">Hi [CONTACT NAME],
+
+One last note. I'll stop reaching out after this &mdash; I know inboxes are crowded.
+
+If the timing is wrong, I'd love to reconnect when you're planning your next [QUARTER/HALF] marketing budget. I'm booking [TIME PERIOD] sponsorships now and would love to hold a spot for [COMPANY NAME] if there's interest.
+
+My media kit: [LINK]
+
+Thanks for your time either way.
+
+[YOUR NAME]</div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">&#9733;</div>
+    <div class="callout-text"><strong>Where to find sponsors:</strong> (1) Tools and products you already use and recommend. (2) Companies advertising on similar but non-competing podcasts in your niche (listen to competitors, note their sponsors, pitch the same companies). (3) Podcorn.com, Spotify Audience Network, and Gumball &mdash; self-serve sponsor marketplaces that connect shows with advertisers at your download tier.</div>
+  </div>
+</div>
+
+<!-- SECTION 8 -->
+<div class="section">
+  <div class="section-num">Section 08</div>
+  <h2>Show Notes Template System</h2>
+  <p>Show notes serve two purposes: they give listeners a reference document, and they give search engines a reason to index your episode. Most podcasters write either no show notes (missed SEO opportunity) or lazy two-line summaries (wasted effort). This template gives you the structure to write show notes that rank in search and serve your listeners.</p>
+
+  <h3>SEO-Optimized Show Notes Structure</h3>
+
+  <div class="formula">Show Notes Template:
+
+[EPISODE NUMBER]: [EPISODE TITLE — 60 characters max, include primary keyword]
+
+[EPISODE HOOK — 2-3 sentences. The most compelling thing about this episode.
+Write this as if describing the episode to a friend who hasn't heard it.]
+
+In this episode:
+- [KEY POINT 1 — specific, not vague]
+- [KEY POINT 2]
+- [KEY POINT 3]
+- [KEY POINT 4]
+- [KEY POINT 5]
+
+[EXPANDED DESCRIPTION — 150-300 words. This is where SEO lives.
+Use your topic keywords naturally. Summarize the main arguments or insights.
+Do not just say "we discuss X." Say what the actual insight or conclusion was.
+Treat this like a blog post intro.]
+
+EPISODE TIMESTAMPS:
+00:00 — Introduction
+[MM:SS] — [TOPIC / SEGMENT NAME]
+[MM:SS] — [TOPIC / SEGMENT NAME]
+[MM:SS] — [GUEST NAME intro, if applicable]
+[MM:SS] — [KEY TOPIC 1]
+[MM:SS] — [KEY TOPIC 2]
+[MM:SS] — [KEY TOPIC 3]
+[MM:SS] — Rapid fire / closing questions
+[MM:SS] — Where to find [GUEST NAME]
+[MM:SS] — Outro
+
+RESOURCES MENTIONED:
+- [Tool / Book / Article name] — [brief description] — [URL]
+- [Tool / Book / Article name] — [brief description] — [URL]
+- [Guest's website/book/course] — [URL]
+
+CONNECT WITH [GUEST NAME]:
+- Website: [URL]
+- Twitter/X: [@handle]
+- LinkedIn: [URL]
+- [Other platform]: [URL]
+
+CONNECT WITH [SHOW NAME]:
+- Website: [SHOW URL]
+- Newsletter: [SIGNUP URL]
+- Instagram: [@handle]
+- Twitter/X: [@handle]
+
+SUBSCRIBE &amp; REVIEW:
+Apple Podcasts: [DIRECT LINK]
+Spotify: [DIRECT LINK]
+→ If you enjoyed this episode, leaving a review on Apple Podcasts takes 2 minutes
+  and helps new listeners find the show.
+
+[CALL TO ACTION — one specific action you want listeners to take.
+E.g., "Download the free [LEAD MAGNET] at [URL]"
+or "Join 3,000+ subscribers at [NEWSLETTER URL]"]</div>
+
+  <h3>Timestamp Format Guide</h3>
+  <p>Use MM:SS format for episodes under 1 hour (07:34), and H:MM:SS for episodes over 60 minutes (1:07:34). Apple Podcasts, Spotify, and most modern podcast apps will make timestamps clickable if formatted correctly in the description field. Test your timestamps are clickable before publishing.</p>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#9888;</div>
+    <div class="callout-text"><strong>Timestamp writing tip:</strong> Write timestamps from the listener's perspective, not the production perspective. "05:22 — The email marketing section" tells a listener nothing. "05:22 — Why 90% of email sequences fail in the first week" makes them want to jump to that moment. Strong timestamps increase episode replays and improve completion rates.</div>
+  </div>
+
+  <h3>Resource Link Section Best Practices</h3>
+  <p>Every resource mentioned in the episode should appear in show notes with a brief descriptor and a working URL. Do not just list tool names &mdash; include what the tool does and why it was mentioned. This is your affiliate link placement opportunity (with proper disclosure) and it is also the section listeners return to most frequently after an episode.</p>
+
+  <h3>Call-to-Action Placement</h3>
+  <p>Place your primary CTA in two positions: immediately after the episode hook (within the first visible paragraph, before the "read more" fold in podcast apps), and at the very end of the show notes after the social links. The top placement captures listeners who want to act immediately. The bottom placement captures those who read through to the end.</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#127775;</div>
+    <div class="callout-text"><strong>Show notes SEO tip:</strong> The episode title and first 150 characters of your description are what appear in search results on Apple Podcasts and Google. Write both to be compelling and keyword-relevant. "Episode 47" is a wasted title slot. "Episode 47: How to Negotiate Your First Podcast Sponsorship ($0 to $2K/month)" is an SEO asset.</div>
+  </div>
+</div>
+
+<!-- SECTION 9 -->
+<div class="section">
+  <div class="section-num">Section 09</div>
+  <h2>Growth &amp; Monetization Roadmap (Months 1&ndash;6)</h2>
+  <p>Most podcasters grow by accident &mdash; or don't grow at all. This roadmap treats your podcast like a product with deliberate growth levers. Each month has a primary focus so you're not trying to do everything at once. Follow the sequence and you will have a monetized show with a genuine audience by the end of month six.</p>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Month 1</div>
+    <div class="roadmap-title">Establish consistency &amp; build the core habit</div>
+    <div class="roadmap-tasks">
+      <li>Publish on schedule, no exceptions. Consistency builds listener habit faster than quality does in month one.</li>
+      <li>Record 2&ndash;3 episodes ahead so you always have a buffer. Missing a week kills momentum and listener trust.</li>
+      <li>Focus on one social platform only. Trying to be everywhere in month one means being mediocre everywhere.</li>
+      <li>Send every episode to your email list with a short personal note about why you made this specific episode.</li>
+      <li>Target: 10 reviews on Apple Podcasts by end of month. Ask directly and repeatedly &mdash; it works.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Month 2</div>
+    <div class="roadmap-title">Guest strategy &amp; first cross-promotions</div>
+    <div class="roadmap-tasks">
+      <li>Book your first 4 interview guests if you are doing an interview format. Target people with audiences of 5,000&ndash;50,000 followers in adjacent niches &mdash; big enough to bring new listeners but small enough to say yes to you.</li>
+      <li>Set up a "guest swap" with 2&ndash;3 shows in adjacent niches of similar size. You appear on their show, they appear on yours. Most efficient listener growth tactic at this stage.</li>
+      <li>Repurpose every episode into 3 short clips for social. Use Descript, Riverside, or OpusClip for automatic clipping.</li>
+      <li>Start collecting listener questions for a Q&amp;A episode in month 3. This builds community signal and episode content simultaneously.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Month 3</div>
+    <div class="roadmap-title">Community building &amp; first monetization test</div>
+    <div class="roadmap-tasks">
+      <li>Launch a free community for your listeners: a Discord server, a Slack group, or a simple newsletter reply thread. Even 20 engaged community members creates a feedback loop that drives better content.</li>
+      <li>Publish your first Q&amp;A episode. Use listener names when referencing their questions. This creates a personal stake for those listeners and makes them brand advocates.</li>
+      <li>Reach out to your first 3 potential sponsors (use Section 07 templates). You do not need to be at 10,000 downloads. Start pitching at 500&ndash;1,000 downloads/episode to local businesses, micro-brands, or the tools you already recommend.</li>
+      <li>Evaluate your top 3 episodes by downloads and completion rate. What pattern do they share? Make more of that.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Month 4</div>
+    <div class="roadmap-title">SEO content strategy &amp; email list growth</div>
+    <div class="roadmap-tasks">
+      <li>Publish full show notes for every episode as a blog post on your website. 2,000-word posts with transcripts drive search traffic independently of podcast platform algorithms.</li>
+      <li>Create a podcast-specific lead magnet: a checklist, template, or resource guide that extends the most popular episode. Put this behind an email opt-in.</li>
+      <li>Set up a YouTube channel for your podcast. Upload the full audio with a static image or auto-generated audiogram. YouTube is a search engine; podcast episodes indexed there bring new listeners who would never find you on Spotify.</li>
+      <li>Close your first sponsorship deal, even if small. The learning from your first sponsor relationship &mdash; creative brief, tracking, renewal conversation &mdash; is worth more than the money.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Month 5</div>
+    <div class="roadmap-title">Paid membership &amp; premium content</div>
+    <div class="roadmap-tasks">
+      <li>Launch a paid tier for your most engaged listeners via Supercast, Patreon, or Memberful. Offer bonus episodes, ad-free listening, early access, or community access. Even 50 subscribers at $9/month = $450 MRR before any sponsor income.</li>
+      <li>Survey your audience about what kind of bonus content they'd pay for. Launch with what they asked for, not what you assumed they wanted.</li>
+      <li>Start pitching 2&ndash;3 brands per week for sponsorship. Treat it like a sales pipeline: track outreach, follow-ups, and responses in a simple spreadsheet.</li>
+      <li>Evaluate whether your current format and cadence is sustainable. Burn-out is the #1 reason podcasts stop. Adjust episode length or frequency now if needed &mdash; consistency at a lower cadence beats perfectionism at a higher one.</li>
+    </div>
+  </div>
+
+  <div class="roadmap-week">
+    <div class="roadmap-label">Month 6</div>
+    <div class="roadmap-title">Systematize &amp; scale</div>
+    <div class="roadmap-tasks">
+      <li>Build a production SOP so you can delegate or batch: recording day, editing day, publish day, social clip day. Schedule all four into your calendar as repeating blocks.</li>
+      <li>Hire a part-time editor if editing is taking more than 2 hours per episode. At $25&ndash;$50/episode for a freelance editor, this is the highest-ROI first hire for podcast growth.</li>
+      <li>Review 6-month analytics holistically: top episodes, listener retention by episode length, download sources, platform breakdown. These data points tell you where to invest in months 7&ndash;12.</li>
+      <li>Set month 12 goals now: downloads per episode, email list size, monthly sponsorship revenue, community size. Working backwards from targets is the only way to make them real.</li>
+    </div>
+  </div>
+
+  <h3>Revenue Stack by Month 6</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Revenue Stream</th>
+        <th>Month 3 Target</th>
+        <th>Month 6 Target</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Episode sponsorships</td><td>$0&ndash;$200/mo</td><td>$500&ndash;$2,000/mo</td><td>Based on 2,000&ndash;10,000 downloads/ep</td></tr>
+      <tr><td>Listener membership</td><td>$0</td><td>$200&ndash;$800/mo</td><td>50&ndash;100 members at $5&ndash;$9/mo</td></tr>
+      <tr><td>Affiliate mentions</td><td>$0&ndash;$100/mo</td><td>$200&ndash;$600/mo</td><td>In show notes + verbal mentions</td></tr>
+      <tr><td>Digital products</td><td>$0</td><td>$0&ndash;$500/mo</td><td>Only if you have a product to sell</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>$0&ndash;$300</strong></td><td><strong>$900&ndash;$3,900</strong></td><td>Conservative estimates</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <div class="callout-icon">&#9650;</div>
+    <div class="callout-text"><strong>The compounding truth:</strong> A podcast with 2,000 downloads per episode and a 2,000-person email list that the host treats seriously can generate $3,000&ndash;$5,000/month by month 9. The constraint is almost never download count &mdash; it is how aggressively the creator pursues and closes sponsorship deals, and whether they build the email list from day one.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">REMbyDesign / GetScrewedScore</div>
+  <div class="doc-footer-note">Podcast Launch Kit &mdash; $79 &mdash; &copy; 2026 &mdash; For personal use only. Do not redistribute.</div>
+</div>
+
+</div><!-- end .page -->
+</body>
+</html>
