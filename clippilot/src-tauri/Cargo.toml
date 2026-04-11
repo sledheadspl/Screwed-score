@@ -1,0 +1,37 @@
+[package]
+name = "clippilot"
+version = "0.1.0"
+description = "ClipPilot — AI Auto-Clip Desktop App"
+authors = ["ClipPilot"]
+edition = "2021"
+
+[lib]
+name = "clippilot_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+tauri-plugin-shell = { version = "2" }
+tauri-plugin-dialog = { version = "2" }
+tauri-plugin-fs = { version = "2" }
+tauri-plugin-http = { version = "2" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+log = "0.4"
+env_logger = "0.11"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4"] }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
