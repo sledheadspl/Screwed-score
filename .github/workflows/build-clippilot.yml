@@ -1,0 +1,163 @@
+name: Build ClipPilot
+
+on:
+  push:
+    tags:
+      - "clippilot-v*"
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Create a GitHub Release"
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: clippilot/src-tauri
+
+      - name: Install Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: clippilot/package-lock.json
+
+      - name: Install npm dependencies
+        working-directory: clippilot
+        run: npm ci
+
+      # ── FFmpeg binaries ──────────────────────────────────────────────────────
+      - name: Cache FFmpeg
+        id: cache-ffmpeg
+        uses: actions/cache@v4
+        with:
+          path: clippilot/binaries/ffmpeg
+          key: ffmpeg-7-windows-x64
+
+      - name: Download FFmpeg (full build with libass)
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
+          $dest = "$env:RUNNER_TEMP\ffmpeg.7z"
+          Invoke-WebRequest -Uri $url -OutFile $dest
+          7z x $dest -o"$env:RUNNER_TEMP\ffmpeg_extracted" -y
+          $ffmpegDir = Get-ChildItem "$env:RUNNER_TEMP\ffmpeg_extracted" -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force -Path "clippilot\binaries\ffmpeg" | Out-Null
+          Copy-Item "$($ffmpegDir.FullName)\bin\ffmpeg.exe" "clippilot\binaries\ffmpeg\ffmpeg.exe"
+          Copy-Item "$($ffmpegDir.FullName)\bin\ffprobe.exe" "clippilot\binaries\ffmpeg\ffprobe.exe"
+          Write-Host "FFmpeg version:"
+          & "clippilot\binaries\ffmpeg\ffmpeg.exe" -version | Select-Object -First 1
+
+      - name: Remove FFmpeg placeholders
+        shell: pwsh
+        run: |
+          $placeholder = "clippilot\binaries\ffmpeg\placeholder.md"
+          if (Test-Path $placeholder) { Remove-Item $placeholder }
+
+      # ── Whisper.cpp binary + model ──────────────────────────────────────────
+      - name: Cache Whisper model
+        id: cache-whisper-model
+        uses: actions/cache@v4
+        with:
+          path: clippilot/binaries/whisper/models
+          key: whisper-ggml-base-en
+
+      - name: Download Whisper model
+        if: steps.cache-whisper-model.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "clippilot\binaries\whisper\models" | Out-Null
+          $modelUrl = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin"
+          Invoke-WebRequest -Uri $modelUrl -OutFile "clippilot\binaries\whisper\models\ggml-base.en.bin"
+          $size = (Get-Item "clippilot\binaries\whisper\models\ggml-base.en.bin").Length / 1MB
+          Write-Host "Model size: $([math]::Round($size, 1)) MB"
+
+      - name: Download Whisper binary
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "clippilot\binaries\whisper" | Out-Null
+          # Get latest release asset
+          $releases = Invoke-RestMethod "https://api.github.com/repos/ggerganov/whisper.cpp/releases/latest"
+          $asset = $releases.assets | Where-Object { $_.name -match "whisper-bin-x64.zip" -or $_.name -match "whisper-cublas.*bin-x64.zip" } | Select-Object -First 1
+          if (-not $asset) {
+            # Fallback: look for any Windows 64-bit binary
+            $asset = $releases.assets | Where-Object { $_.name -match "windows" -and $_.name -match "x64" } | Select-Object -First 1
+          }
+          if ($asset) {
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "$env:RUNNER_TEMP\whisper.zip"
+            Expand-Archive "$env:RUNNER_TEMP\whisper.zip" -DestinationPath "$env:RUNNER_TEMP\whisper_extracted" -Force
+            # Find the main.exe or whisper-cli.exe
+            $exe = Get-ChildItem "$env:RUNNER_TEMP\whisper_extracted" -Recurse -Filter "*.exe" | Select-Object -First 1
+            if ($exe) {
+              Copy-Item $exe.FullName "clippilot\binaries\whisper\main.exe"
+              Write-Host "Whisper binary: $($exe.Name)"
+            }
+          } else {
+            Write-Host "Warning: No Whisper Windows binary found in latest release. Captions will be skipped."
+          }
+          # Remove placeholder
+          $placeholder = "clippilot\binaries\whisper\placeholder.md"
+          if (Test-Path $placeholder) { Remove-Item $placeholder }
+
+      # ── Build Tauri app ─────────────────────────────────────────────────────
+      - name: Build ClipPilot
+        working-directory: clippilot
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ""
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+        run: npm run tauri build -- --target x86_64-pc-windows-msvc
+
+      # ── Upload artifacts ────────────────────────────────────────────────────
+      - name: Upload MSI installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: ClipPilot-Windows-x64
+          path: |
+            clippilot/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+            clippilot/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          if-no-files-found: warn
+
+      # ── GitHub Release (on tag push or manual trigger with release=true) ───
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/clippilot-v') || github.event.inputs.release == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "ClipPilot ${{ github.ref_name }}"
+          body: |
+            ## ClipPilot — AI Auto-Clip Desktop App
+
+            **Download the installer below** and run it to install ClipPilot.
+
+            ### What's included
+            - FFmpeg for video processing
+            - Whisper.cpp for on-device AI captions (base.en model)
+
+            ### Platform credentials needed for social publishing
+            - **TikTok**: Register at developers.tiktok.com → Content Posting API
+            - **YouTube Shorts**: Google Cloud Console → YouTube Data API v3
+            - **Twitter/X**: developer.twitter.com → app with media.write scope
+
+            Add credentials in Settings → Account Connections after installing.
+          files: |
+            clippilot/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+            clippilot/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          draft: false
+          prerelease: false

@@ -33,6 +33,9 @@ pub fn run() {
             // Publish commands
             publish::validate_publish_config,
             publish::get_supported_platforms,
+            publish::start_oauth_flow,
+            publish::refresh_oauth_token,
+            publish::publish_clip,
         ])
         .setup(|app| {
             let app_data_dir = app
@@ -41,11 +44,9 @@ pub fn run() {
                 .expect("failed to get app data dir");
             std::fs::create_dir_all(&app_data_dir).ok();
 
-            // Create clips output directory
             let clips_dir = app_data_dir.join("clips");
             std::fs::create_dir_all(&clips_dir).ok();
 
-            // Create temp directory for stream buffer
             let temp_dir = app_data_dir.join("temp");
             std::fs::create_dir_all(&temp_dir).ok();
 

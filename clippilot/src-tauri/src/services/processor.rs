@@ -104,12 +104,31 @@ pub fn process_clip(
     let vertical_path = output_dir.join(format!("{}_vertical.mp4", req.clip_id));
     crop_to_vertical(&ffmpeg, &raw_path, &vertical_path)?;
 
-    // Step 3: Add captions (if enabled)
+    // Step 3: Add captions via Whisper (if enabled)
     let captioned_path = if req.add_captions {
         let cap_path = output_dir.join(format!("{}_captioned.mp4", req.clip_id));
-        // Captions added via Whisper pipeline — placeholder for now
-        std::fs::copy(&vertical_path, &cap_path)?;
-        cap_path
+        match crate::services::captioner::generate_captions(
+            &vertical_path,
+            &output_dir,
+            &req.clip_id,
+            app,
+        ) {
+            Ok(transcript) if !transcript.captions.is_empty() => {
+                burn_captions_into_video(
+                    &ffmpeg,
+                    &vertical_path,
+                    &transcript.ass_path,
+                    &cap_path,
+                )?;
+                // Cleanup ASS file
+                std::fs::remove_file(&transcript.ass_path).ok();
+                cap_path
+            }
+            _ => {
+                // Whisper unavailable or empty transcript — skip captions silently
+                vertical_path.clone()
+            }
+        }
     } else {
         vertical_path.clone()
     };
@@ -155,21 +174,28 @@ fn extract_segment(
     duration: f64,
     output: &Path,
 ) -> anyhow::Result<()> {
-    let status = std::process::Command::new(ffmpeg)
-        .args([
-            "-y",
-            "-ss",
-            &start.to_string(),
-            "-i",
-            input,
-            "-t",
-            &duration.to_string(),
-            "-c",
-            "copy",
-            output.to_str().unwrap_or(""),
-        ])
-        .status()?;
+    // input may be a plain path OR a "-f concat -safe 0 -i <list>" string
+    let mut cmd = std::process::Command::new(ffmpeg);
+    cmd.arg("-y");
 
+    if input.starts_with("-f concat") {
+        // Split the pre-built concat args into individual args
+        for part in input.split_whitespace() {
+            cmd.arg(part);
+        }
+    } else {
+        cmd.args(["-ss", &start.to_string(), "-i", input]);
+    }
+
+    cmd.args([
+        "-t",
+        &duration.to_string(),
+        "-c",
+        "copy",
+        output.to_str().unwrap_or(""),
+    ]);
+
+    let status = cmd.status()?;
     if !status.success() {
         anyhow::bail!("FFmpeg extract_segment failed");
     }
@@ -177,6 +203,7 @@ fn extract_segment(
 }
 
 fn crop_to_vertical(ffmpeg: &Path, input: &Path, output: &Path) -> anyhow::Result<()> {
+    // Must re-encode video when applying a filter — cannot stream-copy through vf
     let status = std::process::Command::new(ffmpeg)
         .args([
             "-y",
@@ -184,8 +211,14 @@ fn crop_to_vertical(ffmpeg: &Path, input: &Path, output: &Path) -> anyhow::Resul
             input.to_str().unwrap_or(""),
             "-vf",
             "crop=ih*9/16:ih:(iw-ih*9/16)/2:0,scale=1080:1920",
+            "-c:v",
+            "libx264",
+            "-crf",
+            "23",
+            "-preset",
+            "fast",
             "-c:a",
-            "copy",
+            "aac",
             output.to_str().unwrap_or(""),
         ])
         .status()?;
@@ -219,6 +252,40 @@ fn add_watermark(
 
     if !status.success() {
         anyhow::bail!("FFmpeg add_watermark failed");
+    }
+    Ok(())
+}
+
+pub fn burn_captions_into_video(
+    ffmpeg: &Path,
+    input: &Path,
+    ass_path: &str,
+    output: &Path,
+) -> anyhow::Result<()> {
+    // Escape path for FFmpeg's subtitles filter on Windows
+    let ass_escaped = ass_path.replace('\\', "/").replace(':', "\\:");
+    let vf = format!("subtitles={}", ass_escaped);
+    let status = std::process::Command::new(ffmpeg)
+        .args([
+            "-y",
+            "-i",
+            input.to_str().unwrap_or(""),
+            "-vf",
+            &vf,
+            "-c:v",
+            "libx264",
+            "-crf",
+            "23",
+            "-preset",
+            "fast",
+            "-c:a",
+            "copy",
+            output.to_str().unwrap_or(""),
+        ])
+        .status()?;
+
+    if !status.success() {
+        anyhow::bail!("FFmpeg caption burn failed");
     }
     Ok(())
 }
