@@ -40,7 +40,8 @@
     ],
     "resources": {
       "binaries/ffmpeg/*": "binaries/ffmpeg/",
-      "binaries/whisper/*": "binaries/whisper/"
+      "binaries/whisper/main.exe": "binaries/whisper/",
+      "binaries/whisper/models/ggml-base.en.bin": "binaries/whisper/models/"
     },
     "windows": {
       "webviewInstallMode": {

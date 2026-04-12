@@ -178,11 +178,9 @@ fn extract_segment(
     let mut cmd = std::process::Command::new(ffmpeg);
     cmd.arg("-y");
 
-    if input.starts_with("-f concat") {
-        // Split the pre-built concat args into individual args
-        for part in input.split_whitespace() {
-            cmd.arg(part);
-        }
+    if let Some(list_path) = input.strip_prefix("@concat:") {
+        // Concat list — pass path as a single arg to handle spaces in Windows paths
+        cmd.args(["-f", "concat", "-safe", "0", "-i", list_path]);
     } else {
         cmd.args(["-ss", &start.to_string(), "-i", input]);
     }

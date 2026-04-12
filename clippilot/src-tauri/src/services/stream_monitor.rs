@@ -245,10 +245,11 @@ async fn monitor_loop(
                             };
 
                             let app_clip = app.clone();
+                            let app_for_proc = app_clip.clone();
                             let status_clip = status.clone();
                             tauri::async_runtime::spawn(async move {
                                 match tokio::task::spawn_blocking(move || {
-                                    processor::process_clip(&req, &app_clip)
+                                    processor::process_clip(&req, &app_for_proc)
                                 })
                                 .await
                                 {
@@ -396,7 +397,9 @@ fn build_concat_list_file(
         .map(|p| format!("file '{}'\n", p.to_string_lossy().replace('\\', "/")))
         .collect();
     std::fs::write(&list_path, content).ok()?;
-    Some(format!("-f concat -safe 0 -i {}", list_path.to_string_lossy()))
+    // Use @concat: sentinel so processor.rs can pass the path as a single arg
+    // (avoids split_whitespace breaking on Windows paths with spaces)
+    Some(format!("@concat:{}", list_path.to_string_lossy()))
 }
 
 // ── Twitch IRC (anonymous read-only chat) ─────────────────────────────────────
