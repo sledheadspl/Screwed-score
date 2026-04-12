@@ -116,6 +116,38 @@ jobs:
           $placeholder = "clippilot\binaries\whisper\placeholder.md"
           if (Test-Path $placeholder) { Remove-Item $placeholder }
 
+      # ── App icons ──────────────────────────────────────────────────────────
+      - name: Generate app icons
+        shell: pwsh
+        run: |
+          # Create a 512x512 source PNG using .NET System.Drawing
+          Add-Type -AssemblyName System.Drawing
+          $size = 512
+          $bmp = New-Object System.Drawing.Bitmap($size, $size)
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          # Dark background
+          $bg = [System.Drawing.Color]::FromArgb(255, 10, 22, 40)
+          $g.FillRectangle((New-Object System.Drawing.SolidBrush($bg)), 0, 0, $size, $size)
+          # Cyan text
+          $cyan = [System.Drawing.Color]::FromArgb(255, 0, 229, 255)
+          $font = New-Object System.Drawing.Font("Arial", 180, [System.Drawing.FontStyle]::Bold)
+          $brush = New-Object System.Drawing.SolidBrush($cyan)
+          $sf = New-Object System.Drawing.StringFormat
+          $sf.Alignment = [System.Drawing.StringAlignment]::Center
+          $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
+          $rect = New-Object System.Drawing.RectangleF(0, 0, $size, $size)
+          $g.DrawString("CP", $font, $brush, $rect, $sf)
+          $g.Dispose()
+          $srcPath = "clippilot\src-tauri\icons\app-icon.png"
+          $bmp.Save($srcPath, [System.Drawing.Imaging.ImageFormat]::Png)
+          $bmp.Dispose()
+          Write-Host "Source icon created at $srcPath"
+          # Generate all Tauri icon sizes
+          cd clippilot
+          npx @tauri-apps/cli icon src-tauri\icons\app-icon.png
+          Write-Host "Icons generated:"
+          Get-ChildItem src-tauri\icons | Select-Object Name
+
       # ── Build Tauri app ─────────────────────────────────────────────────────
       - name: Build ClipPilot
         working-directory: clippilot
