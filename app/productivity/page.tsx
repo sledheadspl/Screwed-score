@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight, Download, Cpu, FileText, TrendingUp, Layout, Zap, Star, Loader2 } from 'lucide-react'
+import { ArrowRight, Download, Cpu, FileText, TrendingUp, Layout, Zap, Star, Loader2, Sparkles, Play, Mail, Flame, DollarSign, User, Shield, BarChart3, Video, BookOpen } from 'lucide-react'
 
 interface Product {
   id: string
@@ -15,6 +15,16 @@ interface Product {
 }
 
 const PRODUCTS: Product[] = [
+  {
+    id: 'clippilot-pro',
+    icon: Video,
+    category: 'Desktop App',
+    title: 'ClipPilot Pro',
+    desc: 'AI-powered auto-clip app for streamers. Detects your best moments, crops vertical, adds captions, and publishes to TikTok, YouTube Shorts & Twitter — automatically.',
+    price: '$19/mo',
+    badge: 'New',
+    badgeColor: 'rgba(0,229,255,0.8)',
+  },
   {
     id: 'creator-os',
     icon: Layout,
@@ -74,6 +84,106 @@ const PRODUCTS: Product[] = [
     price: '$89',
     badge: null,
     badgeColor: '',
+  },
+  {
+    id: 'ai-prompt-vault',
+    icon: Sparkles,
+    category: 'AI Tools',
+    title: 'AI Prompt Vault for Creators',
+    desc: '500+ battle-tested prompts organized by use case — content, email, ads, scripts, and strategy. Copy, paste, ship in seconds.',
+    price: '$47',
+    badge: 'Hot',
+    badgeColor: 'rgba(167,139,250,0.9)',
+  },
+  {
+    id: 'youtube-accelerator',
+    icon: Play,
+    category: 'Growth',
+    title: 'YouTube Growth Accelerator',
+    desc: 'Channel audit framework, click-worthy title formula, thumbnail psychology, the 48-hour algorithm window, and full SEO playbook.',
+    price: '$97',
+    badge: null,
+    badgeColor: '',
+  },
+  {
+    id: 'email-list-builder',
+    icon: Mail,
+    category: 'Email',
+    title: 'Email List Builder System',
+    desc: '10 lead magnet blueprints, opt-in page copy framework, and a fully-written 14-day welcome sequence that turns subscribers into buyers.',
+    price: '$79',
+    badge: 'Best Seller',
+    badgeColor: 'rgba(0,229,255,0.8)',
+  },
+  {
+    id: 'viral-content-formula',
+    icon: Flame,
+    category: 'Content',
+    title: 'Viral Content Formula',
+    desc: 'The repeatable framework behind viral content. 90 hook templates across every platform, format breakdowns, and a repurposing matrix.',
+    price: '$67',
+    badge: null,
+    badgeColor: '',
+  },
+  {
+    id: 'freelance-rate-kit',
+    icon: DollarSign,
+    category: 'Business',
+    title: 'Freelance Rate Masterclass Kit',
+    desc: 'Rate calculation worksheets, 15 client pitch scripts, negotiation playbook, scope creep prevention templates, and annual raise scripts.',
+    price: '$57',
+    badge: null,
+    badgeColor: '',
+  },
+  {
+    id: 'personal-brand-kit',
+    icon: User,
+    category: 'Branding',
+    title: 'Personal Brand Positioning Kit',
+    desc: 'Niche clarity framework, unique value proposition builder, 20 bio templates per platform, and a complete content pillars architecture.',
+    price: '$47',
+    badge: null,
+    badgeColor: '',
+  },
+  {
+    id: 'creator-legal-toolkit',
+    icon: Shield,
+    category: 'Legal',
+    title: 'Creator Legal Toolkit',
+    desc: '7 plug-and-play contract templates: influencer agreements, brand deals, collaborations, NDA, freelance contracts, and licensing rights.',
+    price: '$89',
+    badge: 'Essential',
+    badgeColor: 'rgba(255,214,10,0.85)',
+  },
+  {
+    id: 'passive-income-blueprint',
+    icon: BarChart3,
+    category: 'Strategy',
+    title: 'Passive Income Blueprint',
+    desc: '7 proven passive income streams for creators — each with a step-by-step implementation roadmap and income projection worksheet.',
+    price: '$97',
+    badge: null,
+    badgeColor: '',
+  },
+  {
+    id: 'video-script-formula',
+    icon: Video,
+    category: 'Video',
+    title: 'Video Script & Hook Formula',
+    desc: '50 proven hook templates, the 4-part high-retention script structure, pattern interrupts, CTA formulas, and platform adaptation guides.',
+    price: '$67',
+    badge: null,
+    badgeColor: '',
+  },
+  {
+    id: 'course-creator-kit',
+    icon: BookOpen,
+    category: 'Courses',
+    title: 'Digital Course Creator Kit',
+    desc: 'Complete system to build and sell a $500+ course. Curriculum planner, full sales page copy template, and a 7-email launch sequence.',
+    price: '$127',
+    badge: 'Premium',
+    badgeColor: 'rgba(255,214,10,0.85)',
   },
 ]
 

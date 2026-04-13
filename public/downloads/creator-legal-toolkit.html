@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creator Legal Toolkit — 7 Professional Contract Templates</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080808;
+    --card-bg: rgba(15,15,15,0.8);
+    --gold: #ffd60a;
+    --gold-dim: rgba(255,214,10,0.15);
+    --text: #f2f2f2;
+    --text-muted: rgba(242,242,242,0.55);
+    --text-faint: rgba(242,242,242,0.35);
+    --border: rgba(255,255,255,0.06);
+    --border-gold: rgba(255,214,10,0.25);
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 32px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .site-header .badge {
+    display: inline-block;
+    background: var(--gold-dim);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border-gold);
+    margin-bottom: 12px;
+  }
+
+  .site-header h1 {
+    font-size: clamp(22px, 4vw, 38px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    line-height: 1.15;
+  }
+
+  .site-header h1 span { color: var(--gold); }
+
+  .site-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  /* HERO DISCLAIMER */
+  .disclaimer-banner {
+    background: rgba(255,214,10,0.07);
+    border: 1px solid var(--border-gold);
+    border-radius: 10px;
+    padding: 16px 22px;
+    margin: 32px auto;
+    max-width: 860px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .disclaimer-banner .icon { font-size: 20px; flex-shrink: 0; padding-top: 2px; }
+
+  .disclaimer-banner p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  .disclaimer-banner strong { color: var(--gold); }
+
+  /* WRAPPER */
+  .wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* TABLE OF CONTENTS */
+  .toc {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+  }
+
+  .toc h2 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 8px 24px;
+  }
+
+  .toc li { counter-increment: toc; }
+
+  .toc a {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13.5px;
+    transition: color 0.18s;
+  }
+
+  .toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .toc a:hover { color: var(--text); }
+
+  /* CONTRACT SECTION */
+  .contract-section {
+    margin-bottom: 72px;
+    scroll-margin-top: 120px;
+  }
+
+  .contract-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .contract-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--border-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .contract-title-wrap h2 {
+    font-size: clamp(18px, 2.8vw, 26px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .contract-title-wrap .subtitle {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 3px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* HOW TO USE BOX */
+  .how-to-use {
+    background: rgba(255,214,10,0.05);
+    border: 1px solid rgba(255,214,10,0.18);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+
+  .how-to-use h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .how-to-use ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .how-to-use li {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .how-to-use li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 11px;
+  }
+
+  /* CONTRACT BODY */
+  .contract-body {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 40px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 14px;
+    line-height: 1.85;
+    color: rgba(242,242,242,0.88);
+  }
+
+  @media (max-width: 600px) {
+    .contract-body { padding: 22px 18px; }
+  }
+
+  .contract-body .contract-title {
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-family: var(--font);
+  }
+
+  .contract-body .contract-subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-bottom: 30px;
+    font-family: var(--font);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .contract-body .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .contract-body h3 {
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 28px 0 10px;
+  }
+
+  .contract-body h3.section-num {
+    font-size: 13px;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    text-transform: none;
+    font-weight: 700;
+  }
+
+  .contract-body p { margin-bottom: 14px; }
+
+  .contract-body .placeholder {
+    background: rgba(255,214,10,0.12);
+    color: var(--gold);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-style: normal;
+    font-size: 13px;
+    border: 1px solid rgba(255,214,10,0.2);
+    font-family: var(--font);
+  }
+
+  .contract-body .sig-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 36px;
+  }
+
+  @media (max-width: 540px) {
+    .contract-body .sig-block { grid-template-columns: 1fr; }
+  }
+
+  .contract-body .sig-col { }
+
+  .contract-body .sig-line {
+    border-bottom: 1px solid rgba(242,242,242,0.25);
+    margin-bottom: 6px;
+    padding-top: 36px;
+  }
+
+  .contract-body .sig-label {
+    font-family: var(--font);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contract-body ul, .contract-body ol {
+    margin: 0 0 14px 22px;
+  }
+
+  .contract-body li { margin-bottom: 6px; }
+
+  /* DIVIDER BETWEEN CONTRACTS */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 72px 0 0;
+  }
+
+  /* FOOTER */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .site-footer p {
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.8;
+    max-width: 640px;
+    margin: 0 auto 8px;
+  }
+
+  .site-footer .brand {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; color: #111; }
+    .site-header, .toc, .how-to-use, .site-footer { display: none; }
+    .contract-body {
+      background: #fff;
+      border: 1px solid #ccc;
+      color: #111;
+      page-break-after: always;
+    }
+    .contract-body .placeholder { background: #fffbe6; color: #7a5900; border: 1px solid #e8c800; }
+    .contract-body h3 { color: #333; }
+    .contract-body .contract-title { color: #111; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="badge">Premium Digital Product</div>
+  <h1>Creator <span>Legal Toolkit</span></h1>
+  <p>7 Professional Contract Templates for Creators &amp; Digital Entrepreneurs</p>
+</header>
+
+<div class="wrapper">
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer-banner">
+    <div class="icon">&#9888;</div>
+    <p><strong>Legal Disclaimer:</strong> These templates are provided for <strong>reference and educational purposes only</strong>. They do not constitute legal advice and do not create an attorney-client relationship. Laws vary by jurisdiction and change frequently. Before signing or distributing any contract — especially for high-value deals — you should <strong>consult a licensed attorney</strong> in your jurisdiction. All placeholders marked <strong>[LIKE THIS]</strong> must be replaced with your specific information. Use at your own risk.</p>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <nav class="toc">
+    <h2>Contents — 7 Contract Templates</h2>
+    <ol>
+      <li><a href="#contract-1">Influencer / Creator Agreement</a></li>
+      <li><a href="#contract-2">Brand Partnership Contract</a></li>
+      <li><a href="#contract-3">Collaboration Agreement</a></li>
+      <li><a href="#contract-4">Non-Disclosure Agreement (NDA)</a></li>
+      <li><a href="#contract-5">Freelance Service Contract</a></li>
+      <li><a href="#contract-6">Content Licensing Agreement</a></li>
+      <li><a href="#contract-7">Digital Product Terms of Service</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 1: INFLUENCER / CREATOR AGREEMENT -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-1">
+    <div class="contract-header">
+      <div class="contract-num">01</div>
+      <div class="contract-title-wrap">
+        <h2>Influencer / Creator Agreement</h2>
+        <div class="subtitle">Creator &amp; Brand / Sponsor</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>Replace every <span style="color:var(--gold);">[PLACEHOLDER]</span> with your actual information before sending to any party.</li>
+        <li>Specify deliverables as precisely as possible — video length, posting platform, number of stories, format (Reel vs. static post), etc.</li>
+        <li>FTC disclosure requirements are non-negotiable in the U.S. — do not remove Section 8. Review current FTC guidelines at ftc.gov/influencers.</li>
+        <li>If the brand requests exclusivity, negotiate compensation accordingly — exclusivity windows should be time-limited and clearly defined.</li>
+        <li>Both parties should sign before any work begins. Verbal agreements and DMs are not enforceable substitutes for a written contract.</li>
+        <li>Consider having a lawyer review this for deals over $5,000.</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Influencer / Creator Agreement</div>
+      <div class="contract-subtitle">Sponsored Content &amp; Campaign Agreement</div>
+      <hr class="divider">
+
+      <p>This Influencer / Creator Agreement (this <strong>"Agreement"</strong>) is entered into as of <span class="placeholder">[EFFECTIVE DATE]</span> (the <strong>"Effective Date"</strong>) by and between:</p>
+
+      <p><strong>Brand / Sponsor:</strong> <span class="placeholder">[BRAND LEGAL NAME]</span>, a <span class="placeholder">[STATE/PROVINCE]</span> <span class="placeholder">[ENTITY TYPE, e.g., LLC / Corporation]</span>, with its principal place of business at <span class="placeholder">[BRAND ADDRESS]</span> (the <strong>"Brand"</strong>); and</p>
+
+      <p><strong>Creator:</strong> <span class="placeholder">[CREATOR FULL LEGAL NAME]</span>, an individual / <span class="placeholder">[ENTITY TYPE IF APPLICABLE]</span> residing or operating at <span class="placeholder">[CREATOR ADDRESS]</span>, known online as <span class="placeholder">[HANDLE / CHANNEL NAME]</span> (the <strong>"Creator"</strong>).</p>
+
+      <p>Brand and Creator are each referred to herein individually as a <strong>"Party"</strong> and collectively as the <strong>"Parties."</strong></p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Campaign Description</h3>
+      <p>The Brand is engaging the Creator to produce and publish sponsored content for the following campaign: <span class="placeholder">[CAMPAIGN NAME / PRODUCT BEING PROMOTED]</span> (the <strong>"Campaign"</strong>). The purpose of the Campaign is to <span class="placeholder">[DESCRIBE CAMPAIGN OBJECTIVE, e.g., promote the launch of Brand's new skincare line to Creator's audience]</span>. The Campaign shall run from <span class="placeholder">[START DATE]</span> through <span class="placeholder">[END DATE]</span> (the <strong>"Campaign Period"</strong>).</p>
+
+      <h3 class="section-num">2. Deliverables</h3>
+      <p>Creator agrees to produce and publish the following content (collectively, the <strong>"Deliverables"</strong>) on the platforms and within the timeframes specified:</p>
+      <ul>
+        <li><span class="placeholder">[NUMBER]</span> sponsored video(s) of at least <span class="placeholder">[LENGTH, e.g., 60 seconds]</span> each, posted on <span class="placeholder">[PLATFORM, e.g., YouTube]</span> by <span class="placeholder">[DATE]</span>.</li>
+        <li><span class="placeholder">[NUMBER]</span> sponsored Instagram post(s) (static image or Reel) posted on <span class="placeholder">[PLATFORM]</span> by <span class="placeholder">[DATE]</span>.</li>
+        <li><span class="placeholder">[NUMBER]</span> Instagram / TikTok Stories posted by <span class="placeholder">[DATE]</span>, including a swipe-up or link-in-bio call to action.</li>
+        <li><span class="placeholder">[ANY ADDITIONAL DELIVERABLES, e.g., blog post, newsletter mention, podcast ad read]</span>.</li>
+      </ul>
+      <p>All Deliverables must remain live and publicly accessible (not deleted, privatized, or unlisted) for a minimum of <span class="placeholder">[e.g., 12 months]</span> from the date of posting unless otherwise agreed in writing.</p>
+
+      <h3 class="section-num">3. Content Approval Process</h3>
+      <p>Creator shall submit all Deliverables for Brand review at least <span class="placeholder">[e.g., 5]</span> business days prior to the agreed posting date. Brand shall provide written approval, revision requests, or rejection within <span class="placeholder">[e.g., 3]</span> business days of receipt. Brand is limited to <span class="placeholder">[e.g., two (2)]</span> rounds of revision requests per Deliverable. If Brand does not respond within the specified review window, the content shall be deemed approved. Revisions shall not materially alter the Creator's authentic voice or editorial style without Creator's written consent.</p>
+
+      <h3 class="section-num">4. Compensation</h3>
+      <p>In consideration for the Deliverables and rights granted herein, Brand shall pay Creator a flat fee of <strong><span class="placeholder">[$AMOUNT USD]</span></strong> (the <strong>"Fee"</strong>), payable as follows:</p>
+      <ul>
+        <li><strong>Deposit:</strong> <span class="placeholder">[e.g., 50% ($AMOUNT)]</span> due upon execution of this Agreement.</li>
+        <li><strong>Balance:</strong> <span class="placeholder">[e.g., remaining 50% ($AMOUNT)]</span> due within <span class="placeholder">[e.g., 14]</span> days of Brand's approval of all Deliverables.</li>
+      </ul>
+      <p>Payment shall be made via <span class="placeholder">[PAYMENT METHOD, e.g., bank transfer / PayPal / check]</span> to <span class="placeholder">[CREATOR PAYMENT DETAILS]</span>. In addition to the flat fee, Brand shall provide Creator with <span class="placeholder">[PRODUCT / GIFTING TERMS, e.g., one (1) complimentary product package valued at approximately $X, or "N/A"]</span>. All compensation received under this Agreement is subject to applicable taxes. Creator is responsible for all income taxes on amounts received. Creator is an independent contractor and not an employee of Brand.</p>
+
+      <h3 class="section-num">5. Timeline</h3>
+      <p>The key project milestones are as follows:</p>
+      <ul>
+        <li><span class="placeholder">[DATE]</span> — Agreement signed by both Parties.</li>
+        <li><span class="placeholder">[DATE]</span> — Brand delivers product samples / creative brief / talking points to Creator.</li>
+        <li><span class="placeholder">[DATE]</span> — Creator submits draft content for Brand review.</li>
+        <li><span class="placeholder">[DATE]</span> — Brand provides feedback.</li>
+        <li><span class="placeholder">[DATE]</span> — Final content approved and posted.</li>
+        <li><span class="placeholder">[DATE]</span> — Final payment due.</li>
+      </ul>
+
+      <h3 class="section-num">6. Exclusivity</h3>
+      <p>During the Campaign Period and for <span class="placeholder">[e.g., 30 / 60 / 90]</span> days thereafter (the <strong>"Exclusivity Window"</strong>), Creator agrees not to produce sponsored content for, or accept payment from, any direct competitor of Brand. For purposes of this Agreement, "direct competitor" means any company offering <span class="placeholder">[DESCRIBE COMPETING PRODUCT/SERVICE CATEGORY, e.g., direct-to-consumer skincare products]</span>. This exclusivity clause does not restrict Creator from discussing or reviewing non-sponsored products or from engaging in any non-competing business activities. If no exclusivity is required, this Section shall be marked "N/A" and shall have no force or effect.</p>
+
+      <h3 class="section-num">7. Usage Rights &amp; License</h3>
+      <p>Creator grants Brand a <span class="placeholder">[exclusive / non-exclusive]</span>, worldwide, royalty-free license to repost, share, and use the Deliverables for Brand's own social media channels, website, and internal purposes for a period of <span class="placeholder">[e.g., 12 months]</span> following publication. This license does <strong>not</strong> include: (a) paid advertising or "whitelisting" / "dark posting" without separate written consent and additional compensation; (b) modification of the Deliverables in a manner that misrepresents Creator's opinion; or (c) use in any context that would damage Creator's reputation. Creator retains all underlying copyright in the Deliverables. If Brand requires expanded rights (e.g., for paid media), the Parties shall negotiate a separate usage fee.</p>
+
+      <h3 class="section-num">8. FTC Disclosure Requirements</h3>
+      <p>Creator acknowledges that the Federal Trade Commission (FTC) requires clear and conspicuous disclosure of material connections between creators and brands. Creator agrees to comply with all applicable FTC guidelines and any platform-specific disclosure requirements. At minimum, Creator shall include in all Deliverables a clear disclosure such as <strong>#ad</strong>, <strong>#sponsored</strong>, or <strong>#paidpartnership</strong> (as appropriate to the platform), placed prominently and before any "more" or "see more" truncation. Creator shall not make any false or misleading claims about Brand's products or services. Failure to include required disclosures is a material breach of this Agreement and Creator assumes full liability for any resulting regulatory action.</p>
+
+      <h3 class="section-num">9. Creator Representations &amp; Warranties</h3>
+      <p>Creator represents and warrants that: (a) Creator has the full right and authority to enter into this Agreement; (b) the Deliverables will be Creator's original work and will not infringe any third-party intellectual property rights; (c) Creator's platforms are in good standing and have not been subject to bans, suspensions, or significant follower manipulation; (d) Creator has disclosed any existing exclusivity or non-compete obligations that may affect this Agreement; and (e) Creator will comply with all applicable laws in creating and publishing the Deliverables.</p>
+
+      <h3 class="section-num">10. Brand Representations &amp; Warranties</h3>
+      <p>Brand represents and warrants that: (a) Brand has the full right and authority to enter into this Agreement; (b) all products, services, and information provided to Creator are accurately described and comply with applicable law; (c) the use of Creator's content as permitted herein will not infringe any third-party rights; and (d) Brand will pay Creator in accordance with Section 4.</p>
+
+      <h3 class="section-num">11. Termination</h3>
+      <p>Either Party may terminate this Agreement with <span class="placeholder">[e.g., 7]</span> days' written notice if the other Party materially breaches any provision and fails to cure such breach within the notice period. Brand may terminate for convenience upon written notice, provided Brand pays Creator a kill fee equal to <span class="placeholder">[e.g., 50%]</span> of the Fee for any unposted Deliverables, plus full payment for any Deliverables already posted. Creator may terminate if Brand fails to make any payment when due and does not cure within <span class="placeholder">[e.g., 5]</span> business days of notice. Upon termination, any license granted to Brand under Section 7 shall terminate immediately as to unposted Deliverables; previously posted content may remain live unless otherwise agreed.</p>
+
+      <h3 class="section-num">12. Confidentiality</h3>
+      <p>Each Party agrees to keep the terms of this Agreement and any non-public information shared by the other Party confidential and to not disclose such information to third parties without prior written consent, except as required by law or to the Party's legal and financial advisors bound by confidentiality obligations.</p>
+
+      <h3 class="section-num">13. Indemnification</h3>
+      <p>Each Party (the <strong>"Indemnifying Party"</strong>) shall indemnify, defend, and hold harmless the other Party and its officers, directors, employees, and agents from and against any third-party claims, losses, liabilities, and expenses (including reasonable attorneys' fees) arising from: (a) the Indemnifying Party's breach of any representation, warranty, or obligation under this Agreement; or (b) the Indemnifying Party's gross negligence or willful misconduct.</p>
+
+      <h3 class="section-num">14. Governing Law &amp; Dispute Resolution</h3>
+      <p>This Agreement shall be governed by and construed in accordance with the laws of the State of <span class="placeholder">[STATE]</span>, without regard to its conflict of laws principles. Any dispute arising out of or related to this Agreement shall first be subject to good-faith negotiation between the Parties. If unresolved within <span class="placeholder">[e.g., 30]</span> days, the dispute shall be submitted to binding arbitration in <span class="placeholder">[CITY, STATE]</span> under the rules of the American Arbitration Association, with the costs split equally unless the arbitrator awards otherwise. The prevailing Party shall be entitled to recover reasonable attorneys' fees.</p>
+
+      <h3 class="section-num">15. General Provisions</h3>
+      <p>This Agreement constitutes the entire agreement between the Parties with respect to its subject matter and supersedes all prior agreements, representations, and understandings. This Agreement may not be amended except in a signed writing. If any provision is found unenforceable, the remainder shall continue in full force. Neither Party may assign this Agreement without prior written consent. This Agreement may be executed in counterparts, and electronic signatures shall be deemed valid.</p>
+
+      <hr class="divider">
+
+      <div class="sig-block">
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Brand Authorized Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Title: <span class="placeholder">[TITLE]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Creator Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[CREATOR NAME]</span><br>Title: <span class="placeholder">[TITLE / "Individual"]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 2: BRAND PARTNERSHIP CONTRACT -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-2" style="margin-top:72px;">
+    <div class="contract-header">
+      <div class="contract-num">02</div>
+      <div class="contract-title-wrap">
+        <h2>Brand Partnership Contract</h2>
+        <div class="subtitle">Long-Term Ambassador Relationship</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>This template is designed for ongoing ambassador relationships (3–12+ months), not one-off sponsored posts. Use Contract 1 for single campaigns.</li>
+        <li>Define exclusivity categories precisely — broad exclusivity dramatically limits your earning potential and should command premium pay.</li>
+        <li>Morality clauses work both ways. Consider adding protections against Brand conduct that could harm your reputation.</li>
+        <li>Performance bonuses should be tied to specific, measurable metrics (sales attributed to your promo code, link clicks, etc.).</li>
+        <li>Negotiate content calendar terms upfront — brands often try to add deliverables mid-partnership without additional compensation.</li>
+        <li>Ensure exit clause terms are mutual so both parties can exit fairly if the relationship is no longer working.</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Brand Partnership Contract</div>
+      <div class="contract-subtitle">Ambassador &amp; Long-Term Sponsorship Agreement</div>
+      <hr class="divider">
+
+      <p>This Brand Partnership Contract (this <strong>"Agreement"</strong>) is entered into as of <span class="placeholder">[EFFECTIVE DATE]</span> by and between <span class="placeholder">[BRAND LEGAL NAME]</span> (<strong>"Brand"</strong>) and <span class="placeholder">[CREATOR FULL LEGAL NAME]</span>, known online as <span class="placeholder">[HANDLE / CHANNEL NAME]</span> (<strong>"Ambassador"</strong>). This Agreement sets forth the terms of an ongoing brand ambassador relationship for the period specified below.</p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Partnership Term</h3>
+      <p>The initial term of this partnership shall commence on <span class="placeholder">[START DATE]</span> and continue through <span class="placeholder">[END DATE]</span> (the <strong>"Initial Term"</strong>). Unless either Party provides written notice of non-renewal at least <span class="placeholder">[e.g., 30]</span> days prior to the end of the Initial Term, this Agreement shall automatically renew for successive <span class="placeholder">[e.g., 3-month]</span> periods under the same terms and conditions, unless renegotiated by mutual written agreement.</p>
+
+      <h3 class="section-num">2. Scope of Partnership</h3>
+      <p>Ambassador agrees to serve as an official brand ambassador for Brand, promoting <span class="placeholder">[BRAND NAME / PRODUCT LINE]</span> authentically and enthusiastically across Ambassador's platforms including <span class="placeholder">[LIST PLATFORMS, e.g., Instagram, YouTube, TikTok, newsletter]</span>. Ambassador shall represent Brand in a manner consistent with Brand's guidelines as provided in writing and Ambassador's authentic personal brand. Ambassador shall not take any action that disparages Brand, its products, or its team during the Term of this Agreement.</p>
+
+      <h3 class="section-num">3. Content Calendar &amp; Deliverables</h3>
+      <p>The Parties agree to the following recurring content commitments per <span class="placeholder">[month / quarter]</span>:</p>
+      <ul>
+        <li><span class="placeholder">[NUMBER]</span> dedicated sponsored posts / videos per month on <span class="placeholder">[PLATFORM(S)]</span>.</li>
+        <li><span class="placeholder">[NUMBER]</span> Stories or short-form mentions per month.</li>
+        <li><span class="placeholder">[NUMBER]</span> brand mentions integrated organically (not standalone sponsored posts) per month.</li>
+        <li>Attendance at <span class="placeholder">[NUMBER, e.g., up to 2]</span> Brand events per year (virtual or in-person), with expenses covered by Brand.</li>
+        <li><span class="placeholder">[ANY ADDITIONAL, e.g., quarterly newsletter feature, podcast mention]</span>.</li>
+      </ul>
+      <p>The Parties shall collaborate on a rolling content calendar at the beginning of each <span class="placeholder">[month / quarter]</span>. Brand shall submit its content requests no later than <span class="placeholder">[e.g., the 1st of each month]</span>. Ambassador is not required to exceed the agreed deliverable counts without written agreement and additional compensation.</p>
+
+      <h3 class="section-num">4. Content Approval Process</h3>
+      <p>Ambassador shall submit a brief content outline or draft to Brand at least <span class="placeholder">[e.g., 5]</span> business days before the planned posting date. Brand shall respond with written approval or one round of feedback within <span class="placeholder">[e.g., 48 hours]</span>. If Brand does not respond within the review window, content is deemed approved. Brand shall not require Ambassador to make claims about Brand products that are false, misleading, or inconsistent with Ambassador's genuine experience. Ambassador retains the right to decline requests that conflict with Ambassador's personal values or audience trust, provided Ambassador gives Brand written notice and a reasonable opportunity to modify the request.</p>
+
+      <h3 class="section-num">5. Compensation &amp; Payment Schedule</h3>
+      <p>In consideration for the services herein, Brand shall pay Ambassador:</p>
+      <ul>
+        <li><strong>Base Retainer:</strong> <span class="placeholder">[$AMOUNT]</span> per <span class="placeholder">[month / quarter]</span>, payable by the <span class="placeholder">[e.g., 15th]</span> of each <span class="placeholder">[month / quarter]</span>.</li>
+        <li><strong>Product Allowance:</strong> Brand shall provide Ambassador with <span class="placeholder">[e.g., $X worth of product per month / N/A]</span> at no charge.</li>
+        <li><strong>Affiliate Commission:</strong> Ambassador shall receive <span class="placeholder">[e.g., 10%]</span> commission on net sales generated through Ambassador's unique promo code <span class="placeholder">[CODE]</span> or trackable affiliate link, paid within <span class="placeholder">[e.g., 30]</span> days after each calendar month.</li>
+      </ul>
+      <p>Late payments shall accrue interest at the rate of <span class="placeholder">[e.g., 1.5%]</span> per month on the outstanding balance.</p>
+
+      <h3 class="section-num">6. Performance Bonuses</h3>
+      <p>Ambassador shall be eligible for performance bonuses as follows:</p>
+      <ul>
+        <li>If Ambassador's content generates <span class="placeholder">[e.g., $X in attributed sales / X number of conversions / X% engagement rate]</span> in a given <span class="placeholder">[month / quarter]</span>, Brand shall pay a bonus of <span class="placeholder">[$BONUS AMOUNT or X% of excess sales]</span>.</li>
+        <li><span class="placeholder">[ADD ADDITIONAL BONUS TIERS AS APPLICABLE]</span>.</li>
+      </ul>
+      <p>Brand shall provide Ambassador with transparent reporting on attributed sales and conversions on a <span class="placeholder">[monthly / quarterly]</span> basis.</p>
+
+      <h3 class="section-num">7. Exclusivity Windows</h3>
+      <p>During the Term, Ambassador agrees not to enter into paid brand partnerships or ambassador agreements with direct competitors of Brand. "Direct competitor" is defined as any brand offering <span class="placeholder">[SPECIFIC PRODUCT/SERVICE CATEGORY]</span> to consumers. This exclusivity does <strong>not</strong> restrict Ambassador from: (a) discussing or reviewing non-sponsored competitive products; (b) partnerships in entirely unrelated categories; or (c) any existing partnerships disclosed in Exhibit A attached hereto. In recognition of this exclusivity, Brand agrees that the base retainer as set forth in Section 5 reflects an exclusivity premium. Ambassador shall disclose any pre-existing partnerships to Brand, and Brand acknowledges that those disclosed partnerships are exempt from this exclusivity obligation.</p>
+
+      <h3 class="section-num">8. Intellectual Property Ownership</h3>
+      <p>Ambassador retains full ownership of all content, imagery, video, and other creative work produced under this Agreement (collectively, <strong>"Ambassador Content"</strong>). Brand is granted a non-exclusive, worldwide license to repost, share, and display Ambassador Content on Brand's owned social media channels and website throughout the Term and for <span class="placeholder">[e.g., 6 months]</span> following its expiration. Any use of Ambassador Content for paid advertising, media buys, or whitelisting requires a separate written agreement and additional license fee. Brand shall always credit Ambassador when sharing Ambassador Content.</p>
+
+      <h3 class="section-num">9. Morality Clause</h3>
+      <p>Either Party may terminate this Agreement immediately upon written notice if the other Party: (a) is charged with or convicted of a felony or crime involving moral turpitude; (b) makes public statements or takes actions that a reasonable person would find to be hateful, discriminatory, or deeply offensive; (c) engages in conduct that brings significant public disrepute, scandal, or ridicule upon the other Party; or (d) materially misrepresents facts publicly in a manner that damages the other Party's reputation. Brand acknowledges that this clause applies reciprocally — conduct by Brand that harms Ambassador's reputation gives Ambassador the right to exit without penalty under this Section.</p>
+
+      <h3 class="section-num">10. Exit Clause</h3>
+      <p>Either Party may terminate this Agreement without cause by providing <span class="placeholder">[e.g., 30]</span> days' written notice to the other Party. Upon termination without cause: (a) Brand shall pay all amounts owed for completed and approved Deliverables through the termination date; (b) Brand shall pay a pro-rata portion of the monthly retainer for the notice period; (c) any ongoing exclusivity obligations shall terminate simultaneously with the Agreement; and (d) previously licensed content may remain published for the remainder of the agreed license period unless otherwise negotiated. Neither Party shall be liable for punitive damages upon a good-faith exit under this clause.</p>
+
+      <h3 class="section-num">11. FTC &amp; Regulatory Compliance</h3>
+      <p>Ambassador shall comply with all applicable FTC guidelines regarding sponsored content disclosure. All sponsored Deliverables shall include conspicuous disclosures such as #ad, #sponsored, or equivalent platform-native disclosure tools. Ambassador shall not make false or unsubstantiated claims about Brand's products. Brand shall provide Ambassador with accurate product information and any required substantiation for product claims. Both Parties agree to cooperate promptly if contacted by any regulatory authority regarding this partnership.</p>
+
+      <h3 class="section-num">12. Representations &amp; Warranties</h3>
+      <p>Each Party represents and warrants that: (a) it has full authority to enter into and perform this Agreement; (b) its performance will not violate any third-party rights or applicable law; and (c) all information provided to the other Party is accurate and complete to the best of its knowledge.</p>
+
+      <h3 class="section-num">13. Limitation of Liability</h3>
+      <p>In no event shall either Party be liable to the other for any indirect, incidental, consequential, punitive, or special damages arising from or related to this Agreement, even if advised of the possibility of such damages. Each Party's total aggregate liability to the other shall not exceed the total fees paid or payable under this Agreement in the <span class="placeholder">[e.g., 3]</span> months immediately preceding the claim.</p>
+
+      <h3 class="section-num">14. Governing Law</h3>
+      <p>This Agreement shall be governed by and construed in accordance with the laws of the State of <span class="placeholder">[STATE]</span>. Any disputes shall be resolved by binding arbitration in <span class="placeholder">[CITY, STATE]</span> as described in any applicable arbitration addendum, or by the courts of <span class="placeholder">[COUNTY, STATE]</span> if arbitration is waived in writing by both Parties.</p>
+
+      <h3 class="section-num">15. Entire Agreement</h3>
+      <p>This Agreement, together with any attached Exhibits, constitutes the entire agreement between the Parties concerning its subject matter. It may only be amended by a written document signed by both Parties. Waiver of any provision shall not constitute a waiver of any other provision. This Agreement may be executed electronically, and such signatures shall be deemed legally binding.</p>
+
+      <hr class="divider">
+
+      <div class="sig-block">
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Brand Authorized Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Title: <span class="placeholder">[TITLE]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Ambassador Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[AMBASSADOR NAME]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 3: COLLABORATION AGREEMENT -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-3" style="margin-top:72px;">
+    <div class="contract-header">
+      <div class="contract-num">03</div>
+      <div class="contract-title-wrap">
+        <h2>Collaboration Agreement</h2>
+        <div class="subtitle">Joint Creator Project Agreement</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>Use this contract whenever two or more creators are working together on a joint project — course, video series, podcast, digital product, event, etc.</li>
+        <li>The revenue split and IP ownership sections are the most critical — be explicit and get it in writing before you create anything together.</li>
+        <li>Define "revenue" precisely: gross vs. net, before or after platform fees and payment processing costs.</li>
+        <li>Credit requirements matter for SEO and attribution — specify exactly how each creator must be credited on all platforms.</li>
+        <li>Think through what happens if one party wants to exit or stops contributing — address this upfront to protect both parties.</li>
+        <li>If the project involves significant investment or potential revenue, consult an attorney before signing.</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Collaboration Agreement</div>
+      <div class="contract-subtitle">Joint Creator Project &amp; Revenue Sharing Agreement</div>
+      <hr class="divider">
+
+      <p>This Collaboration Agreement (this <strong>"Agreement"</strong>) is entered into as of <span class="placeholder">[EFFECTIVE DATE]</span> by and between:</p>
+
+      <p><strong>Creator A:</strong> <span class="placeholder">[FULL LEGAL NAME]</span>, known online as <span class="placeholder">[HANDLE / BRAND NAME]</span> (<strong>"Creator A"</strong>); and</p>
+      <p><strong>Creator B:</strong> <span class="placeholder">[FULL LEGAL NAME]</span>, known online as <span class="placeholder">[HANDLE / BRAND NAME]</span> (<strong>"Creator B"</strong>).</p>
+
+      <p>Creator A and Creator B are referred to individually as a <strong>"Party"</strong> and collectively as the <strong>"Parties."</strong></p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Project Description</h3>
+      <p>The Parties agree to collaborate on the following joint project (the <strong>"Project"</strong>): <span class="placeholder">[DESCRIBE THE PROJECT IN DETAIL, e.g., a co-hosted 6-episode YouTube mini-series titled "X," a joint digital course titled "Y," a co-authored e-book titled "Z," etc.]</span>. The Project is intended for publication / launch on <span class="placeholder">[DATE]</span> via <span class="placeholder">[PLATFORM(S) / DISTRIBUTION CHANNEL(S)]</span>. The estimated total project budget is <span class="placeholder">[$AMOUNT / "to be borne by each Party equally" / "N/A"]</span>.</p>
+
+      <h3 class="section-num">2. Roles &amp; Responsibilities</h3>
+      <p>Each Party's specific contributions to the Project are as follows:</p>
+
+      <p><strong>Creator A shall be responsible for:</strong></p>
+      <ul>
+        <li><span class="placeholder">[e.g., Writing and recording all video scripts]</span></li>
+        <li><span class="placeholder">[e.g., Managing the project timeline and content calendar]</span></li>
+        <li><span class="placeholder">[e.g., Primary promotion on Creator A's channels]</span></li>
+        <li><span class="placeholder">[ANY ADDITIONAL RESPONSIBILITIES]</span></li>
+      </ul>
+
+      <p><strong>Creator B shall be responsible for:</strong></p>
+      <ul>
+        <li><span class="placeholder">[e.g., Video editing and post-production]</span></li>
+        <li><span class="placeholder">[e.g., Thumbnail design and visual branding]</span></li>
+        <li><span class="placeholder">[e.g., Primary promotion on Creator B's channels]</span></li>
+        <li><span class="placeholder">[ANY ADDITIONAL RESPONSIBILITIES]</span></li>
+      </ul>
+
+      <p>Each Party agrees to complete their responsibilities in good faith, on time, and at a professional standard. If a Party is unable to fulfill a responsibility, they shall notify the other Party in writing as soon as reasonably practicable so alternatives can be arranged.</p>
+
+      <h3 class="section-num">3. Revenue Split</h3>
+      <p>All net revenue generated from the Project shall be divided as follows:</p>
+      <ul>
+        <li><strong>Creator A:</strong> <span class="placeholder">[e.g., 50%]</span></li>
+        <li><strong>Creator B:</strong> <span class="placeholder">[e.g., 50%]</span></li>
+      </ul>
+      <p>For purposes of this Agreement, <strong>"net revenue"</strong> means all gross revenue received from the Project minus: (a) applicable platform fees and payment processing fees; (b) any agreed-upon project expenses documented in writing and pre-approved by both Parties. Revenue distributions shall be made within <span class="placeholder">[e.g., 15]</span> days after the end of each <span class="placeholder">[month / quarter]</span> in which revenue is received. The Party receiving or collecting revenue on behalf of the Project shall provide the other Party with a written accounting statement with each distribution. Neither Party shall deduct management fees, agent commissions, or personal overhead without the express written consent of the other Party.</p>
+
+      <h3 class="section-num">4. Expenses</h3>
+      <p>All Project-related expenses exceeding <span class="placeholder">[$THRESHOLD, e.g., $100]</span> individually must be pre-approved in writing by both Parties. Each Party is responsible for their own personal equipment, software, and overhead unless otherwise agreed. Approved shared expenses shall be deducted from gross revenue before the split described in Section 3 is applied. Each Party shall maintain records of all Project expenses and provide receipts upon request.</p>
+
+      <h3 class="section-num">5. Content Ownership</h3>
+      <p>All content created specifically for the Project and jointly by both Parties (the <strong>"Joint Work"</strong>) shall be jointly owned by both Parties in equal undivided shares, unless otherwise specified in a separate written addendum. Each Party's pre-existing intellectual property (including their personal brand, logo, prior content, and proprietary methods) remains solely owned by that Party. Neither Party may license the Joint Work to third parties for commercial purposes without the written consent of the other Party. In the event the Parties wish to create derivative works from the Joint Work, they shall negotiate terms in good faith at that time.</p>
+
+      <h3 class="section-num">6. Approval Rights</h3>
+      <p>Neither Party shall publish, post, or distribute any Project content without the written approval of the other Party. Each Party shall have <span class="placeholder">[e.g., 48 hours]</span> to review and approve submitted drafts. If no response is given within the review window, the content shall be deemed approved. Each Party has the right to request revisions to ensure the Project content accurately represents their views and maintains their professional standards. Approval shall not be unreasonably withheld or delayed.</p>
+
+      <h3 class="section-num">7. Credit Requirements</h3>
+      <p>All Project content shall credit both Parties equally and prominently. Specifically:</p>
+      <ul>
+        <li>All titles, thumbnails, and cover art shall feature both Parties' names / handles with equal visual prominence.</li>
+        <li>All written descriptions, captions, and metadata shall list both Parties as co-creators.</li>
+        <li>Any press coverage, podcast appearances, or interviews discussing the Project shall reference both Parties as co-creators.</li>
+        <li>Neither Party shall represent the Project as solely their own work.</li>
+      </ul>
+
+      <h3 class="section-num">8. Exclusivity During Project</h3>
+      <p>The Parties <span class="placeholder">[do / do not]</span> agree to exclusivity during the Project. If applicable: Neither Party shall collaborate with a direct competitor on a substantially similar project during the period from <span class="placeholder">[START DATE]</span> to <span class="placeholder">[END DATE]</span> without providing written notice to the other Party.</p>
+
+      <h3 class="section-num">9. Term &amp; Termination</h3>
+      <p>This Agreement begins on the Effective Date and continues until the Project is complete and all revenue obligations are fulfilled, unless terminated earlier. Either Party may terminate this Agreement by providing <span class="placeholder">[e.g., 14]</span> days' written notice. Upon termination: (a) all completed Joint Work shall remain jointly owned; (b) revenue obligations on existing published content shall survive termination and continue to be split per Section 3; (c) the Parties shall negotiate in good faith whether any partially completed content shall be finished, shelved, or released in its current form; and (d) each Party may retain their own pre-existing intellectual property and any content created solely by them.</p>
+
+      <h3 class="section-num">10. Dispute Resolution</h3>
+      <p>The Parties agree to attempt to resolve any dispute arising from this Agreement through good-faith discussion first. If a dispute cannot be resolved within <span class="placeholder">[e.g., 21]</span> days, the Parties agree to attempt mediation through a mutually agreed-upon mediator before pursuing arbitration or litigation. Any legal action shall be governed by the laws of <span class="placeholder">[STATE]</span> and brought in the courts of <span class="placeholder">[COUNTY, STATE]</span>.</p>
+
+      <h3 class="section-num">11. Non-Disparagement</h3>
+      <p>During the Term and for <span class="placeholder">[e.g., 12 months]</span> following its expiration or termination, neither Party shall make public statements that disparage, defame, or materially damage the reputation of the other Party, the other Party's brand, or the Project itself.</p>
+
+      <h3 class="section-num">12. Entire Agreement</h3>
+      <p>This Agreement represents the complete understanding of the Parties regarding the Project and supersedes all prior discussions. It may only be modified in a signed writing. Electronic signatures are valid and binding.</p>
+
+      <hr class="divider">
+
+      <div class="sig-block">
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Creator A Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Creator B Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 4: NON-DISCLOSURE AGREEMENT -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-4" style="margin-top:72px;">
+    <div class="contract-header">
+      <div class="contract-num">04</div>
+      <div class="contract-title-wrap">
+        <h2>Non-Disclosure Agreement</h2>
+        <div class="subtitle">Mutual NDA for Business Discussions</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>Use this NDA before sharing sensitive business information in pitch meetings, partnership discussions, or joint venture negotiations.</li>
+        <li>This is a mutual (bilateral) NDA — both parties are bound by the same obligations. For one-way confidentiality (e.g., you're protecting only your info), remove the mutual language.</li>
+        <li>Standard NDA terms run 2–3 years. Longer terms are harder to enforce. Trade secrets may have indefinite protection under applicable law regardless of contract term.</li>
+        <li>The exclusions section (Section 4) is important and fair — don't try to remove it. Information that becomes public through no fault of the receiving party shouldn't remain confidential.</li>
+        <li>NDAs don't prevent all information leakage — they just create legal recourse if someone breaches. Use them alongside good judgment about what you share.</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Mutual Non-Disclosure Agreement</div>
+      <div class="contract-subtitle">Confidential Business Information Protection Agreement</div>
+      <hr class="divider">
+
+      <p>This Mutual Non-Disclosure Agreement (this <strong>"Agreement"</strong>) is entered into as of <span class="placeholder">[EFFECTIVE DATE]</span> (the <strong>"Effective Date"</strong>) by and between:</p>
+
+      <p><strong>Party 1:</strong> <span class="placeholder">[FULL LEGAL NAME / ENTITY NAME]</span>, <span class="placeholder">[an individual residing at / a ENTITY TYPE with its principal place of business at]</span> <span class="placeholder">[ADDRESS]</span> (<strong>"Party 1"</strong>); and</p>
+
+      <p><strong>Party 2:</strong> <span class="placeholder">[FULL LEGAL NAME / ENTITY NAME]</span>, <span class="placeholder">[an individual residing at / a ENTITY TYPE with its principal place of business at]</span> <span class="placeholder">[ADDRESS]</span> (<strong>"Party 2"</strong>).</p>
+
+      <p>Party 1 and Party 2 are individually referred to as a <strong>"Party"</strong> and collectively as the <strong>"Parties."</strong> This Agreement is entered into in connection with the Parties' discussions regarding <span class="placeholder">[DESCRIBE PURPOSE, e.g., a potential business partnership / content collaboration / investment / joint venture]</span> (the <strong>"Purpose"</strong>).</p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Definition of Confidential Information</h3>
+      <p><strong>"Confidential Information"</strong> means any and all non-public information disclosed by one Party (the <strong>"Disclosing Party"</strong>) to the other Party (the <strong>"Receiving Party"</strong>), whether disclosed orally, in writing, digitally, visually, or by any other means, that is designated as confidential or that reasonably should be understood to be confidential given the nature of the information and circumstances of disclosure. Confidential Information includes, without limitation: business plans, strategies, financial projections and data, revenue figures, audience analytics, subscriber and follower data, unreleased product or content concepts, partnerships in negotiation, pricing structures, proprietary processes and methodologies, client and vendor lists, trade secrets, technical data, marketing strategies, and personal information about the Disclosing Party's team or associates.</p>
+
+      <h3 class="section-num">2. Obligations of Confidentiality</h3>
+      <p>Each Receiving Party agrees to:</p>
+      <ul>
+        <li>Hold all Confidential Information of the Disclosing Party in strict confidence.</li>
+        <li>Use the Confidential Information solely for the Purpose described above and for no other purpose.</li>
+        <li>Not disclose, share, transmit, publish, or otherwise make available any Confidential Information to any third party without the prior written consent of the Disclosing Party.</li>
+        <li>Limit internal access to the Confidential Information to employees, contractors, advisors, and representatives who have a need to know such information in furtherance of the Purpose and who are bound by confidentiality obligations at least as protective as those in this Agreement.</li>
+        <li>Take reasonable precautions — at least those the Receiving Party uses to protect its own confidential information of similar sensitivity, and no less than reasonable care — to safeguard the Confidential Information against unauthorized access, disclosure, or use.</li>
+        <li>Promptly notify the Disclosing Party in writing upon becoming aware of any actual or suspected unauthorized disclosure or use of Confidential Information.</li>
+      </ul>
+
+      <h3 class="section-num">3. Permitted Disclosures</h3>
+      <p>The Receiving Party may disclose Confidential Information without consent to the extent required by applicable law, regulation, or court order, provided that: (a) the Receiving Party provides the Disclosing Party with prompt written notice (to the extent legally permissible) so that the Disclosing Party may seek a protective order or other appropriate remedy; (b) the Receiving Party cooperates with the Disclosing Party's reasonable efforts to obtain such a protective order; and (c) the Receiving Party discloses only that portion of the Confidential Information legally required to be disclosed.</p>
+
+      <h3 class="section-num">4. Exclusions from Confidential Information</h3>
+      <p>The obligations of this Agreement shall not apply to information that the Receiving Party can demonstrate by documentary evidence:</p>
+      <ul>
+        <li>Is or becomes publicly available through no act or omission of the Receiving Party;</li>
+        <li>Was rightfully known to the Receiving Party prior to disclosure by the Disclosing Party and without any confidentiality obligation;</li>
+        <li>Is rightfully received by the Receiving Party from a third party without restriction on disclosure and without breach of any obligation of confidentiality;</li>
+        <li>Is independently developed by the Receiving Party without use of or reference to the Disclosing Party's Confidential Information; or</li>
+        <li>Has been approved for release in writing by the Disclosing Party.</li>
+      </ul>
+
+      <h3 class="section-num">5. Term</h3>
+      <p>This Agreement shall remain in effect for a period of <span class="placeholder">[e.g., two (2) / three (3)]</span> years from the Effective Date (the <strong>"Term"</strong>). Notwithstanding the foregoing, obligations with respect to any Confidential Information that constitutes a trade secret under applicable law shall continue for so long as such information remains a trade secret, regardless of the expiration of the Term. Either Party may terminate this Agreement upon <span class="placeholder">[e.g., 30]</span> days' written notice, but all obligations of confidentiality with respect to Confidential Information received prior to termination shall survive for the remainder of the Term.</p>
+
+      <h3 class="section-num">6. Return or Destruction of Materials</h3>
+      <p>Upon the Disclosing Party's written request, or upon termination or expiration of this Agreement, the Receiving Party shall promptly: (a) return to the Disclosing Party all tangible materials containing or embodying Confidential Information; and (b) permanently destroy or delete all digital copies, notes, summaries, and derivatives of the Confidential Information and certify in writing that such destruction has been completed. Notwithstanding the foregoing, the Receiving Party may retain one archival copy of Confidential Information to the extent required by applicable law or regulation, subject to the continuing confidentiality obligations herein.</p>
+
+      <h3 class="section-num">7. No License or Rights Granted</h3>
+      <p>Nothing in this Agreement shall be construed as granting either Party any license, right, or interest in any patent, copyright, trademark, trade secret, or any other intellectual property right of the other Party. The disclosure of Confidential Information under this Agreement does not commit either Party to entering into any further agreement, partnership, or business relationship.</p>
+
+      <h3 class="section-num">8. No Warranty</h3>
+      <p>Each Party discloses its Confidential Information "as is." Neither Party makes any warranty, express or implied, as to the accuracy, completeness, or fitness for any purpose of the Confidential Information disclosed. The Disclosing Party shall not be liable to the Receiving Party for any use of the Confidential Information by the Receiving Party.</p>
+
+      <h3 class="section-num">9. Remedies</h3>
+      <p>Each Party acknowledges that any breach or threatened breach of this Agreement may cause irreparable harm to the Disclosing Party for which monetary damages would be an inadequate remedy. Accordingly, the Disclosing Party shall be entitled to seek injunctive or other equitable relief (without the requirement to post bond) in addition to all other remedies available at law or in equity. The Parties expressly waive any objection to the jurisdiction or venue of a court of competent jurisdiction for purposes of seeking such equitable relief. The prevailing Party in any legal action to enforce this Agreement shall be entitled to recover reasonable attorneys' fees and costs.</p>
+
+      <h3 class="section-num">10. Governing Law</h3>
+      <p>This Agreement shall be governed by and construed in accordance with the laws of the State of <span class="placeholder">[STATE]</span>, without regard to its conflict of law principles. Any legal proceeding arising from or related to this Agreement shall be brought exclusively in the state or federal courts located in <span class="placeholder">[COUNTY, STATE]</span>, and each Party hereby irrevocably submits to the personal jurisdiction of those courts.</p>
+
+      <h3 class="section-num">11. General Provisions</h3>
+      <p>This Agreement constitutes the entire agreement between the Parties with respect to confidentiality of information exchanged in connection with the Purpose. It supersedes all prior agreements on the subject matter. This Agreement may not be assigned by either Party without the written consent of the other. If any provision is held invalid or unenforceable, the remaining provisions shall remain in full force and effect. This Agreement may be executed in counterparts, and electronic signatures are valid and binding.</p>
+
+      <hr class="divider">
+
+      <div class="sig-block">
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Party 1 Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Title: <span class="placeholder">[TITLE / "Individual"]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Party 2 Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Title: <span class="placeholder">[TITLE / "Individual"]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 5: FREELANCE SERVICE CONTRACT -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-5" style="margin-top:72px;">
+    <div class="contract-header">
+      <div class="contract-num">05</div>
+      <div class="contract-title-wrap">
+        <h2>Freelance Service Contract</h2>
+        <div class="subtitle">General Purpose Independent Contractor Agreement</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>Use this contract whether you are the freelancer OR the client hiring a freelancer. Adapt the Party designations accordingly.</li>
+        <li>The kill fee provision is essential — always include it. It protects you when a client cancels after work has already begun.</li>
+        <li>The IP transfer section requires careful consideration: by default, freelancers own their work product under copyright law. IP transfers to clients upon full payment only — do not remove this condition.</li>
+        <li>The limitation of liability cap (equal to total fees) is standard and protects the freelancer from catastrophic claims.</li>
+        <li>Define the revision policy in detail — unlimited revisions is a common trap that leads to scope creep and unpaid labor.</li>
+        <li>Send this contract before starting any work, not after. "We agreed in DMs" is not a contract.</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Freelance Service Contract</div>
+      <div class="contract-subtitle">Independent Contractor Services Agreement</div>
+      <hr class="divider">
+
+      <p>This Freelance Service Contract (this <strong>"Agreement"</strong>) is entered into as of <span class="placeholder">[EFFECTIVE DATE]</span> by and between:</p>
+
+      <p><strong>Client:</strong> <span class="placeholder">[CLIENT FULL LEGAL NAME / ENTITY NAME]</span>, <span class="placeholder">[an individual / a ENTITY TYPE]</span> with address at <span class="placeholder">[CLIENT ADDRESS]</span> (<strong>"Client"</strong>); and</p>
+
+      <p><strong>Freelancer:</strong> <span class="placeholder">[FREELANCER FULL LEGAL NAME]</span>, an independent contractor with address at <span class="placeholder">[FREELANCER ADDRESS]</span>, operating under the business name <span class="placeholder">[BUSINESS NAME, if applicable / "N/A"]</span> (<strong>"Freelancer"</strong>).</p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Scope of Work</h3>
+      <p>Freelancer agrees to provide the following services to Client (the <strong>"Services"</strong>): <span class="placeholder">[DESCRIBE SERVICES IN DETAIL. Be specific. E.g., "Design and development of a 5-page Squarespace website including home, about, services, portfolio, and contact pages. Includes logo placement, brand color integration, mobile responsiveness, and two rounds of design revisions." Do not write vague descriptions like "website work."]</span>. Any work not explicitly described in this Section shall be considered out of scope and shall be subject to a separate written change order and additional fee.</p>
+
+      <h3 class="section-num">2. Deliverables</h3>
+      <p>The specific deliverables to be provided under this Agreement are:</p>
+      <ul>
+        <li><span class="placeholder">[DELIVERABLE 1 — e.g., Completed 5-page website, live and functional]</span></li>
+        <li><span class="placeholder">[DELIVERABLE 2 — e.g., All design source files in Figma and exported PNG/SVG formats]</span></li>
+        <li><span class="placeholder">[DELIVERABLE 3 — e.g., 30-day post-launch email support for bug fixes]</span></li>
+        <li><span class="placeholder">[ADD ADDITIONAL DELIVERABLES AS NEEDED]</span></li>
+      </ul>
+
+      <h3 class="section-num">3. Timeline &amp; Milestones</h3>
+      <p>Freelancer shall complete the Services and deliver the Deliverables according to the following schedule:</p>
+      <ul>
+        <li><strong><span class="placeholder">[DATE]</span>:</strong> <span class="placeholder">[MILESTONE, e.g., Project kickoff and receipt of all required Client materials]</span></li>
+        <li><strong><span class="placeholder">[DATE]</span>:</strong> <span class="placeholder">[MILESTONE, e.g., Initial design concepts submitted for Client review]</span></li>
+        <li><strong><span class="placeholder">[DATE]</span>:</strong> <span class="placeholder">[MILESTONE, e.g., Revisions completed and second draft delivered]</span></li>
+        <li><strong><span class="placeholder">[DATE]</span>:</strong> <span class="placeholder">[MILESTONE, e.g., Final deliverables submitted and project complete]</span></li>
+      </ul>
+      <p>Timelines are contingent on Client providing all required materials, feedback, and approvals within <span class="placeholder">[e.g., 3]</span> business days of each request. Freelancer shall not be liable for delays caused by Client's failure to provide timely materials, feedback, or approvals, and may adjust project deadlines accordingly with written notice.</p>
+
+      <h3 class="section-num">4. Payment Terms</h3>
+      <p>Client agrees to pay Freelancer as follows:</p>
+      <ul>
+        <li><strong>Total Fee:</strong> <span class="placeholder">[$TOTAL AMOUNT]</span></li>
+        <li><strong>Deposit:</strong> <span class="placeholder">[$AMOUNT (e.g., 50%)]</span> due upon execution of this Agreement. Work shall not commence until deposit is received.</li>
+        <li><strong>Milestone Payment(s):</strong> <span class="placeholder">[$AMOUNT]</span> due upon completion of <span class="placeholder">[MILESTONE, if applicable]</span>.</li>
+        <li><strong>Final Payment:</strong> <span class="placeholder">[$AMOUNT]</span> due upon delivery of all final Deliverables and prior to transfer of any final files or IP rights.</li>
+      </ul>
+      <p>Invoices are payable within <span class="placeholder">[e.g., 7]</span> days of receipt. Late payments shall accrue interest at <span class="placeholder">[e.g., 1.5%]</span> per month on the outstanding balance. Freelancer reserves the right to suspend all work — without liability — until overdue invoices are paid in full. Client shall reimburse Freelancer for any pre-approved out-of-pocket expenses (e.g., stock photos, fonts, software licenses, travel) within <span class="placeholder">[e.g., 14]</span> days of invoice with receipts.</p>
+
+      <h3 class="section-num">5. Revision Policy</h3>
+      <p>The project fee includes up to <span class="placeholder">[e.g., two (2)]</span> rounds of revisions per deliverable. A "revision round" means a consolidated set of changes communicated by Client in a single written list. Additional revision rounds beyond the included number shall be billed at Freelancer's standard hourly rate of <span class="placeholder">[$HOURLY RATE]</span> per hour, or a flat rate of <span class="placeholder">[$FLAT RATE per revision round]</span>, as agreed in writing prior to the additional work commencing. Revisions shall be limited to modifications of existing approved concepts. New concepts or significant scope changes shall be treated as out-of-scope work and quoted separately.</p>
+
+      <h3 class="section-num">6. Intellectual Property &amp; Ownership Transfer</h3>
+      <p>Upon receipt of full and final payment of all amounts due under this Agreement, Freelancer hereby assigns and transfers to Client all right, title, and interest — including all copyright and intellectual property rights — in and to the final delivered Deliverables (the <strong>"Work Product"</strong>). Until full payment is received, Freelancer retains all ownership of all work product, and Client shall have no right to use any deliverable. Freelancer retains the right to: (a) display the Work Product in Freelancer's portfolio and case studies; (b) use general skills, techniques, and methodologies developed during this project for other clients; and (c) retain pre-existing tools, code libraries, templates, and materials used in creating the Work Product. Client represents that all materials provided to Freelancer for use in the project are owned by Client or properly licensed for the intended use.</p>
+
+      <h3 class="section-num">7. Kill Fee</h3>
+      <p>If Client terminates this Agreement after work has commenced, the following kill fees apply based on the stage of project completion at the time of termination:</p>
+      <ul>
+        <li><strong>Termination before work begins:</strong> Client forfeits deposit paid.</li>
+        <li><strong>Termination after work commences (up to 25% completion):</strong> Client owes <span class="placeholder">[e.g., 25%]</span> of total project fee.</li>
+        <li><strong>Termination after 25%–50% completion:</strong> Client owes <span class="placeholder">[e.g., 50%]</span> of total project fee.</li>
+        <li><strong>Termination after 50%–75% completion:</strong> Client owes <span class="placeholder">[e.g., 75%]</span> of total project fee.</li>
+        <li><strong>Termination after 75%+ completion:</strong> Client owes 100% of the total project fee.</li>
+      </ul>
+      <p>Kill fees are due within <span class="placeholder">[e.g., 7]</span> days of termination notice. Upon payment of the applicable kill fee, Freelancer shall deliver all work completed to date in its current state, and Client shall have no further claims against Freelancer.</p>
+
+      <h3 class="section-num">8. Independent Contractor Status</h3>
+      <p>Freelancer is an independent contractor and not an employee, agent, or partner of Client. Freelancer shall be solely responsible for all taxes on amounts received under this Agreement, including self-employment taxes. Client shall not withhold income taxes or provide any employment benefits to Freelancer. Freelancer may engage subcontractors to assist in performing the Services, provided Freelancer remains responsible for the quality and confidentiality of all work performed. Client shall provide Freelancer with IRS Form 1099-NEC if payments exceed $600 in a calendar year.</p>
+
+      <h3 class="section-num">9. Confidentiality</h3>
+      <p>Freelancer agrees to keep all non-public information provided by Client confidential and to not disclose such information to any third party without Client's prior written consent, except to subcontractors assisting with the project who are bound by equivalent confidentiality obligations. This confidentiality obligation shall survive termination of this Agreement for a period of <span class="placeholder">[e.g., two (2) years]</span>.</p>
+
+      <h3 class="section-num">10. Indemnification</h3>
+      <p>Client shall indemnify, defend, and hold harmless Freelancer from and against any third-party claims, losses, damages, liabilities, and expenses (including attorneys' fees) arising from: (a) Client's use or misuse of the Work Product; (b) Client's breach of this Agreement; (c) any materials provided by Client that infringe third-party intellectual property rights; or (d) Client's business operations. Freelancer shall indemnify Client from third-party claims arising from Freelancer's infringement of third-party intellectual property in the Work Product (excluding Client-provided materials).</p>
+
+      <h3 class="section-num">11. Limitation of Liability</h3>
+      <p>IN NO EVENT SHALL EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL, PUNITIVE, SPECIAL, OR EXEMPLARY DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. EACH PARTY'S TOTAL AGGREGATE LIABILITY TO THE OTHER FOR DIRECT DAMAGES SHALL NOT EXCEED THE TOTAL FEES PAID OR PAYABLE BY CLIENT UNDER THIS AGREEMENT. The foregoing limitations apply regardless of the form of action, whether in contract, tort, negligence, strict liability, or otherwise.</p>
+
+      <h3 class="section-num">12. Governing Law &amp; Dispute Resolution</h3>
+      <p>This Agreement shall be governed by the laws of the State of <span class="placeholder">[STATE]</span>. Any dispute arising from this Agreement shall first be addressed through written notice and a <span class="placeholder">[e.g., 14-day]</span> cure period. Unresolved disputes shall be submitted to binding arbitration in <span class="placeholder">[CITY, STATE]</span>. The prevailing Party shall be entitled to recover reasonable attorneys' fees and costs.</p>
+
+      <h3 class="section-num">13. Entire Agreement</h3>
+      <p>This Agreement constitutes the entire agreement between the Parties and supersedes all prior communications. It may not be modified except in a signed writing. If any provision is found unenforceable, the remainder shall continue in full force. Electronic signatures are valid and binding.</p>
+
+      <hr class="divider">
+
+      <div class="sig-block">
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Client Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Title: <span class="placeholder">[TITLE]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Freelancer Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Business: <span class="placeholder">[BUSINESS NAME]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 6: CONTENT LICENSING AGREEMENT -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-6" style="margin-top:72px;">
+    <div class="contract-header">
+      <div class="contract-num">06</div>
+      <div class="contract-title-wrap">
+        <h2>Content Licensing Agreement</h2>
+        <div class="subtitle">Licensing Your Content to Third Parties</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>Use this when you're allowing another party to use your photos, videos, written content, music, or other creative work in exchange for payment.</li>
+        <li>Exclusive licenses are worth significantly more than non-exclusive ones — price accordingly. Exclusive means only the licensee can use the content for the specified period/territory.</li>
+        <li>Define "permitted uses" exhaustively. If you don't list it, assume they'll try to use it for that purpose and have a legal argument. Be specific.</li>
+        <li>Attribution requirements protect your brand — always include them unless you're explicitly selling anonymous content.</li>
+        <li>Royalty structures can be flat fees, per-use rates, percentage of revenue, or a combination. All are valid — just define them clearly.</li>
+        <li>This agreement does not transfer ownership — you retain copyright. If full ownership transfer is intended, use an assignment agreement instead (or add an assignment clause).</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Content Licensing Agreement</div>
+      <div class="contract-subtitle">Creative Content License Grant</div>
+      <hr class="divider">
+
+      <p>This Content Licensing Agreement (this <strong>"Agreement"</strong>) is entered into as of <span class="placeholder">[EFFECTIVE DATE]</span> by and between:</p>
+
+      <p><strong>Licensor:</strong> <span class="placeholder">[CONTENT CREATOR / OWNER FULL LEGAL NAME]</span>, known as <span class="placeholder">[BRAND NAME / HANDLE]</span>, with address at <span class="placeholder">[ADDRESS]</span> (<strong>"Licensor"</strong>); and</p>
+
+      <p><strong>Licensee:</strong> <span class="placeholder">[LICENSEE FULL LEGAL NAME / ENTITY NAME]</span>, a <span class="placeholder">[ENTITY TYPE]</span> with its principal place of business at <span class="placeholder">[ADDRESS]</span> (<strong>"Licensee"</strong>).</p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Licensed Content</h3>
+      <p>The content subject to this Agreement (the <strong>"Licensed Content"</strong>) is described as follows:</p>
+      <ul>
+        <li><strong>Type:</strong> <span class="placeholder">[e.g., photographs / video footage / written articles / podcast audio / illustrations / music]</span></li>
+        <li><strong>Description:</strong> <span class="placeholder">[SPECIFIC DESCRIPTION, e.g., "A set of 47 lifestyle product photography images, as listed in Exhibit A attached hereto" / "The YouTube video titled 'X' published on DATE, available at URL"]</span></li>
+        <li><strong>File format(s):</strong> <span class="placeholder">[e.g., JPEG at minimum 300 DPI / MP4 at 4K resolution / PDF]</span></li>
+      </ul>
+      <p>Licensor represents and warrants that Licensor is the sole owner of all right, title, and interest in and to the Licensed Content, including all copyrights therein, and has the full right and authority to grant the license set forth in this Agreement.</p>
+
+      <h3 class="section-num">2. Grant of License</h3>
+      <p>Subject to the terms and conditions of this Agreement and Licensee's payment of all applicable fees, Licensor hereby grants to Licensee a <strong><span class="placeholder">[exclusive / non-exclusive]</span></strong>, <strong><span class="placeholder">[sublicensable / non-sublicensable]</span></strong>, <strong><span class="placeholder">[transferable / non-transferable]</span></strong> license to use the Licensed Content solely as follows:</p>
+      <ul>
+        <li><strong>Permitted Uses:</strong> <span class="placeholder">[LIST EVERY PERMITTED USE SPECIFICALLY, e.g., (a) display on Licensee's website at [URL]; (b) inclusion in Licensee's social media posts on Instagram and Facebook; (c) use in Licensee's paid digital advertising campaigns on Meta and Google; (d) inclusion in Licensee's printed marketing materials including brochures and packaging]</span></li>
+        <li><strong>Prohibited Uses:</strong> All uses not explicitly listed above are prohibited without prior written consent. Prohibited uses include, without limitation: resale or sublicensing of the Licensed Content to third parties; editorial use beyond the scope listed above; use in any context that portrays Licensor or the Licensed Content in a false, defamatory, or misleading manner; use in connection with adult content, illegal activities, or political campaigns; and modification of the Licensed Content beyond minor cropping or color adjustment.</li>
+      </ul>
+      <p>This license does <strong>not</strong> constitute a transfer of copyright or ownership. Licensor retains all ownership of and copyright in the Licensed Content.</p>
+
+      <h3 class="section-num">3. Territory</h3>
+      <p>The license granted herein is limited to the following geographic territory: <strong><span class="placeholder">[e.g., Worldwide / United States / North America / European Union / specify countries]</span></strong>. Licensee shall not use the Licensed Content outside the specified territory without Licensor's prior written consent and payment of any applicable additional license fee.</p>
+
+      <h3 class="section-num">4. Term</h3>
+      <p>The license granted under this Agreement shall commence on the Effective Date and continue until <span class="placeholder">[e.g., one (1) year from the Effective Date / a specific date / "perpetually, subject to the termination provisions below"]</span> (the <strong>"License Term"</strong>). Upon expiration of the License Term, all rights granted to Licensee shall automatically terminate and Licensee shall cease all use of the Licensed Content, remove it from all platforms and materials, and certify such removal in writing within <span class="placeholder">[e.g., 10]</span> business days. The Parties may renew the license by written agreement executed prior to expiration.</p>
+
+      <h3 class="section-num">5. License Fee &amp; Royalty Structure</h3>
+      <p>In consideration for the license granted herein, Licensee shall pay Licensor as follows:</p>
+      <ul>
+        <li><strong>Upfront License Fee:</strong> <span class="placeholder">[$FLAT FEE]</span>, due within <span class="placeholder">[e.g., 5]</span> business days of execution of this Agreement.</li>
+        <li><strong>Royalties (if applicable):</strong> <span class="placeholder">[e.g., "In addition to the upfront fee, Licensee shall pay Licensor a royalty of X% of net revenue directly attributable to the Licensed Content, payable quarterly with an accompanying accounting statement" / "N/A — flat fee only"]</span>.</li>
+        <li><strong>Usage Expansion Fee:</strong> If Licensee requests expanded rights (additional platforms, territories, duration, or use cases), the Parties shall negotiate an additional fee in good faith prior to such expanded use.</li>
+      </ul>
+      <p>All payments shall be made via <span class="placeholder">[PAYMENT METHOD]</span>. Late payments shall accrue interest at <span class="placeholder">[e.g., 1.5%]</span> per month. Licensee's right to use the Licensed Content is conditioned on timely payment of all amounts due. If payment is not received, the license is automatically suspended until payment is made.</p>
+
+      <h3 class="section-num">6. Attribution Requirements</h3>
+      <p>Licensee shall credit Licensor in connection with all uses of the Licensed Content as follows: <strong><span class="placeholder">["Photo by [LICENSOR NAME / HANDLE]" / "Content by @[HANDLE]" / "Courtesy of [BRAND NAME]" / specify exact credit format]</span></strong>. Attribution shall be placed in a conspicuous location reasonably visible to the audience consuming the content (e.g., caption, footer, description, or end card). Digital uses shall include a clickable link to <span class="placeholder">[LICENSOR WEBSITE / SOCIAL PROFILE]</span> where feasible. Licensee shall not remove, alter, or obscure any watermarks, metadata, or copyright notices embedded in the Licensed Content.</p>
+
+      <h3 class="section-num">7. Content Standards</h3>
+      <p>Licensee agrees not to use the Licensed Content in any manner that: (a) damages or could reasonably be expected to damage Licensor's reputation, brand, or professional standing; (b) misrepresents or implies any endorsement by Licensor of products, services, views, or causes not explicitly agreed to; (c) involves pornographic, violent, hateful, discriminatory, or otherwise objectionable material; (d) constitutes defamation, harassment, or invasion of privacy; or (e) violates any applicable law or regulation. Licensor shall have the right to terminate this license immediately upon written notice if Licensee uses the Licensed Content in a manner that violates this Section.</p>
+
+      <h3 class="section-num">8. Quality &amp; Modification</h3>
+      <p>Licensee may not modify, alter, crop (beyond minor framing adjustments), colorize, add to, or create derivative works from the Licensed Content without prior written consent. If modification is permitted, Licensee shall not use any modified version to misrepresent Licensor's original work or intent. Licensee shall maintain the technical quality of the Licensed Content and shall not compress, downgrade, or degrade its resolution or quality in a manner that would reflect poorly on Licensor.</p>
+
+      <h3 class="section-num">9. Licensor's Retained Rights</h3>
+      <p>Unless an exclusive license is granted under Section 2, Licensor retains the full right to use, display, license, sell, and otherwise exploit the Licensed Content in any manner and to any third party. Even where an exclusive license is granted, Licensor retains the right to display the Licensed Content in Licensor's own portfolio and case studies for self-promotional purposes.</p>
+
+      <h3 class="section-num">10. Termination</h3>
+      <p>This Agreement may be terminated: (a) by either Party for material breach by the other Party that remains uncured for <span class="placeholder">[e.g., 10]</span> business days after written notice; (b) by Licensor immediately upon Licensee's failure to pay any amount due; (c) by Licensor immediately upon Licensee's use of the Licensed Content in violation of Sections 2 or 7; or (d) by mutual written consent. Upon termination, all rights granted to Licensee shall immediately cease, and Licensee shall remove all uses of the Licensed Content from all platforms and materials within <span class="placeholder">[e.g., 5]</span> business days. Fees paid are non-refundable upon termination for Licensee's breach.</p>
+
+      <h3 class="section-num">11. Indemnification &amp; Warranty</h3>
+      <p>Licensor warrants that: (a) Licensor owns all rights in the Licensed Content free and clear; (b) the Licensed Content does not infringe any third-party intellectual property, privacy, or publicity rights; and (c) Licensor has the authority to grant the license herein. Licensor shall indemnify and defend Licensee against third-party claims arising from a breach of these warranties. Licensee shall indemnify and defend Licensor against third-party claims arising from Licensee's use of the Licensed Content outside the scope of this Agreement or in violation of applicable law.</p>
+
+      <h3 class="section-num">12. Governing Law</h3>
+      <p>This Agreement shall be governed by the laws of the State of <span class="placeholder">[STATE]</span>. Disputes shall be resolved by binding arbitration in <span class="placeholder">[CITY, STATE]</span> or in the courts of <span class="placeholder">[COUNTY, STATE]</span> if arbitration is mutually waived. The prevailing Party shall be entitled to recover reasonable attorneys' fees.</p>
+
+      <hr class="divider">
+
+      <div class="sig-block">
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Licensor Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+        <div class="sig-col">
+          <div class="sig-line"></div>
+          <div class="sig-label">Licensee Signature</div>
+          <p style="margin-top:10px;font-size:13px;">Name: <span class="placeholder">[NAME]</span><br>Title: <span class="placeholder">[TITLE]</span><br>Date: <span class="placeholder">[DATE]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- CONTRACT 7: DIGITAL PRODUCT TERMS OF SERVICE -->
+  <!-- ============================================================ -->
+  <section class="contract-section" id="contract-7" style="margin-top:72px;">
+    <div class="contract-header">
+      <div class="contract-num">07</div>
+      <div class="contract-title-wrap">
+        <h2>Digital Product Terms of Service</h2>
+        <div class="subtitle">For Selling Digital Downloads &amp; Products</div>
+      </div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>How to Use This Template</h3>
+      <ul>
+        <li>Display these terms prominently at checkout and on your product page — buyers should actively acknowledge them (checkbox or "I agree" button) before purchasing.</li>
+        <li>Customize the refund policy to match your actual policy — courts will look at what you actually promised, not just what the template says.</li>
+        <li>The "no refunds on digital products" policy is legally valid in most U.S. states if conspicuously disclosed before purchase. Check your local consumer protection laws.</li>
+        <li>Distinguish between personal use and commercial use licenses carefully — commercial use licenses should cost more. Define both clearly.</li>
+        <li>Update this document whenever you change your products, policies, or business practices. Date-stamp it and keep old versions for reference.</li>
+        <li>If you sell in the EU, you must also comply with EU consumer protection directives. Consider consulting a lawyer familiar with cross-border e-commerce.</li>
+      </ul>
+    </div>
+
+    <div class="contract-body">
+      <div class="contract-title">Digital Product Terms of Service</div>
+      <div class="contract-subtitle">End User License Agreement &amp; Purchase Terms<br>Last Updated: <span class="placeholder">[DATE]</span></div>
+      <hr class="divider">
+
+      <p>These Digital Product Terms of Service (these <strong>"Terms"</strong>) govern your purchase and use of digital products sold by <span class="placeholder">[YOUR FULL LEGAL NAME / BUSINESS NAME]</span> (<strong>"Seller,"</strong> <strong>"we,"</strong> or <strong>"us"</strong>), a <span class="placeholder">[ENTITY TYPE, e.g., sole proprietor / LLC / corporation]</span> based in <span class="placeholder">[CITY, STATE]</span>, operating at <span class="placeholder">[WEBSITE URL]</span>. By purchasing any digital product from us, you (<strong>"Buyer"</strong> or <strong>"you"</strong>) agree to be bound by these Terms. If you do not agree to these Terms, do not complete your purchase.</p>
+
+      <hr class="divider">
+
+      <h3 class="section-num">1. Product Description</h3>
+      <p>We sell the following categories of digital products through our website and authorized sales platforms (collectively, <strong>"Products"</strong>): <span class="placeholder">[LIST ALL PRODUCT TYPES, e.g., digital templates, contract templates, e-books, online courses, presets, design files, spreadsheets, printables, audio files, video tutorials, and similar downloadable content]</span>. Each Product listing includes a description of its specific contents, file format(s), and any applicable technical requirements. It is your responsibility to review the product description and ensure your device and software are compatible before purchasing. We make reasonable efforts to keep product descriptions accurate, but we reserve the right to update, correct, or modify product contents as needed.</p>
+
+      <h3 class="section-num">2. Instant Access &amp; Delivery</h3>
+      <p>Upon completion of a successful purchase and payment processing, you will receive instant access to your digital product via <span class="placeholder">[e.g., a download link sent to your email / your customer account / the purchase confirmation page]</span>. It is your responsibility to download and save your product files promptly. We are not responsible for files lost due to device failure, accidental deletion, or failure to download. We may, at our discretion, provide re-download access for a period of <span class="placeholder">[e.g., 30 days]</span> following purchase. We are not responsible for products that cannot be delivered due to an incorrect email address provided by you.</p>
+
+      <h3 class="section-num">3. License Grant — Personal Use</h3>
+      <p>Upon purchase of a Product designated as a <strong>"Personal Use"</strong> license, Seller grants you a non-exclusive, non-transferable, non-sublicensable, revocable license to:</p>
+      <ul>
+        <li>Download and use the Product for your own personal, non-commercial purposes.</li>
+        <li>Modify the Product (where applicable, such as templates) for your own personal use.</li>
+        <li>Store one (1) backup copy of the Product on your personal devices.</li>
+      </ul>
+      <p>A Personal Use license does NOT permit you to: (a) use the Product in any commercial application, business, product, or service offered for sale; (b) share, distribute, resell, sublicense, or give away the Product or any derivative thereof to any third party; (c) use the Product to create physical or digital products for sale; or (d) use the Product in client work. If you require commercial use rights, you must purchase a Commercial Use license where available, or contact us to negotiate a separate license.</p>
+
+      <h3 class="section-num">4. License Grant — Commercial Use</h3>
+      <p>Upon purchase of a Product designated as a <strong>"Commercial Use"</strong> license (where available and offered by Seller), Seller grants you a non-exclusive, non-transferable license to:</p>
+      <ul>
+        <li>Use the Product in your own business operations, client projects, and commercial applications.</li>
+        <li>Modify and adapt the Product for use in an unlimited number of end projects for yourself or your clients.</li>
+        <li>Use the Product to create finished products or deliverables sold to clients (e.g., a custom contract created from this template for a client's use).</li>
+      </ul>
+      <p>A Commercial Use license does NOT permit you to: (a) resell, redistribute, or sublicense the Product itself (as a standalone file or in a bundle) to third parties; (b) use the Product to create a competing template library, resource kit, or product collection for sale; (c) represent the Product as your original creation when reselling to clients as a standalone product; or (d) use the Product in any manner that violates applicable law. Seller reserves the right to withdraw or modify commercial use terms at any time, but such changes will not affect previously purchased licenses.</p>
+
+      <h3 class="section-num">5. Prohibited Uses</h3>
+      <p>Regardless of license type, you may NOT use any Product to:</p>
+      <ul>
+        <li>Create, distribute, or promote any content that is unlawful, fraudulent, defamatory, harassing, obscene, or discriminatory.</li>
+        <li>Infringe any third party's intellectual property, privacy, or publicity rights.</li>
+        <li>Engage in spam, phishing, or any form of deceptive marketing.</li>
+        <li>Violate any applicable local, national, or international law or regulation.</li>
+        <li>Reverse engineer, decompile, or attempt to extract proprietary methodologies or source materials from the Product.</li>
+        <li>Claim authorship or ownership of the unmodified Product to misrepresent its origin.</li>
+        <li>Use the Product in any way that could bring the Seller's brand into disrepute.</li>
+      </ul>
+      <p>Violation of these prohibited uses will result in immediate termination of your license without refund and may subject you to legal liability.</p>
+
+      <h3 class="section-num">6. Refund Policy</h3>
+      <p><strong>ALL SALES OF DIGITAL PRODUCTS ARE FINAL. WE DO NOT OFFER REFUNDS, EXCHANGES, OR STORE CREDITS ON DIGITAL PRODUCTS ONCE THEY HAVE BEEN DOWNLOADED OR ACCESS HAS BEEN GRANTED.</strong> By completing your purchase, you acknowledge and agree to this no-refund policy. This policy exists because digital products are immediately accessible and cannot be "returned" once delivered. Exceptions may be made at Seller's sole discretion in the following circumstances only:</p>
+      <ul>
+        <li>The Product files are corrupted, inaccessible, or materially different from the product description, and Seller is unable to provide a corrected version within <span class="placeholder">[e.g., 5]</span> business days of receiving written notice of the issue.</li>
+        <li>You were charged more than once for the same product due to a technical error (you will be refunded the duplicate charge only).</li>
+      </ul>
+      <p>To request an exception, contact us at <span class="placeholder">[SUPPORT EMAIL]</span> within <span class="placeholder">[e.g., 7]</span> days of purchase with your order confirmation number and a description of the issue. Refund requests submitted after this window will not be considered. If you are located in the EU or another jurisdiction with mandatory refund rights for digital products, applicable law will govern your rights notwithstanding this policy.</p>
+
+      <h3 class="section-num">7. Intellectual Property</h3>
+      <p>All Products, including all text, design, layouts, methodologies, frameworks, graphics, and other content contained therein, are the exclusive intellectual property of Seller and are protected by applicable copyright, trademark, and other intellectual property laws. Your purchase grants you only the limited license rights described in these Terms — it does not transfer any ownership of or copyright in the Product to you. All rights not expressly granted herein are reserved by Seller. Seller's name, logo, brand, and any associated trademarks may not be used in connection with any product or service without Seller's prior written permission. Unauthorized copying, distribution, modification, or sale of any Product is a violation of Seller's intellectual property rights and may subject you to civil and criminal liability.</p>
+
+      <h3 class="section-num">8. Warranty Disclaimer</h3>
+      <p>ALL PRODUCTS ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT ANY WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY LAW, SELLER EXPRESSLY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, COMPLETENESS, NON-INFRINGEMENT, AND ANY WARRANTIES ARISING FROM COURSE OF DEALING OR USAGE OF TRADE. SELLER DOES NOT WARRANT THAT: (A) THE PRODUCTS WILL MEET YOUR SPECIFIC REQUIREMENTS; (B) THE PRODUCTS WILL PRODUCE ANY PARTICULAR RESULT OR OUTCOME; (C) THE PRODUCTS ARE FREE FROM ERRORS; OR (D) THE PRODUCTS ARE APPROPRIATE FOR USE IN YOUR SPECIFIC JURISDICTION OR CIRCUMSTANCES.</p>
+
+      <p>IN PARTICULAR, ALL LEGAL TEMPLATES AND CONTRACT TEMPLATES ARE PROVIDED FOR REFERENCE AND EDUCATIONAL PURPOSES ONLY AND DO NOT CONSTITUTE LEGAL ADVICE. SELLER IS NOT A LAW FIRM AND THE SALE OF THESE TEMPLATES DOES NOT CREATE AN ATTORNEY-CLIENT RELATIONSHIP. YOU SHOULD CONSULT A LICENSED ATTORNEY BEFORE USING ANY CONTRACT TEMPLATE FOR A LEGALLY SIGNIFICANT TRANSACTION.</p>
+
+      <h3 class="section-num">9. Limitation of Liability</h3>
+      <p>TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL SELLER, ITS OWNERS, OFFICERS, DIRECTORS, EMPLOYEES, CONTRACTORS, OR LICENSORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, PUNITIVE, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, REVENUE, DATA, GOODWILL, BUSINESS OPPORTUNITIES, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE ANY PRODUCT, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. SELLER'S TOTAL AGGREGATE LIABILITY TO YOU FOR ANY CLAIM ARISING FROM OR RELATED TO THESE TERMS OR ANY PRODUCT SHALL NOT EXCEED THE AMOUNT YOU ACTUALLY PAID FOR THE SPECIFIC PRODUCT GIVING RISE TO THE CLAIM. IF YOUR JURISDICTION DOES NOT ALLOW LIMITATIONS ON CERTAIN WARRANTIES OR LIABILITIES, SOME OF THE ABOVE MAY NOT APPLY TO YOU.</p>
+
+      <h3 class="section-num">10. Third-Party Platforms</h3>
+      <p>If you purchase our Products through a third-party platform (e.g., <span class="placeholder">[Gumroad / Etsy / Shopify / Payhip / Podia / etc.]</span>), that platform's terms of service also apply to your purchase and use of that platform. Seller is not responsible for the practices, policies, or technical operation of any third-party platform. Technical issues with third-party platforms (including payment processing failures, download errors on their platform, or account suspension) are outside Seller's control and do not automatically entitle you to a refund.</p>
+
+      <h3 class="section-num">11. Updates &amp; Modifications to Products</h3>
+      <p>Seller may, at its sole discretion, update, revise, or improve Products from time to time. We will make commercially reasonable efforts to provide updated versions to previous purchasers, but we are not obligated to do so. These Terms may be updated periodically. The version of these Terms in effect at the time of your purchase shall govern your transaction. We encourage you to review these Terms before each purchase.</p>
+
+      <h3 class="section-num">12. Governing Law</h3>
+      <p>These Terms shall be governed by and construed in accordance with the laws of the State of <span class="placeholder">[STATE]</span>, without giving effect to conflict of law principles. Any disputes arising from these Terms shall be resolved exclusively by binding arbitration in <span class="placeholder">[CITY, STATE]</span>, except that either Party may seek injunctive or equitable relief in any court of competent jurisdiction to prevent intellectual property infringement. If you are a consumer located in a jurisdiction that does not permit mandatory arbitration for consumer disputes, applicable law will govern your dispute resolution rights.</p>
+
+      <h3 class="section-num">13. Contact Information</h3>
+      <p>Questions about these Terms, your purchase, or your license should be directed to: <span class="placeholder">[BUSINESS NAME]</span>, <span class="placeholder">[MAILING ADDRESS]</span>, Email: <span class="placeholder">[SUPPORT EMAIL ADDRESS]</span>. We will make reasonable efforts to respond to inquiries within <span class="placeholder">[e.g., 3–5]</span> business days.</p>
+
+      <hr class="divider">
+
+      <p style="font-size:12px;color:rgba(242,242,242,0.4);text-align:center;font-style:italic;">By purchasing this product, you confirm that you have read, understood, and agree to be bound by these Terms of Service. These Terms constitute a legally binding agreement between you and <span class="placeholder">[BUSINESS NAME]</span>.</p>
+    </div>
+  </section>
+
+</div><!-- /wrapper -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p class="brand">Creator Legal Toolkit</p>
+  <p>Part of the <strong>GetScrewedScore Fight Back Kit</strong> — Professional resources for creators and digital entrepreneurs.</p>
+  <p>These templates are for reference and educational use only. They do not constitute legal advice. Consult a licensed attorney in your jurisdiction before using any contract for a legally significant matter. Laws vary by location and change over time — always verify current requirements.</p>
+  <p style="margin-top:16px;font-size:11px;">&copy; <span class="placeholder">[YEAR]</span> <span class="placeholder">[YOUR BUSINESS NAME]</span>. All rights reserved. Unauthorized redistribution or resale of this document is prohibited.</p>
+</footer>
+
+</body>
+</html>

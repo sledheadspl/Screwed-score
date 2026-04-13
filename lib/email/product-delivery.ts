@@ -52,6 +52,66 @@ export const PRODUCT_CATALOG: Record<string, {
     deliveryEnvKey: 'PRODUCT_LINK_LAUNCH_SEQUENCE',
     accentColor: '#ffd60a',
   },
+  'ai-prompt-vault': {
+    name: 'AI Prompt Vault for Creators',
+    tagline: '500+ battle-tested AI prompts, organized by use case.',
+    deliveryEnvKey: 'PRODUCT_LINK_AI_PROMPT_VAULT',
+    accentColor: '#a78bfa',
+  },
+  'youtube-accelerator': {
+    name: 'YouTube Growth Accelerator',
+    tagline: 'The full system to grow your channel from any starting point.',
+    deliveryEnvKey: 'PRODUCT_LINK_YOUTUBE_ACCELERATOR',
+    accentColor: '#ff4444',
+  },
+  'email-list-builder': {
+    name: 'Email List Builder System',
+    tagline: 'Lead magnets, opt-in copy, and 14 emails that convert.',
+    deliveryEnvKey: 'PRODUCT_LINK_EMAIL_LIST_BUILDER',
+    accentColor: '#00E5FF',
+  },
+  'viral-content-formula': {
+    name: 'Viral Content Formula',
+    tagline: 'The repeatable framework behind content that spreads.',
+    deliveryEnvKey: 'PRODUCT_LINK_VIRAL_CONTENT_FORMULA',
+    accentColor: '#ff6b35',
+  },
+  'freelance-rate-kit': {
+    name: 'Freelance Rate Masterclass Kit',
+    tagline: 'Price your work confidently and negotiate like a pro.',
+    deliveryEnvKey: 'PRODUCT_LINK_FREELANCE_RATE_KIT',
+    accentColor: '#30d158',
+  },
+  'personal-brand-kit': {
+    name: 'Personal Brand Positioning Kit',
+    tagline: 'Build a brand so sharp it sells itself.',
+    deliveryEnvKey: 'PRODUCT_LINK_PERSONAL_BRAND_KIT',
+    accentColor: '#00E5FF',
+  },
+  'creator-legal-toolkit': {
+    name: 'Creator Legal Toolkit',
+    tagline: '7 contract templates that protect your business and IP.',
+    deliveryEnvKey: 'PRODUCT_LINK_CREATOR_LEGAL_TOOLKIT',
+    accentColor: '#ffd60a',
+  },
+  'passive-income-blueprint': {
+    name: 'Passive Income Blueprint',
+    tagline: '7 income streams, fully mapped. Start building tomorrow.',
+    deliveryEnvKey: 'PRODUCT_LINK_PASSIVE_INCOME_BLUEPRINT',
+    accentColor: '#30d158',
+  },
+  'video-script-formula': {
+    name: 'Video Script & Hook Formula',
+    tagline: '50 hook templates and the structure behind high-retention video.',
+    deliveryEnvKey: 'PRODUCT_LINK_VIDEO_SCRIPT_FORMULA',
+    accentColor: '#00E5FF',
+  },
+  'course-creator-kit': {
+    name: 'Digital Course Creator Kit',
+    tagline: 'Everything you need to build, launch, and sell a $500+ course.',
+    deliveryEnvKey: 'PRODUCT_LINK_COURSE_CREATOR_KIT',
+    accentColor: '#ffd60a',
+  },
 }
 
 function buildEmailHtml(opts: {

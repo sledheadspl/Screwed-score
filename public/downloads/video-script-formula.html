@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Script & Hook Formula — Complete System</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080808;
+    --card: rgba(15,15,15,0.8);
+    --accent: #00E5FF;
+    --accent-dim: rgba(0,229,255,0.15);
+    --accent-border: rgba(0,229,255,0.3);
+    --text: #f2f2f2;
+    --text-muted: rgba(242,242,242,0.6);
+    --text-faint: rgba(242,242,242,0.35);
+    --border: rgba(255,255,255,0.06);
+    --border-light: rgba(255,255,255,0.1);
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* LAYOUT */
+  .page-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 60px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 40px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-tagline {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+  }
+  .hero-stat-label {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* CARDS & SECTIONS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .card-accent {
+    border-color: var(--accent-border);
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, var(--card) 60%);
+  }
+
+  /* TOC */
+  .toc { margin-bottom: 60px; }
+  .toc-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .toc-item:hover { border-color: var(--accent-border); color: var(--accent); text-decoration: none; }
+  .toc-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 20px;
+  }
+
+  /* SECTION HEADERS */
+  .section { margin-bottom: 64px; }
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .section-intro {
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    margin-bottom: 32px;
+    max-width: 720px;
+  }
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+
+  /* HOOK TEMPLATES */
+  .hook-category { margin-bottom: 40px; }
+  .hook-category-title {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--accent-border);
+    margin-bottom: 20px;
+  }
+  .hook-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .hook-template {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .hook-template em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hook-example {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    padding-left: 12px;
+    border-left: 2px solid var(--accent-border);
+  }
+  .hook-best {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    font-style: italic;
+  }
+
+  /* STRUCTURE PARTS */
+  .script-part {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.01);
+    position: relative;
+  }
+  .script-part-num {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    background: var(--accent);
+    color: #080808;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+  .script-part h3 { margin-top: 8px; }
+
+  /* PATTERN INTERRUPTS */
+  .interrupt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .interrupt-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .interrupt-item h4 { font-size: 0.9rem; margin-bottom: 6px; }
+  .interrupt-item p { font-size: 0.84rem; color: var(--text-muted); }
+
+  /* PLATFORM CARDS */
+  .platform-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .platform-card:hover { border-color: var(--border-light); }
+  .platform-badge {
+    display: inline-block;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  /* LISTS */
+  ul, ol { padding-left: 22px; }
+  ul li, ol li { margin-bottom: 8px; color: var(--text-muted); font-size: 0.95rem; }
+  ul li strong, ol li strong { color: var(--text); }
+
+  /* CTA TEMPLATES */
+  .cta-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .cta-num {
+    width: 28px;
+    height: 28px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .cta-text { font-size: 0.93rem; }
+  .cta-text strong { color: var(--text); display: block; margin-bottom: 3px; }
+  .cta-text span { color: var(--text-muted); font-size: 0.85rem; }
+
+  /* SAMPLE SCRIPTS */
+  .sample-script {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .script-header {
+    background: rgba(0,229,255,0.06);
+    border-bottom: 1px solid var(--accent-border);
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .script-header h3 { margin: 0; font-size: 1.1rem; }
+  .script-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .script-meta-tag {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .script-body { padding: 28px; }
+  .script-line {
+    margin-bottom: 16px;
+    font-size: 0.93rem;
+  }
+  .script-cue {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .script-line p { color: var(--text-muted); }
+
+  /* CALLOUT BOXES */
+  .callout {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+  .callout-title {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .callout p { font-size: 0.93rem; color: rgba(242,242,242,0.8); margin: 0; }
+
+  /* STAT BLOCKS */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .stat-block {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .stat-block-num {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-block-label { font-size: 0.8rem; color: var(--text-faint); }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent-border);
+  }
+  td {
+    padding: 10px 14px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0 0;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 0.82rem;
+  }
+  .footer a { color: var(--text-faint); }
+  .footer a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .page-wrap { padding: 0 16px 60px; }
+    .hero { padding: 50px 0 40px; }
+    .card { padding: 20px; }
+    .script-body { padding: 20px; }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-badge">Premium Digital Product</div>
+    <h1>Video Script &amp;<br><span>Hook Formula</span></h1>
+    <p class="hero-tagline">The complete system for writing high-retention video scripts across every platform — 50 proven hook templates, the 4-part script structure, platform-specific adaptation, and 5 fully written sample scripts.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">50</span>
+        <span class="hero-stat-label">Hook Templates</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">6</span>
+        <span class="hero-stat-label">Platforms Covered</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">20</span>
+        <span class="hero-stat-label">CTA Formulas</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">5</span>
+        <span class="hero-stat-label">Full Sample Scripts</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOC -->
+  <div class="toc card">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-grid">
+      <a href="#science" class="toc-item"><span class="toc-num">00</span> The Science of Retention</a>
+      <a href="#hooks" class="toc-item"><span class="toc-num">01</span> 50 Proven Hook Templates</a>
+      <a href="#structure" class="toc-item"><span class="toc-num">02</span> The 4-Part Script Structure</a>
+      <a href="#pattern" class="toc-item"><span class="toc-num">03</span> Pattern Interrupt Techniques</a>
+      <a href="#platforms" class="toc-item"><span class="toc-num">04</span> Platform-Specific Adaptation</a>
+      <a href="#workflow" class="toc-item"><span class="toc-num">05</span> The Scripting Workflow</a>
+      <a href="#ctas" class="toc-item"><span class="toc-num">06</span> CTA Formulas That Convert</a>
+      <a href="#samples" class="toc-item"><span class="toc-num">07</span> 5 Complete Sample Scripts</a>
+    </div>
+  </div>
+
+  <!-- SECTION 0: SCIENCE OF RETENTION -->
+  <section class="section" id="science">
+    <div class="section-label">Section 00</div>
+    <h2 class="section-title">The Science of Retention</h2>
+    <p class="section-intro">Before you write a single word, you need to understand what you're actually fighting against — and what the algorithm is silently measuring every second your video plays.</p>
+
+    <div class="card">
+      <h3>How Algorithms Actually Measure Retention</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">YouTube, TikTok, and Instagram Reels don't care how good your content is in the abstract. They measure cold, hard behavioral signals — and the most important one isn't views, subscribers, or even likes. It's <strong>Average View Duration (AVD)</strong> and <strong>Average Percentage Viewed (APV)</strong>.</p>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Here's how the feedback loop works: when someone clicks your video, the algorithm starts a timer. Every second they watch, they're casting a "vote" that your content deserves to be pushed to more people. The moment they leave — whether it's 4 seconds or 4 minutes in — that drop is logged in a retention graph. The algorithm aggregates millions of these micro-decisions to determine your video's "viewer satisfaction score," which directly controls distribution.</p>
+
+      <div class="stat-row">
+        <div class="stat-block">
+          <span class="stat-block-num">40%</span>
+          <span class="stat-block-label">Average retention rate for top-performing YouTube videos</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-block-num">30s</span>
+          <span class="stat-block-label">The critical window where most viewers decide to stay or leave</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-block-num">62%</span>
+          <span class="stat-block-label">Viewers lost in first 60 seconds on average videos</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-block-num">3x</span>
+          <span class="stat-block-label">Distribution boost for videos with above-average retention</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>The 30-Second Rule</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Every platform has run internal studies showing the same result: the drop-off curve is steepest in the first 30 seconds. This isn't unique to short-form — even on 20-minute YouTube videos, the biggest single retention cliff happens between seconds 0 and 30.</p>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Why? Because viewers are making a cost-benefit calculation before they're even conscious of it. Their subconscious is asking: <em>"Is the value I'm going to get worth the time this is going to take?"</em> Your opening 30 seconds need to answer that question with an overwhelming "yes."</p>
+      <p style="color:var(--text-muted);">The 30-second rule has three implications for your script: (1) Your hook must make a specific, credible promise. (2) You must not deliver on that promise immediately — you create tension, not resolution. (3) You must use the bridge (seconds 30–60) to reinforce the promise and give a preview of what's coming without giving it away.</p>
+    </div>
+
+    <div class="card">
+      <h3>Why Most Videos Lose 60% of Viewers in the First Minute</h3>
+      <p style="color:var(--text-muted); margin-bottom:12px;">The most common reasons for catastrophic early drop-off, in order of frequency:</p>
+      <ol>
+        <li><strong>Slow starts and excessive intros</strong> — "Hey guys, welcome back to my channel, today we're going to be talking about..." loses 20–30% of viewers before the sentence ends. Viewers have infinite alternatives. They don't owe you a slow start.</li>
+        <li><strong>Mismatched thumbnail/title vs. content</strong> — If your hook doesn't directly connect to the thumbnail that got them to click, they feel deceived. The contract is broken before you've begun.</li>
+        <li><strong>No established stakes</strong> — Viewers need to know <em>why this matters to them</em> within the first 15 seconds. Information without stakes is trivia. Stakes without information is click-bait. You need both.</li>
+        <li><strong>Monotone energy</strong> — The human ear and eye are hardwired to detect boredom. If your energy, pacing, or visual presentation doesn't vary, the brain treats your video as background noise and the viewer's thumb finds the scroll.</li>
+        <li><strong>No open loop</strong> — The single most powerful retention mechanism in storytelling is an unanswered question. Every second between when you raise a question and when you answer it is a second the viewer will stay. Most creators answer too fast.</li>
+      </ol>
+    </div>
+
+    <div class="card card-accent">
+      <h3>The Pattern Interrupt Concept</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">The human brain evolved to filter out the familiar. When something predictable happens on screen, the brain's default mode network kicks in and attention wanders. A pattern interrupt is any deliberate disruption to the expected flow — a sudden cut, a text overlay, a shift in camera angle, a surprising statistic, a sound effect — that forces the brain back to active attention.</p>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Top creators deploy pattern interrupts every 20–30 seconds on average, not randomly, but at the exact moments when retention data shows a natural dip. This is why MrBeast's videos don't feel exhausting even at 20+ minutes — the editing and scripting are engineered to constantly reset the viewer's attention cycle.</p>
+
+      <div class="callout">
+        <div class="callout-title">The Attention Reset Cycle</div>
+        <p>The human brain's natural attention span cycles approximately every 20–30 seconds before it seeks a new stimulus. Your script must be architected around these cycles — not to fight them, but to work with them. Deploy a pattern interrupt just before the attention dip, not after it.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 1: HOOK TEMPLATES -->
+  <section class="section" id="hooks">
+    <div class="section-label">Part 01</div>
+    <h2 class="section-title">50 Proven Hook Templates</h2>
+    <p class="section-intro">Every hook template below is drawn from analysis of high-retention videos across YouTube, TikTok, and Instagram. Each includes the fill-in template, a real-world example, and a note on the best use case.</p>
+
+    <!-- CONTROVERSY HOOKS -->
+    <div class="hook-category">
+      <div class="hook-category-title">Category A — Controversy Hooks (10)</div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Everyone is wrong about <em>[topic]</em> — and I have the receipts."</div>
+        <div class="hook-example">Example: "Everyone is wrong about the best time to post on Instagram — and I have the receipts from 3 years of data."</div>
+        <div class="hook-best">Best for: Niches with strong orthodoxies (finance, fitness, marketing). Works best when you can actually back it up.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I said <em>[controversial opinion]</em> publicly, and the response told me everything."</div>
+        <div class="hook-example">Example: "I said 'most creators should stop posting Reels' publicly, and the response told me everything about why creators fail."</div>
+        <div class="hook-best">Best for: Thought leaders, personal brand builders. Creates immediate social proof and controversy simultaneously.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The <em>[industry/guru/company]</em> doesn't want you to know this — but I'm going to tell you anyway."</div>
+        <div class="hook-example">Example: "The online course industry doesn't want you to know this — but I'm going to tell you anyway."</div>
+        <div class="hook-best">Best for: Any niche with an established "establishment" to push against. Taps into distrust of authority.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I used to believe <em>[commonly held belief]</em>. I was embarrassingly wrong."</div>
+        <div class="hook-example">Example: "I used to believe posting every day was the key to growing on YouTube. I was embarrassingly wrong — and I wasted 18 months to find out."</div>
+        <div class="hook-best">Best for: Educational content where self-deprecating vulnerability builds trust quickly.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "<em>[Popular thing]</em> is actually making your <em>[result]</em> worse — here's the evidence."</div>
+        <div class="hook-example">Example: "Drinking more water is actually making your skin worse for some people — here's the evidence."</div>
+        <div class="hook-best">Best for: Health, wellness, fitness, productivity content. Inverts common advice to create curiosity.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I got banned / sued / fired for saying <em>[thing]</em> — here's the full story."</div>
+        <div class="hook-example">Example: "I got my ad account banned for doing exactly what the official documentation told me to do — here's the full story."</div>
+        <div class="hook-best">Best for: High-drama storytelling. The specificity of the consequence makes it feel credible and urgent.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Hot take: <em>[contrarian opinion]</em>. Let me explain before you close this."</div>
+        <div class="hook-example">Example: "Hot take: Most productivity advice is designed to keep you productive for other people. Let me explain before you close this."</div>
+        <div class="hook-best">Best for: Short-form platforms. The "before you close this" line directly addresses and interrupts the exit impulse.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The reason <em>[most people]</em> fail at <em>[goal]</em> isn't what they think it is."</div>
+        <div class="hook-example">Example: "The reason most people fail at losing weight isn't what they think it is — and it has nothing to do with diet or exercise."</div>
+        <div class="hook-best">Best for: Any niche with a high failure rate and established myths. Promises insider knowledge.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "<em>[Number]</em>% of <em>[professionals/experts]</em> are lying to you about <em>[topic]</em>."</div>
+        <div class="hook-example">Example: "87% of financial advisors are lying to you about index funds — here's how to spot them."</div>
+        <div class="hook-best">Best for: Finance, health, legal content. Specific numbers dramatically increase credibility of claims.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Unpopular opinion: <em>[belief that many secretly hold but few say out loud]</em>."</div>
+        <div class="hook-example">Example: "Unpopular opinion: Working from home is actually destroying your career trajectory, and most remote workers already know it."</div>
+        <div class="hook-best">Best for: Career, business, lifestyle content. Creates tribalism — viewers who agree feel seen and validated.</div>
+      </div>
+    </div>
+
+    <!-- QUESTION HOOKS -->
+    <div class="hook-category">
+      <div class="hook-category-title">Category B — Question / Curiosity Hooks (10)</div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "What would happen if you <em>[unusual action]</em> for <em>[time period]</em>?"</div>
+        <div class="hook-example">Example: "What would happen if you responded to every email with a voice memo instead of text for 30 days?"</div>
+        <div class="hook-best">Best for: Experiment-style content, lifestyle, productivity. The open question creates a mental itch that only watching can scratch.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Have you ever wondered why <em>[thing that seems simple]</em> is actually <em>[unexpectedly complex or dark]</em>?"</div>
+        <div class="hook-example">Example: "Have you ever wondered why every gas station charges $0.009 at the end — and why that fraction of a cent still exists in 2025?"</div>
+        <div class="hook-best">Best for: Educational, explainer, history content. Targets the viewer's inherent curiosity about overlooked details.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "What if everything you know about <em>[topic]</em> is based on a <em>[type of error]</em>?"</div>
+        <div class="hook-example">Example: "What if everything you know about building muscle is based on studies funded by supplement companies?"</div>
+        <div class="hook-best">Best for: Deep dive content. Creates a "matrix unplugging" effect — the viewer feels they're about to see behind the curtain.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Why does <em>[massive brand/institution]</em> not want you to ask this question?"</div>
+        <div class="hook-example">Example: "Why does Big Pharma not want you to ask about the actual failure rate of antidepressants in clinical trials?"</div>
+        <div class="hook-best">Best for: Investigative, watchdog, consumer content. Pairs authority skepticism with curiosity for maximum pull.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "If <em>[achievement]</em> is possible, why isn't everyone doing it?"</div>
+        <div class="hook-example">Example: "If making $10,000 a month freelancing is genuinely possible, why isn't everyone doing it — what's actually in the way?"</div>
+        <div class="hook-best">Best for: Business, career, income content. Directly addresses the viewer's own unspoken skepticism and converts it into curiosity.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "What do the top <em>[number]</em>% of <em>[achievers]</em> do that no one talks about?"</div>
+        <div class="hook-example">Example: "What do the top 1% of salespeople do in the first 60 seconds of a call that no one talks about?"</div>
+        <div class="hook-best">Best for: Skills, business, performance content. "No one talks about" language signals exclusive insider access.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Can you <em>[skill]</em> in <em>[extremely short time]</em>? I tried."</div>
+        <div class="hook-example">Example: "Can you learn conversational Spanish in 30 days with zero prior experience? I tried — here's what actually happened."</div>
+        <div class="hook-best">Best for: Challenge content, skill acquisition, self-improvement. The "I tried" clause promises real, unfiltered results.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Is <em>[thing viewer does]</em> actually <em>[negative outcome]</em>?"</div>
+        <div class="hook-example">Example: "Is your morning coffee habit actually making you more anxious throughout the day? The research might surprise you."</div>
+        <div class="hook-best">Best for: Health, productivity, lifestyle. Creates personal relevance — the viewer sees themselves in the question.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I asked <em>[number]</em> <em>[experts/successful people]</em> the same question. Here's what I found."</div>
+        <div class="hook-example">Example: "I asked 47 millionaires the same question about how they started. Not one of them gave the answer I expected."</div>
+        <div class="hook-best">Best for: Research-style content. The specific number (not "dozens" but "47") signals rigor and builds credibility.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Who decided that <em>[thing we all accept]</em>? And why does no one question it?"</div>
+        <div class="hook-example">Example: "Who decided the 8-hour workday was optimal? Because it wasn't scientists — and once you know the real reason, you can't unsee it."</div>
+        <div class="hook-best">Best for: History, social commentary, business culture content. Triggers righteous indignation and intellectual curiosity simultaneously.</div>
+      </div>
+    </div>
+
+    <!-- BOLD STATEMENT HOOKS -->
+    <div class="hook-category">
+      <div class="hook-category-title">Category C — Bold Statement Hooks (10)</div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I made <em>[$X]</em> in <em>[time period]</em> using only <em>[simple method]</em>."</div>
+        <div class="hook-example">Example: "I made $31,000 in 90 days using only a free Notion template and a $9/month email tool."</div>
+        <div class="hook-best">Best for: Business, income, side hustle content. Specificity is essential — round numbers feel fabricated.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "This is the only <em>[thing]</em> you'll ever need to <em>[goal]</em>."</div>
+        <div class="hook-example">Example: "This is the only framework you'll ever need to write a viral hook on any platform."</div>
+        <div class="hook-best">Best for: Tutorial, how-to content. The promise of completeness and finality appeals to viewers who are tired of searching.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I deleted <em>[thing everyone uses]</em> and my <em>[result]</em> went up <em>[amount]</em>."</div>
+        <div class="hook-example">Example: "I deleted my Instagram for 60 days and my in-person sales went up 40% — here's the connection."</div>
+        <div class="hook-best">Best for: Digital wellness, productivity, contrarian lifestyle content. The counterintuitive cause-effect pair creates instant curiosity.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "After <em>[time/reps]</em> of <em>[thing]</em>, here's what I know for certain."</div>
+        <div class="hook-example">Example: "After 7 years and 847 podcast interviews, here's the only thing every successful guest has in common."</div>
+        <div class="hook-best">Best for: Authority-building content. Signals earned wisdom, not theoretical advice.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Stop doing <em>[common thing]</em>. Here's why."</div>
+        <div class="hook-example">Example: "Stop setting goals in January. Here's why the entire approach is statistically designed to fail."</div>
+        <div class="hook-best">Best for: Advice-giving, coaching content. The imperative "stop" triggers defensiveness which converts to engagement.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "This single <em>[change/decision]</em> compounded into <em>[massive outcome]</em>."</div>
+        <div class="hook-example">Example: "This single hiring decision compounded into a $4.2M acquisition offer three years later."</div>
+        <div class="hook-best">Best for: Business, personal development. The compounding metaphor resonates deeply with growth-oriented audiences.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Most people will never <em>[goal]</em> because they refuse to do <em>[one specific hard thing]</em>."</div>
+        <div class="hook-example">Example: "Most people will never become great writers because they refuse to do the one thing that actually builds the skill."</div>
+        <div class="hook-best">Best for: Motivational, tough-love content. Creates a "not me" defensive reaction that keeps viewers watching to prove the claim wrong.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The <em>[industry]</em> is broken. Here's the fix — and it takes 10 minutes."</div>
+        <div class="hook-example">Example: "The way we teach personal finance is broken. Here's the fix — and it takes 10 minutes to implement for your whole household."</div>
+        <div class="hook-best">Best for: Reform-oriented, solution-focused content. "Broken system + easy fix" is one of the most powerful content structures.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I turned <em>[small thing]</em> into <em>[large thing]</em> — and you can replicate it exactly."</div>
+        <div class="hook-example">Example: "I turned a single Reddit comment into a $6,000 consulting retainer — and you can replicate it exactly with this framework."</div>
+        <div class="hook-best">Best for: Business, entrepreneurship. "Replicate exactly" is one of the most clicked phrases in educational content.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Nobody talks about the real cost of <em>[popular thing]</em>."</div>
+        <div class="hook-example">Example: "Nobody talks about the real cost of going viral — the operational chaos, the wrong followers, the pivot pressure."</div>
+        <div class="hook-best">Best for: Counter-narrative content. Positions the creator as uniquely honest in a landscape of hype.</div>
+      </div>
+    </div>
+
+    <!-- STORY HOOKS -->
+    <div class="hook-category">
+      <div class="hook-category-title">Category D — Story Hooks (10)</div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "<em>[Time period]</em> ago, I was <em>[low point]</em>. Today, <em>[high point]</em>. This is what changed."</div>
+        <div class="hook-example">Example: "Three years ago, I was $80,000 in debt and sleeping on my sister's couch. Today, I run a seven-figure business from Lisbon. This is what changed."</div>
+        <div class="hook-best">Best for: Personal brand, transformation content. The contrast between two states creates immediate narrative tension.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The day I <em>[pivotal event]</em>, everything I thought I knew fell apart."</div>
+        <div class="hook-example">Example: "The day I lost my biggest client — $18,000/month gone in a 3-minute phone call — everything I thought I knew about client retention fell apart."</div>
+        <div class="hook-best">Best for: Lesson-from-failure content. Specific dollar amounts and time references create immediacy.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Nobody warned me about <em>[specific consequence]</em> when I decided to <em>[action]</em>."</div>
+        <div class="hook-example">Example: "Nobody warned me about the identity crisis that hits six months into solopreneurship — and it almost made me quit everything."</div>
+        <div class="hook-best">Best for: Vulnerable, authentic storytelling. "Nobody warned me" creates the feeling that the creator is breaking a silence.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I watched <em>[someone/thing]</em> do <em>[action]</em>, and I immediately understood why I had been failing."</div>
+        <div class="hook-example">Example: "I watched a 12-year-old explain TikTok to her mom, and I immediately understood why my content was invisible to 95% of the platform."</div>
+        <div class="hook-best">Best for: Insight-driven content. The "observer moment" story structure is deeply satisfying to watch unfold.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I almost quit <em>[pursuit]</em> on <em>[specific date/moment]</em>. Then this happened."</div>
+        <div class="hook-example">Example: "I almost quit YouTube on a Tuesday in October 2022, after two years and 47 videos with zero traction. Then this happened."</div>
+        <div class="hook-best">Best for: Creator economy, persistence content. The specificity of the date makes the story feel real, not manufactured.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "My <em>[mentor/boss/competitor]</em> told me <em>[harsh truth]</em>. I ignored them. I shouldn't have."</div>
+        <div class="hook-example">Example: "My first investor told me my pricing was the thing that would kill my business. I ignored him for eight months. I shouldn't have."</div>
+        <div class="hook-best">Best for: Business wisdom, humility-based teaching. Creates curiosity about both the warning and the consequences.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The conversation that <em>[changed/saved/ruined]</em> my <em>[career/relationship/business]</em> lasted exactly <em>[time]</em>."</div>
+        <div class="hook-example">Example: "The conversation that saved my marriage lasted exactly 4 minutes. And it started with me saying the wrong thing."</div>
+        <div class="hook-best">Best for: Relationship, life advice, drama-driven content. Specificity of duration creates cinematic tension.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "This is the story of how <em>[unlikely person/entity]</em> <em>[surprising outcome]</em>."</div>
+        <div class="hook-example">Example: "This is the story of how a 68-year-old retired schoolteacher accidentally built a $2M/year Etsy business."</div>
+        <div class="hook-best">Best for: Documentary-style, feature content. The contrast between expectation and outcome is irresistible.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I spent <em>[time]</em> trying to <em>[goal]</em>. Here's everything I learned — and what I wish someone had told me on day one."</div>
+        <div class="hook-example">Example: "I spent 14 months trying to get my first brand deal. Here's everything I learned — and what I wish someone had told me on day one."</div>
+        <div class="hook-best">Best for: Tutorial content where personal experience adds authority. The "day one" line creates a mentorship dynamic.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "It wasn't until <em>[unexpected trigger]</em> that I finally understood <em>[insight]</em>."</div>
+        <div class="hook-example">Example: "It wasn't until I watched my 5-year-old build a LEGO set that I finally understood why my team kept missing deadlines."</div>
+        <div class="hook-best">Best for: Insight-driven, metaphorical content. The unexpected source of the insight (a child, a random event) adds novelty.</div>
+      </div>
+    </div>
+
+    <!-- COUNTER-INTUITIVE HOOKS -->
+    <div class="hook-category">
+      <div class="hook-category-title">Category E — Counter-Intuitive Hooks (10)</div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The secret to <em>[goal]</em> is to stop trying to <em>[obvious approach]</em>."</div>
+        <div class="hook-example">Example: "The secret to building a loyal audience is to stop trying to reach as many people as possible."</div>
+        <div class="hook-best">Best for: Audience growth, marketing content. The inversion of common wisdom creates a mini-paradox that demands explanation.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Doing less <em>[thing]</em> got me more <em>[result]</em> than doing more ever did."</div>
+        <div class="hook-example">Example: "Sending fewer emails got me more opens, more replies, and more sales than doubling my send frequency ever did."</div>
+        <div class="hook-best">Best for: Productivity, marketing, business efficiency content. The less-is-more insight resonates because it feels actionable immediately.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "Your biggest advantage might be the thing you've been embarrassed about."</div>
+        <div class="hook-example">Example: "Your biggest business advantage might be the niche you've been too embarrassed to claim — here's why 'too specific' is usually not specific enough."</div>
+        <div class="hook-best">Best for: Personal brand, self-development content. Reframes shame as competitive advantage, which is emotionally powerful.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The worst advice I ever got turned out to be the best thing that happened to my <em>[career/business/life]</em>."</div>
+        <div class="hook-example">Example: "The worst advice I ever got — 'don't quit your day job' — turned out to be the best thing that happened to my business."</div>
+        <div class="hook-best">Best for: Entrepreneurship, career content. Creates tension between expectation (bad advice = bad outcome) and reality.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "More <em>[thing everyone chases]</em> is actually making you <em>[negative outcome]</em>."</div>
+        <div class="hook-example">Example: "More followers is actually making your conversion rate worse — and the data proves it."</div>
+        <div class="hook-best">Best for: Marketing, social media, business content. Challenges a core assumption in a way that forces reassessment.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "I stopped <em>[thing that everyone does]</em> and my <em>[metric]</em> improved by <em>[amount]</em>."</div>
+        <div class="hook-example">Example: "I stopped doing keyword research for 90 days and my organic traffic improved by 34% — here's why."</div>
+        <div class="hook-best">Best for: SEO, content strategy, marketing. Shocks readers out of conventional assumptions with hard data.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The fastest path to <em>[goal]</em> isn't <em>[fast-sounding method]</em>. It's <em>[slow-sounding method]</em>."</div>
+        <div class="hook-example">Example: "The fastest path to financial independence isn't aggressive investing. It's aggressively boring budgeting in your first three years."</div>
+        <div class="hook-best">Best for: Personal finance, long-term strategy content. Validates the "slow" path while reframing it as the smart one.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "<em>[Common fear]</em> is not your problem. <em>[Unexpected real problem]</em> is."</div>
+        <div class="hook-example">Example: "Imposter syndrome is not your problem. Accurate syndrome — knowing exactly what you're still missing — is your actual obstacle."</div>
+        <div class="hook-best">Best for: Psychology, self-help, coaching content. Reframes a familiar concept in a way that feels fresh and honest.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "If you want to <em>[goal]</em> faster, try <em>[counterintuitive method]</em> for <em>[short period]</em>."</div>
+        <div class="hook-example">Example: "If you want to get better at public speaking faster, try deliberately speaking too slowly for the next two weeks."</div>
+        <div class="hook-best">Best for: Skills, training, self-improvement. The specific time period ("two weeks") makes the ask feel concrete and low-commitment.</div>
+      </div>
+
+      <div class="hook-item">
+        <div class="hook-template">Template: "The thing that's supposed to help you <em>[goal]</em> might be the exact thing keeping you stuck."</div>
+        <div class="hook-example">Example: "The therapy framework that's supposed to help you process anxiety might be the exact thing keeping your nervous system stuck in a loop."</div>
+        <div class="hook-best">Best for: Health, personal development, mental wellness. Questions established remedies in a way that feels genuinely helpful, not dismissive.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 2: 4-PART STRUCTURE -->
+  <section class="section" id="structure">
+    <div class="section-label">Part 02</div>
+    <h2 class="section-title">The 4-Part High-Retention Script Structure</h2>
+    <p class="section-intro">Every high-retention video — regardless of length, platform, or niche — follows the same underlying architecture. The execution differs, but the skeleton is universal.</p>
+
+    <div class="script-part">
+      <div class="script-part-num">Part 1 — 0–30 Seconds</div>
+      <h3>The Hook</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Your hook is not an introduction. It is a promise, a provocation, or an open loop — and it must land within the first 5 seconds before the viewer's finger finds the scroll.</p>
+
+      <h4>Hook Types (Quick Reference)</h4>
+      <ul style="margin-bottom:16px;">
+        <li><strong>The Promise Hook:</strong> Makes a specific, time-bound promise the viewer wants. "By the end of this video, you'll have a complete email sequence you can send tomorrow."</li>
+        <li><strong>The Provocation Hook:</strong> Challenges the viewer's existing beliefs. "You've been doing this wrong — and it's costing you money right now."</li>
+        <li><strong>The Story Hook:</strong> Opens in media res — in the middle of action. "I was sitting in my car outside the venue when I realized I had no idea what I was about to say."</li>
+        <li><strong>The Curiosity Hook:</strong> Introduces an open loop without resolving it. "There's one sentence you can say at the start of any sales call that closes 30% more deals. Here's what it is."</li>
+        <li><strong>The Shock Hook:</strong> Opens with a surprising fact or statistic. "The average person spends 2 hours and 27 minutes per day doing something that actively makes them worse at their job."</li>
+      </ul>
+
+      <h4>The Open Loop Technique</h4>
+      <p style="color:var(--text-muted); margin-bottom:16px;">An open loop is a narrative or informational gap between what the viewer knows and what they want to know. The tension of an unresolved loop is the most powerful retention mechanism in video. Your hook should <em>open</em> a loop, not close it. State the premise. Withhold the resolution.</p>
+      <p style="color:var(--text-muted); margin-bottom:16px;"><strong>Example:</strong> "In 2019, a study of 10,000 YouTube channels found a single variable that predicted success more than subscribers, posting frequency, or video quality combined. And it's not what you'd expect. I'm going to show you exactly what it is — but first, let me show you why everything else you've been focused on is a distraction."</p>
+      <p style="color:var(--text-muted);">Notice: the loop is opened ("there is one variable"), the answer is teased but withheld, and the viewer is given a reason to stay for what comes immediately before the payoff.</p>
+
+      <div class="callout" style="margin-top:20px;">
+        <div class="callout-title">The Preview Tease</div>
+        <p>At the end of your hook (seconds 20–30), briefly preview what's coming without revealing the payoff. "I'm going to show you the exact three-step system — but before I do, you need to understand why everything else fails first." This second-layer loop extends the viewer's commitment horizon.</p>
+      </div>
+    </div>
+
+    <div class="script-part">
+      <div class="script-part-num">Part 2 — 30–60 Seconds</div>
+      <h3>The Bridge</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">The bridge is the most underestimated segment of any video. Most creators either skip it or treat it as dead air while they set up their main content. Done right, the bridge is where you earn the viewer's trust and commit them to staying for the full video.</p>
+
+      <h4>Three Bridge Functions</h4>
+      <ol style="margin-bottom:16px;">
+        <li><strong>Credibility Establishment:</strong> In one or two sentences, establish why you have the authority to deliver what you just promised. Not a full biography — a single, specific credential that directly connects to your hook's promise. "I've run this experiment with 14 different clients across 6 industries — here's what the data shows."</li>
+        <li><strong>Scope Preview:</strong> Tell viewers exactly what they're about to get. Not in exhaustive detail, but enough to make the full video feel worth watching. "We're going to cover the three biggest retention killers, a framework you can use today, and a live example from my own channel."</li>
+        <li><strong>The Stay Mechanism:</strong> Explicitly or implicitly give the viewer a reason to stay until the end. "The third point is the one that most people miss — and in my experience, it's the one that makes the biggest difference." You've now planted a seed that keeps them watching for payoff #3.</li>
+      </ol>
+
+      <div class="callout">
+        <div class="callout-title">The Subscribe Nudge Window</div>
+        <p>The 45-second mark is the optimal position for your first subscribe call-to-action on YouTube. Why? Viewers who have watched 45 seconds have self-selected as engaged — they're not casual scrollers. A light, non-pushy nudge here ("If this is useful, hit subscribe — I drop these breakdowns every Tuesday") converts at dramatically higher rates than front-loaded CTAs.</p>
+      </div>
+    </div>
+
+    <div class="script-part">
+      <div class="script-part-num">Part 3 — Main Content</div>
+      <h3>The Golden Nuggets</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">The "body" of your video — your actual content — needs to be structured for retention, not just comprehensiveness. The most common mistake is treating this section as a linear information dump. High-retention videos are engineered with multiple peaks, micro-payoffs, and internal loops.</p>
+
+      <h4>The Nugget Structure</h4>
+      <p style="color:var(--text-muted); margin-bottom:12px;">Organize your main content into discrete "nuggets" — self-contained value units that each have their own mini-hook, content, and payoff. Each nugget should follow this three-beat rhythm:</p>
+      <ol style="margin-bottom:16px;">
+        <li><strong>Setup:</strong> Tell the viewer what they're about to learn and why it matters. "Most people skip this step because it seems obvious — it isn't."</li>
+        <li><strong>Substance:</strong> Deliver the actual insight, tactic, or story. Be specific. Generalities feel like padding; specifics feel like value.</li>
+        <li><strong>Callback Plant:</strong> End the nugget with a thread that connects to the next section or to a payoff later in the video. "And this is actually what makes the next point so important."</li>
+      </ol>
+
+      <h4>The Callback Technique</h4>
+      <p style="color:var(--text-muted); margin-bottom:12px;">A callback is a reference to something you mentioned earlier in the video, now revisited with new context. Callbacks do three things: (1) reward attentive viewers who feel smart for remembering, (2) create a sense of narrative cohesion that makes the video feel crafted rather than improvised, and (3) trigger a small dopamine hit that reinforces continued watching. Use callbacks at least twice in videos over 10 minutes.</p>
+
+      <h4>Energy Pacing</h4>
+      <p style="color:var(--text-muted);">Your energy — vocal tempo, intensity, body language — should not be constant. It should mirror the content. High-energy, fast delivery for punchy insights. Slower, deliberate delivery for complex concepts that need to land. Build energy through the video toward a climax at your biggest insight, then release it at the CTA. Think of energy as a verb, not an adjective.</p>
+    </div>
+
+    <div class="script-part">
+      <div class="script-part-num">Part 4 — Closing</div>
+      <h3>The CTA</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">The call to action is where most educational content creators leave enormous value on the table. They either cram in three CTAs at once (confusing the viewer) or deliver a weak, apologetic ask that viewers easily ignore.</p>
+
+      <h4>The 4 CTA Types</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>CTA Type</th>
+            <th>Goal</th>
+            <th>Optimal Position</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>The Subscribe Ask</strong></td>
+            <td>Channel growth</td>
+            <td>45s + end of video</td>
+            <td>"If this was useful, subscribe — I post every Tuesday."</td>
+          </tr>
+          <tr>
+            <td><strong>The Comment Ask</strong></td>
+            <td>Engagement signal</td>
+            <td>Mid-video + end</td>
+            <td>"Drop your biggest challenge with X in the comments — I read every one."</td>
+          </tr>
+          <tr>
+            <td><strong>The Next Video Ask</strong></td>
+            <td>Session time / AVD</td>
+            <td>End screen</td>
+            <td>"Watch this next — it's the exact follow-up to what we just covered."</td>
+          </tr>
+          <tr>
+            <td><strong>The Conversion Ask</strong></td>
+            <td>Leads / Sales</td>
+            <td>Post-peak value moment</td>
+            <td>"Link in bio — I built a free template that does this automatically."</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout" style="margin-top:20px;">
+        <div class="callout-title">One CTA Rule</div>
+        <p>Every video should have exactly one primary CTA. You can have secondary CTAs, but the viewer should never feel uncertain about what the most important next step is. Cognitive overload at the moment of commitment is the most expensive mistake in video marketing.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 3: PATTERN INTERRUPTS -->
+  <section class="section" id="pattern">
+    <div class="section-label">Part 03</div>
+    <h2 class="section-title">Pattern Interrupt Techniques</h2>
+    <p class="section-intro">A pattern interrupt is any deliberate disruption to expected flow that forces the viewer's brain back into active attention mode. Below are 15 proven types, each with deployment guidance.</p>
+
+    <div class="interrupt-grid">
+      <div class="interrupt-item">
+        <h4>01 — B-Roll Cuts</h4>
+        <p>Cut from your talking-head shot to contextual footage mid-sentence. The visual shift forces reengagement. Use B-roll that illustrates the exact concept being discussed, not generic filler. Frequency: every 20–30 seconds.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>02 — Text Overlays</h4>
+        <p>On-screen text that reinforces, contradicts, or adds a second layer to what you're saying verbally. Works especially on mobile where audio is often off. Keep to 5 words or fewer per overlay. Don't read the text aloud word-for-word.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>03 — Zoom Cuts</h4>
+        <p>A sudden punch-in to a tighter frame mid-sentence signals emphasis and creates a jolt of energy. Used heavily in TikTok and YouTube Shorts. Should be paired with the most important claim or point in a segment.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>04 — Sound Design</h4>
+        <p>Strategic sound effects, whooshes, pings, and music swells alert the ear before the eye processes what changed. TikTok's native sounds and trending audio function as pattern interrupts even before viewers consciously register them.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>05 — Camera Angle Change</h4>
+        <p>Switching between a wide shot and a close-up of the same scene, or cutting to a different camera angle of the presenter, creates the impression of a multi-camera shoot even when it isn't. The shift disrupts the visual monotony.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>06 — Screen Recordings</h4>
+        <p>Cutting to a screen recording or live demonstration pulls viewers out of passive watching into instructional mode. The transition signals "now we get practical" and boosts retention because the viewer shifts from observer to learner.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>07 — The Direct Address</h4>
+        <p>Breaking the fourth wall by directly addressing the viewer creates a micro-moment of personal connection. "I want you to pause here for a second" or "I'm talking specifically to you if you've ever..." causes a small jolt of recognition.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>08 — The Reframe Statement</h4>
+        <p>A single sentence that completely recontextualizes what the viewer just heard. "Now here's the part that most people misunderstand about what I just said." This signals that the previous point wasn't the real point — the real insight is about to land.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>09 — Visual Graphics</h4>
+        <p>Charts, diagrams, animated text, or illustrated frameworks cut into the video break the visual monotony of a talking head. Keep graphics simple — complexity in graphics competes with your voiceover for cognitive bandwidth.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>10 — Pace Shifts</h4>
+        <p>Suddenly speaking faster for 5–8 seconds (acceleration) or dramatically slowing down and enunciating each word (deceleration). The auditory pattern change re-engages the listener the same way a sudden bass drop does in music.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>11 — The Unexpected Pause</h4>
+        <p>A full 1–2 second silence immediately after a key statement. Silence is deeply unusual in video content — it disrupts the expected flow and causes the viewer to wonder if something broke. Use it after your most important point to let it land.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>12 — The Quick Recap</h4>
+        <p>A 10-second on-screen summary of the previous section, formatted as bullet points, resets the viewer's mental state. Works especially in longer videos (12+ minutes) to prevent cognitive fatigue and confirm the viewer "got it" before moving forward.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>13 — The Cliffhanger Tease</h4>
+        <p>Before transitioning sections, briefly preview the next one with a curiosity trigger: "What I found when I actually tested this was shocking — but before I show you, let me explain why this matters." Delays the transition reward to pull the viewer through the cut.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>14 — The Reaction Cut</h4>
+        <p>Your own reaction shot (surprise, laugh, disbelief) cut into a relevant moment. Mirrors the emotional response you want viewers to have. Human faces are the most powerfully attention-capturing stimuli that exist — even a 1-second reaction shot resets attention.</p>
+      </div>
+
+      <div class="interrupt-item">
+        <h4>15 — Background/Location Change</h4>
+        <p>Switching filming location mid-video — even from a desk to standing at a whiteboard — signals a structural shift and breaks the visual pattern. On short-form, even a costume or lighting change between shots functions as a soft scene transition.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:32px;">
+      <div class="callout-title">Pattern Interrupt Scheduling</div>
+      <p>Don't place pattern interrupts randomly — use your analytics. Check your retention graph for the dip points specific to your audience and content type. Place an interrupt 3–5 seconds <em>before</em> the dip point, not at it. By the time you reach the dip, the interrupt has already re-engaged the viewer. Over time, well-placed interrupts flatten the retention curve entirely.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 4: PLATFORMS -->
+  <section class="section" id="platforms">
+    <div class="section-label">Part 04</div>
+    <h2 class="section-title">Platform-Specific Adaptation</h2>
+    <p class="section-intro">The same core script architecture applies across all platforms — but the execution, pacing, and formatting must adapt to platform-specific viewer expectations, algorithm mechanics, and native culture.</p>
+
+    <div class="platform-card">
+      <div class="platform-badge">YouTube — 8–20 Minutes</div>
+      <h3>Long-Form YouTube</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">YouTube's algorithm rewards <strong>session watch time</strong> — how much time a viewer spends on YouTube after watching your video, not just on your video. This means your end screen and "watch next" strategy is almost as important as the video itself.</p>
+      <ul>
+        <li><strong>Pacing:</strong> Aim for one distinct section transition every 2–3 minutes. Use chapter markers to let viewers jump to sections — ironically, this increases total watch time because it reduces abandonment from frustrated viewers who can't find what they need.</li>
+        <li><strong>Script density:</strong> Write to approximately 130–150 words per minute of video. Higher density feels rushed; lower feels padded. A 15-minute video requires roughly 2,000–2,200 words of script.</li>
+        <li><strong>The YouTube end screen window:</strong> The last 20 seconds must be scripted to keep the viewer actively watching (not passively rewinding or already leaving). A "watch this next" verbal CTA accompanied by an end screen card should land at exactly the 20-second-from-end mark.</li>
+        <li><strong>Cards strategy:</strong> Script two "card moments" — specific timestamps where a verbal reference to a related video is naturally supported by an i-card appearing on screen. "Actually, I made a whole video about this — I'll link it right here" converts dramatically better than orphaned cards the viewer has to notice independently.</li>
+        <li><strong>Chapter naming:</strong> Write chapter titles as curiosity triggers, not descriptive labels. "The System" outperforms "Step 2: Implementation" in click-through from the chapter navigation bar.</li>
+      </ul>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-badge">YouTube Shorts — Under 60s</div>
+      <h3>YouTube Shorts</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Shorts exist in a separate algorithmic universe from long-form YouTube. The Shorts feed is purely a discovery mechanism — your goal is subscriber conversion, not watch time. A Shorts viewer who subscribes is worth 10x the same view on a non-subscriber's feed.</p>
+      <ul>
+        <li><strong>Compression technique:</strong> Take any long-form script section and strip it to a single, punchy insight. Remove all context-setting, all examples (keep at most one), and all caveats. The viewer assumes context on short-form.</li>
+        <li><strong>The vertical framing mindset:</strong> Script for a viewer holding a phone with one thumb scrolling. Every sentence should be completeable in one breath and intelligible without the one before it. If a sentence requires the previous sentence to make sense, cut or rewrite.</li>
+        <li><strong>Loop architecture:</strong> YouTube Shorts rewards loop replays. Script the ending so it connects back to the opening line — a circular structure that incentivizes the algorithm to replay the video for the viewer automatically.</li>
+        <li><strong>The 2-second visual hook:</strong> The first frame must be visually distinct enough to stop a scroll with zero audio. Script explicitly for a silent first 2 seconds — text on screen, dramatic visual, or visually surprising opening.</li>
+      </ul>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-badge">TikTok</div>
+      <h3>TikTok</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">TikTok's algorithm distributes content based on completion rate, shares, and comments — not followers. This means a creator with 300 followers can outperform one with 300,000 if the content triggers the right behavioral signals.</p>
+      <ul>
+        <li><strong>Native feel mandate:</strong> TikTok penalizes content that looks imported from other platforms. Overly polished production, branded intros, and non-vertical framing are immediate signals to both the algorithm and the audience that you don't "get" the platform. Script your TikToks to feel <em>found</em>, not produced.</li>
+        <li><strong>Trending sounds as script cues:</strong> When using a trending audio track, script the visual pacing to hit the audio's beat drops, transitions, and mood shifts. The sound structure becomes your script structure. Search the "trending" tab before scripting and let audio inspire format.</li>
+        <li><strong>Duet and stitch strategy:</strong> Script specific segments of your educational content as duet/stitch bait — moments that make a clear, potentially controversial claim and invite response. "Stitch this if you disagree" is a CTA that multiplies distribution without ad spend.</li>
+        <li><strong>The comment hook:</strong> Script your first line to be precisely the kind of statement that makes TikTok users comment to agree or disagree. Comments signal to TikTok that your content is creating conversation — which is the highest-value engagement signal on the platform.</li>
+        <li><strong>Optimal length:</strong> 21–34 seconds for maximum completion rate on purely educational content. 45–60 seconds for storytelling or demonstration content. Over 60 seconds requires a strong mid-video hook to prevent drop-off at the 60-second natural scroll impulse.</li>
+      </ul>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-badge">Instagram Reels</div>
+      <h3>Instagram Reels</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Reels distribution is tied to Save rate more than any other signal. A video that's saved is a video that the algorithm treats as high-quality content worth distributing further. Script for saves — give viewers a reason to want to return to your video.</p>
+      <ul>
+        <li><strong>Visual hook timing:</strong> Instagram audiences are slightly more aesthetic-conscious than TikTok audiences. Your first frame should be intentionally composed — not necessarily cinematic, but deliberate. The hook on Reels is split between the visual opening and the caption.</li>
+        <li><strong>Text overlay timing:</strong> The research on Reels text overlays shows that text appearing in the first 1.5 seconds increases completion rate by approximately 12–18%. Script exactly what text appears and when in your production notes, not as an afterthought in post.</li>
+        <li><strong>The save trigger:</strong> Explicitly give viewers a reason to save: "Save this for the next time you're writing a hook" or "You'll want to come back to this checklist." Viewers who save are signaling high intent — they're your best candidates for follows and deeper engagement.</li>
+        <li><strong>Caption as extension:</strong> Unlike TikTok where captions are largely irrelevant, Instagram captions extend the content. Script a "tease caption" — the first line of the caption should be a hook that makes the viewer tap "more," which is another engagement signal to the algorithm.</li>
+      </ul>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-badge">LinkedIn Video</div>
+      <h3>LinkedIn Video</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">LinkedIn video is still dramatically underutilized relative to the opportunity it represents. The algorithm gives video content roughly 3–5x the organic reach of text posts. The audience expects professional context, but not stuffiness.</p>
+      <ul>
+        <li><strong>Professional tone adjustments:</strong> Replace casual openers ("What's up guys") with direct, professional hooks ("Here's what three years of managing enterprise sales taught me about the one question you should never ask on a cold call"). The credentialing language that sounds pompous on TikTok lands as authority on LinkedIn.</li>
+        <li><strong>Captions are mandatory:</strong> Over 80% of LinkedIn video is watched without audio. Script with the understanding that your text overlays and captions carry the full content load. Every key point must appear on screen as text, not just verbally.</li>
+        <li><strong>Native upload vs. YouTube links:</strong> LinkedIn heavily suppresses external links. Script a CTA that directs to LinkedIn-native actions (DM, comment, follow) rather than external URLs. Save the link for a comment on your own post.</li>
+        <li><strong>Thought leadership framing:</strong> LinkedIn audiences respond to personal experience + transferable lesson structures. Script your videos as "here's what I saw/did/learned + here's what you can take from it" rather than purely instructional content.</li>
+      </ul>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-badge">Podcast-to-Video Conversion</div>
+      <h3>Repurposing Podcasts as Video</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Raw podcast audio repurposed as video almost never performs well. The conversion from audio-first to video-first content requires intentional restructuring, not just adding a waveform or static image.</p>
+      <ul>
+        <li><strong>Clip selection criteria:</strong> Not every podcast moment makes a good video clip. Script-worthy clips have: (1) a standalone insight that doesn't require prior context, (2) an emotional moment or a surprising turn, and (3) a natural conclusion — a moment where the energy peaks and falls. Never cut a clip mid-thought.</li>
+        <li><strong>The re-hook:</strong> Podcast clips must be re-introduced for video audiences who have zero context. Record a 5–8 second verbal re-hook specifically for the video version: "This came up in my interview with [guest] — [key insight] — here's the exact clip." Record this to camera, don't just use podcast audio.</li>
+        <li><strong>Caption editing:</strong> Auto-captions from podcast clips often need cleanup for filler words ("um," "like," "you know"). Edit out filler words from captions even if you keep them in the audio — the discrepancy is rarely noticed but makes the content feel much tighter.</li>
+        <li><strong>B-roll for context:</strong> Podcast clips without supporting visuals are the hardest to retain viewers on. Source at least 3 relevant B-roll clips per minute of repurposed podcast content to maintain visual variety.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 5: WORKFLOW -->
+  <section class="section" id="workflow">
+    <div class="section-label">Part 05</div>
+    <h2 class="section-title">The Scripting Workflow</h2>
+    <p class="section-intro">A great script doesn't start with writing — it starts with a structured research and architecture phase that makes the writing fast, focused, and retention-optimized from the first draft.</p>
+
+    <div class="card">
+      <h3>Phase 1: Research &amp; Validation</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Before writing a single word, answer these four questions:</p>
+      <ol>
+        <li><strong>What is the one thing the viewer should know after watching this video?</strong> If you can't answer in one clear sentence, your concept isn't developed enough. Don't script it yet.</li>
+        <li><strong>What is the viewer's current belief about this topic?</strong> Your hook needs to meet them where they are — either validating their frustration, challenging their assumption, or surprising them with something they didn't expect to learn.</li>
+        <li><strong>What existing content is ranking on this topic?</strong> Watch the top 5 performing videos on your topic. Identify the angle they all use — then choose a different angle. Differentiation in positioning is more valuable than differentiation in production quality.</li>
+        <li><strong>What is the viewer's desired emotional state at the end of this video?</strong> Informed? Energized? Relieved? Challenged? Entertained? Every scripting decision — word choice, pacing, story selection — should serve this emotional endpoint.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Phase 2: Outline Building</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Build your outline in this exact order — not the order the content will appear in the video:</p>
+      <ol>
+        <li><strong>Write your core insight first</strong> (the single most important point in your video). This is your Golden Nugget anchor. Everything else supports this.</li>
+        <li><strong>Write your CTA</strong> second. Knowing what action you want the viewer to take shapes everything before it.</li>
+        <li><strong>Write your hook</strong> third. The hook should promise the core insight in the most compelling possible way without giving it away.</li>
+        <li><strong>Fill in the supporting content</strong> last. These are the points that make the core insight credible, actionable, and complete. Aim for 3–5 supporting points, ordered by engagement value (not logical order). The second-most-interesting point goes first; the most interesting goes last before the CTA.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>The Timing Calculator</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Use these benchmarks to estimate script length from target video duration:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Platform / Format</th>
+            <th>Target Duration</th>
+            <th>Script Word Count</th>
+            <th>Approx. Reading Speed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TikTok / Shorts (punchy)</td>
+            <td>20–35 seconds</td>
+            <td>50–90 words</td>
+            <td>150 WPM</td>
+          </tr>
+          <tr>
+            <td>Reels / Shorts (storytelling)</td>
+            <td>45–60 seconds</td>
+            <td>110–150 words</td>
+            <td>140 WPM</td>
+          </tr>
+          <tr>
+            <td>YouTube Mid-form</td>
+            <td>5–8 minutes</td>
+            <td>700–1,100 words</td>
+            <td>140 WPM</td>
+          </tr>
+          <tr>
+            <td>YouTube Long-form</td>
+            <td>12–20 minutes</td>
+            <td>1,700–2,800 words</td>
+            <td>140 WPM</td>
+          </tr>
+          <tr>
+            <td>LinkedIn Video</td>
+            <td>90–180 seconds</td>
+            <td>200–420 words</td>
+            <td>140 WPM</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:var(--text-muted); margin-top:16px; font-size:0.88rem;">Note: These are "dense" word counts assuming minimal pause time. If your content includes demonstrations, screen recordings, or deliberate pacing pauses, reduce the word count by 15–20% accordingly.</p>
+    </div>
+
+    <div class="card">
+      <h3>Teleprompter Tips &amp; Sounding Natural</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">The most common teleprompter mistake is scrolling at a reading speed, not a speaking speed. Reading and speaking are different cognitive processes. Here's how to prevent the glazed "reading face":</p>
+      <ul>
+        <li><strong>Read the script aloud 3 times before filming.</strong> Your delivery should feel like recall, not reading. The teleprompter is a safety net, not your primary source.</li>
+        <li><strong>Write in spoken language, not written language.</strong> Contractions, sentence fragments, and conversational transitions ("Here's the thing," "Now, this is where it gets interesting") read naturally on camera. Full, grammatically correct sentences sound academic and stiff.</li>
+        <li><strong>Mark emphasis and pauses in the script.</strong> Use bold for words to emphasize, and a "//" for 1-second pauses. "The thing most people get wrong // is not the strategy. It's the <strong>timing</strong>." These marks remind you to perform, not just recite.</li>
+        <li><strong>Vary your eye position.</strong> On a teleprompter, the text appears directly on the lens — but don't stare laser-eyed at the dead center of the frame. Practice small, natural eye movements that create the impression of thinking, not reading.</li>
+        <li><strong>Record a "freedom pass" take.</strong> After your scripted take, do one take with no script where you try to cover the same material from memory. These takes often produce the most natural, usable moments — even if they deviate slightly from the script.</li>
+        <li><strong>Script your stumbles.</strong> Counterintuitively, leaving a natural self-correction in the final edit ("actually — let me rephrase that") makes content feel more authentic and less produced, which increases trust on platforms where authenticity is currency.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 6: CTA FORMULAS -->
+  <section class="section" id="ctas">
+    <div class="section-label">Part 06</div>
+    <h2 class="section-title">CTA Formulas That Convert</h2>
+    <p class="section-intro">Twenty proven CTA templates across four goal categories, with placement timing and A/B testing guidance for each.</p>
+
+    <h3 style="margin-bottom:20px;">Category 1: Subscribe / Follow CTAs</h3>
+
+    <div class="cta-item">
+      <div class="cta-num">1</div>
+      <div class="cta-text">
+        <strong>"If you found this useful — subscribe. I post this kind of breakdown every [day]."</strong>
+        <span>Works because: time-specific posting schedule sets expectations and creates a reason to come back. Best placement: 45s mark + end of video.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">2</div>
+      <div class="cta-text">
+        <strong>"Hit subscribe so you don't miss Part 2 — I'm dropping it [timeframe]."</strong>
+        <span>Works because: serialized content creates genuine FOMO for subscribers. Best used when you actually have Part 2 scheduled.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">3</div>
+      <div class="cta-text">
+        <strong>"Every person who watches this and doesn't subscribe is leaving free [value] on the table."</strong>
+        <span>Works because: reframes subscription as a self-interested decision, not a favor to the creator. Use only after delivering substantial value.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">4</div>
+      <div class="cta-text">
+        <strong>"I only make content for people who are serious about [outcome]. If that's you — subscribe."</strong>
+        <span>Works because: exclusivity and identity-based framing make the subscribe feel like joining a tribe, not clicking a button.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">5</div>
+      <div class="cta-text">
+        <strong>"If you're still watching this, you're exactly who I make this for. Subscribe and I'll keep delivering."</strong>
+        <span>Works because: rewards perseverance and creates reciprocal commitment. Only viewers with high intent see the end of a long video.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:20px; margin-top:32px;">Category 2: Comment / Engagement CTAs</h3>
+
+    <div class="cta-item">
+      <div class="cta-num">6</div>
+      <div class="cta-text">
+        <strong>"Drop your [biggest challenge / current situation / answer to X] in the comments — I read and respond to every single one."</strong>
+        <span>Works because: specific prompt removes decision fatigue. "I respond to every one" increases comment likelihood by making it feel like a real conversation.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">7</div>
+      <div class="cta-text">
+        <strong>"Comment '[word]' if you want me to make a full video on [topic]. If I get [number]+ comments, I'll build it."</strong>
+        <span>Works because: conditional promise gives viewers agency over future content. Simple one-word comment reduces friction to near zero.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">8</div>
+      <div class="cta-text">
+        <strong>"I'm curious — have you tried [approach mentioned in video]? What happened? Tell me below."</strong>
+        <span>Works because: genuine curiosity framing invites story-sharing rather than simple reactions. Stories in comments signal high engagement quality to algorithms.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">9</div>
+      <div class="cta-text">
+        <strong>"Prove me wrong. If you disagree with [specific point], tell me exactly why in the comments."</strong>
+        <span>Works because: challenge-based CTAs generate debate, which multiplies comment counts. Only use when you can genuinely back up your position.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">10</div>
+      <div class="cta-text">
+        <strong>"Rate this advice: 1–10 in the comments. If it's below an 8, tell me what's missing."</strong>
+        <span>Works because: numeric rating lowers the effort barrier to commenting while the conditional second prompt generates more substantive responses.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:20px; margin-top:32px;">Category 3: Lead Generation / DM CTAs</h3>
+
+    <div class="cta-item">
+      <div class="cta-num">11</div>
+      <div class="cta-text">
+        <strong>"DM me '[keyword]' and I'll send you the [free resource] I mentioned."</strong>
+        <span>Works because: keyword-based DM automation means immediate gratification for the viewer and a high-intent lead for you. Use with ManyChat or equivalent.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">12</div>
+      <div class="cta-text">
+        <strong>"I built a free [template/checklist/calculator] that automates everything I just showed you. Link in bio."</strong>
+        <span>Works because: "automates" is one of the highest-converting words in a CTA. The free resource removes purchase friction from a first conversion.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">13</div>
+      <div class="cta-text">
+        <strong>"If you want me to apply this to your specific situation, DM me. I do [number] free strategy calls per week."</strong>
+        <span>Works because: scarcity ("limited calls") signals high demand while "free" removes the commitment barrier. Best for service-based businesses.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">14</div>
+      <div class="cta-text">
+        <strong>"Join [number]+ people who are already using this system — link in bio to get the full breakdown."</strong>
+        <span>Works because: social proof at the point of CTA is the highest-converting place to deploy it. Make the number specific and real.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">15</div>
+      <div class="cta-text">
+        <strong>"I put everything from this video — plus [bonus content] — into a free guide. No email required. Link below."</strong>
+        <span>Works because: "no email required" removes the #1 objection to free resource offers. If you're prioritizing list growth, offer value before asking for the email on the landing page.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:20px; margin-top:32px;">Category 4: Direct Purchase / Conversion CTAs</h3>
+
+    <div class="cta-item">
+      <div class="cta-num">16</div>
+      <div class="cta-text">
+        <strong>"If you want the done-for-you version of this — not just the how, but the actual [deliverable] — it's linked below."</strong>
+        <span>Works because: "done-for-you" targets buyers who want the outcome, not the process. Directly contrasts the DIY content they just watched with the premium alternative.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">17</div>
+      <div class="cta-text">
+        <strong>"I'm opening [number] spots for [program/service] this [month]. If you want one, the link is in my bio — spots close [date]."</strong>
+        <span>Works because: hard deadline + limited capacity is the most reliable urgency mechanism. The specific date is critical — "soon" doesn't convert, "[month] 15" does.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">18</div>
+      <div class="cta-text">
+        <strong>"The full course/program covers [X, Y, and Z] — everything I couldn't fit into this video. [Price] right now. Link below."</strong>
+        <span>Works because: explicit scoping ("what I couldn't fit in") positions the purchase as complementary content, not a replacement for the free value.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">19</div>
+      <div class="cta-text">
+        <strong>"If this video would have saved you [time/money] a year ago — imagine what working with me directly would do. Link in bio."</strong>
+        <span>Works because: counterfactual framing makes the value of working with you concrete by anchoring to the viewer's actual past experience.</span>
+      </div>
+    </div>
+
+    <div class="cta-item">
+      <div class="cta-num">20</div>
+      <div class="cta-text">
+        <strong>"Don't just watch this and move on. Use it. And if you need help implementing — that's exactly what [product/service] is for. Link below."</strong>
+        <span>Works because: challenges passive consumption and positions the product as the activation mechanism for the insights they just received.</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:32px;">
+      <h3>A/B Testing Your CTAs</h3>
+      <p style="color:var(--text-muted); margin-bottom:16px;">CTA optimization is one of the highest-leverage activities in content monetization. A 20% improvement in CTA click-through rate compounds across every video you publish from that point forward. Here's how to test systematically:</p>
+      <ul>
+        <li><strong>Test one variable at a time:</strong> CTA placement timing, CTA wording, CTA destination (DM vs. link in bio vs. comment), or CTA format (verbal vs. on-screen text vs. both). Changing multiple variables simultaneously makes it impossible to identify what drove the change.</li>
+        <li><strong>Use pinned comments as CTA variations:</strong> Your video script's verbal CTA is fixed after publishing. But you can A/B test written CTA versions in your pinned comment, and change them weekly to see which drives more link clicks.</li>
+        <li><strong>Track click-through by video, not by CTA type:</strong> The same CTA can perform very differently on different types of videos. A conversion CTA on a high-emotion storytelling video might outperform the identical CTA on a dry tutorial — not because the CTA changed, but because the viewer's emotional state at the point of the ask is different.</li>
+        <li><strong>The 2-week minimum:</strong> Give each CTA variation at least 2 weeks of data before making a decision. Short-form platforms in particular have unpredictable day-of-week performance patterns that can make early data misleading.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 7: SAMPLE SCRIPTS -->
+  <section class="section" id="samples">
+    <div class="section-label">Part 07 — Appendix</div>
+    <h2 class="section-title">5 Complete Sample Scripts</h2>
+    <p class="section-intro">Five fully written scripts — one per major platform — demonstrating every principle from this guide in practice. Each script is production-ready with timing notes, emphasis marks, and directorial cues.</p>
+
+    <!-- SAMPLE 1: YOUTUBE LONG-FORM -->
+    <div class="sample-script">
+      <div class="script-header">
+        <h3>Script 01 — YouTube Long-Form</h3>
+        <div class="script-meta">
+          <span class="script-meta-tag">Platform: YouTube</span>
+          <span class="script-meta-tag">Duration: ~12 min</span>
+          <span class="script-meta-tag">Topic: Hook Writing</span>
+          <span class="script-meta-tag">~1,650 words</span>
+        </div>
+      </div>
+      <div class="script-body">
+
+        <div class="script-line">
+          <span class="script-cue">Hook — 0:00–0:28</span>
+          <p>I analyzed 200 viral YouTube videos last year — <strong>every single one of them</strong> // had the exact same thing happen in the first eight seconds. Not the same topic. Not the same format. Not even the same creator type. But one pattern was universal. And once I show it to you, you won't be able to watch another video — including this one — without seeing it. // I'm going to show you exactly what it is. But first — I need to show you what most creators are doing wrong — because understanding the mistake is what makes the solution actually stick.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Bridge — 0:28–0:55 [subscribe nudge at ~0:48]</span>
+          <p>I'm [Name]. I've spent the last four years studying what makes certain YouTube videos explode while almost-identical videos from almost-identical channels go nowhere. I've run this analysis across finance, fitness, education, and entertainment channels — and the data consistently points to the same variables. // Today I'm going to break down the three biggest hook mistakes I see, the single most reliable hook structure I've found, and at the end, I'm going to build a hook live for a video topic you give me in the comments. // [Light CTA:] If retention strategy is something you want to go deep on — hit subscribe. I post these breakdowns every Tuesday.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Section 1 — 0:55–3:30 [Chapter: "The 3 Mistakes"]</span>
+          <p>Let's start with the mistakes — because this is where I see even experienced creators bleeding views. // Mistake number one: <strong>the slow start</strong>. And I don't mean slow like boring — I mean slow like soft-pedaling the opening. Saying "in today's video, I'm going to be covering..." before you give the viewer any reason to care. You've earned nothing yet. Every second of your intro is asking the viewer for a favor. Don't ask for favors before you've given value. // [B-roll cue: screen recording of a retention graph with a steep early drop] // See this graph? This is the retention curve from a video I reviewed — not one of mine, but a creator who gave me permission to share it. Notice that cliff between 0 and 30 seconds? // That creator lost 48% of viewers before they even finished introducing themselves. Not because the content was bad. Because the hook made no promise. It just... started. // Mistake number two is what I call the <strong>thumbnail promise break</strong>. This is when your hook — what you say or show in the first 5 seconds — has no relationship to the thumbnail that got people to click. // When someone clicks your thumbnail, they've made a small mental contract with you. "I expect this video to deliver on the promise of that image and title." Break that contract in the first 5 seconds — even accidentally — and you trigger the exact cognitive state that makes people reach for the back button. // Your first sentence should either contain the words from your title, or explicitly call back to your thumbnail. Don't make the viewer wonder if they clicked the right video. // Mistake number three — and this is the one I see most often on otherwise great channels — is the <strong>premature resolution</strong>. This is when you answer the core question your hook raised before the viewer has any reason to stay and watch the full answer. // The entire retention architecture of a high-performing video is built around an <em>unresolved question</em>. An open loop. The moment you close the loop, you've released the tension that was holding the viewer in place. // Think of it like a rubber band. Your hook is the pull-back. The longer and more precisely you hold that tension — without snapping back — the further the viewer travels with you.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Section 2 — 3:30–6:45 [Chapter: "The Universal Hook Pattern"]</span>
+          <p>Now. The pattern I mentioned at the start. // Here it is: every one of the 200 viral videos I analyzed opened with what I now call a <strong>Dual-Signal Hook</strong>. It does two things simultaneously, in the first 8 seconds — no exceptions. // Signal one: <em>specificity</em>. Something specific enough that the viewer immediately thinks "this person knows something I don't." Not "I'll show you how to grow on YouTube." But "I'll show you the single sentence that got me 14,000 subscribers in 23 days — and I'll show you exactly why it worked." // The first version could have been written by anyone. The second version implies access. It implies lived experience. It implies there's information in this video that exists nowhere else. // Signal two: <em>personal stakes</em>. Within 8 seconds, the viewer needs to feel — not just intellectually recognize — that this video is relevant to <em>their</em> life. Not your credentials. Not your backstory. Their problem. // "If you've ever posted a video that you were genuinely proud of and watched it get 47 views — this video is for you." // That sentence is doing something subtle: it's not just describing a situation, it's mirroring a specific emotional memory. The viewer who has experienced exactly that moment feels seen. That feeling is more powerful than any algorithm trick. // [Card cue: "I have a whole breakdown on thumbnail strategy — I'll link it here"] // Here's how to combine both signals in a single hook sentence: [Name the viewer's problem] + [promise a specific outcome] + [imply exclusive access]. // "Most creators are losing 50% of viewers before the first minute — here's the exact three-word change that fixed it on my channel." // Problem. Promise. Exclusivity. Eight seconds. // This formula works because it activates two neurological drives simultaneously: the pain drive (I have this problem) and the gain drive (I can specifically solve it). When both are active at once, the viewer's decision to keep watching is no longer a choice — it's a reflex.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Section 3 — 6:45–9:30 [Chapter: "The Live Build"]</span>
+          <p>I promised at the start that I'd build a hook live using a topic from the comments. // I pulled one from last week's video — [reads comment] "how to price yourself as a freelancer." Perfect. Let's build. // Step one: identify the core viewer pain. Someone searching for freelance pricing advice is either undercharging and knows it, overcharging and losing clients, or has no idea what they're doing and is making it up as they go. Let's target the first two — that's the biggest audience segment. // Step two: find the specific outcome. Not "price yourself better." Something specific: "charge twice what you're charging without losing your best clients." // Step three: add implied exclusivity. "Here's the framework I found in a 1987 consulting textbook that almost no one in the online freelancing space has found yet." // Now combine: // "If you're a freelancer who's been guessing your rates — and secretly suspects you're undercharging — I found a pricing framework from a 1987 consulting textbook that will show you exactly how to double your rate without losing a single client. And I promise you: almost no one talking about freelancing online has found this yet." // [Zoom cut on key phrase] // Is that hook perfect? Maybe not. But test it against most freelancing hooks online — "Here's how to set your freelance rates" — and you immediately feel the difference. One creates curiosity. One creates a yawn. // The live build process took me less than 90 seconds once I had the formula internalized. That's what practice does — it turns a framework into instinct.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Outro + CTA — 9:30–10:00</span>
+          <p>That's the Dual-Signal Hook. Specificity + personal stakes, delivered in under 8 seconds, with an open loop that forces the viewer to stay for the payoff. // If you want to test this on your own content — write your next hook using this formula before you write a single other word of your script. The hook shapes everything that comes after it. // Drop your channel niche in the comments and I'll write a practice hook for you live. I respond to every comment in the first 48 hours after a video goes up. // [End screen cue] Watch this next — it's the full retention architecture breakdown I've been teasing for two videos now. Everything after the hook. See you there.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAMPLE 2: TIKTOK -->
+    <div class="sample-script">
+      <div class="script-header">
+        <h3>Script 02 — TikTok</h3>
+        <div class="script-meta">
+          <span class="script-meta-tag">Platform: TikTok</span>
+          <span class="script-meta-tag">Duration: 28 seconds</span>
+          <span class="script-meta-tag">Topic: Email subject lines</span>
+          <span class="script-meta-tag">~70 words</span>
+        </div>
+      </div>
+      <div class="script-body">
+
+        <div class="script-line">
+          <span class="script-cue">Visual Hook — Frame 1 (0:00–0:02) [On-screen text: "The subject line that got 71% open rate"]</span>
+          <p>[Hold up phone showing an email analytics screen — 71% open rate visible. No words yet. Let the visual land.]</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Verbal Hook — 0:02–0:06</span>
+          <p>This email got a 71% open rate. // Here's the subject line — and why it worked.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Content — 0:06–0:20 [Cut to close-up of subject line text on screen]</span>
+          <p>The subject line was: <strong>"I was wrong about this."</strong> // Four words. No name. No emoji. No "RE:" // Here's why it crushed every other subject line I've ever sent: it broke a pattern. Inboxes are full of promises. This one admitted a mistake. // Your reader's brain can't resist finding out what you were wrong about. // That curiosity gap — that's what open rates are made of.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">CTA — 0:20–0:28 [On-screen text: "Save this for your next campaign"]</span>
+          <p>Save this. Test it on your next campaign. Comment what your open rate usually is — I want to see if this beats it for you too.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAMPLE 3: INSTAGRAM REELS -->
+    <div class="sample-script">
+      <div class="script-header">
+        <h3>Script 03 — Instagram Reels</h3>
+        <div class="script-meta">
+          <span class="script-meta-tag">Platform: Instagram Reels</span>
+          <span class="script-meta-tag">Duration: 45 seconds</span>
+          <span class="script-meta-tag">Topic: Client red flags</span>
+          <span class="script-meta-tag">~105 words</span>
+        </div>
+      </div>
+      <div class="script-body">
+
+        <div class="script-line">
+          <span class="script-cue">Visual + Text Hook — 0:00–0:03 [On-screen text: "3 client red flags I ignored (and paid for)"]</span>
+          <p>[Open walking toward camera, confident. Text overlay lands on frame 1.]</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">0:03–0:38 [Cut between walking shot and close-up face cam. Text reinforces each point.]</span>
+          <p>Red flag one: They ask for your "best price" before you've even scoped the project. // That's not negotiation — that's signaling that price will always come before quality. Those clients never end well. // Red flag two: They say they've "had bad experiences with [profession] before." // Maybe they have. Or maybe they were the problem. Either way — now <em>you're</em> starting in a defensive position with zero trust built. // Red flag three — the big one: They need it done by Friday. And it's Wednesday. // Urgency without lead time means disorganization. You'll be cleaning up their chaos on a deadline every single engagement. // Save this. You'll thank yourself.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">CTA — 0:38–0:45 [On-screen text: "Which one have you experienced?"]</span>
+          <p>Which one have you seen the most? Drop a number in the comments. And follow for more — I post this stuff three times a week.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAMPLE 4: LINKEDIN VIDEO -->
+    <div class="sample-script">
+      <div class="script-header">
+        <h3>Script 04 — LinkedIn Video</h3>
+        <div class="script-meta">
+          <span class="script-meta-tag">Platform: LinkedIn</span>
+          <span class="script-meta-tag">Duration: ~90 seconds</span>
+          <span class="script-meta-tag">Topic: Hiring mistake</span>
+          <span class="script-meta-tag">~210 words</span>
+        </div>
+      </div>
+      <div class="script-body">
+
+        <div class="script-line">
+          <span class="script-cue">Hook — 0:00–0:12 [Captions on. No intro. Start mid-thought energy.]</span>
+          <p>The most expensive hiring mistake I ever made wasn't hiring the wrong person. // It was keeping the right person in the wrong role for 14 months because I didn't want to have a hard conversation. // The cost: one burned-out high performer, three missed deadlines on a seven-figure project, and a team culture that took two years to repair.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Insight — 0:12–0:55 [Caption every key phrase]</span>
+          <p>Here's what I learned: a misaligned hire isn't a hiring problem. It's a management problem. // Most leaders know within 60 days if a person is misaligned. The data is right there. But acknowledging it means accepting that you made a mistake — and that the longer you wait, the more expensive the acknowledgment becomes. // So we wait. We hope the role adapts. We tell ourselves they just need more time. // The framework I use now: at the 60-day mark, every new hire gets a structured role-alignment conversation. Not a performance review. A conversation that asks: "Is this role giving you energy or taking it?" // The answers are diagnostic. If someone is giving energy to two tasks and draining on eight — that's not a performance problem. That's a positioning problem. And positioning is fixable. // I've used this framework with every hire for the last three years. It has a 100% rate of either realigning mismatched talent or enabling a graceful, early exit before damage compounds.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">CTA — 0:55–1:30</span>
+          <p>If you manage people — whether it's a team of two or two hundred — try the 60-day alignment conversation on your next hire. // And if this hits close to home: drop a comment. I'm compiling responses from managers who've dealt with this — I want to turn it into a real resource. // Follow for more of this. I post twice a week on building teams that actually work.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAMPLE 5: YOUTUBE SHORTS -->
+    <div class="sample-script">
+      <div class="script-header">
+        <h3>Script 05 — YouTube Shorts</h3>
+        <div class="script-meta">
+          <span class="script-meta-tag">Platform: YouTube Shorts</span>
+          <span class="script-meta-tag">Duration: 55 seconds</span>
+          <span class="script-meta-tag">Topic: The 2-minute rule (inverted)</span>
+          <span class="script-meta-tag">~130 words</span>
+        </div>
+      </div>
+      <div class="script-body">
+
+        <div class="script-line">
+          <span class="script-cue">Hook — 0:00–0:05 [On-screen text: "Stop using the 2-minute rule"]</span>
+          <p>Stop using the two-minute rule. // I know — it's supposed to be the gold standard of productivity. // But here's the problem nobody talks about.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Content — 0:05–0:42 [Cut on each point. Zoom cut at "compounding task debt."]</span>
+          <p>The two-minute rule says: if a task takes less than two minutes, do it now. // The result: your day becomes an endless stream of tiny tasks, and you never build uninterrupted deep work time. // Every two-minute task you do is a pattern interrupt to the thing that actually moves the needle. // What to do instead — the <strong>batch method</strong>: collect all two-minute tasks throughout the day. Set a 20-minute window, once in the morning, once at the end of the day. Do them all at once. // Two windows. Zero interruptions. // You get the same tasks done — but you protect the four to six hours of deep work in between. // That's where the real output lives.</p>
+        </div>
+
+        <div class="script-line">
+          <span class="script-cue">Loop Outro — 0:42–0:55 [Circular back to opening frame energy]</span>
+          <p>So yeah — stop using the two-minute rule the way everyone teaches it. // Use it like a batch. // Subscribe if you want more of these — I break down one productivity myth per week.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p style="margin-bottom:8px;">Video Script &amp; Hook Formula &mdash; Premium Digital Product</p>
+    <p>Part of the <a href="/">GetScrewedScore Creator Toolkit</a> &mdash; Built for creators who take their craft seriously.</p>
+    <p style="margin-top:16px; font-size:0.75rem; color:rgba(242,242,242,0.2);">All templates, frameworks, and scripts in this document are original works. For personal and commercial use by the purchaser.</p>
+  </footer>
+
+</div>
+</body>
+</html>

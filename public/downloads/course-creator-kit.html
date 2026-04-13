@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Course Creator Kit — Build, Launch & Sell a $500+ Course</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #080808;
+    color: #f2f2f2;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .page-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* HEADER */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 56px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,214,10,0.12);
+    border: 1px solid rgba(255,214,10,0.3);
+    color: #ffd60a;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: #ffd60a; }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(242,242,242,0.6);
+    max-width: 620px;
+    margin: 0 auto 36px;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: rgba(242,242,242,0.4);
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #ffd60a; display: inline-block; }
+
+  /* TOC */
+  .toc {
+    background: rgba(15,15,15,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 36px;
+    margin: 48px 0;
+  }
+  .toc h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffd60a;
+    margin-bottom: 20px;
+  }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a {
+    color: rgba(242,242,242,0.7);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: #ffd60a; }
+
+  /* SECTIONS */
+  .phase {
+    margin-top: 64px;
+    scroll-margin-top: 24px;
+  }
+  .phase-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #ffd60a;
+    margin-bottom: 10px;
+  }
+  .phase > h2 {
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .phase > .phase-intro {
+    font-size: 16px;
+    color: rgba(242,242,242,0.65);
+    margin-bottom: 36px;
+    max-width: 720px;
+  }
+  .card {
+    background: rgba(15,15,15,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: #f2f2f2;
+  }
+  .card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #ffd60a;
+    text-transform: uppercase;
+    margin: 20px 0 8px;
+  }
+  .card p { color: rgba(242,242,242,0.72); margin-bottom: 12px; font-size: 15px; }
+  .card ul, .card ol { padding-left: 20px; margin-bottom: 12px; }
+  .card li { color: rgba(242,242,242,0.72); font-size: 15px; margin-bottom: 6px; }
+  .card li strong { color: #f2f2f2; }
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin: 28px 0;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: rgba(255,214,10,0.07);
+    border: 1px solid rgba(255,214,10,0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .highlight p { color: rgba(242,242,242,0.85); margin: 0; font-size: 15px; }
+  .highlight strong { color: #ffd60a; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    background: rgba(255,214,10,0.1);
+    color: #ffd60a;
+    font-weight: 700;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,214,10,0.2);
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(242,242,242,0.72);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  td strong { color: #f2f2f2; }
+  td.gold { color: #ffd60a; font-weight: 700; }
+
+  /* EMAIL BLOCKS */
+  .email-block {
+    background: rgba(10,10,10,0.9);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .email-header {
+    background: rgba(255,214,10,0.08);
+    border-bottom: 1px solid rgba(255,214,10,0.15);
+    padding: 16px 24px;
+  }
+  .email-header .email-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffd60a;
+    margin-bottom: 6px;
+  }
+  .email-header .email-subject {
+    font-size: 17px;
+    font-weight: 800;
+    color: #f2f2f2;
+    margin-bottom: 4px;
+  }
+  .email-header .email-preview {
+    font-size: 13px;
+    color: rgba(242,242,242,0.5);
+    font-style: italic;
+  }
+  .email-body {
+    padding: 24px;
+    font-size: 15px;
+    color: rgba(242,242,242,0.75);
+    white-space: pre-wrap;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    line-height: 1.75;
+  }
+
+  /* COPY TEMPLATE */
+  .copy-block {
+    background: rgba(8,8,8,0.95);
+    border-left: 3px solid #ffd60a;
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .copy-block .copy-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #ffd60a;
+    margin-bottom: 10px;
+  }
+  .copy-block p {
+    font-size: 15px;
+    color: rgba(242,242,242,0.8);
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    line-height: 1.75;
+  }
+
+  /* NUMBER LIST STYLING */
+  .num-list { counter-reset: item; list-style: none; padding: 0; }
+  .num-list li {
+    counter-increment: item;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    color: rgba(242,242,242,0.72);
+    font-size: 15px;
+  }
+  .num-list li::before {
+    content: counter(item);
+    min-width: 26px;
+    height: 26px;
+    background: rgba(255,214,10,0.15);
+    border: 1px solid rgba(255,214,10,0.3);
+    border-radius: 50%;
+    color: #ffd60a;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* CHECK LIST */
+  .check-list { list-style: none; padding: 0; }
+  .check-list li {
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 8px;
+    color: rgba(242,242,242,0.72);
+    font-size: 15px;
+  }
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #ffd60a;
+    font-weight: 700;
+  }
+
+  /* WORKSHEET */
+  .worksheet {
+    background: rgba(15,15,15,0.6);
+    border: 1px dashed rgba(255,214,10,0.25);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 20px 0;
+  }
+  .worksheet h4 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffd60a;
+    margin-bottom: 16px;
+  }
+  .field-row {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 0;
+    font-size: 14px;
+    color: rgba(242,242,242,0.5);
+    display: flex;
+    gap: 12px;
+  }
+  .field-row .field-label {
+    min-width: 180px;
+    color: rgba(242,242,242,0.4);
+    font-size: 13px;
+  }
+  .field-row .field-value { color: rgba(242,242,242,0.65); font-style: italic; }
+
+  /* TIER CARDS */
+  .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+  .tier-card {
+    background: rgba(15,15,15,0.8);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .tier-card.featured {
+    border-color: rgba(255,214,10,0.35);
+    background: rgba(255,214,10,0.04);
+  }
+  .tier-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(242,242,242,0.5);
+    margin-bottom: 8px;
+  }
+  .tier-price {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #f2f2f2;
+    margin-bottom: 16px;
+  }
+  .tier-price span { font-size: 16px; color: rgba(242,242,242,0.4); font-weight: 400; }
+  .tier-card ul { list-style: none; padding: 0; }
+  .tier-card li {
+    font-size: 13px;
+    color: rgba(242,242,242,0.65);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding-left: 16px;
+    position: relative;
+  }
+  .tier-card li::before { content: '—'; position: absolute; left: 0; color: rgba(255,214,10,0.5); }
+
+  /* PLATFORM TABLE */
+  .platform-table th:first-child, .platform-table td:first-child { font-weight: 700; color: #f2f2f2; }
+  .yes { color: #4ade80; }
+  .no { color: rgba(242,242,242,0.3); }
+  .partial { color: #ffd60a; }
+
+  /* FOOTER */
+  .doc-footer {
+    text-align: center;
+    padding: 48px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 80px;
+  }
+  .doc-footer p { font-size: 13px; color: rgba(242,242,242,0.3); margin-bottom: 6px; }
+  .doc-footer a { color: rgba(255,214,10,0.6); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 16px 40px; }
+    .card { padding: 22px; }
+    .email-body { padding: 18px; font-size: 14px; }
+    .tier-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-badge">Premium Digital Product</div>
+  <h1>Digital Course<br><span>Creator Kit</span></h1>
+  <p class="hero-sub">Everything you need to build, launch, and sell a $500+ online course — curriculum architecture, full sales copy, 7-email launch sequence, pricing strategy, and more.</p>
+  <div class="hero-meta">
+    <span><span class="dot"></span> 10 Phases of Build</span>
+    <span><span class="dot"></span> Full Copy Templates</span>
+    <span><span class="dot"></span> 7 Launch Emails Written</span>
+    <span><span class="dot"></span> Platform Comparison</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#phase0">Phase 0 — Validation: Prove Demand Before You Build</a></li>
+    <li><a href="#phase1">Phase 1 — Curriculum Architecture</a></li>
+    <li><a href="#phase2">Phase 2 — Lesson Structure Formula</a></li>
+    <li><a href="#phase3">Phase 3 — Pricing Strategy</a></li>
+    <li><a href="#phase4">Phase 4 — Sales Page Copy (Full Template)</a></li>
+    <li><a href="#phase5">Phase 5 — 7-Email Launch Sequence (All Written)</a></li>
+    <li><a href="#phase6">Phase 6 — Student Onboarding Sequence</a></li>
+    <li><a href="#phase7">Phase 7 — Platform Comparison</a></li>
+    <li><a href="#phase8">Phase 8 — Post-Launch: Evergreen Funnel + Affiliates</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<!-- PHASE 0 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase0">
+  <div class="phase-label">Phase 0</div>
+  <h2>Validation: Prove Demand Before You Build a Single Lesson</h2>
+  <p class="phase-intro">The graveyard of online courses is full of content nobody asked for. Before you record a single video, spend 1–2 weeks validating that real people will pay real money for your specific transformation.</p>
+
+  <div class="card">
+    <h3>The Presell Method — Sell Before You Build</h3>
+    <p>The presell method is the single most important concept in course creation. Instead of building your course, then hoping people buy it, you sell access to the course before it exists — then build it based on confirmed demand and real student questions.</p>
+    <h4>How It Works</h4>
+    <ol class="num-list">
+      <li><strong>Write a 1-paragraph course concept</strong> — what transformation does it deliver, who is it for, what's the price?</li>
+      <li><strong>Create a simple sales page</strong> — a Google Doc, Notion page, or basic landing page. No design required.</li>
+      <li><strong>Set a presell price 20–30% below launch price</strong> — reward early believers. Frame it as "Founding Member Pricing."</li>
+      <li><strong>Set a minimum threshold</strong> — "If 20 people join by [date], I'll build it. If not, you get a full refund." This removes your risk and theirs.</li>
+      <li><strong>Drive traffic via direct outreach</strong> — email your list, post on social, DM warm leads. No ads needed at this stage.</li>
+      <li><strong>Collect payment via Stripe or Gumroad</strong> — hold funds in a separate account until threshold is met.</li>
+      <li><strong>If threshold is hit, build</strong> — deliver content weekly or in cohort batches, incorporating live Q&A to fill gaps.</li>
+    </ol>
+    <div class="highlight">
+      <p><strong>Real talk:</strong> If you cannot sell 10–20 presell spots at $97–$297 to people who already know you, a $997 evergreen course to cold traffic will not save you. Fix the offer first.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>10 Validation Signals to Look For</h3>
+    <p>Before you presell, look for these signals that a course idea has legs. The more you can check off, the stronger the opportunity.</p>
+    <ol class="num-list">
+      <li><strong>People are already paying for adjacent solutions</strong> — books, coaching, software, conferences about this topic exist and are selling.</li>
+      <li><strong>You get the same question repeatedly</strong> — if 5+ people have asked you how to do the same thing, that's a course waiting to be built.</li>
+      <li><strong>The outcome is specific and measurable</strong> — "get a remote job as a UX designer in 90 days" beats "learn design."</li>
+      <li><strong>The audience has a budget</strong> — B2B skills, career advancement, revenue-generating skills all attract buyers with money. Hobbies are harder.</li>
+      <li><strong>There are active communities around the topic</strong> — Reddit threads, Facebook groups, Discord servers all full of questions = demand.</li>
+      <li><strong>Competitors exist and are succeeding</strong> — competition validates the market. No competition often means no market.</li>
+      <li><strong>The pain is urgent</strong> — people in active pain buy faster. "I need a job now" converts better than "I'd like to improve someday."</li>
+      <li><strong>You have a credibility hook</strong> — you've done the thing, helped others do the thing, or have a unique methodological angle.</li>
+      <li><strong>The topic has recurring search volume</strong> — check Ahrefs, Google Trends, or AnswerThePublic. Flat or growing is good. Declining is a red flag.</li>
+      <li><strong>Your audience already trusts you</strong> — an email list, social following, or community of 500+ engaged people is a major advantage.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Pricing Research Process</h3>
+    <p>Set your price based on data, not what feels comfortable. Here's the process:</p>
+    <h4>Step 1: Competitive Landscape Audit</h4>
+    <p>Find 8–12 courses on your topic. Record: price, what's included, who the creator is, how long the course is, and what reviews say. Build a simple spreadsheet. You're looking for the pricing band most courses cluster in — and any gap you can own.</p>
+    <h4>Step 2: Value-Based Pricing Calculation</h4>
+    <p>Ask: what is the outcome of this course worth to the student? If your course helps someone land a $20,000/year raise, pricing at $997 is a no-brainer. If it saves someone 40 hours of frustration, price accordingly. Rule of thumb: <strong>your course price should be 1–10% of the value of the outcome.</strong></p>
+    <h4>Step 3: Customer Interviews</h4>
+    <p>Talk to 10 people in your target audience. Ask them: "If a course guaranteed [specific outcome], what would you expect to pay for it?" Note the range. Also ask: "What's the most you've spent on professional development in the last 12 months?" This calibrates their spending willingness.</p>
+    <h4>Step 4: Anchor Up, Discount Down</h4>
+    <p>Always establish a higher anchor price, then discount for the launch or presell. A course listed at $997 with a launch price of $597 is more compelling than a course listed at $597 flat — even though the buyer pays less either way.</p>
+  </div>
+
+  <div class="card">
+    <h3>Audience Size Requirements</h3>
+    <p>You do not need a massive audience to launch a profitable course. Here's what actually matters:</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Revenue Goal</th><th>Course Price</th><th>Customers Needed</th><th>Minimum Audience Size</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>$5,000</td><td>$497</td><td>11</td><td>~500 engaged followers</td></tr>
+          <tr><td>$10,000</td><td>$497</td><td>21</td><td>~1,000 engaged followers</td></tr>
+          <tr><td>$25,000</td><td>$997</td><td>26</td><td>~2,500 engaged followers</td></tr>
+          <tr><td>$50,000</td><td>$997</td><td>51</td><td>~5,000 engaged followers</td></tr>
+          <tr><td>$100,000</td><td>$1,997</td><td>51</td><td>~8,000 engaged followers</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="highlight">
+      <p><strong>Key insight:</strong> A 1–3% conversion rate on your warm audience is realistic for a well-positioned launch. 500 engaged email subscribers converting at 2% = 10 buyers. At $997 = $9,970. A small, engaged list beats a large, cold one every time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 1 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase1">
+  <div class="phase-label">Phase 1</div>
+  <h2>Curriculum Architecture</h2>
+  <p class="phase-intro">Most course creators either cram too much in or leave students confused about what they actually get. This phase gives you the structural blueprint for a course that delivers results and earns great reviews.</p>
+
+  <div class="card">
+    <h3>The 3-Act Course Structure</h3>
+    <p>Borrow from storytelling: every great course has a beginning (orientation + quick win), a middle (the real work), and an end (transformation + next steps).</p>
+    <h4>Act 1 — Foundation (20% of content)</h4>
+    <p>Orient students. Set expectations. Deliver a quick win in the first lesson so students feel momentum immediately. Cover mindset, terminology, and the framework overview. If students don't feel progress in Module 1, they disengage forever.</p>
+    <h4>Act 2 — Core System (60% of content)</h4>
+    <p>This is where the transformation happens. Each module builds on the last. Use a logical progression: concepts → frameworks → demonstrations → exercises. Don't skip steps. Don't assume knowledge. Don't introduce a concept without immediately showing how to apply it.</p>
+    <h4>Act 3 — Integration + Next Steps (20% of content)</h4>
+    <p>Bring everything together. Show how the pieces connect. Give students a capstone project or final exercise. Celebrate what they've achieved. Point to what comes next (upsell, community, coaching). Students who finish feel accomplished and leave reviews.</p>
+  </div>
+
+  <div class="card">
+    <h3>The Transformation Framework</h3>
+    <p>Your course is not a collection of information. It is a vehicle for transformation. Define both endpoints with precision before you plan a single lesson.</p>
+    <h4>Before State — Where Students Start</h4>
+    <p>Write out, in the student's own words, exactly where they are before they take your course. What are they struggling with? What have they tried that hasn't worked? What does their typical day look like? What's the pain? What's the cost of staying stuck?</p>
+    <h4>After State — Where Students End Up</h4>
+    <p>Write out the exact transformation. Be specific. Not "they understand marketing" but "they have a repeatable client acquisition system generating 3–5 qualified leads per week without paid ads." The after state drives every curriculum decision.</p>
+    <h4>The Bridge — Your Course</h4>
+    <p>Every module, lesson, and exercise should be a step across the bridge from before to after. If a piece of content doesn't move students from before to after, cut it. This is the hardest discipline in curriculum design.</p>
+    <div class="worksheet">
+      <h4>Transformation Framework Worksheet</h4>
+      <div class="field-row"><span class="field-label">Before State:</span><span class="field-value">My student currently struggles with ___ and feels ___ every time they try to ___</span></div>
+      <div class="field-row"><span class="field-label">Root Cause:</span><span class="field-value">The reason they're stuck is ___ (not ___ which is what they think it is)</span></div>
+      <div class="field-row"><span class="field-label">After State:</span><span class="field-value">After the course, they can ___ consistently, and they feel ___ when doing it</span></div>
+      <div class="field-row"><span class="field-label">Proof of Success:</span><span class="field-value">They'll know the course worked when ___ happens in their life/business</span></div>
+      <div class="field-row"><span class="field-label">Timeline:</span><span class="field-value">A motivated student will achieve this in ___ days/weeks</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Module-Lesson Planning Template</h3>
+    <h4>Blank Template</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Module #</th><th>Module Title</th><th>Learning Objective</th><th>Lessons</th><th>Est. Time</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>Start Here / Orientation</td><td>Student is oriented, knows what to expect, completes first action</td><td>Welcome, How to Use This Course, Your First Win</td><td>15 min</td></tr>
+          <tr><td>1</td><td>[Your topic]</td><td>Student can [specific skill/outcome]</td><td>Lesson 1.1, 1.2, 1.3, Exercise</td><td>45–60 min</td></tr>
+          <tr><td>2</td><td>[Your topic]</td><td>Student can [specific skill/outcome]</td><td>Lesson 2.1, 2.2, 2.3, Exercise</td><td>45–60 min</td></tr>
+          <tr><td>3</td><td>[Your topic]</td><td>Student can [specific skill/outcome]</td><td>Lesson 3.1, 3.2, 3.3, Exercise</td><td>45–60 min</td></tr>
+          <tr><td>4</td><td>[Your topic]</td><td>Student can [specific skill/outcome]</td><td>Lesson 4.1, 4.2, 4.3, Exercise</td><td>45–60 min</td></tr>
+          <tr><td>5</td><td>Capstone + Next Steps</td><td>Student completes integration project, knows next steps</td><td>Capstone Project, Review, What's Next</td><td>30 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Filled Example — "Freelance Copywriter Launchpad"</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Module #</th><th>Module Title</th><th>Learning Objective</th><th>Lessons</th><th>Est. Time</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>Start Here</td><td>Student understands the path and completes their positioning statement</td><td>Welcome, How the Course Works, The Freelancer's Mindset</td><td>20 min</td></tr>
+          <tr><td>1</td><td>Niche & Positioning</td><td>Student can articulate their ideal client and unique positioning</td><td>Why Niching Wins, Choosing Your Niche, Writing Your One-Liner, Positioning Exercise</td><td>55 min</td></tr>
+          <tr><td>2</td><td>Portfolio Without Clients</td><td>Student has 3 portfolio pieces ready to share</td><td>Spec Work Strategy, Writing Your First 3 Pieces, Portfolio Page Setup</td><td>60 min</td></tr>
+          <tr><td>3</td><td>Finding & Pitching Clients</td><td>Student can send 10 qualified pitches per week</td><td>Where to Find Clients, Cold Email Formula, LinkedIn Outreach, Following Up</td><td>70 min</td></tr>
+          <tr><td>4</td><td>Rates, Contracts & Scope</td><td>Student can price confidently and protect themselves contractually</td><td>Pricing Models, Setting Your Rates, Contract Essentials, Scope Creep Defense</td><td>55 min</td></tr>
+          <tr><td>5</td><td>First 90 Days Roadmap</td><td>Student has a 90-day action plan and first client target list</td><td>Your 90-Day Plan, Building Referral Momentum, Graduation</td><td>30 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>How to Scope Your Course (Not Too Big, Not Too Small)</h3>
+    <p>Scope creep is the #1 reason courses never launch. Here's how to find the right scope:</p>
+    <h4>The "One Promise" Rule</h4>
+    <p>Your course should deliver one specific, measurable promise. If you can't state the outcome in a single sentence, the scope is too big. Cut modules until you can.</p>
+    <h4>Signs Your Course Is Too Big</h4>
+    <ul class="check-list">
+      <li>You have more than 8 modules</li>
+      <li>Total video content exceeds 10 hours</li>
+      <li>Students need to learn multiple fundamentally different skill sets</li>
+      <li>You keep saying "and then there's also..."</li>
+      <li>You've been building it for more than 3 months</li>
+    </ul>
+    <h4>Signs Your Course Is Too Small</h4>
+    <ul class="check-list">
+      <li>You can cover the entire topic in under 90 minutes</li>
+      <li>There's nothing for students to practice or implement</li>
+      <li>The outcome could be achieved with a single blog post</li>
+      <li>You're struggling to justify a price above $97</li>
+    </ul>
+    <h4>The Goldilocks Zone</h4>
+    <p>For a $497–$997 course: 5–8 modules, 3–5 lessons each, 5–10 minutes per lesson, total completion time 4–8 hours. Students can complete it in a focused weekend or spread over 4 weeks at one module per week.</p>
+  </div>
+
+  <div class="card">
+    <h3>Learning Objective Writing Formula</h3>
+    <p>Vague objectives produce vague content. Use this formula for every module and lesson:</p>
+    <div class="highlight">
+      <p><strong>Formula:</strong> "By the end of this [module/lesson], students will be able to [ACTION VERB] + [SPECIFIC OBJECT] + [MEASURABLE CONDITION OR STANDARD]"</p>
+    </div>
+    <h4>Strong Action Verbs by Level</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Level</th><th>Good Verbs</th><th>Avoid</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Knowledge</td><td>identify, list, recall, name, define</td><td>know, understand, be aware of</td></tr>
+          <tr><td>Comprehension</td><td>explain, summarize, describe, interpret</td><td>learn, grasp, appreciate</td></tr>
+          <tr><td>Application</td><td>use, apply, build, execute, complete, implement</td><td>understand how to, be familiar with</td></tr>
+          <tr><td>Analysis</td><td>analyze, diagnose, compare, distinguish, audit</td><td>think about, consider</td></tr>
+          <tr><td>Creation</td><td>create, design, write, produce, develop, launch</td><td>make (too vague)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Examples</h4>
+    <ul class="check-list">
+      <li>Weak: "Understand email marketing." Strong: "Write a 5-email welcome sequence that achieves 40%+ open rates."</li>
+      <li>Weak: "Learn about pricing." Strong: "Set a project rate using the value-based pricing formula and defend it confidently on client calls."</li>
+      <li>Weak: "Know how to use SEO." Strong: "Identify 10 low-competition, high-intent keywords using Ahrefs and write optimized title tags for each."</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 2 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase2">
+  <div class="phase-label">Phase 2</div>
+  <h2>Lesson Structure Formula</h2>
+  <p class="phase-intro">Every lesson should follow the same underlying structure, even if it doesn't feel formulaic to the student. Consistency of structure creates momentum. Students always know what to expect and never feel lost.</p>
+
+  <div class="card">
+    <h3>The 5-Part Lesson Framework</h3>
+    <ol class="num-list">
+      <li><strong>Hook (30–60 seconds)</strong> — Open with a question, a provocative statement, or a mini-story that makes the student immediately invested. "By the end of this lesson, you'll know the one pricing mistake that cost me my first $20K client — and exactly how to avoid it." Never open with "Hi, welcome back to module 3 lesson 2."</li>
+      <li><strong>Teach (40–60% of lesson time)</strong> — Deliver the core concept. Use the "explain → example → explain again" loop. State the principle, show it in action, then restate the principle in light of what they just saw. Keep language conversational. Avoid academic tone.</li>
+      <li><strong>Demonstrate (20–30% of lesson time)</strong> — Show it, don't just tell it. Screen share a real example. Walk through a before/after. Do the exercise live. The demonstration is where abstract concepts become concrete skills.</li>
+      <li><strong>Apply (5–10 minutes at end)</strong> — Give students a specific action to take before the next lesson. "Before you move on, complete [specific task]. This takes about 10 minutes and is the foundation for everything in the next module." Students who don't apply learn nothing.</li>
+      <li><strong>Review (60–90 seconds)</strong> — Summarize the 2–3 key takeaways. Preview what's coming next to create a cliffhanger. "In the next lesson, we're going to take what you just built and run it through our 5-point audit — you'll probably find 2 things you need to fix before sending this to a client."</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Slide Design Principles for Course Creators</h3>
+    <p>Your slides are teaching tools, not documents. They support your voice — they don't replace it.</p>
+    <ul class="check-list">
+      <li><strong>One idea per slide.</strong> If a slide has more than one concept, split it. Cognitive overload kills retention.</li>
+      <li><strong>Max 30 words per slide.</strong> If you need more words, use them in your voiceover — not on the slide.</li>
+      <li><strong>Use the "billboard test."</strong> If someone driving 60mph couldn't read your slide in 3 seconds, it has too much on it.</li>
+      <li><strong>Contrast is king.</strong> Dark background + light text or vice versa. Never gray-on-gray. Accessibility matters.</li>
+      <li><strong>Use visuals to show process.</strong> Arrows, diagrams, before/after comparisons all teach better than bullet lists.</li>
+      <li><strong>Brand consistency builds perceived value.</strong> Pick 2 fonts and 3 colors. Use them everywhere. Students pay attention to polish.</li>
+      <li><strong>Talking head + slides = best retention.</strong> When possible, use picture-in-picture so students see your face and the slides simultaneously.</li>
+    </ul>
+    <div class="highlight">
+      <p><strong>Tool stack:</strong> Canva (slides), Loom (screen + webcam recording), Descript (editing), or Keynote/PowerPoint if you prefer. Don't buy a $3,000 camera before you have 10 paying students.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Workbook &amp; Exercise Creation Guide</h3>
+    <p>Workbooks transform passive watchers into active learners — and active learners get results, leave reviews, and buy your next course.</p>
+    <h4>What Belongs in a Workbook</h4>
+    <ul class="check-list">
+      <li>Fill-in-the-blank sections that mirror lesson content (forces engagement)</li>
+      <li>Reflection prompts — "What's your biggest takeaway?" / "Where does this apply to your situation?"</li>
+      <li>Action checklists — specific tasks to complete before moving on</li>
+      <li>Templates and frameworks students fill out for their own situation</li>
+      <li>Space for notes, sketches, and examples</li>
+    </ul>
+    <h4>Workbook Design Tips</h4>
+    <ul class="check-list">
+      <li>Make it printable AND digital-fillable (use PDF form fields)</li>
+      <li>Brand it with your course name — students screenshot these and share them</li>
+      <li>Include a progress tracker on the first page</li>
+      <li>Use page numbers that match lesson numbers so it's easy to find</li>
+    </ul>
+    <h4>Exercise Types That Work</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Exercise Type</th><th>Best For</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Fill-in-the-blank</td><td>Vocabulary, frameworks</td><td>"The formula for a strong headline is: ___ + ___ + ___"</td></tr>
+          <tr><td>Build-your-own</td><td>Application skills</td><td>"Write your own version of the positioning statement below"</td></tr>
+          <tr><td>Audit/Diagnosis</td><td>Analysis skills</td><td>"Score your current website on these 8 criteria"</td></tr>
+          <tr><td>Case Study Analysis</td><td>Comprehension</td><td>"Read this real campaign — what would you do differently?"</td></tr>
+          <tr><td>Roleplay Script</td><td>Communication skills</td><td>"Practice this sales objection response out loud 5 times"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Video Length Optimization by Module Type</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Module Type</th><th>Ideal Length</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Welcome / Orientation</td><td>3–5 min</td><td>Students just want to get started. Don't stall them.</td></tr>
+          <tr><td>Concept/Theory Lessons</td><td>7–12 min</td><td>Long enough to explain fully, short enough to stay focused.</td></tr>
+          <tr><td>Demonstration/Tutorial</td><td>10–20 min</td><td>Must cover the full workflow, but cut every "um" and dead air.</td></tr>
+          <tr><td>Exercise Walkthroughs</td><td>5–10 min</td><td>Show the exercise being done; students then do their own version.</td></tr>
+          <tr><td>Case Studies</td><td>8–15 min</td><td>Enough context to make it real; not so long it becomes a lecture.</td></tr>
+          <tr><td>Q&amp;A / FAQ Videos</td><td>10–20 min</td><td>Batch common questions; cut anything that's already covered.</td></tr>
+          <tr><td>Capstone / Wrap-up</td><td>5–8 min</td><td>Celebrate the student, summarize, and point forward.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Engagement Loop Techniques</h3>
+    <p>Engagement in courses is not about entertainment — it's about creating the conditions for continued action. Use these techniques throughout your course:</p>
+    <ul class="num-list">
+      <li><strong>Progress visibility</strong> — show students how far they've come and how far they have to go. Platforms like Kajabi and Teachable do this with progress bars. Students are far more likely to finish when they can see the finish line.</li>
+      <li><strong>Micro-commitments</strong> — ask students to check off each lesson as complete. The act of checking a box releases dopamine and primes them for the next one.</li>
+      <li><strong>Community integration</strong> — at the end of each module, prompt students to share their work in the community. "Post your completed exercise in #module-2-wins." Social accountability dramatically increases completion rates.</li>
+      <li><strong>Email check-ins</strong> — automated emails at day 3, day 7, and day 14 that reference specific lessons and ask a question. "Hey, did you get through Module 2 yet? What was your biggest aha moment?" This triggers re-engagement for students who've drifted.</li>
+      <li><strong>Quick wins early and often</strong> — schedule at least one moment of visible progress in every module. Students who feel momentum continue. Students who feel lost disappear.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 3 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase3">
+  <div class="phase-label">Phase 3</div>
+  <h2>Pricing Strategy</h2>
+  <p class="phase-intro">Price is a signal, not just a number. How you price your course communicates who it's for, what it's worth, and how serious you are. Price too low and you attract the wrong buyers. Price correctly and you attract people who actually do the work.</p>
+
+  <div class="card">
+    <h3>The Price Anchoring Technique</h3>
+    <p>Anchoring is the single most powerful pricing lever available to you. Here's how to deploy it:</p>
+    <h4>Method 1: The "Coaching Alternative" Anchor</h4>
+    <p>Show what it would cost to get the same result through a more expensive alternative. "Private 1:1 coaching with me is $500/hour. Most clients need 8–12 sessions to achieve what this course delivers. That's $4,000–$6,000. Today, you're getting the complete system for $997." The $997 feels like a steal.</p>
+    <h4>Method 2: The Strikethrough Price</h4>
+    <p>Show the "regular" price crossed out, then show the launch price. The regular price must be real — something you'll actually charge after launch. Don't fabricate it. But the gap between $1,497 and $697 is extremely compelling during a launch window.</p>
+    <h4>Method 3: Price Per Day</h4>
+    <p>Break the price into daily cost over the expected transformation period. "$997 for a 90-day transformation is $11/day — less than your morning coffee. You're betting $11/day on yourself." This works especially well when combined with a payment plan.</p>
+  </div>
+
+  <div class="card">
+    <h3>3-Tier Pricing Structure</h3>
+    <p>Offering three tiers increases average order value and serves multiple segments of your audience. The middle tier is where most students land — design for that.</p>
+    <div class="tier-grid">
+      <div class="tier-card">
+        <div class="tier-name">Tier 1 — Self-Study</div>
+        <div class="tier-price">$397 <span>/one-time</span></div>
+        <ul>
+          <li>Full course access</li>
+          <li>Workbooks &amp; templates</li>
+          <li>Lifetime access</li>
+          <li>Email support</li>
+          <li>Community access (read-only)</li>
+        </ul>
+      </div>
+      <div class="tier-card featured">
+        <div class="tier-name">Tier 2 — Guided ★ Most Popular</div>
+        <div class="tier-price">$697 <span>/one-time</span></div>
+        <ul>
+          <li>Everything in Self-Study</li>
+          <li>4 live group Q&amp;A calls</li>
+          <li>Full community access + posting</li>
+          <li>Peer accountability partner</li>
+          <li>Bonus: Resource swipe file</li>
+        </ul>
+      </div>
+      <div class="tier-card">
+        <div class="tier-name">Tier 3 — VIP</div>
+        <div class="tier-price">$1,497 <span>/one-time</span></div>
+        <ul>
+          <li>Everything in Guided</li>
+          <li>2x 1:1 coaching calls (45 min)</li>
+          <li>Direct Slack/email access (30 days)</li>
+          <li>Done-with-you project review</li>
+          <li>Private bonus training</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight">
+      <p><strong>Tier psychology:</strong> The VIP tier makes the middle tier look reasonably priced. The self-study tier gives budget-conscious buyers an entry point. You'll typically see 60–70% of buyers choose the middle tier, 20–25% choose self-study, and 5–10% choose VIP.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Launch Pricing vs. Evergreen Pricing</h3>
+    <h4>Launch Pricing</h4>
+    <p>During an active launch (open cart for 5–10 days), offer a meaningful discount to reward early action. 30–40% off is a strong launch incentive. Add real deadlines — cart closes at midnight Friday, price goes to $X — and honor those deadlines without exception. False scarcity destroys trust.</p>
+    <h4>Evergreen Pricing</h4>
+    <p>Once the launch closes, raise to full price. Evergreen buyers pay full price and often convert via automated webinars, email sequences triggered by lead magnet opt-ins, or direct sales calls. Your evergreen funnel should target a cold audience landing on your course page via ads, SEO, or affiliate traffic.</p>
+    <h4>Founding Member Pricing (Best for First Launch)</h4>
+    <p>Your first cohort should receive "founding member" pricing — typically 40–50% off lifetime — in exchange for feedback, testimonials, and patience as you refine the curriculum. Frame it as a privilege, not a discount. These students become your most loyal advocates.</p>
+  </div>
+
+  <div class="card">
+    <h3>Payment Plan Psychology and Structure</h3>
+    <p>Payment plans increase conversions by 20–40% on courses priced above $497. Here's how to structure them effectively:</p>
+    <h4>The Math</h4>
+    <p>Charge a premium for payment plans. If your course is $997, a 3-pay plan should be $397 × 3 = $1,191 — a 19% premium. This is standard, accepted, and fair. Students who want the lower effective price choose to pay in full. Students who need cash flow flexibility pay the premium. Everyone wins.</p>
+    <h4>Payment Plan Options by Price Point</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Course Price</th><th>Pay-in-Full</th><th>Payment Plan</th><th>Plan Premium</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>$497</td><td>$497</td><td>2 × $267</td><td>7%</td></tr>
+          <tr><td>$697</td><td>$697</td><td>3 × $257</td><td>11%</td></tr>
+          <tr><td>$997</td><td>$997</td><td>3 × $367</td><td>10%</td></tr>
+          <tr><td>$1,497</td><td>$1,497</td><td>4 × $427</td><td>14%</td></tr>
+          <tr><td>$1,997</td><td>$1,997</td><td>6 × $377</td><td>13%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Managing Chargebacks on Payment Plans</h4>
+    <p>Get a clear terms of service agreement signed at checkout. Specify that students who access course content are bound to complete all payments. Use Stripe's subscription billing so payments auto-collect. Have a dunning process (automated payment failure emails) in place before launch.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 4 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase4">
+  <div class="phase-label">Phase 4</div>
+  <h2>Sales Page Copy — Full Template</h2>
+  <p class="phase-intro">A great sales page is a structured argument. Each section answers a specific objection or question in the buyer's mind. Use these templates verbatim or adapt them to your course topic and voice.</p>
+
+  <div class="card">
+    <h3>Headline Formula + 5 Examples</h3>
+    <div class="highlight">
+      <p><strong>Formula:</strong> [Specific Desirable Outcome] + [Time Frame] + [Credibility/Method Hook] — Even If [Most Common Objection]</p>
+    </div>
+    <h4>5 Headline Examples</h4>
+    <ol class="num-list">
+      <li>"Land Your First 3 Freelance Clients in 60 Days — Using a Proven Outreach System That Doesn't Require a Big Following, a Portfolio, or Cold Calling Strangers"</li>
+      <li>"Build &amp; Launch a $1,000/Month Shopify Store in 8 Weeks — Step by Step, Even If You've Never Sold Anything Online"</li>
+      <li>"Get Promoted to Senior Designer in 12 Months — The Exact Career Strategy That Worked for 200+ Junior Designers at Top Agencies"</li>
+      <li>"Quit Your Job and Replace Your Income with Consulting in 90 Days — The Framework Used by 500+ Successful Consultants Who Started From Zero"</li>
+      <li>"Write &amp; Self-Publish a Book in 30 Days That Builds Your Authority and Generates Passive Income — No Writing Experience Required"</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Above-the-Fold Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Headline</div>
+      <p>[Your specific transformation headline from above]</p>
+    </div>
+    <div class="copy-block">
+      <div class="copy-label">Subheadline</div>
+      <p>The complete, step-by-step [course name] gives you the exact framework, templates, and over-the-shoulder training to [achieve the primary outcome] — without [the primary pain point] or [secondary objection].</p>
+    </div>
+    <div class="copy-block">
+      <div class="copy-label">Hero CTA Button + Supporting Copy</div>
+      <p>[YES — I Want Access Now →]
+
+Starting at just $[PRICE] · Instant Access · 30-Day Money-Back Guarantee</p>
+    </div>
+    <div class="copy-block">
+      <div class="copy-label">Social Proof Bar (under the fold)</div>
+      <p>Joined by [NUMBER]+ students · ★★★★★ [X] reviews · Featured in [PUBLICATION or "As seen on [podcast/newsletter]"]</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>"Is This For You?" Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">This course is for you if...</div>
+      <p>✓ You're a [target audience descriptor] who is tired of [pain point #1] and ready to finally [desired outcome]
+
+✓ You've tried [alternative solution] and found it [why it didn't work] — and you want a system that actually delivers results
+
+✓ You're willing to put in [realistic time commitment — e.g., "5 focused hours per week for 8 weeks"] to build something that will [long-term benefit]
+
+✓ You want more than just theory — you want frameworks you can apply immediately, with real examples from people who've done it
+
+✓ You're ready to invest in yourself and follow a proven path rather than piecing together free content that may or may not be accurate</p>
+    </div>
+    <div class="copy-block">
+      <div class="copy-label">This course is NOT for you if...</div>
+      <p>✗ You're looking for a "get rich quick" shortcut that requires zero effort — that's not what this is
+
+✗ You're not willing to actually implement — watching videos without doing the work produces zero results
+
+✗ You're currently in a financial situation where $[PRICE] would cause genuine hardship — we want you to succeed, not stress
+
+✗ You already have a working system for [outcome] that you're happy with — in that case, keep doing what's working</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What You'll Learn Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Section Header</div>
+      <p>Here's Exactly What You'll Be Able to Do After Completing [Course Name]:</p>
+    </div>
+    <div class="copy-block">
+      <div class="copy-label">Learning Outcomes (fill in your own)</div>
+      <p>✓ [Outcome 1 — specific and measurable, e.g., "Write and schedule a full month of social content in one afternoon using the Content Batching System"]
+
+✓ [Outcome 2 — addresses a specific pain point, e.g., "Know exactly what to charge for any project — and how to deliver that number on a client call without flinching"]
+
+✓ [Outcome 3 — a skill they'll have forever, e.g., "Build a client referral system that generates warm leads on autopilot without cold outreach"]
+
+✓ [Outcome 4 — removes a fear, e.g., "Handle scope creep, late payments, and difficult clients professionally — with exact scripts and templates"]
+
+✓ [Outcome 5 — the aspirational bigger picture, e.g., "Build the foundation for a $100K+ business that fits around your life — not the other way around"]</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Module Breakdown Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Section Header + Intro</div>
+      <p>What's Inside [Course Name]
+
+[X] modules. [X]+ lessons. [Total hours] of over-the-shoulder training. Everything you need to [achieve the outcome] — nothing you don't.</p>
+    </div>
+    <div class="copy-block">
+      <div class="copy-label">Module Breakdown Format (repeat for each module)</div>
+      <p>MODULE [#]: [Module Title]
+[One sentence that describes the transformation this module delivers]
+
+In this module, you'll discover:
+→ [Lesson 1 benefit — what they'll be able to do, not just what they'll "learn"]
+→ [Lesson 2 benefit]
+→ [Lesson 3 benefit]
+→ [Exercise/worksheet description]
+
+By the end of this module, you'll have [specific tangible deliverable — e.g., "a complete client onboarding system ready to use with your first client"].</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Instructor Credibility Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Full Template</div>
+      <p>Who Is [Your Name]?
+
+[Your name] is a [professional identity — e.g., "freelance copywriter and business coach"] who has [specific credibility proof — e.g., "generated $1.2M in client revenue over the past 4 years and helped 300+ writers build profitable freelance businesses"].
+
+[Short origin story — 2-3 sentences about where you started and what made you qualified to teach this. Make it relatable. If you struggled, say so. Buyers trust people who've been where they are.]
+
+[What you're known for — specific methodology or approach that sets you apart. "I'm known for the [Framework Name] — a 5-step system that [unique promise]."]
+
+[Social proof signals — publications, podcasts, communities, employers, clients, alumni results. "My students have gone on to [impressive outcomes — e.g., 'land clients at Shopify, Apple, and Google', 'replace their 9-5 income in under 6 months', 'publish in Fast Company and Forbes']."]
+
+[Why you built this course — make it human. "I built [Course Name] because I spent [time] figuring this out the hard way, and I want to compress that timeline for you."]</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Testimonial / Social Proof Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Section Structure</div>
+      <p>Don't just say "students love this course." Show the specific outcome each testimonial represents.
+
+FORMAT FOR EACH TESTIMONIAL:
+"[Quote that describes the specific result, not just 'this course is amazing']"
+
+— [First Name Last Name], [Title/Role], [Location or Company]
+
+Result: [One-line outcome — e.g., "Went from $0 to $4,200/month in 10 weeks"]
+
+PLACEMENT STRATEGY:
+• 1 testimonial near the top of the page (above the fold if possible)
+• 3–5 testimonials after the module breakdown
+• 2–3 testimonials directly above the pricing section
+• 1 strong testimonial adjacent to your money-back guarantee
+
+FOR NEW COURSES WITH NO TESTIMONIALS:
+Use beta tester results, outcomes from free workshops, 1:1 coaching results, or quotes from people who previewed the material. Always be transparent about the context.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Bonus Stack Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Full Template</div>
+      <p>But Wait — You Also Get These [X] Bonuses (Total Value: $[X])
+
+Great bonuses are not random. Each bonus should address a specific objection or accelerate a specific result from the core course.
+
+BONUS #1: [Name of Bonus] — Value: $[X]
+[One paragraph describing what it is, what problem it solves, and why it's relevant to the core course outcome. Be specific. "You'll get my complete email script library — 23 proven templates for every situation you'll face as a freelancer, from first pitch to scope change request. These took me 4 years to write and refine. You can use them tomorrow."]
+
+BONUS #2: [Name of Bonus] — Value: $[X]
+[Same format — specific, benefit-driven, tied to an objection or accelerator]
+
+BONUS #3: [Name of Bonus] — Value: $[X]
+[Same format]
+
+These bonuses are only available when you enroll during the [launch period / at this price]. After [date/condition], they're removed from the package.
+
+Combined Value: $[Total]
+Your Investment Today: $[Course Price]</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Pricing / CTA Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Full Template</div>
+      <p>Your Investment
+
+[SELF-STUDY TIER NAME] — $[PRICE]
+[List what's included]
+[CTA Button: "Enroll in Self-Study →"]
+
+[GUIDED TIER NAME] — $[PRICE] ★ Most Popular
+[List what's included]
+[CTA Button: "Enroll in Guided →"]
+
+[VIP TIER NAME] — $[PRICE]
+[List what's included]
+[CTA Button: "Apply for VIP →"]
+
+OR pay in [X] installments of $[amount/month].
+
+---
+
+Our Guarantee
+
+[Course Name] comes with a [30]-day, no-questions-asked money-back guarantee. If you complete the first [X] modules, do the exercises, and don't feel you're on track to [achieve the outcome], email us and we'll refund you in full. We stand behind this course completely.
+
+Questions? Email [email] and we'll get back to you within [X] hours.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>FAQ Section — 10 Questions Written Out</h3>
+    <ol class="num-list">
+      <li>
+        <div>
+          <strong>How long does it take to complete the course?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">Most students complete [Course Name] in [4–6 weeks] when putting in [5 hours per week]. That said, you have lifetime access, so you can go at your own pace. Some students sprint through it in a weekend; others take 3 months. Either approach works — what matters is that you implement as you go.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Do I need any prior experience or specific tools?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">No prior experience is required. You'll need [list any tools — e.g., "a free Google account and a laptop"]. Any paid tools we recommend have free tiers or free trials that are more than sufficient for getting started. We'll walk you through every setup step inside the course.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>What if I fall behind or get stuck?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">Life happens. Guided and VIP students have access to live Q&amp;A calls where you can get unstuck in real time. All students have access to our community where you can post questions and get answers from fellow students and our team. Nobody gets left behind.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Is this a live course or pre-recorded?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">The core curriculum is pre-recorded — so you can access it any time, pause, rewind, and revisit as needed. Guided and VIP students also get access to [X] live calls throughout the program. All live calls are recorded and available in your student dashboard within 24 hours.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>How is this different from free content on YouTube?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">Free content is fragmented, inconsistent in quality, and designed to entertain — not transform. [Course Name] is a structured, sequenced system designed specifically to take you from [before state] to [after state] in the most direct path possible. You also get templates, exercises, community support, and direct access to us — none of which YouTube provides.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>What if I don't get results?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">We have a [30]-day money-back guarantee. If you complete the course modules, do the exercises, and still don't feel like you're on track, email us for a full refund. No hoops, no hassle. That said, results depend on your implementation — we provide the system, you provide the effort.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Can I do this while working a full-time job?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">Absolutely — this is exactly how most of our successful students start. You need [X hours per week] of focused work time. Many students work on this early mornings, evenings, or weekends. The self-paced format makes it easy to fit around your current schedule.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>When does the course open / close?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">This enrollment window closes at [time/date]. After that, the course will be [closed until the next cohort / available at the full evergreen price of $X]. If you're on the fence, now is the time to decide — both the price and the bonuses change after this window closes.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Do I get lifetime access?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">Yes. Once you enroll, you have lifetime access to all course materials, including any future updates. We update the curriculum at least once per year, and you get all updates at no additional charge. Enroll once, benefit forever.</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>I have a specific question not answered here — who do I contact?</strong><br>
+          <span style="color:rgba(242,242,242,0.65)">Email us at [email address] and we'll respond within [X hours/1 business day]. We read and respond to every email personally during launch. If you'd prefer to talk it through, we also have [office hours / a quick-chat option] — just reply to any of our emails to schedule time.</span>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Final CTA Section</h3>
+    <div class="copy-block">
+      <div class="copy-label">Full Closing Copy</div>
+      <p>Here's the thing.
+
+A year from now, you'll either have [the specific outcome the course delivers] — or you'll be exactly where you are today, still trying to figure it out on your own.
+
+The information you need exists. The question is whether you're going to get it in a structured, proven system — or keep piecing together blog posts and YouTube videos and hoping something clicks.
+
+[Course Name] gives you the exact path. No fluff. No filler. Just the frameworks, templates, and step-by-step guidance that has helped [X]+ students [achieve the outcome].
+
+The door closes [date/time]. After that, [price goes up / bonuses are removed / enrollment closes].
+
+[YES — I'm Ready to [Achieve Outcome] →]
+
+Questions? Email [email]. We're here.
+
+— [Your Name]
+
+P.S. Remember: you're backed by a [30]-day money-back guarantee. If you do the work and it's not what we promised, you get a full refund. The only real risk is not trying.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 5 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase5">
+  <div class="phase-label">Phase 5</div>
+  <h2>7-Email Launch Sequence — All Emails Written in Full</h2>
+  <p class="phase-intro">This sequence runs over 7 days with cart open. Adapt the copy to your course topic, audience, and voice. Every subject line and preview text is optimized for open rates. Every email has one job.</p>
+
+  <!-- EMAIL 1 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 1 of 7 — Day 1 (Send at 9am)</div>
+      <div class="email-subject">Subject: It's finally here (and it almost didn't happen)</div>
+      <div class="email-preview">Preview text: I almost didn't build this. Here's why I did anyway...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+I have something I've been working on for months — and today it's finally ready.
+
+But before I tell you what it is, I want to tell you the story of why it exists.
+
+About [X years/months] ago, I was exactly where you might be right now: [describe the "before state" in vivid, specific detail — the struggle, the frustration, the failed attempts, the cost of staying stuck].
+
+I tried [what you tried]. I read [what you read]. I invested in [coaching/courses/tools that didn't work]. And for a long time, I thought the problem was me.
+
+It wasn't.
+
+The problem was that nobody had given me a clear, step-by-step system. There was plenty of "what to do" advice out there. What was missing was the "how, exactly, for someone in my specific situation."
+
+So I figured it out the hard way. Over [timeframe], I built, tested, and refined a framework that finally produced [the specific result]. And then I used that same framework to help [X] private clients achieve [the same result].
+
+The results were [specific outcomes from clients or your own experience].
+
+Today, I'm packaging everything I've learned — every template, every framework, every "I wish someone had told me this" lesson — into a single, comprehensive course.
+
+It's called [Course Name].
+
+[Course Name] is a [number]-module program that takes you from [before state] to [after state] in [timeframe]. It includes [key features — over-the-shoulder lessons, fill-in-the-blank templates, live Q&A calls, community access].
+
+It opens for enrollment right now, and it closes on [closing date/time].
+
+I'll share all the details over the next few days. But if you're already curious, you can check out the full details here:
+
+→ [Link to Sales Page]
+
+More tomorrow.
+
+— [Your Name]
+
+P.S. Founding Member pricing is available for the next [X days] only. If you've been thinking about [the course topic], this is the lowest price this course will ever be. Full details at the link above.</div>
+  </div>
+
+  <!-- EMAIL 2 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 2 of 7 — Day 2 (Send at 9am)</div>
+      <div class="email-subject">Subject: The #1 mistake [your audience] make (and how to fix it)</div>
+      <div class="email-preview">Preview text: I see this mistake constantly. It's costing people months of progress...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+Yesterday I announced [Course Name] and told you why I built it.
+
+Today I want to talk about the single biggest mistake I see [your target audience] make — one that costs them months of wasted effort and thousands of dollars.
+
+The mistake is: [State the counterintuitive mistake clearly and specifically].
+
+Here's what this looks like in practice:
+
+[Describe the mistake in action — what does someone doing this wrong look like? What does their week, their output, their results look like? Be specific. Use a story or example if possible.]
+
+I see this constantly. And I understand why it happens — because [the logical reason why someone would make this mistake — make them feel understood, not stupid].
+
+The problem is that [the mistake] produces [specific negative consequence]. Instead of getting [the desired result], you end up with [the frustrating outcome].
+
+The fix is [the correct approach — brief overview only, not the full course]. And it's actually simpler than most people think.
+
+Specifically, the shift is from [wrong approach] to [right approach]. When [your target audience] makes this shift, [what changes — what becomes possible].
+
+In [Course Name], I walk you through exactly how to make this shift in Module [X]. We go deep on [specific lesson or framework], and by the end of that module, you'll have [specific deliverable].
+
+If you're ready to stop [the costly mistake] and start [the better way]:
+
+→ [Enrollment Link — Get Access to Course Name]
+
+Founding Member pricing closes [date]. More tomorrow.
+
+— [Your Name]
+
+P.S. I'm curious — have you been caught in this mistake? Hit reply and tell me. I read every response personally and I'll share some of the answers (anonymized) later this week.</div>
+  </div>
+
+  <!-- EMAIL 3 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 3 of 7 — Day 3 (Send at 9am)</div>
+      <div class="email-subject">Subject: How [Student Name] went from [before] to [after] in [timeframe]</div>
+      <div class="email-preview">Preview text: [He/She/They] was exactly where you might be right now. Here's what changed...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+I want to introduce you to [Student First Name].
+
+[Student Name] came to me [timeframe ago] as a [description of their before state — specific situation, frustrations, what they'd already tried].
+
+Sound familiar?
+
+[Student Name] had been [doing the thing that wasn't working] for [time period] with little to show for it. [He/She/They] was [specific emotional state — exhausted, discouraged, about to give up].
+
+That's when [he/she/they] found [Course Name / your methodology].
+
+Here's what happened:
+
+In week 1, [specific action they took and specific early result]. Not huge, but real — and enough to believe something was different this time.
+
+By week 4, [specific milestone]. [He/She/They] told me: "[Direct quote from student about the experience or result at this point]."
+
+By the end of the [course duration / program], [Student Name] had [the specific, measurable transformation]. [Include a specific number, specific outcome, specific life change if possible].
+
+In [his/her/their] own words:
+
+"[Full testimonial quote — 3-5 sentences, specific, including the before state, what changed, and the after state]"
+
+— [Student Full Name, title/role/location]
+
+[Student Name]'s story is not unique. I've seen [X]+ students go through this same transformation using the system in [Course Name].
+
+The difference between them and the people who stay stuck is simple: they decided to invest in a proven path instead of trying to figure it out alone.
+
+If you're ready to have your own version of [Student Name]'s story:
+
+→ [Enrollment Link]
+
+Founding Member pricing ends [date/time].
+
+— [Your Name]
+
+P.S. I'll be sharing what's inside the course in tomorrow's email — a detailed look at every module and what you'll be able to do by the end of it.</div>
+  </div>
+
+  <!-- EMAIL 4 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 4 of 7 — Day 4 (Send at 9am)</div>
+      <div class="email-subject">Subject: Here's exactly what's inside [Course Name]</div>
+      <div class="email-preview">Preview text: A full breakdown of every module — what you'll learn and what you'll be able to do after...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+I know some of you are visual processors who want to see exactly what you're getting before making a decision.
+
+This email is for you.
+
+Here's a complete breakdown of every module inside [Course Name]:
+
+---
+
+MODULE 0: START HERE (15 minutes)
+The orientation module sets you up for success. You'll understand the full path ahead, set your personal goal for the course, and complete your first action — [specific first action]. Students who complete this module have a 3× higher completion rate than those who skip it.
+
+---
+
+MODULE 1: [MODULE TITLE] ([estimated time])
+[2-3 sentences describing what this module covers and the specific outcome. Focus on what students will be able to DO, not just what they'll "learn."]
+
+Lessons include:
+• [Lesson 1 title and benefit]
+• [Lesson 2 title and benefit]
+• [Lesson 3 title and benefit]
+• [Exercise/worksheet]
+
+By the end, you'll have: [Specific tangible deliverable]
+
+---
+
+MODULE 2: [MODULE TITLE] ([estimated time])
+[Same format]
+
+---
+
+MODULE 3: [MODULE TITLE] ([estimated time])
+[Same format]
+
+---
+
+MODULE 4: [MODULE TITLE] ([estimated time])
+[Same format]
+
+---
+
+MODULE 5: [CAPSTONE + NEXT STEPS] ([estimated time])
+[Same format — describe the capstone project and what students leave with]
+
+---
+
+PLUS, you also get:
+✓ [Bonus #1 name and brief description]
+✓ [Bonus #2 name and brief description]
+✓ [Bonus #3 name and brief description]
+✓ [Community access / Live calls / etc.]
+
+---
+
+Total value: $[Total]
+Your Founding Member price: $[Course Price]
+
+Enrollment closes [date/time].
+
+→ [Enrollment Link — I'm Ready to Enroll]
+
+Questions before you decide? Reply to this email. I'm checking every few hours during launch week and respond personally.
+
+— [Your Name]</div>
+  </div>
+
+  <!-- EMAIL 5 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 5 of 7 — Day 5 (Send at 9am)</div>
+      <div class="email-subject">Subject: "But what about [objection]?" — I answer your questions</div>
+      <div class="email-preview">Preview text: The questions I've received this week — answered honestly...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+I've received a lot of questions this week — more than 200 replies so far, which tells me this topic is hitting a real nerve.
+
+I want to address the most common ones honestly:
+
+---
+
+Q: "I don't have [time / money / technical skills / the right situation]. Is this really for me?"
+
+A: I hear this one a lot, and I want to be honest with you: [Course Name] is designed for people who are [realistic description of who the course is actually for]. If you're [describe a situation where someone genuinely might not be ready], this course probably isn't the right fit right now.
+
+But if you're [describe who IS a good fit], then the [time / money / skills] concern is the exact thing this course addresses. Students have come in with [less than what you think you need] and come out the other side with [the result]. The system works. The question is whether you're willing to follow it.
+
+---
+
+Q: "How is this different from [alternative — another course, YouTube, books, coaching]?"
+
+A: [Clear, honest differentiation. What makes this unique — methodology, your experience, the format, the community, the support structure? Be specific about what they won't get elsewhere.]
+
+---
+
+Q: "What if I get in and realize it's not right for me?"
+
+A: You have [30] days to try the course completely risk-free. If you complete the first [X] modules, do the exercises, and don't feel like you're on your way to [the outcome], email me for a full refund. No games, no interrogation, no hoops. You have my word on that.
+
+---
+
+Q: "Is the price going to go up after this?"
+
+A: Yes, genuinely. After [closing date/time], the price goes to $[new price] and the [bonuses / founding member perks] are removed. I'm not creating artificial urgency — the Founding Member pricing is specifically for the people who helped me build this in its early stage. That phase ends [date].
+
+---
+
+Q: "Can I do this at my own pace?"
+
+A: Absolutely. The content is self-paced. The only live elements are [X] Q&A calls, which are recorded for anyone who can't attend live. You have lifetime access to everything.
+
+---
+
+Still have a question? Reply to this email. If it's a common one, I may include it in a future email.
+
+Ready to enroll?
+
+→ [Enrollment Link — Join Course Name]
+
+Enrollment closes [date/time] — 48 hours from now.
+
+— [Your Name]</div>
+  </div>
+
+  <!-- EMAIL 6 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 6 of 7 — Day 6 (Send at 9am)</div>
+      <div class="email-subject">Subject: 24 hours left (and a question for you)</div>
+      <div class="email-preview">Preview text: The cart closes tomorrow night. Before then, I want to ask you something...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+Enrollment for [Course Name] closes tomorrow at [time/timezone].
+
+After that, the Founding Member price goes away. The [specific bonus] goes away. And the next time I open enrollment, the price will be $[higher price].
+
+I want to ask you something directly.
+
+What would it mean for your [life / business / career] if, [timeframe] from now, you had [the specific outcome the course delivers]?
+
+What would change? What would you stop worrying about? What would become possible?
+
+I ask because I've found that people who answer this question clearly — who can feel what's on the other side — are the ones who enroll, follow through, and get results.
+
+People who stay vague stay stuck.
+
+[Course Name] is not going to do the work for you. That part is on you. But it will give you the clearest possible path, the most useful possible tools, and a community of people taking the same journey alongside you.
+
+[X]+ students have already enrolled this week. Over the next [timeframe], they'll be [achieving the course outcome]. Some of them will be where you are today in [timeframe from now].
+
+You can be one of them.
+
+→ [Enrollment Link — Join Before the Deadline]
+
+The cart closes at [time/timezone] tomorrow — [Day, Date].
+
+If you're on the fence, reply to this email and tell me what's holding you back. I've got one more day to help you make the right decision for you.
+
+— [Your Name]
+
+P.S. Here's a reminder of everything you get when you enroll today:
+✓ [Course Name] — [X] modules, [X]+ lessons
+✓ [Bonus #1]
+✓ [Bonus #2]
+✓ [Bonus #3]
+✓ [Live calls / community / support]
+✓ Lifetime access + all future updates
+✓ 30-day money-back guarantee
+
+All for $[Price] — Founding Member pricing, one more day only.</div>
+  </div>
+
+  <!-- EMAIL 7 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Email 7 of 7 — Day 7 (Send at 8am + follow-up at 6pm)</div>
+      <div class="email-subject">Subject: [CLOSING TONIGHT] Last chance for Course Name</div>
+      <div class="email-preview">Preview text: Cart closes at midnight. This is the last email about this...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+Today is the last day to enroll in [Course Name] at Founding Member pricing.
+
+At midnight [timezone], the cart closes. The price goes to $[higher price]. The bonuses come down. The door closes.
+
+I'm not going to write a long email today.
+
+Either you're in, or you're not. And only you can make that call.
+
+What I will say is this:
+
+The people who are going to be [achieving the outcome] [timeframe] from now are the people who decide today. Not someday. Today.
+
+If you've been reading these emails all week and something in you keeps coming back to this offer — that's worth listening to. That pull you feel toward [the outcome] is real. The question is whether you're going to act on it.
+
+You have until tonight.
+
+→ [Enrollment Link — Join Before Midnight]
+
+---
+
+[6PM FOLLOW-UP — Send as a separate email or same thread]
+
+Subject: 6 hours left — [Course Name] closes at midnight
+
+Hey [First Name],
+
+Six hours.
+
+At midnight, enrollment closes and the Founding Member price is gone permanently.
+
+If today is the day you decide to [achieve the course outcome], this is the moment.
+
+→ [Enrollment Link — Last Chance]
+
+If now isn't the right time, no worries at all. I'll be back with more [valuable content related to your topic] in [X days]. But I won't reopen at this price again.
+
+Thank you for reading along this week. Whether or not you enroll, I'm grateful for your attention.
+
+— [Your Name]
+
+P.S. Questions in the last 6 hours? Reply now. I'm watching my inbox until midnight.</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 6 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase6">
+  <div class="phase-label">Phase 6</div>
+  <h2>Student Onboarding Sequence</h2>
+  <p class="phase-intro">What happens after purchase determines completion rates, testimonials, and referrals. Most course creators treat the sale as the finish line. It's actually the starting line.</p>
+
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Onboarding Email 1 — Sent Immediately After Purchase</div>
+      <div class="email-subject">Subject: You're in — here's how to get started right now</div>
+      <div class="email-preview">Preview text: Welcome to [Course Name]. Your first step is simpler than you think...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+Welcome to [Course Name]. I'm genuinely excited you're here.
+
+You just made a real decision — and decisions like this have a way of compounding. I've watched [X]+ students make this exact move and come out the other side with [the transformation]. You're next.
+
+Here's exactly what to do right now:
+
+STEP 1: Access your course
+Your login details are below. Click here to access your student dashboard:
+→ [Course Platform Login Link]
+
+Username: [their email]
+Password: [temporary password or "check your separate login email"]
+
+STEP 2: Start with Module 0
+I know it's tempting to skip the orientation and dive into the "real" content. Please don't. Module 0 takes 15 minutes and will dramatically increase your results. It sets the foundation for everything else.
+
+STEP 3: Download your Course Workbook
+Your workbook is in the Module 0 resources section. Download it now and keep it open as you work through the course. Students who use the workbook complete 4× more modules than those who don't.
+
+STEP 4: Join the community
+[Course Name] students have access to our private [community platform — Slack/Circle/Facebook Group]. Join here:
+→ [Community Link]
+
+Introduce yourself in the #introductions channel. Tell us: your name, where you're starting from, and your #1 goal for this course. This single act of accountability increases your completion rate significantly.
+
+---
+
+A note from me:
+
+The fact that you bought this course means nothing without action. I know that sounds harsh, but I mean it with respect: I've seen students who buy every course and implement none of them. I don't want that for you.
+
+Module 0 takes 15 minutes. That's all I'm asking for today.
+
+Go do it now, while the energy of this decision is still fresh. Then come back and introduce yourself in the community.
+
+I'll be checking in on you over the next few weeks.
+
+Welcome to the other side.
+
+— [Your Name]
+
+P.S. Reply to this email if you have any trouble accessing the course. We respond to all support emails within [X hours].</div>
+  </div>
+
+  <div class="card">
+    <h3>Getting Started Guide Template</h3>
+    <p>This is a PDF or in-platform document that lives in Module 0. It gives students everything they need to begin with confidence.</p>
+    <div class="copy-block">
+      <div class="copy-label">Getting Started Guide Structure</div>
+      <p>WELCOME TO [COURSE NAME]
+
+Congratulations on enrolling. This guide covers everything you need to know to get the most out of your experience.
+
+YOUR GOAL FOR THIS COURSE:
+[Leave space for students to write their specific goal]
+
+THE PATH AHEAD:
+[Brief overview of the 3-act structure — what they'll do in Act 1 / 2 / 3]
+
+RECOMMENDED PACE:
+Option A (Sprint): Complete 1 module per day for [X] days
+Option B (Balanced): Complete 1 module per week for [X] weeks
+Option C (Slow Burn): Complete 2–3 lessons per week, done in [X] months
+
+All options lead to the same place. Choose based on your current schedule.
+
+YOUR STUDY SETUP:
+• Keep the workbook open in a second window as you watch
+• Pause after each major concept and write your own version
+• Don't move to the next lesson until you've completed the exercise
+• Post your exercise completions in the community — accountability is the real secret
+
+TECH REQUIREMENTS:
+[List any tools, accounts, or setups students should have ready before starting]
+
+HOW TO GET HELP:
+• Community: [Link] — fastest response, great peer support
+• Live calls: [Schedule and link] — for Guided and VIP students
+• Email: [Support email] — response within [X hours]
+
+YOUR FIRST WIN:
+Before doing anything else, go to Lesson 0.3 and complete [the first exercise]. Take 10 minutes right now. This is your proof that you're serious about this.
+
+I'll see you inside.
+
+— [Your Name]</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Community / Slack Onboarding</h3>
+    <p>A strong community dramatically increases completion rates and creates the peer-to-peer learning that makes your course feel premium. Structure your community channels before the first student arrives.</p>
+    <h4>Recommended Channel Structure</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Channel Name</th><th>Purpose</th><th>Who Posts</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>#announcements</td><td>Course updates, call schedules, important info</td><td>Admin only</td></tr>
+          <tr><td>#introductions</td><td>New student welcome posts</td><td>All students</td></tr>
+          <tr><td>#module-[1-5]-wins</td><td>Share completed exercises</td><td>All students</td></tr>
+          <tr><td>#questions</td><td>Course content questions</td><td>All students</td></tr>
+          <tr><td>#accountability</td><td>Weekly goals + check-ins</td><td>All students</td></tr>
+          <tr><td>#share-your-work</td><td>Projects, portfolios, real-world application</td><td>All students</td></tr>
+          <tr><td>#wins</td><td>Celebrate results (major milestone only)</td><td>All students</td></tr>
+          <tr><td>#resources</td><td>Tools, articles, external links</td><td>Admin + students</td></tr>
+          <tr><td>#vip-only</td><td>Exclusive channel for VIP tier students</td><td>VIP students</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Community Activation Script (Post This in #Announcements on Day 1)</h4>
+    <div class="copy-block">
+      <div class="copy-label">Day 1 Community Welcome Post</div>
+      <p>Welcome to the [Course Name] community, [First Name]!
+
+You're officially part of a group of [X]+ people who have decided to [achieve the outcome]. That's not a small thing.
+
+Three things to do right now:
+
+1. Introduce yourself in #introductions — name, where you're starting, and your #1 goal
+2. Set your community notification settings — I recommend "all messages" for the first week
+3. Post your Module 0 completion in #module-1-wins when you finish it
+
+I'll be in here every [day(s) of week] to answer questions and celebrate wins. If you're stuck on anything, tag me directly (@[your name]) and I'll get to you.
+
+The people who get the best results from this course are always the ones who show up here. The content is the system. The community is the accountability that makes the system work.
+
+Let's go.</p>
+    </div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Onboarding Email 2 — Day 30 Check-In</div>
+      <div class="email-subject">Subject: A quick check-in — how's [Course Name] going?</div>
+      <div class="email-preview">Preview text: 30 days in. Where are you? What's working? What isn't?</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+It's been 30 days since you joined [Course Name], and I wanted to check in personally.
+
+Where are you in the course? (No judgment — I know life gets in the way.)
+
+If you've been powering through: incredible. What's been your biggest win so far? What surprised you most? Reply and tell me — I genuinely want to know.
+
+If you've fallen behind: that's okay, and it's more common than you think. The course isn't going anywhere. But I want to help you re-engage before the momentum fades completely.
+
+Here's what I recommend if you're behind:
+
+1. Block 90 minutes this week — not "when I have time," but actually on your calendar right now.
+
+2. Pick up exactly where you left off — don't start over. Just open the last lesson you completed and do the next one.
+
+3. Post in the community — tell us where you are and what you're going to do this week. Public commitment is the single most effective way to re-activate.
+
+If something specific has gotten in the way — a question, a concept that confused you, a life situation — reply and tell me. I can help.
+
+You didn't invest in [Course Name] to let it collect digital dust. I'd rather help you get across the finish line than have you feel like it was wasted.
+
+Where are you at?
+
+— [Your Name]</div>
+  </div>
+
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-num">Onboarding Email 3 — Day 45 Testimonial Request</div>
+      <div class="email-subject">Subject: Would you share your experience? (Takes 5 minutes)</div>
+      <div class="email-preview">Preview text: If [Course Name] has made a difference, I'd love to hear about it...</div>
+    </div>
+    <div class="email-body">Hey [First Name],
+
+You've been in [Course Name] for about 45 days, and I hope you've had some wins to show for it.
+
+I have a favor to ask — and I want to be completely transparent about what it's for.
+
+I'm collecting testimonials and case studies from students who've had real results. These go on the course sales page and help other people like you decide whether [Course Name] is right for them.
+
+If you've gotten value from the course, I'd love a quick testimonial. Here's a simple framework:
+
+1. WHERE YOU STARTED — What was your situation before the course? What were you struggling with?
+2. WHAT HAPPENED — What specific lessons, frameworks, or tools made the biggest difference for you?
+3. WHERE YOU ARE NOW — What result have you achieved? Be as specific as possible. Numbers are gold.
+
+You can reply directly to this email with a paragraph or two. It takes about 5 minutes. You'll help future students make a better decision — and you'll help me build a better product by knowing what's working.
+
+If you're comfortable with it, I'd love to use your full name and title. If you'd prefer first name only or anonymized, just say so.
+
+One more thing: if you've had a truly exceptional result — the kind of story that would make someone's jaw drop — I'd love to do a short recorded case study interview with you (20 minutes, totally casual, I'll send the questions in advance). These case studies help so many people. Reply and let me know if you're open to it.
+
+And if you haven't gotten to the part of the course where the results kick in yet — no worries. Keep going. I'll check in again soon.
+
+Thank you for being part of this.
+
+— [Your Name]</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 7 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase7">
+  <div class="phase-label">Phase 7</div>
+  <h2>Platform Comparison</h2>
+  <p class="phase-intro">Choosing the right platform affects your student experience, your revenue, your marketing capabilities, and your scalability. Here's an honest side-by-side comparison of the five most popular options.</p>
+
+  <div class="card">
+    <h3>Teachable vs Kajabi vs Podia vs Thinkific vs Gumroad</h3>
+    <div class="table-wrap">
+      <table class="platform-table">
+        <thead>
+          <tr><th>Feature</th><th>Teachable</th><th>Kajabi</th><th>Podia</th><th>Thinkific</th><th>Gumroad</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Starting Price/mo</strong></td>
+            <td>$59 (Basic)</td>
+            <td>$149 (Basic)</td>
+            <td>$39 (Mover)</td>
+            <td>$49 (Basic)</td>
+            <td>$0 (10% fee)</td>
+          </tr>
+          <tr>
+            <td><strong>Transaction Fees</strong></td>
+            <td class="partial">0–5% (plan-dependent)</td>
+            <td class="yes">0%</td>
+            <td class="yes">0%</td>
+            <td class="yes">0%</td>
+            <td class="no">10% flat</td>
+          </tr>
+          <tr>
+            <td><strong>Email Marketing Built-in</strong></td>
+            <td class="no">No</td>
+            <td class="yes">Yes (full)</td>
+            <td class="yes">Yes (basic)</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Landing Page Builder</strong></td>
+            <td class="partial">Basic</td>
+            <td class="yes">Full (Kajabi Pages)</td>
+            <td class="partial">Basic</td>
+            <td class="partial">Basic</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Sales Funnel / Pipeline</strong></td>
+            <td class="no">No</td>
+            <td class="yes">Yes (Pipelines)</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Community Feature</strong></td>
+            <td class="no">No</td>
+            <td class="yes">Yes (Kajabi Community)</td>
+            <td class="yes">Yes</td>
+            <td class="partial">Basic (Thinkific Communities)</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Membership / Subscription</strong></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="partial">Limited</td>
+          </tr>
+          <tr>
+            <td><strong>Affiliate Program</strong></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+          </tr>
+          <tr>
+            <td><strong>Course Completion Certs</strong></td>
+            <td class="yes">Yes</td>
+            <td class="partial">Limited</td>
+            <td class="no">No</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Mobile App</strong></td>
+            <td class="yes">Yes (Teachable app)</td>
+            <td class="yes">Yes (Kajabi app)</td>
+            <td class="no">No</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Video Hosting</strong></td>
+            <td class="yes">Unlimited (all plans)</td>
+            <td class="yes">Unlimited</td>
+            <td class="yes">Unlimited</td>
+            <td class="yes">Unlimited</td>
+            <td class="partial">Limited (file size cap)</td>
+          </tr>
+          <tr>
+            <td><strong>Analytics</strong></td>
+            <td class="partial">Moderate</td>
+            <td class="yes">Strong</td>
+            <td class="partial">Basic</td>
+            <td class="yes">Strong</td>
+            <td class="no">Basic</td>
+          </tr>
+          <tr>
+            <td><strong>Ease of Use</strong></td>
+            <td class="yes">Easy</td>
+            <td class="partial">Moderate (feature-heavy)</td>
+            <td class="yes">Very Easy</td>
+            <td class="yes">Easy</td>
+            <td class="yes">Very Easy</td>
+          </tr>
+          <tr>
+            <td><strong>Best For</strong></td>
+            <td>Course-first creators</td>
+            <td>All-in-one businesses</td>
+            <td>Beginners, simplicity</td>
+            <td>Scalable course businesses</td>
+            <td>Digital products, first launch</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Our Recommendations by Stage</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Stage</th><th>Recommended Platform</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>First launch / testing</strong></td><td class="gold">Gumroad</td><td>Zero upfront cost. Sell fast. Validate before investing in infrastructure.</td></tr>
+          <tr><td><strong>First real course ($0–$5K/mo)</strong></td><td class="gold">Teachable or Podia</td><td>Low cost, easy setup, professional student experience. No features you don't need.</td></tr>
+          <tr><td><strong>Scaling ($5K–$30K/mo)</strong></td><td class="gold">Thinkific or Kajabi</td><td>Better analytics, affiliate management, and automation as you grow.</td></tr>
+          <tr><td><strong>Full business ($30K+/mo)</strong></td><td class="gold">Kajabi</td><td>All-in-one infrastructure for courses, email, community, funnels, and memberships.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PHASE 8 -->
+<!-- ============================================================ -->
+<section class="phase" id="phase8">
+  <div class="phase-label">Phase 8</div>
+  <h2>Post-Launch: Evergreen Funnel, Affiliates &amp; Course Updates</h2>
+  <p class="phase-intro">A successful launch is not the end of the story — it's proof of concept. Now you build the machine that sells the course while you sleep.</p>
+
+  <div class="card">
+    <h3>Evergreen Funnel Architecture</h3>
+    <p>An evergreen funnel allows your course to sell continuously, without a live launch. Here's the standard high-converting architecture:</p>
+    <ol class="num-list">
+      <li><strong>Traffic Source</strong> — Organic social, SEO blog content, YouTube, podcast appearances, or paid ads. All traffic flows to a single lead magnet opt-in page.</li>
+      <li><strong>Lead Magnet</strong> — A free resource that solves a specific micro-problem for your target student. Examples: a checklist, a template, a short guide, a mini-course, a quiz. Must be directly related to the paid course topic. Deliver it instantly after opt-in.</li>
+      <li><strong>Email Welcome Sequence (5–7 emails over 7–10 days)</strong> — Build relationship, deliver value, introduce the paid course offer. This is a condensed version of your launch sequence — same structure, evergreen content. End with a hard CTA to the sales page.</li>
+      <li><strong>Evergreen Webinar or VSL</strong> — A recorded webinar or video sales letter (30–60 minutes) that delivers a mini training and pitches the course at the end. Services like EverWebinar or WebinarJam automate this. Alternatively, a YouTube video or Loom with a clear CTA works for simpler funnels.</li>
+      <li><strong>Sales Page with Evergreen Urgency</strong> — Use a tool like Deadline Funnel to give each subscriber a personalized 3–5 day cart window. When they opt in, the clock starts. Their sales page shows a real countdown timer that expires for them personally. This creates genuine urgency without a live launch.</li>
+      <li><strong>Post-Purchase Onboarding</strong> — Immediately after purchase, the onboarding sequence from Phase 6 kicks in. Great onboarding = completion = testimonials = word-of-mouth referrals = more organic traffic.</li>
+      <li><strong>Retargeting Ads</strong> — Serve retargeting ads on Facebook/Instagram/YouTube to people who visited your sales page but didn't buy. Budget: $15–$30/day. These are your warmest prospects and the cheapest conversions you'll get from paid media.</li>
+    </ol>
+    <div class="highlight">
+      <p><strong>Funnel economics benchmark:</strong> A healthy evergreen funnel converts 1–3% of email opt-ins to paid course buyers. At $997/course and 1,000 opt-ins/month at 2% conversion = 20 sales = $19,940/month. At $15/lead (reasonable for a warm content-driven audience), that's $15,000 in ad spend for $19,940 in revenue. Profitable and scalable.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Affiliate Program Setup</h3>
+    <p>An affiliate program turns your happiest students and complementary-audience creators into a sales team that works on commission. Done right, affiliates can drive 20–40% of evergreen revenue.</p>
+    <h4>Commission Structure</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Affiliate Type</th><th>Commission</th><th>Cookie Duration</th><th>Payout Delay</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Standard affiliate</td><td>30–40%</td><td>30–60 days</td><td>30 days (refund window)</td></tr>
+          <tr><td>Student affiliate</td><td>25–30% + bonus</td><td>30 days</td><td>30 days</td></tr>
+          <tr><td>Partner/influencer</td><td>40–50%</td><td>60–90 days</td><td>30 days</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Affiliate Kit — What to Give Every Affiliate</h4>
+    <ul class="check-list">
+      <li>Unique tracking link (set up via Teachable/Kajabi built-in or Rewardful/PartnerStack)</li>
+      <li>Pre-written email swipe copy (2–3 email variations they can send to their list)</li>
+      <li>Pre-written social posts (5–10 across Instagram, LinkedIn, Twitter/X, Facebook)</li>
+      <li>Promotional graphics (3–4 sizes: square, story, banner)</li>
+      <li>A short demo video or course tour they can share</li>
+      <li>FAQ document (what is the course, who is it for, what's the refund policy)</li>
+      <li>Real-time affiliate dashboard with clicks, conversions, and commissions</li>
+    </ul>
+    <h4>How to Recruit Affiliates</h4>
+    <ol class="num-list">
+      <li><strong>Start with your students</strong> — email graduates who got results. A student saying "this worked for me" converts better than any other marketing. Offer a bonus commission rate for students.</li>
+      <li><strong>Find complementary-audience creators</strong> — who serves the same audience as you but doesn't compete directly? A freelance course + a tools review blog, for example. Pitch them with your conversion data and their potential earnings.</li>
+      <li><strong>List on affiliate marketplaces</strong> — Commission Junction, ShareASale, Impact, or the platform-native affiliate marketplace (Teachable, Kajabi). Passive discovery from motivated affiliates.</li>
+      <li><strong>Run a launch affiliate program</strong> — recruit affiliates specifically for your live launch, offer a bonus prize for the top affiliate (cash, product credit, 1:1 coaching). Leaderboards create competition and motivation.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Course Update Cadence</h3>
+    <p>A living course is a better course — and updating it is one of the easiest ways to maintain premium pricing, earn re-enrollment, and keep your testimonials current.</p>
+    <h4>Quarterly Light Review</h4>
+    <p>Every quarter: review student Q&amp;A logs and community questions for recurring confusion. If the same question comes up 5+ times, that lesson needs to be clearer or a new lesson needs to be added. Update templates and tool references as platforms change.</p>
+    <h4>Annual Deep Review</h4>
+    <p>Once per year: review the entire curriculum end-to-end. Remove outdated content. Add new modules based on what you've learned from students. Update case studies and examples. This is also the moment to raise your evergreen price — "Updated for [year], with X new modules" is a legitimate value increase.</p>
+    <h4>How to Notify Students of Updates</h4>
+    <ul class="check-list">
+      <li>Email all current students with a changelog — what was added, what was updated, what was removed</li>
+      <li>Post in the community with a summary and encourage students to revisit updated modules</li>
+      <li>For major updates, consider hosting a live "what's new" Q&amp;A call for active students</li>
+      <li>Use the update as a re-launch marketing moment — "The course just got better, and here's how"</li>
+    </ul>
+    <h4>Version Control for Your Course</h4>
+    <p>Keep a simple changelog document (Google Doc or Notion page) that records every change with the date. This is invaluable for communicating value to students, for your own reference, and for making the case for price increases. "Version 3.0 — 40% new content, updated for [year]" is a compelling upsell or re-enrollment pitch to past students who might want the new material.</p>
+    <div class="highlight">
+      <p><strong>The long game:</strong> Course creators who build once and never update see declining conversion rates and stale reviews. Course creators who treat their course as a living product compound their authority, their alumni network, and their revenue every year. Commit to the update cadence before you launch.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="margin-top:64px;">
+
+<div class="doc-footer">
+  <p>Digital Course Creator Kit — Premium Resource</p>
+  <p>Part of the <a href="/">GetScrewedScore Resource Library</a></p>
+  <p style="margin-top:16px;">All templates, copy, and frameworks in this kit are for your personal and commercial use. Adapt freely to your course topic, voice, and audience.</p>
+</div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

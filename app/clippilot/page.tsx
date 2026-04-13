@@ -2,6 +2,7 @@ import {
   ArrowRight, Zap, Radio, Scissors, Subtitles, Share2,
   CheckCircle, BarChart3, Monitor, Crown, Cpu, Clapperboard,
 } from 'lucide-react'
+import CheckoutButton from './CheckoutButton'
 
 // ── Feature data ─────────────────────────────────────────────────────────────
 
@@ -81,6 +82,7 @@ const TIERS = [
       'Local Whisper captions',
     ],
     cta: 'Download Free',
+    productId: 'free',
     highlight: false,
   },
   {
@@ -96,6 +98,7 @@ const TIERS = [
       'Priority clip processing',
     ],
     cta: 'Get Pro',
+    productId: 'clippilot-pro',
     highlight: true,
     badge: 'Most Popular',
   },
@@ -112,6 +115,7 @@ const TIERS = [
       'Early access to new features',
     ],
     cta: 'Go Unlimited',
+    productId: 'clippilot-unlimited',
     highlight: false,
   },
 ]
@@ -416,7 +420,7 @@ if score ≥ threshold (default 50):
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
-              {TIERS.map(({ name, price, period, desc, features, cta, highlight, badge }) => (
+              {TIERS.map(({ name, price, period, desc, features, cta, productId, highlight, badge }) => (
                 <div
                   key={name}
                   className={`glass-card rounded-2xl p-7 flex flex-col gap-6 transition-all duration-300 ${
@@ -469,19 +473,7 @@ if score ≥ threshold (default 50):
                   </ul>
 
                   {/* CTA */}
-                  <a
-                    href="#download"
-                    className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02] ${
-                      highlight ? 'text-black' : 'text-brand-text border border-brand-border hover:bg-brand-muted'
-                    }`}
-                    style={highlight ? {
-                      background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
-                      boxShadow: '0 0 30px rgba(0,229,255,0.2)',
-                    } : {}}
-                  >
-                    {name !== 'Free' && <Crown className="w-3.5 h-3.5" />}
-                    {cta}
-                  </a>
+                  <CheckoutButton productId={productId} label={cta} highlight={highlight} />
                 </div>
               ))}
             </div>

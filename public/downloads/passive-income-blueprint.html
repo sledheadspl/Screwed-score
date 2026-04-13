@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Passive Income Blueprint — REMbyDesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#080808;--surface:#0f0f0f;--surface2:#141414;--border:#1c1c1c;--text:#f2f2f2;--sub:#777;--green:#30d158;--cyan:#00E5FF;--yellow:#ffd60a;--red:#ff3b30}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .page{max-width:820px;margin:0 auto;padding:60px 32px}
+  .doc-header{border-bottom:1px solid var(--border);padding-bottom:48px;margin-bottom:56px}
+  .doc-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;border:1px solid rgba(48,209,88,.3);background:rgba(48,209,88,.06);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:24px}
+  .doc-title{font-size:clamp(36px,6vw,58px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:16px}
+  .doc-subtitle{font-size:17px;color:rgba(242,242,242,.5);max-width:580px;line-height:1.6}
+  .doc-meta{display:flex;gap:16px;margin-top:24px;flex-wrap:wrap}
+  .doc-meta span{font-size:12px;color:var(--sub);border:1px solid var(--border);padding:4px 12px;border-radius:6px}
+  .toc{background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px 32px;margin-bottom:56px}
+  .toc-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-bottom:16px}
+  .toc ol{padding-left:20px}.toc li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:7px}
+  .toc a{color:rgba(242,242,242,.6);text-decoration:none;transition:color .15s}.toc a:hover{color:var(--green)}
+  .toc-sub{list-style:none;padding-left:16px;margin-top:6px}
+  .toc-sub li{font-size:12px;margin-bottom:4px;color:rgba(242,242,242,.4)}
+  .toc-sub a{color:rgba(242,242,242,.4)}.toc-sub a:hover{color:var(--green)}
+  .section{margin-bottom:72px}
+  .section-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+  .stream-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:28px;padding:24px 28px;background:rgba(48,209,88,.04);border:1px solid rgba(48,209,88,.12);border-radius:16px}
+  .stream-icon{font-size:32px;flex-shrink:0}
+  .stream-meta{}
+  .stream-label{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(48,209,88,.7);margin-bottom:6px}
+  h1.stream-title{font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:-.03em;color:var(--text);line-height:1.1;margin-bottom:8px}
+  .stream-tagline{font-size:14px;color:rgba(242,242,242,.45)}
+  h2{font-size:26px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:16px;line-height:1.2}
+  h2.overview-h{font-size:30px}
+  h3{font-size:18px;font-weight:700;color:var(--text);margin:32px 0 12px}
+  h4{font-size:13px;font-weight:700;color:rgba(242,242,242,.75);margin:22px 0 8px;text-transform:uppercase;letter-spacing:.08em}
+  p{color:rgba(242,242,242,.65);margin-bottom:14px}
+  ul,ol{padding-left:22px;margin-bottom:14px}
+  li{color:rgba(242,242,242,.6);font-size:14px;margin-bottom:6px;line-height:1.6}
+  strong{color:rgba(242,242,242,.9);font-weight:700}
+  .card{background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+  .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.6}
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+  .callout.green{background:rgba(48,209,88,.06);border:1px solid rgba(48,209,88,.2)}
+  .callout.yellow{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2)}
+  .callout.cyan{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2)}
+  .callout.red{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.2)}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  .callout-text{font-size:13px;color:rgba(242,242,242,.7);line-height:1.65}
+  .callout-text strong{color:var(--text)}
+  .steps{margin:20px 0}
+  .step{display:flex;gap:16px;margin-bottom:22px}
+  .step-num{width:32px;height:32px;border-radius:50%;background:rgba(48,209,88,.1);border:1px solid rgba(48,209,88,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--green);flex-shrink:0;margin-top:2px}
+  .step-content{}
+  .step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .step-desc{font-size:13px;color:rgba(242,242,242,.5);line-height:1.65}
+  .formula{background:#060606;border:1px solid rgba(48,209,88,.15);border-radius:8px;padding:14px 18px;font-family:'SF Mono','Fira Code','Fira Mono',monospace;font-size:12px;color:var(--green);margin:14px 0;overflow-x:auto;white-space:pre-wrap;line-height:1.8}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  th{background:rgba(15,15,15,0.8);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);border-bottom:1px solid rgba(255,255,255,0.06)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.035);color:rgba(242,242,242,.6);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td strong{color:rgba(242,242,242,.85)}
+  td.green{color:var(--green);font-weight:700}
+  td.yellow{color:var(--yellow);font-weight:600}
+  .projection-box{background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin:24px 0}
+  .projection-header{padding:16px 24px;background:rgba(48,209,88,.06);border-bottom:1px solid rgba(48,209,88,.12);display:flex;align-items:center;gap:10px}
+  .projection-header span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+  .projection-body{padding:20px 24px}
+  .proj-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .proj-row:last-child{border-bottom:none}
+  .proj-label{font-size:13px;color:rgba(242,242,242,.5)}
+  .proj-value{font-size:14px;font-weight:700;color:var(--green)}
+  .proj-value.yellow{color:var(--yellow)}
+  .proj-value.sub{color:rgba(242,242,242,.4);font-weight:400;font-size:12px}
+  .template-box{background:#060606;border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;margin:20px 0}
+  .template-header{padding:10px 18px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub)}
+  .template-body{padding:20px;font-size:13px;color:rgba(242,242,242,.65);line-height:1.9;white-space:pre-wrap}
+  .template-body strong{color:var(--green)}
+  .divider{height:1px;background:rgba(255,255,255,0.06);margin:56px 0}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0}
+  .stat-card{background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 18px}
+  .stat-value{font-size:24px;font-weight:900;letter-spacing:-.02em;color:var(--green);margin-bottom:4px}
+  .stat-label{font-size:11px;color:rgba(242,242,242,.4);font-weight:500;text-transform:uppercase;letter-spacing:.08em}
+  .platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+  .platform-card{background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 18px}
+  .platform-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px}
+  .platform-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:8px}
+  .platform-tag.best{background:rgba(48,209,88,.12);color:var(--green);border:1px solid rgba(48,209,88,.2)}
+  .platform-tag.good{background:rgba(255,214,10,.08);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
+  .platform-tag.niche{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+  .platform-detail{font-size:12px;color:rgba(242,242,242,.45);line-height:1.6}
+  .roadmap{margin:20px 0}
+  .roadmap-item{display:flex;gap:0;margin-bottom:0}
+  .roadmap-line{display:flex;flex-direction:column;align-items:center;margin-right:16px;flex-shrink:0}
+  .roadmap-dot{width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid rgba(48,209,88,.4);flex-shrink:0;margin-top:5px}
+  .roadmap-connector{width:2px;flex:1;background:rgba(48,209,88,.15);min-height:32px}
+  .roadmap-item:last-child .roadmap-connector{display:none}
+  .roadmap-content{padding-bottom:24px}
+  .roadmap-month{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+  .roadmap-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .roadmap-desc{font-size:13px;color:rgba(242,242,242,.45);line-height:1.6}
+  .stack-section{background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px 32px;margin-bottom:20px}
+  .stack-title{font-size:20px;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:8px}
+  .stack-sub{font-size:13px;color:rgba(242,242,242,.45);margin-bottom:20px}
+  .priority-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+  .priority-badge.p1{background:rgba(48,209,88,.1);color:var(--green);border:1px solid rgba(48,209,88,.25)}
+  .priority-badge.p2{background:rgba(255,214,10,.08);color:var(--yellow);border:1px solid rgba(255,214,10,.2)}
+  .priority-badge.p3{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+  .doc-footer{border-top:1px solid var(--border);padding-top:32px;margin-top:64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .doc-footer-brand{font-size:13px;font-weight:700;color:rgba(242,242,242,.3)}
+  .doc-footer-note{font-size:11px;color:rgba(242,242,242,.2)}
+  @media(max-width:600px){.page{padding:40px 20px}.stream-header{flex-direction:column;gap:12px}.stat-grid{grid-template-columns:repeat(2,1fr)}.platform-grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;color:#000}.page{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<div class="doc-header">
+  <div class="doc-badge">Premium Digital Product</div>
+  <h1 class="doc-title">Passive Income Blueprint</h1>
+  <p class="doc-subtitle">7 proven passive income streams for creators — each with a full implementation roadmap, income projections, and everything you need to start earning while you sleep.</p>
+  <div class="doc-meta">
+    <span>Value: $49</span>
+    <span>REMbyDesign</span>
+    <span>7 Income Streams</span>
+    <span>2026 Edition</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     TABLE OF CONTENTS
+============================================================ -->
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li><a href="#how-to-use">How to Use This Blueprint</a></li>
+    <li><a href="#overview">Overview: Passive Income Reality Check</a>
+      <ul class="toc-sub">
+        <li><a href="#myth-vs-reality">The Myth vs. Reality</a></li>
+        <li><a href="#three-tiers">The 3 Tiers of Passivity</a></li>
+        <li><a href="#income-stacking">The Income Stacking Concept</a></li>
+      </ul>
+    </li>
+    <li><a href="#stream1">Stream 1: Digital Products</a></li>
+    <li><a href="#stream2">Stream 2: Affiliate Marketing</a></li>
+    <li><a href="#stream3">Stream 3: Content Licensing &amp; Stock</a></li>
+    <li><a href="#stream4">Stream 4: Newsletter Sponsorships</a></li>
+    <li><a href="#stream5">Stream 5: Online Courses &amp; Education</a></li>
+    <li><a href="#stream6">Stream 6: Template Marketplaces</a></li>
+    <li><a href="#stream7">Stream 7: Royalties, Licensing &amp; Syndication</a></li>
+    <li><a href="#income-stack">The Income Stack: $0 to $5k/Month</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================
+     HOW TO USE
+============================================================ -->
+<div class="section" id="how-to-use">
+  <div class="section-num">Getting Started</div>
+  <h2>How to Use This Blueprint</h2>
+  <p>This document is designed to be used, not just read. Each of the 7 streams is a self-contained implementation guide — you can go deep on one before touching another, or use the overview and income stack sections to decide where to start.</p>
+
+  <div class="callout green">
+    <div class="callout-icon">&#9654;</div>
+    <div class="callout-text"><strong>Recommended approach:</strong> Read the Overview section first, then skip directly to whichever stream best matches your existing content, audience, or skill set. The Income Stack at the end shows you how to layer all 7 over a 12-month runway.</div>
+  </div>
+
+  <h3>The Three Rules of This Blueprint</h3>
+  <div class="card">
+    <div class="card-title">Rule 1: Start With What You Already Have</div>
+    <div class="card-desc">The fastest path to passive income is monetizing assets you've already created. Existing content, skills, relationships, and audience are worth more than you think. Before building something new, ask: what do I already have that someone would pay for?</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Rule 2: One Stream at a Time</div>
+    <div class="card-desc">Passive income is not actually passive at the start. Each stream requires upfront setup work. Attempting all 7 simultaneously is a recipe for mediocre results across the board. Pick one, execute fully, then layer the next.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Rule 3: Systems Over Hustle</div>
+    <div class="card-desc">The goal isn't to work more — it's to build systems that generate income with minimal ongoing input. Every stream in this blueprint includes a maintenance phase. Design your systems with that phase in mind from day one.</div>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#9888;</div>
+    <div class="callout-text"><strong>Realistic expectations:</strong> Most passive income streams take 3–6 months to generate meaningful revenue. The projections in this document represent what's achievable with consistent effort — not overnight results. Treat this as a 12-month project, not a 12-day sprint.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     OVERVIEW
+============================================================ -->
+<div class="section" id="overview">
+  <div class="section-num">Overview</div>
+  <h2 class="overview-h">Passive Income Reality Check</h2>
+
+  <div id="myth-vs-reality">
+    <h3>The Myth vs. The Reality</h3>
+    <p>The internet has sold creators a fantasy: build once, earn forever. The reality is more nuanced — and ultimately more empowering once you understand it.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>The Myth</th>
+          <th>The Reality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Post it and forget it"</td>
+          <td>Every stream requires periodic maintenance, optimization, and occasionally a full refresh.</td>
+        </tr>
+        <tr>
+          <td>"No skills needed"</td>
+          <td>Your existing creative and professional skills ARE the product. Passive income is packaging expertise.</td>
+        </tr>
+        <tr>
+          <td>"Instant income"</td>
+          <td>Expect 60–180 days before any stream reaches consistent monthly revenue.</td>
+        </tr>
+        <tr>
+          <td>"One stream is enough"</td>
+          <td>Diversification across 3–5 streams is what creates true income stability.</td>
+        </tr>
+        <tr>
+          <td>"Anyone can do any stream"</td>
+          <td>Some streams fit your situation better than others based on audience size, content type, and time available.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The creators who build genuinely sustainable passive income understand something crucial: they are not creating passive income products — they are building <strong>evergreen distribution systems</strong> for their existing expertise. The "passive" part is the distribution, not the creation.</p>
+  </div>
+
+  <div id="three-tiers">
+    <h3>The 3 Tiers of Passivity</h3>
+    <p>Not all passive income is equally passive. Understanding this framework will set accurate expectations and help you plan your time investment.</p>
+
+    <div class="card">
+      <div class="card-title">Tier 1: Active Setup — The Work You Do Once</div>
+      <div class="card-desc">This is where 80% of your total time investment goes. Creating the product, writing the content, building the distribution channel, setting up automations, and getting traffic flowing. Tier 1 is front-loaded, intensive, and temporary. Think of it as buying an asset — you're trading hours now for income later. For most streams, Tier 1 takes 20–100 hours spread over 4–12 weeks.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 2: Ongoing Maintenance — The Light Touch</div>
+      <div class="card-desc">Once a stream is live, it needs periodic attention to stay healthy. This includes updating pricing, responding to customer questions, refreshing SEO, monitoring affiliate links, and tweaking underperforming assets. For well-built streams, maintenance averages 1–4 hours per month. This is what "passive" actually looks like in practice.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 3: Optimization — Where the Real Money Lives</div>
+      <div class="card-desc">This is the highest-leverage activity: taking a stream that already earns $200/month and engineering it to earn $800/month. Optimization happens quarterly and includes things like conversion rate testing, expanding to new platforms, bundling products, improving SEO, and identifying traffic sources that can be doubled down on. Most creators skip this phase entirely — don't.</div>
+    </div>
+
+    <div class="formula">TOTAL INCOME = (Streams × Average Monthly Revenue) × Optimization Multiplier
+
+Example:
+  3 streams × $400/month avg = $1,200/month
+  With optimization:
+  3 streams × $400/month avg × 1.8x = $2,160/month</div>
+  </div>
+
+  <div id="income-stacking">
+    <h3>The Income Stacking Concept</h3>
+    <p>Income stacking is the practice of layering multiple passive revenue streams so they compound and reinforce each other. The goal isn't just more streams — it's <strong>synergistic streams</strong> that feed each other.</p>
+
+    <p>For example: A creator who teaches design skills can simultaneously earn from digital product sales (Stream 1), affiliate commissions from design software they recommend (Stream 2), stock assets they've uploaded (Stream 3), a sponsored design newsletter (Stream 4), a design course (Stream 5), and design templates on Etsy (Stream 6). Each piece of content they create touches multiple revenue streams at once.</p>
+
+    <div class="callout green">
+      <div class="callout-icon">&#9650;</div>
+      <div class="callout-text"><strong>The Compound Effect:</strong> When your streams reinforce each other, every piece of content you create drives multiple revenue channels simultaneously. A YouTube tutorial can drive affiliate clicks, course enrollments, digital product purchases, and newsletter signups — all from a single asset. This is the real power of income stacking.</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">3–4x</div>
+        <div class="stat-label">Revenue multiplier from stacking vs. single stream</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12 mo</div>
+        <div class="stat-label">Typical time to build a full stack</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$5k+</div>
+        <div class="stat-label">Monthly passive floor achievable with 4–5 streams</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1–4 hrs</div>
+        <div class="stat-label">Weekly maintenance for a mature stack</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 1: DIGITAL PRODUCTS
+============================================================ -->
+<div class="section" id="stream1">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#128196;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 1</div>
+      <h1 class="stream-title">Digital Products</h1>
+      <div class="stream-tagline">Templates, guides, toolkits, swipe files, and done-for-you resources your audience will buy again and again.</div>
+    </div>
+  </div>
+
+  <h3>What It Is</h3>
+  <p>Digital products are downloadable files — PDFs, spreadsheets, Notion templates, Figma files, Canva templates, checklists, swipe files, audio packs, preset bundles — that you create once and sell unlimited times. There is no inventory, no fulfillment cost, and near-zero marginal cost per sale. A product that took you 20 hours to build can generate revenue for years.</p>
+
+  <p>The key insight most creators miss: <strong>your process is the product</strong>. The systems, frameworks, and workflows you already use to do your work are things your audience would pay to have. You're not creating something from scratch — you're packaging what you already know.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-value">$15–499</div>
+      <div class="stat-label">Typical price range per product</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">30–90 days</div>
+      <div class="stat-label">Time to first dollar with existing audience</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">~97%</div>
+      <div class="stat-label">Gross margin on digital products</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">$500–5k+</div>
+      <div class="stat-label">Monthly potential at mid-scale</div>
+    </div>
+  </div>
+
+  <h3>Step-by-Step Launch Roadmap</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Identify Your Highest-Value Knowledge</div>
+        <div class="step-desc">List the top 10 questions your audience asks you repeatedly, the processes you've built that save you time, and the mistakes you see others make that you've figured out how to avoid. Your first product lives in that list.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Validate Before You Build</div>
+        <div class="step-desc">Post a poll, send a survey to your list, or simply ask your audience: "If I built X, would you buy it?" Aim for at least 20–30 people to say yes before investing significant time. Even better: pre-sell it. If you can collect money before it's built, you have product-market fit.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Choose Your Format</div>
+        <div class="step-desc">Match format to content type. Step-by-step instructions → PDF guide or Notion doc. Visual assets → Canva, Figma, or PSD files. Data and tracking → Spreadsheet or Airtable. Workflows → Notion or ClickUp templates. Copywriting → Google Docs or PDF swipe files. Audio tools → WAV/MP3 packs.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Build the Core Product</div>
+        <div class="step-desc">Aim for useful, not perfect. Your first version should solve the core problem clearly. Resist the urge to add everything — a focused $25 product beats a bloated $49 product every time. Plan to update and expand it after your first 50 sales.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Create a Compelling Sales Page</div>
+        <div class="step-desc">Your sales page needs: a specific headline that states the outcome, 3–5 bullet points of what's inside, social proof (even one testimonial from a beta user), a clear price, and a single call to action. The most common mistake is listing features instead of benefits — tell them what their life looks like after using your product.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Set Up Your Delivery System</div>
+        <div class="step-desc">Use a platform like Gumroad or Lemon Squeezy to handle payments, file delivery, and customer management. Connect it to a welcome email sequence (2–3 emails over 7 days) that helps buyers get value immediately and reduces refund requests.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <div class="step-title">Launch to Your Existing Audience First</div>
+        <div class="step-desc">Send a launch email to your list, post on your strongest social channel, and tell your existing followers directly. Your first sales will almost always come from warm audiences. Don't wait for cold traffic — it comes later.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <div class="step-title">Collect Testimonials Immediately</div>
+        <div class="step-desc">Email every buyer within 48 hours of purchase and ask: "What problem does this solve for you? What would you tell someone on the fence about buying it?" Use their exact words on your sales page. Authentic buyer language converts better than any copy you'll write yourself.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">9</div>
+      <div class="step-content">
+        <div class="step-title">Build an Evergreen Traffic System</div>
+        <div class="step-desc">Create content that drives ongoing traffic to your product: a free lead magnet that feeds into the paid product, SEO blog posts that target your buyer's search queries, YouTube videos that demonstrate the value of what's inside, or Pinterest pins that link directly to your sales page. This is what makes it passive.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">10</div>
+      <div class="step-content">
+        <div class="step-title">Optimize and Expand</div>
+        <div class="step-desc">At 30 days post-launch, review your conversion rate (aim for 2–5% of visitors who buy). If it's below 1%, test a new headline or price. If it's above 5%, consider raising your price. At 90 days, create a second complementary product and offer them together as a bundle at a small discount.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Pricing Tiers and What to Include</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Tier</th>
+        <th>Price Range</th>
+        <th>What to Include</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Entry</strong></td>
+        <td class="green">$9–27</td>
+        <td>A single focused template, checklist, or guide. Solves one specific problem.</td>
+        <td>First product, building buyer list, cold audience</td>
+      </tr>
+      <tr>
+        <td><strong>Core</strong></td>
+        <td class="green">$29–79</td>
+        <td>A full system — multiple templates, a guide, a checklist, and a quick-start walkthrough.</td>
+        <td>Your primary product, warm audiences</td>
+      </tr>
+      <tr>
+        <td><strong>Premium</strong></td>
+        <td class="green">$97–199</td>
+        <td>The complete toolkit — everything in Core plus video walkthroughs, bonus resources, and a community or Q&amp;A session.</td>
+        <td>Existing buyers upgrading, engaged audiences</td>
+      </tr>
+      <tr>
+        <td><strong>Bundle</strong></td>
+        <td class="green">$149–499</td>
+        <td>2–5 products sold together at 30–40% off individual pricing. Often your highest revenue per transaction.</td>
+        <td>Upsells, seasonal promotions, email list offers</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Platform Comparison</h3>
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="platform-name">Gumroad</div>
+      <span class="platform-tag best">Best for Beginners</span>
+      <div class="platform-detail">10% transaction fee (or $10/mo for 5%). Simple setup, instant payouts, built-in audience of buyers. Best for first-time sellers who want to launch in under an hour.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Lemon Squeezy</div>
+      <span class="platform-tag best">Best Overall</span>
+      <div class="platform-detail">5% + $0.50 per transaction. Handles global tax compliance automatically. Better checkout design than Gumroad. Subscription support, upsells, and robust affiliate tools built in.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Payhip</div>
+      <span class="platform-tag good">Best Free Option</span>
+      <div class="platform-detail">5% transaction fee on the free plan, or $29/mo for 0% fees. Built-in EU VAT handling, affiliate program, and landing page builder. Good for testing before committing to a platform.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Your Own Site</div>
+      <span class="platform-tag niche">Best at Scale</span>
+      <div class="platform-detail">Stripe + a WordPress plugin (WooCommerce, Easy Digital Downloads) or Shopify Digital Downloads. Lowest fees at scale but requires technical setup. Worth it once you're doing $3k+/month.</div>
+    </div>
+  </div>
+
+  <h3>Income Projection Worksheet</h3>
+  <div class="projection-box">
+    <div class="projection-header"><span>Fill In Your Numbers</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">Monthly visitors to your sales page</div>
+        <div class="proj-value yellow">_______ visitors</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Conversion rate (industry avg: 1–3%)</div>
+        <div class="proj-value yellow">_______ %</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Sales per month (visitors × conversion rate)</div>
+        <div class="proj-value yellow">_______ sales</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Average product price</div>
+        <div class="proj-value yellow">$_______</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Gross monthly revenue</div>
+        <div class="proj-value">$_______ / month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Platform fees (~5–10%)</div>
+        <div class="proj-value sub">−$_______</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Net monthly income</div>
+        <div class="proj-value">$_______ / month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">&#8594;</div>
+    <div class="callout-text"><strong>Real-world benchmark:</strong> A creator with 3,000 monthly visitors, a 2% conversion rate, and a $49 product earns approximately $2,940/month gross. With a $97 bundle upsell converting at 15% of buyers, that adds another $860/month — total of $3,800/month from a single product line.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 2: AFFILIATE MARKETING
+============================================================ -->
+<div class="section" id="stream2">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#128279;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 2</div>
+      <h1 class="stream-title">Affiliate Marketing</h1>
+      <div class="stream-tagline">Earn commissions by recommending tools and products you already use — every recommendation you've ever made has a monetization potential.</div>
+    </div>
+  </div>
+
+  <h3>How Affiliate Income Compounds Over Time</h3>
+  <p>Affiliate income is unique in that it's retrospective — content you published two years ago can earn you money today. Every blog post, YouTube video, or newsletter issue with an affiliate link is a permanent asset. The compound effect works like this: your library of content grows, each piece drives traffic forever (especially via SEO), and commissions accumulate from the entire back catalog simultaneously.</p>
+
+  <p>A creator who writes 4 affiliate-optimized posts per month for 12 months has 48 assets all earning simultaneously by the end of the year. If each earns an average of $40/month, that's $1,920/month from the work of month one through twelve — with no additional effort.</p>
+
+  <div class="formula">Monthly Affiliate Income = (Total Affiliate Links Live) × (Avg Monthly Clicks per Link) × (Conversion Rate) × (Commission per Sale)
+
+Example:
+  200 links × 15 clicks/link × 3% conversion × $25 commission = $2,250/month</div>
+
+  <h3>Finding and Vetting Affiliate Programs</h3>
+  <p>The best affiliate programs are the tools you already pay for and recommend without compensation. Start there, then expand systematically.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Audit Your Own Tool Stack</div>
+        <div class="step-desc">List every subscription, software, platform, and service you pay for. Check each company's website for an "Affiliate" or "Partners" link — 80% of SaaS tools have affiliate programs. Sign up for every one that's relevant to your content.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Search Affiliate Networks</div>
+        <div class="step-desc">ShareASale, Impact, PartnerStack, and CJ Affiliate aggregate thousands of programs. Search by your niche keyword and filter by commission rate, cookie duration, and EPC (earnings per click). Cookie duration matters enormously — a 90-day cookie means you earn commissions from someone who clicks your link today and buys 3 months from now.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Vet for Quality and Honesty</div>
+        <div class="step-desc">Only promote things you've used and genuinely recommend. Your audience's trust is worth infinitely more than any commission. Before promoting, ask: would I recommend this if there were no commission? If not, skip it.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Prioritize Recurring Commissions</div>
+        <div class="step-desc">Software subscriptions often pay recurring commissions — you earn every month the person you referred keeps their subscription. A single referral to a $99/month tool at 30% commission earns you $29.70/month, every month, potentially for years. Prioritize recurring programs over one-time commissions.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Content-to-Commission Mapping Strategy</h3>
+  <p>Map every piece of content you create to at least one affiliate opportunity before you publish. This isn't about stuffing links — it's about ensuring your monetization infrastructure exists where traffic already flows.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Content Type</th>
+        <th>Best Affiliate Placement</th>
+        <th>Avg Conversion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tool Comparison Post</strong></td>
+        <td>Affiliate links for every tool reviewed, with your top pick highlighted</td>
+        <td>3–6%</td>
+      </tr>
+      <tr>
+        <td><strong>"Best of" List</strong></td>
+        <td>Each listed item linked, with affiliate links where available</td>
+        <td>2–4%</td>
+      </tr>
+      <tr>
+        <td><strong>Tutorial / How-To</strong></td>
+        <td>Link the tool used in the tutorial; add "Tools I Used" section</td>
+        <td>1–3%</td>
+      </tr>
+      <tr>
+        <td><strong>Resource Page</strong></td>
+        <td>Dedicated "/resources" or "/tools" page — highest converting affiliate page type</td>
+        <td>4–8%</td>
+      </tr>
+      <tr>
+        <td><strong>Email Newsletter</strong></td>
+        <td>"Sponsored by" slot or genuine tool recommendation in P.S.</td>
+        <td>1–2%</td>
+      </tr>
+      <tr>
+        <td><strong>YouTube Video</strong></td>
+        <td>Description links with timestamps, pinned comment with affiliate tools</td>
+        <td>0.5–2%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Top Affiliate Categories and Commission Rates</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Typical Commission</th>
+        <th>Cookie Duration</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SaaS / Software</strong></td>
+        <td class="green">20–40% recurring</td>
+        <td>60–120 days</td>
+        <td>Best lifetime value; highest recommended category</td>
+      </tr>
+      <tr>
+        <td><strong>Online Education</strong></td>
+        <td class="green">30–50% one-time</td>
+        <td>30–90 days</td>
+        <td>High payouts; trust-dependent</td>
+      </tr>
+      <tr>
+        <td><strong>Web Hosting</strong></td>
+        <td class="green">$50–200 one-time</td>
+        <td>60–180 days</td>
+        <td>Saturated but high CPC</td>
+      </tr>
+      <tr>
+        <td><strong>Finance / Fintech</strong></td>
+        <td class="green">$25–150 per lead</td>
+        <td>30–90 days</td>
+        <td>Highest commissions; compliance-heavy</td>
+      </tr>
+      <tr>
+        <td><strong>Amazon Products</strong></td>
+        <td>1–10% one-time</td>
+        <td>24 hours</td>
+        <td>High volume needed; physical products only</td>
+      </tr>
+      <tr>
+        <td><strong>Creative Tools</strong></td>
+        <td class="green">15–35% recurring</td>
+        <td>30–90 days</td>
+        <td>Natural fit for creator audiences</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>30-Day Affiliate Launch Plan</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">W1</div>
+      <div class="step-content">
+        <div class="step-title">Week 1: Audit and Sign Up</div>
+        <div class="step-desc">Audit your entire tool stack. Apply to affiliate programs for all relevant tools. Set up a tracking system (spreadsheet) with program name, commission rate, cookie duration, payment threshold, and login info. Add a "/resources" page to your website.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">W2</div>
+      <div class="step-content">
+        <div class="step-title">Week 2: Back-Catalog Retrofit</div>
+        <div class="step-desc">Go through your top 20 most-visited pieces of content and add relevant affiliate links where they naturally fit. Don't force it — only add links where a tool is genuinely mentioned or helpful. Update disclosure language at the top of each piece.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">W3</div>
+      <div class="step-content">
+        <div class="step-title">Week 3: Create Your First Comparison Piece</div>
+        <div class="step-desc">Write or film one high-intent comparison: "[Tool A] vs [Tool B]: Which Should You Choose in 2026?" Target people who are actively deciding between two options — this is the highest-converting affiliate content type. Include your affiliate link for both tools.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">W4</div>
+      <div class="step-content">
+        <div class="step-title">Week 4: Set Up Link Management and Tracking</div>
+        <div class="step-desc">Install a link management tool (Pretty Links for WordPress, or a simple redirect folder on your server) to cloak affiliate links and track clicks. Connect your affiliate dashboards and check weekly. Identify your top 5 performing links and create one more piece of content supporting each.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="projection-box">
+    <div class="projection-header"><span>Affiliate Income Projection</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">Month 3: Getting traction</div>
+        <div class="proj-value">$100–400/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Month 6: Building momentum</div>
+        <div class="proj-value">$400–1,200/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Month 12: Compounding library</div>
+        <div class="proj-value">$1,200–4,000/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Month 24: Established presence</div>
+        <div class="proj-value">$3,000–10,000+/month</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 3: CONTENT LICENSING & STOCK
+============================================================ -->
+<div class="section" id="stream3">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#128247;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 3</div>
+      <h1 class="stream-title">Content Licensing &amp; Stock</h1>
+      <div class="stream-tagline">Your existing photos, videos, audio, and written content are licensable assets. Other brands and media companies will pay for the right to use them.</div>
+    </div>
+  </div>
+
+  <h3>Licensing Your Existing Content to Brands and Media</h3>
+  <p>Direct licensing is the highest-margin form of content monetization. Instead of uploading to a stock platform and collecting a small royalty, you license content directly to a brand or publisher and set your own price. A single licensing deal can be worth $300–$5,000 for a single image or piece of content that already exists on your hard drive.</p>
+
+  <p>The most common direct licensing scenarios: editorial use (news outlets licensing your photos from an event you attended), commercial use (brands licensing your content for advertising), product use (your content appearing on packaging or marketing materials), and website use (blogs and digital publications licensing your writing or photography).</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#8505;</div>
+    <div class="callout-text"><strong>Key principle:</strong> You license the RIGHT to use your content — you still own it. A license is not a sale. Make sure any licensing agreement specifies the duration, geography, medium, and exclusivity of the license. Non-exclusive licenses let you license the same asset to multiple buyers.</div>
+  </div>
+
+  <h3>Stock Platforms and Rates</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Content Type</th>
+        <th>Creator Royalty</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Shutterstock</strong></td>
+        <td>Photo, video, music</td>
+        <td>15–40% photos / 15–35% video</td>
+        <td>Largest buyer pool; volume game</td>
+      </tr>
+      <tr>
+        <td><strong>Adobe Stock</strong></td>
+        <td>Photo, video, vector, audio</td>
+        <td>33% photos &amp; video</td>
+        <td>Integrated into Creative Cloud; premium buyers</td>
+      </tr>
+      <tr>
+        <td><strong>Getty Images</strong></td>
+        <td>Photo, video</td>
+        <td>15–45%</td>
+        <td>Hardest to get accepted; highest average sale price</td>
+      </tr>
+      <tr>
+        <td><strong>Pond5</strong></td>
+        <td>Video, audio, photo</td>
+        <td>50% (you set price)</td>
+        <td>Best for video; creator-friendly royalty structure</td>
+      </tr>
+      <tr>
+        <td><strong>Epidemic Sound</strong></td>
+        <td>Music / audio</td>
+        <td>50% of subscription revenue</td>
+        <td>Invite-only; music creators only</td>
+      </tr>
+      <tr>
+        <td><strong>Artlist</strong></td>
+        <td>Music, SFX</td>
+        <td>50% licensing fee</td>
+        <td>Quality-focused; good for established artists</td>
+      </tr>
+      <tr>
+        <td><strong>Envato Elements</strong></td>
+        <td>Templates, audio, video, graphics</td>
+        <td>Share of subscription pool</td>
+        <td>High volume needed; broad content types accepted</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Music Licensing for Creators</h3>
+  <p>If you create original music — even lo-fi beats, podcast intros, or background tracks — music licensing is an underutilized income stream. YouTube creators, podcasters, advertisers, and filmmakers all need licensed music, and the demand far outpaces supply for quality tracks.</p>
+
+  <div class="card">
+    <div class="card-title">Sync Licensing</div>
+    <div class="card-desc">Your music paired with video content in TV shows, films, ads, or YouTube videos. Sync fees range from $50 (independent YouTube creator) to $50,000+ (national TV ad). The PRO (Performance Rights Organization) tracks when your music is broadcast and collects performance royalties on your behalf.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Production Music Libraries</div>
+    <div class="card-desc">Submit your tracks to music libraries like Musicbed, Artlist, or Epidemic Sound. These platforms charge creators a subscription and pay you a share of that revenue each time your track is used. A single popular track can earn $200–2,000/month from a subscription library.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Beat Licensing (Beatmakers)</div>
+    <div class="card-desc">Platforms like BeatStars allow you to sell non-exclusive licenses ($25–50 per track) or exclusive licenses ($100–5,000). The top producers on BeatStars earn $10,000–100,000/year from passive beat sales. Non-exclusive is the passive model — the same beat can be licensed to unlimited artists.</div>
+  </div>
+
+  <h3>How to Register and Protect Your IP</h3>
+  <ul>
+    <li><strong>Copyright is automatic:</strong> Your work is copyrighted the moment it's created. However, registering with the US Copyright Office ($45–65 per work) entitles you to statutory damages in infringement cases — up to $150,000 per work for willful infringement.</li>
+    <li><strong>Join a PRO:</strong> Register with ASCAP, BMI, or SESAC (music creators) to collect performance royalties. These are free to join and collect money that would otherwise go uncollected.</li>
+    <li><strong>Use watermarks and metadata:</strong> Embed your name, website, and copyright notice in the EXIF/metadata of every photo and video file before distribution.</li>
+    <li><strong>Document your creation date:</strong> Email files to yourself, commit to a dated repository, or use a timestamping service to establish a creation record.</li>
+    <li><strong>Consider a Creative Commons license:</strong> For content you want widely shared with attribution, CC licenses can dramatically expand distribution while keeping your copyright intact.</li>
+  </ul>
+
+  <div class="projection-box">
+    <div class="projection-header"><span>Content Licensing Income Projection</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">100 stock assets live (photos/vectors)</div>
+        <div class="proj-value">$50–200/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">500 stock assets live</div>
+        <div class="proj-value">$300–800/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">2,000+ assets + direct licensing deals</div>
+        <div class="proj-value">$1,000–4,000+/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Music library (20+ tracks on 3+ platforms)</div>
+        <div class="proj-value">$400–2,000/month</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 4: NEWSLETTER SPONSORSHIPS
+============================================================ -->
+<div class="section" id="stream4">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#128140;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 4</div>
+      <h1 class="stream-title">Newsletter Sponsorships</h1>
+      <div class="stream-tagline">A niche newsletter with an engaged list is a cash-generating machine. Sponsors pay for access to your audience — and they pay well.</div>
+    </div>
+  </div>
+
+  <h3>How Newsletter Ad Rates Work</h3>
+  <p>Newsletter sponsorships are priced on a CPM model — cost per thousand subscribers. Unlike social media where reach is uncertain, a newsletter's reach is highly predictable: your open rate tells sponsors exactly how many people will see their ad. This makes newsletters one of the most transparent and reliable advertising channels for sponsors.</p>
+
+  <div class="formula">Sponsorship Rate = (List Size × Open Rate × CPM) ÷ 1,000
+
+Example:
+  8,000 subscribers × 45% open rate = 3,600 opens
+  3,600 ÷ 1,000 × $45 CPM = $162 per sponsored issue
+
+  With 4 issues/month: $648/month from a single sponsor slot</div>
+
+  <p>CPM rates vary significantly by niche. Finance, B2B SaaS, and developer newsletters command $50–150+ CPM. General lifestyle newsletters average $20–40 CPM. The size of your list matters less than the specificity of your audience — a 2,000-subscriber newsletter for independent financial advisors will out-earn a 20,000-subscriber general newsletter every time.</p>
+
+  <h3>Building a Sponsor-Ready Newsletter</h3>
+  <p>Sponsors aren't just buying eyeballs — they're buying trust. Your newsletter becomes sponsor-ready when it has three things: a clearly defined audience, a consistent sending schedule, and documented engagement metrics.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Define Your Audience in One Sentence</div>
+        <div class="step-desc">Sponsors need to instantly understand who your readers are. "Independent designers who charge $150+/hour" is better than "creatives." "Early-stage SaaS founders bootstrapping to $1M ARR" is better than "entrepreneurs." Specificity commands higher CPMs.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Achieve Consistent Open Rates Above 35%</div>
+        <div class="step-desc">Industry average open rates are 20–25%. Sponsors look for 35%+ as a baseline. To get there: clean your list quarterly (remove non-openers after 90 days), send at consistent times, and make every issue genuinely valuable. A 50% open rate on 5,000 subscribers outperforms a 20% rate on 15,000.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Create a Media Kit</div>
+        <div class="step-desc">A one-page PDF or web page with: your audience description, list size, open rate, click rate, sending frequency, ad placement options, rates, and 2–3 testimonials from previous sponsors. This is your sales document and eliminates the most common sponsor objections before they arise.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Choose Your Ad Format</div>
+        <div class="step-desc">Classifieds (2–3 lines, lowest price), sponsored blurbs (1 paragraph with a link, mid-price), and solo sponsorships (the entire issue is sponsor-focused, highest price). Most newsletters offer all three and let sponsors choose based on budget and goals.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Sponsor Pitch Template</h3>
+  <div class="template-box">
+    <div class="template-header">Outbound Sponsor Pitch — Copy and Customize</div>
+    <div class="template-body">Subject: Partnership opportunity — [Your Newsletter Name] reaches [Audience Type]
+
+Hi [First Name],
+
+I run [Newsletter Name], a weekly newsletter read by [audience description — be specific] with [X] subscribers and a [X%] average open rate.
+
+I noticed [Company Name] recently [launched a new feature / ran a campaign targeting X audience / received coverage in Y publication]. Your product is a natural fit for my readers, who are actively [solving the problem your product addresses].
+
+Here's what a sponsorship looks like:
+
+— Dedicated shoutout to [X] engaged readers
+— Placement in the [primary / secondary / classified] slot
+— [X%] average open rate → approximately [X] guaranteed eyes
+— Rate: $[X] per issue / $[X] for a 4-issue package
+
+I've attached our media kit with full audience details.
+
+I'd love to offer you a first-issue trial at 20% off to see the results firsthand. Would a quick call this week or next make sense?
+
+Best,
+[Your Name]
+[Newsletter Name]
+[Subscriber count] subscribers | [Open rate]% open rate
+[Media kit link]</div>
+  </div>
+
+  <h3>Sponsorship Rate Card Template</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Placement</th>
+        <th>Description</th>
+        <th>1 Issue</th>
+        <th>4-Issue Package</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Primary Sponsor</strong></td>
+        <td>Top of issue, 150-word blurb + image + CTA</td>
+        <td class="green">$[X]</td>
+        <td class="green">$[X × 3.5]</td>
+      </tr>
+      <tr>
+        <td><strong>Secondary Sponsor</strong></td>
+        <td>Mid-issue, 75-word blurb + link</td>
+        <td class="green">$[X × 0.6]</td>
+        <td class="green">$[X × 2]</td>
+      </tr>
+      <tr>
+        <td><strong>Classified Ad</strong></td>
+        <td>Bottom of issue, 2–3 lines + link</td>
+        <td class="green">$[X × 0.25]</td>
+        <td class="green">$[X × 0.85]</td>
+      </tr>
+      <tr>
+        <td><strong>Solo Send</strong></td>
+        <td>Dedicated issue, sponsor-written content</td>
+        <td class="green">$[X × 2.5]</td>
+        <td>N/A</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#9998;</div>
+    <div class="callout-text"><strong>Set your base rate [X]:</strong> Use the CPM formula above to calculate your primary sponsor rate. Example: 6,000 subscribers × 40% open rate = 2,400 opens. At $45 CPM: 2.4 × $45 = $108 per issue. Round up to $125–150 for a primary sponsorship.</div>
+  </div>
+
+  <div class="projection-box">
+    <div class="projection-header"><span>Newsletter Sponsorship Projection by List Size</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">1,000 subscribers (40% open) × 4 issues</div>
+        <div class="proj-value">$180–360/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">5,000 subscribers (40% open) × 4 issues</div>
+        <div class="proj-value">$900–1,800/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">15,000 subscribers (38% open) × 4 issues</div>
+        <div class="proj-value">$2,700–5,400/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">50,000 subscribers (35% open) × 4 issues</div>
+        <div class="proj-value">$9,000–20,000+/month</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 5: ONLINE COURSES & EDUCATION
+============================================================ -->
+<div class="section" id="stream5">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#127891;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 5</div>
+      <h1 class="stream-title">Online Courses &amp; Education</h1>
+      <div class="stream-tagline">Package your expertise into a structured learning experience — the highest average revenue per customer of any passive income stream.</div>
+    </div>
+  </div>
+
+  <h3>The Difference Between Courses and Coaching</h3>
+  <p>This distinction matters enormously for passivity. Coaching is your time sold directly — it cannot be passive. A course is your methodology, packaged and delivered asynchronously. The goal of this stream is to convert what you'd otherwise coach someone through into an evergreen course that runs without you.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Coaching</th>
+        <th>Online Course</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Delivery</strong></td>
+        <td>You, live, every session</td>
+        <td>Pre-recorded; automated delivery</td>
+      </tr>
+      <tr>
+        <td><strong>Scalability</strong></td>
+        <td>Capped by your hours</td>
+        <td>Unlimited concurrent students</td>
+      </tr>
+      <tr>
+        <td><strong>Passivity</strong></td>
+        <td>Zero</td>
+        <td>High once created</td>
+      </tr>
+      <tr>
+        <td><strong>Price point</strong></td>
+        <td>$150–500+/hour</td>
+        <td>$97–2,000 per enrollment</td>
+      </tr>
+      <tr>
+        <td><strong>Best use</strong></td>
+        <td>R&amp;D: discovering what students struggle with</td>
+        <td>Scale: teaching the same thing infinitely</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <div class="callout-icon">&#9654;</div>
+    <div class="callout-text"><strong>The playbook:</strong> Offer 5–10 coaching clients first. Document every question they ask and every "aha moment" they have. Use those insights to design your course curriculum. Your first coaching cohort funds and informs your course, which then sells forever.</div>
+  </div>
+
+  <h3>Platform Comparison</h3>
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="platform-name">Teachable</div>
+      <span class="platform-tag good">Best for Beginners</span>
+      <div class="platform-detail">Free plan available (transaction fees apply). $39–$299/mo plans with no transaction fees. Good design, strong checkout flow, basic affiliate tools. Ideal starting point for first-time course creators.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Kajabi</div>
+      <span class="platform-tag best">Best All-in-One</span>
+      <div class="platform-detail">$149–$399/mo. Includes courses, email marketing, landing pages, community, podcasting, and coaching in one platform. Higher cost justified once you're generating $3k+/month. Zero transaction fees.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Podia</div>
+      <span class="platform-tag good">Best Value</span>
+      <div class="platform-detail">$39–$89/mo. Includes courses, digital downloads, memberships, and email marketing. No transaction fees. Simple, clean interface. Good for creators who want simplicity over feature depth.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Thinkific</div>
+      <span class="platform-tag niche">Best for Enterprises</span>
+      <div class="platform-detail">Free–$499/mo. Strong compliance and white-labeling features. Best for course creators who plan to sell B2B or need advanced student management. Steep learning curve for beginners.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Udemy</div>
+      <span class="platform-tag niche">Built-in Audience</span>
+      <div class="platform-detail">No monthly fee; Udemy takes 37–75% of revenue. Low price ceiling ($10–30 per course on sale). Best for building an audience from zero — not for maximizing revenue per student.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Gumroad + Loom</div>
+      <span class="platform-tag good">Lowest Barrier</span>
+      <div class="platform-detail">The simplest setup: record modules in Loom, organize links in a PDF or Notion page, sell access via Gumroad. No monthly fees. Not scalable but gets your first course live in days, not weeks.</div>
+    </div>
+  </div>
+
+  <h3>Pricing Strategy for Digital Education</h3>
+  <p>Most first-time course creators underprice. The customer's perceived value of your course has almost no relationship to how long it took you to make. It's entirely determined by the outcome you promise and deliver.</p>
+
+  <ul>
+    <li><strong>$97–297:</strong> Tactical skills courses. Teaches one specific skill with clear before/after outcome. Best for audiences under 5,000.</li>
+    <li><strong>$297–997:</strong> Transformation courses. Comprehensive systems that fundamentally change how someone works or operates. Multiple modules, resources, and ideally community access.</li>
+    <li><strong>$997–2,997:</strong> High-ticket courses and bootcamps. Often includes live coaching calls, community, and accountability. Positioned as a program, not just a course.</li>
+    <li><strong>$0 free + paid certification:</strong> Free course, paid certificate of completion. Works for professional development niches where credentials matter.</li>
+  </ul>
+
+  <h3>Launch-to-Evergreen Transition</h3>
+  <p>Most successful courses start with a live launch and transition to evergreen. Here's the timeline:</p>
+
+  <div class="roadmap">
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Months 1–2</div>
+        <div class="roadmap-title">Beta Launch (Cohort 1)</div>
+        <div class="roadmap-desc">Sell 10–30 founding members at 40–50% discount. Deliver live. Collect feedback, testimonials, and success stories. This cohort funds production costs and validates your content.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 3</div>
+        <div class="roadmap-title">Full Launch (Cohort 2)</div>
+        <div class="roadmap-desc">Open enrollment at full price. Use testimonials from Cohort 1. Run a 5–7 day open cart with email sequence. Aim for 2–5x the revenue of your beta launch.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 4</div>
+        <div class="roadmap-title">Record and Produce</div>
+        <div class="roadmap-desc">Take the live delivery from Cohort 1–2 and produce polished video modules. Add workbooks, templates, and supplemental resources. This becomes your evergreen course library.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 5+</div>
+        <div class="roadmap-title">Evergreen Enrollment</div>
+        <div class="roadmap-desc">Open enrollment permanently or with rolling quarterly cohorts. Build a webinar or video sales letter that sells the course automatically. Traffic → webinar → purchase → automated onboarding. This is the passive machine.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="projection-box">
+    <div class="projection-header"><span>Course Income Projection</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">Evergreen course at $297, 5 sales/month</div>
+        <div class="proj-value">$1,485/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Evergreen course at $497, 8 sales/month</div>
+        <div class="proj-value">$3,976/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">High-ticket course at $997, 4 sales/month</div>
+        <div class="proj-value">$3,988/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Course suite (3 products, various prices)</div>
+        <div class="proj-value">$5,000–15,000/month</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 6: TEMPLATE MARKETPLACES
+============================================================ -->
+<div class="section" id="stream6">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#128736;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 6</div>
+      <h1 class="stream-title">Template Marketplaces</h1>
+      <div class="stream-tagline">Marketplaces do the marketing for you — list your templates where buyers are already shopping and earn royalties from a built-in audience.</div>
+    </div>
+  </div>
+
+  <h3>Best Marketplaces and Their Strengths</h3>
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="platform-name">Etsy</div>
+      <span class="platform-tag best">Largest Buyer Volume</span>
+      <div class="platform-detail">300M+ visits/month. Strong for Canva, Notion, spreadsheet, and printable templates. High competition but equally high demand. $0.20 listing fee + 6.5% transaction fee. Excellent SEO from Google.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Creative Market</div>
+      <span class="platform-tag best">Best for Design</span>
+      <div class="platform-detail">You set prices, earn 50–70%. Premium design-focused audience — buyers here pay more. Best for Figma UI kits, Photoshop templates, fonts, illustrations, and branding assets. Requires application approval.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Envato Elements</div>
+      <span class="platform-tag good">Best for Volume</span>
+      <div class="platform-detail">Subscription model — your earnings are a share of the subscriber pool based on downloads. Low per-download rate but extremely high volume. Best for PowerPoint, video templates, and motion graphics.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Notion.so Marketplace</div>
+      <span class="platform-tag niche">Best for Notion</span>
+      <div class="platform-detail">Official Notion marketplace. Lower volume than Etsy but higher intent buyers. No transaction fees for basic listings. Best for productivity, business, and personal organization templates.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Gumroad Discovery</div>
+      <span class="platform-tag good">Creator-Friendly</span>
+      <div class="platform-detail">Gumroad's built-in discovery layer surfaces products to buyers browsing the platform. No additional setup needed if you're already selling on Gumroad. Lower volume but loyal buyer base.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">TemplateMonster</div>
+      <span class="platform-tag niche">Best for Web</span>
+      <div class="platform-detail">Focused on website themes and templates. Good for WordPress themes, HTML templates, and website builders. 40–70% royalty on exclusive items. Strong international buyer base.</div>
+    </div>
+  </div>
+
+  <h3>What Sells: The Research Process</h3>
+  <p>Before building anything, spend one week researching what already sells. This process eliminates guesswork and dramatically increases your probability of a profitable first template.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Search Your Target Marketplace for Your Category</div>
+        <div class="step-desc">On Etsy: search for "[your template type]" and sort by "Most Relevant" (which factors in sales). Note which listings have 100+ reviews — each review typically represents 5–20 sales, so 200 reviews = 1,000–4,000 sales. These are proven winners.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Analyze the Top Sellers</div>
+        <div class="step-desc">What's in the title? What does the thumbnail look like? What's included? What do buyers say in reviews — and what do they complain about? The negative reviews in bestselling listings are your product improvement roadmap.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Find the Gap</div>
+        <div class="step-desc">You're not trying to copy the bestseller — you're trying to build something better. Look for: a missing feature buyers are requesting, a design style that's underrepresented, a sub-niche that isn't well served, or a price point that nobody is occupying.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Validate With Keyword Research</div>
+        <div class="step-desc">Use Etsy's search bar autocomplete to find what buyers are searching. Use eRank or Marmalead for Etsy keyword data — look for high search volume and low competition. These keywords should be in your title, tags, and description before you list.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Template Creation Workflow</h3>
+  <ul>
+    <li><strong>Plan:</strong> Define the exact problem your template solves, who it's for, and what format it requires (Canva, Notion, Google Sheets, Figma, etc.)</li>
+    <li><strong>Build:</strong> Create a working version first, then polish the design. Test every formula, link, and interactive element before delivery.</li>
+    <li><strong>Document:</strong> Write clear instructions. The #1 cause of refund requests is confusion about how to use the template — a 5-minute video walkthrough reduces refunds by 60–80%.</li>
+    <li><strong>Package:</strong> Create mockup images that show the template in context. Use Smartmockups, Creative Market mockups, or Canva to create professional-looking previews.</li>
+    <li><strong>List:</strong> Write keyword-rich titles and descriptions. Include all relevant tags. Price at or slightly below comparable bestsellers to build initial review velocity.</li>
+  </ul>
+
+  <h3>SEO for Template Marketplaces</h3>
+  <p>Marketplace SEO is different from Google SEO. Each platform's algorithm weights different signals, but there are universal rules:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Factor</th>
+        <th>What to Do</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Title Keywords</strong></td>
+        <td>Lead with primary keyword. Include secondary keywords naturally. No keyword stuffing.</td>
+        <td>Very High</td>
+      </tr>
+      <tr>
+        <td><strong>Tags / Attributes</strong></td>
+        <td>Use all available tag slots. Include variations, synonyms, and use-case tags.</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td><strong>Sales Velocity</strong></td>
+        <td>Offer a launch discount to early buyers. More recent sales signal algorithm relevance.</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td><strong>Review Rate</strong></td>
+        <td>Follow up with buyers asking for a review. A 10–20% review rate is excellent.</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td><strong>Thumbnail CTR</strong></td>
+        <td>Test multiple thumbnails. Clean, high-contrast images with readable text perform best.</td>
+        <td>Medium-High</td>
+      </tr>
+      <tr>
+        <td><strong>Description</strong></td>
+        <td>Front-load benefits and keywords. Use bullet points for scanability. Address objections.</td>
+        <td>Medium</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="projection-box">
+    <div class="projection-header"><span>Template Marketplace Income Projection</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">10 templates listed, $25 avg price, 20 sales/month total</div>
+        <div class="proj-value">$500/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">30 templates, $35 avg price, 80 sales/month total</div>
+        <div class="proj-value">$2,800/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">100+ templates, $30 avg price, 300 sales/month</div>
+        <div class="proj-value">$9,000/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Breakthrough listing (1 product, 10+ sales/day)</div>
+        <div class="proj-value">$7,500–25,000/month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">&#8594;</div>
+    <div class="callout-text"><strong>The portfolio approach:</strong> Treat your template shop like a stock portfolio. Some listings will be big winners, most will earn modestly. The goal is a large catalog where the few breakout products carry the whole. Aim for 50+ listings within your first 12 months — quality over quantity for each individual item, but quantity matters for the overall shop performance.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     STREAM 7: ROYALTIES, LICENSING & SYNDICATION
+============================================================ -->
+<div class="section" id="stream7">
+
+  <div class="stream-header">
+    <div class="stream-icon">&#9836;</div>
+    <div class="stream-meta">
+      <div class="stream-label">Stream 7</div>
+      <h1 class="stream-title">Royalties, Licensing &amp; Syndication</h1>
+      <div class="stream-tagline">Get paid for work you've already done — books, podcasts, articles, and brand assets can all generate ongoing royalty and licensing income.</div>
+    </div>
+  </div>
+
+  <h3>Book and Ebook Royalties</h3>
+  <p>Publishing a book — even a short, focused ebook — creates a permanent royalty-generating asset. The creator economy has made self-publishing the superior economic choice for most authors: you keep 70% of revenue versus the 8–15% traditional publishers offer.</p>
+
+  <div class="card">
+    <div class="card-title">Self-Publishing (Amazon KDP, Gumroad, Direct)</div>
+    <div class="card-desc">Publish on Amazon Kindle Direct Publishing at 70% royalty on ebooks priced $2.99–$9.99. Physical books through KDP Print at 40–60% royalty. A 10,000-word ebook sold at $9.99 at 70% royalty earns you $6.99 per copy. At 100 copies/month, that's $699/month — indefinitely — from a single focused book. Pair this with your own website sales (via Gumroad) where you keep 95%+ and the economics improve further.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Traditional Publishing</div>
+    <div class="card-desc">If you secure a traditional deal, you receive an advance (typically $5,000–$50,000 for non-fiction by creator-economy authors) and then royalties of 8–15% on net sales after the advance is earned back. The key advantage is distribution and credibility — traditional publishers get you into airports, major retailers, and international markets. The trade-off is lower per-unit earnings and a 12–18-month publication timeline.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Serialized Content (Substack Books, Wattpad, Kindle Vella)</div>
+    <div class="card-desc">Publish content in serialized chapters and earn as readers subscribe or purchase episode credits. Lower per-unit revenue but built-in discovery and community. Best for fiction or long-form narrative non-fiction creators who already have an engaged audience for their writing.</div>
+  </div>
+
+  <h3>Podcast Syndication Income</h3>
+  <p>Podcast monetization has evolved beyond host-read ads. Syndication income is the passive layer on top of your existing podcast — earning from platforms and licensing partners without changing your production process.</p>
+
+  <ul>
+    <li><strong>Spotify Exclusive Deals:</strong> Spotify has historically paid creators $10,000–$5,000,000+ for podcast exclusivity or licensing deals. These are negotiated and reserved for established shows, but knowing they exist is motivation to build toward them.</li>
+    <li><strong>Podcast Network Revenue Share:</strong> Joining a network (Wondery, iHeart, Podglomerate) gets you access to premium advertisers and higher CPM rates ($25–80+ vs. $15–25 DIY). Networks take 20–40% of ad revenue in exchange.</li>
+    <li><strong>Backcatalogue Syndication:</strong> Platforms like Luminary and Stitcher Premium license existing podcast back catalogs for their subscription libraries. If your podcast has 50+ episodes of substantial content, it's worth pitching.</li>
+    <li><strong>International Licensing:</strong> Podcast translation and licensing companies pay upfront fees or revenue shares to bring English-language podcasts to international markets. The right podcast format can be worth $2,000–20,000 for international licensing rights.</li>
+  </ul>
+
+  <h3>Content Repurposing for Royalties</h3>
+  <p>Content you've already created can be reformatted into royalty-generating assets with relatively little effort. The key is thinking systematically about your existing library:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Original Format</th>
+        <th>Repurposed To</th>
+        <th>Royalty Opportunity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Blog Posts</strong></td>
+        <td>Compiled ebook or book manuscript</td>
+        <td>KDP royalties, direct sales</td>
+      </tr>
+      <tr>
+        <td><strong>YouTube Videos</strong></td>
+        <td>Online course modules</td>
+        <td>Course platform revenue</td>
+      </tr>
+      <tr>
+        <td><strong>Podcast Episodes</strong></td>
+        <td>Transcripts → articles → ebook → book</td>
+        <td>Multiple royalty streams from one recording</td>
+      </tr>
+      <tr>
+        <td><strong>Social Media Content</strong></td>
+        <td>Anthology book or content collection</td>
+        <td>Publishing royalties</td>
+      </tr>
+      <tr>
+        <td><strong>Newsletter Issues</strong></td>
+        <td>Annual retrospective ebook</td>
+        <td>Passive sales to new subscribers</td>
+      </tr>
+      <tr>
+        <td><strong>Photography</strong></td>
+        <td>Stock photo libraries + print licensing</td>
+        <td>Ongoing stock royalties</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Brand Licensing Your IP</h3>
+  <p>If you've built a recognizable brand, aesthetic, or intellectual property — a character, a methodology, a design system, a phrase — you can license that IP to third parties who want to use it commercially. This is the most passive form of income: you create nothing new, you simply grant permission to use what already exists and collect royalties on resulting sales.</p>
+
+  <div class="callout cyan">
+    <div class="callout-icon">&#8505;</div>
+    <div class="callout-text"><strong>Brand licensing basics:</strong> Identify your protectable IP (trademarks, copyrights, trade dress). Work with an IP attorney to register what's worth protecting. Approach potential licensees who serve your audience with a licensing proposal: they use your brand on their products, you earn 5–15% of wholesale revenue. Minimum annual guarantees protect your income floor.</div>
+  </div>
+
+  <p>Examples of creator IP licensing: A productivity influencer licenses their "system name" to a physical planner company. A food creator licenses their recipes to a meal kit service. A design creator licenses their illustration style to a merchandise company. A business educator licenses their framework to a training company. The royalty rates vary (3–15% of wholesale) but the income requires zero ongoing effort once the agreement is signed.</p>
+
+  <div class="projection-box">
+    <div class="projection-header"><span>Royalties &amp; Licensing Income Projection</span></div>
+    <div class="projection-body">
+      <div class="proj-row">
+        <div class="proj-label">1 ebook on Amazon KDP, 50 sales/month at $9.99</div>
+        <div class="proj-value">$350/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">5 ebooks, combined 200 sales/month</div>
+        <div class="proj-value">$1,400/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Podcast ad revenue (10k downloads/episode, 2x/week)</div>
+        <div class="proj-value">$1,500–4,000/month</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-label">Brand licensing deal (5% on $500k annual wholesale)</div>
+        <div class="proj-value">$2,083/month</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ============================================================
+     THE INCOME STACK
+============================================================ -->
+<div class="section" id="income-stack">
+  <div class="section-num">The Master Plan</div>
+  <h2 style="font-size:clamp(28px,5vw,44px);font-weight:900;letter-spacing:-.03em;margin-bottom:12px">The Income Stack</h2>
+  <p style="font-size:16px;color:rgba(242,242,242,.5);margin-bottom:40px">How to layer all 7 streams, prioritize your first moves, and build from $0 to $5,000/month passive income in 12 months.</p>
+
+  <h3>Prioritization Framework: Which Stream to Start With</h3>
+  <p>Your starting point depends on what you already have. Use this decision tree:</p>
+
+  <div class="stack-section">
+    <div class="priority-badge p1">Priority 1 — Start Here</div>
+    <div class="stack-title">Do you already create content? Start with Affiliate Marketing (Stream 2) + Digital Products (Stream 1)</div>
+    <div class="stack-sub">These two streams require no new audience building and can be implemented with what you already have. Affiliate links can go live today. Your first digital product can ship in 2–4 weeks.</div>
+    <p style="font-size:13px;color:rgba(242,242,242,.5)">Target: $500–1,500/month by Day 90. Investment: 20–40 hours upfront.</p>
+  </div>
+
+  <div class="stack-section">
+    <div class="priority-badge p1">Priority 1 (Alternative) — If You Have No Audience</div>
+    <div class="stack-title">Start with Template Marketplaces (Stream 6)</div>
+    <div class="stack-sub">Etsy and Creative Market have built-in buyer traffic. You don't need an existing audience. List 10 templates in 30 days, optimize based on performance data, and use the income to fund audience-building activities.</div>
+    <p style="font-size:13px;color:rgba(242,242,242,.5)">Target: $300–800/month by Day 90. Investment: 30–50 hours upfront.</p>
+  </div>
+
+  <div class="stack-section">
+    <div class="priority-badge p2">Priority 2 — Months 3–6</div>
+    <div class="stack-title">Add Newsletter Sponsorships (Stream 4) + Content Licensing (Stream 3)</div>
+    <div class="stack-sub">Once you have a consistent content output and a growing audience, launch a newsletter and set up stock accounts. These streams compound with every issue you send and every asset you upload. Both can run simultaneously with minimal overhead.</div>
+    <p style="font-size:13px;color:rgba(242,242,242,.5)">Target: Add $400–1,200/month by Month 6. Investment: 8–15 hours/month ongoing.</p>
+  </div>
+
+  <div class="stack-section">
+    <div class="priority-badge p3">Priority 3 — Months 6–12</div>
+    <div class="stack-title">Layer in Online Courses (Stream 5) + Royalties (Stream 7)</div>
+    <div class="stack-sub">These streams require the most upfront work but have the highest income ceiling. By Month 6 you'll have audience validation, testimonials, and real knowledge of what your buyers want. That's the perfect time to build your course and start your book or ebook project.</div>
+    <p style="font-size:13px;color:rgba(242,242,242,.5)">Target: Add $2,000–5,000/month by Month 12. Investment: 60–120 hours for courses; 20–40 hours for ebooks.</p>
+  </div>
+
+  <h3>12-Month Roadmap: $0 to $5,000/Month Passive</h3>
+
+  <div class="roadmap">
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 1</div>
+        <div class="roadmap-title">Foundation: Affiliates &amp; First Product</div>
+        <div class="roadmap-desc">Audit your tool stack and join every relevant affiliate program. Back-catalog retrofit: add affiliate links to your top 20 pieces of content. Build your /resources page. Identify and validate your first digital product idea. Begin building it. <strong style="color:var(--green)">Target: $0–150/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 2</div>
+        <div class="roadmap-title">Launch: First Product Live</div>
+        <div class="roadmap-desc">Launch your first digital product. Send launch email to your list. Create one comparison piece for affiliate content. List your first 5 templates on Etsy or Creative Market. <strong style="color:var(--green)">Target: $200–600/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 3</div>
+        <div class="roadmap-title">Scale: Traffic &amp; Template Growth</div>
+        <div class="roadmap-desc">Create a free lead magnet that drives traffic to your paid product. Publish 2 SEO-targeted affiliate posts. Add 10 more templates to your marketplace shop. Upload first batch of stock assets. Optimize top-performing affiliate content. <strong style="color:var(--green)">Target: $400–900/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 4</div>
+        <div class="roadmap-title">Newsletter: Build Your Sponsor Asset</div>
+        <div class="roadmap-desc">Launch a weekly newsletter with a clear niche focus. Create your media kit. Aim for 500–1,000 subscribers by end of month using content upgrades and lead magnets. Create your second digital product — ideally a bundle or upgrade of the first. <strong style="color:var(--green)">Target: $600–1,200/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 5</div>
+        <div class="roadmap-title">Optimization Pass</div>
+        <div class="roadmap-desc">Review analytics across all active streams. Identify your top 3 traffic sources and double down. A/B test your digital product sales page headline and price. Refresh your top 5 Etsy listings with new thumbnails and updated SEO. Reach out to first potential newsletter sponsor. <strong style="color:var(--green)">Target: $800–1,600/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 6</div>
+        <div class="roadmap-title">First Newsletter Sponsor + Course Research</div>
+        <div class="roadmap-desc">Land your first newsletter sponsorship. Begin documenting your expertise for course creation — outline the curriculum, identify the transformation, name the outcome. Offer 5 beta coaching spots to validate course content. <strong style="color:var(--green)">Target: $1,000–2,000/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 7</div>
+        <div class="roadmap-title">Course Beta Launch</div>
+        <div class="roadmap-desc">Launch your course to beta students at 40% discount. Deliver live. Record sessions. Collect testimonials. Continue running all other streams in maintenance mode. <strong style="color:var(--green)">Target: $1,500–2,500/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 8</div>
+        <div class="roadmap-title">Course Full Launch + Ebook Project</div>
+        <div class="roadmap-desc">Full course launch at regular price. Use beta testimonials extensively. Begin compiling your highest-performing blog posts or newsletter issues into an ebook manuscript. <strong style="color:var(--green)">Target: $2,000–3,500/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 9</div>
+        <div class="roadmap-title">Evergreen Systems + Ebook Launch</div>
+        <div class="roadmap-desc">Set your course to evergreen enrollment. Build the automated webinar or video sales letter. Publish your ebook on Amazon KDP and your own site. Begin optimizing for KDP discovery. <strong style="color:var(--green)">Target: $2,500–4,000/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 10</div>
+        <div class="roadmap-title">Stack Optimization</div>
+        <div class="roadmap-desc">Full audit of all 6+ active streams. Identify your top 2 earners and allocate 80% of optimization effort there. Negotiate longer-term newsletter sponsorship packages. Expand top-performing template lines. <strong style="color:var(--green)">Target: $3,000–4,500/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 11</div>
+        <div class="roadmap-title">Second Product Suite + Licensing Exploration</div>
+        <div class="roadmap-desc">Launch a premium bundle of your digital products. Explore content licensing opportunities — pitch your photography or written content to media companies. Build a second template line targeting a different sub-niche. <strong style="color:var(--green)">Target: $3,500–5,000/month.</strong></div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-month">Month 12</div>
+        <div class="roadmap-title">$5k Floor — Reinvest and Expand</div>
+        <div class="roadmap-desc">All 7 streams active or in progress. Monthly review of all income sources. Reinvest 20% of passive income into paid traffic, better tools, or outsourcing low-value maintenance tasks. Plan Year 2: the goal is to double your passive income without doubling your time. <strong style="color:var(--green)">Target: $4,000–7,000+/month.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>The Complete 12-Month Income Stack Projection</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Stream</th>
+        <th>Month 3</th>
+        <th>Month 6</th>
+        <th>Month 12</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Stream 1: Digital Products</strong></td>
+        <td>$300</td>
+        <td>$700</td>
+        <td class="green">$1,200</td>
+      </tr>
+      <tr>
+        <td><strong>Stream 2: Affiliate Marketing</strong></td>
+        <td>$150</td>
+        <td>$400</td>
+        <td class="green">$900</td>
+      </tr>
+      <tr>
+        <td><strong>Stream 3: Content Licensing</strong></td>
+        <td>$50</td>
+        <td>$200</td>
+        <td class="green">$500</td>
+      </tr>
+      <tr>
+        <td><strong>Stream 4: Newsletter Sponsorships</strong></td>
+        <td>$0</td>
+        <td>$400</td>
+        <td class="green">$900</td>
+      </tr>
+      <tr>
+        <td><strong>Stream 5: Online Courses</strong></td>
+        <td>$0</td>
+        <td>$500</td>
+        <td class="green">$1,500</td>
+      </tr>
+      <tr>
+        <td><strong>Stream 6: Template Marketplaces</strong></td>
+        <td>$200</td>
+        <td>$400</td>
+        <td class="green">$700</td>
+      </tr>
+      <tr>
+        <td><strong>Stream 7: Royalties &amp; Licensing</strong></td>
+        <td>$0</td>
+        <td>$100</td>
+        <td class="green">$400</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--text)">TOTAL MONTHLY PASSIVE</strong></td>
+        <td><strong>$700</strong></td>
+        <td><strong>$2,700</strong></td>
+        <td class="green"><strong>$6,100</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <div class="callout-icon">&#9650;</div>
+    <div class="callout-text"><strong>These are conservative estimates</strong> based on consistent execution with a starting audience between 500–2,000 people. Creators with larger audiences or higher-ticket niches will reach these numbers faster. Creators starting from zero may take 3–4 months longer. The key variable is consistency — not talent, not luck, not followers.</div>
+  </div>
+
+  <h3>The One Principle That Changes Everything</h3>
+  <p>Passive income is not built in moments of inspiration. It's built through consistent, unglamorous execution over 12+ months. The creators who succeed with this blueprint do so not because they have better ideas or larger audiences — they succeed because they treat this like a business with KPIs, a calendar, and a quarterly review process.</p>
+
+  <p>Every stream in this blueprint is proven. Every projection here is achievable. The only variable is whether you'll still be executing on Month 10 with the same focus you brought to Month 1.</p>
+
+  <div class="callout yellow">
+    <div class="callout-icon">&#9998;</div>
+    <div class="callout-text"><strong>Your next action:</strong> Close this document. Open a new note. Write the name of the one stream you're starting with. Write one specific task you will complete this week to move that stream forward. Set a deadline. That's it. That's the entire difference between people who read blueprints and people who build passive income.</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">REMbyDesign — Passive Income Blueprint</div>
+  <div class="doc-footer-note">For personal use only. Do not redistribute. &copy; 2026 REMbyDesign.</div>
+</div>
+
+</div><!-- end .page -->
+</body>
+</html>

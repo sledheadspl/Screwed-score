@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelance Rate Masterclass Kit — Price Confidently, Win Clients, Raise Rates</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080808;
+    --card-bg: rgba(15,15,15,0.8);
+    --accent: #30d158;
+    --accent-dim: rgba(48,209,88,0.15);
+    --accent-border: rgba(48,209,88,0.3);
+    --text: #f2f2f2;
+    --text-muted: rgba(242,242,242,0.6);
+    --text-faint: rgba(242,242,242,0.35);
+    --border: rgba(255,255,255,0.06);
+    --border-mid: rgba(255,255,255,0.1);
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(48,209,88,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 22px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: 19px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.55;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-val {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin: 48px 0;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .toc ol { padding-left: 20px; }
+  .toc li {
+    margin-bottom: 10px;
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: var(--accent); }
+  .toc-sub { margin-top: 6px; padding-left: 18px; }
+  .toc-sub li { font-size: 13px; margin-bottom: 5px; color: var(--text-faint); }
+
+  /* ── PART HEADERS ── */
+  .part-header {
+    padding: 72px 0 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .part-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .part-header h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .part-intro {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* ── SECTION HEADERS ── */
+  h3 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin: 48px 0 16px;
+    color: var(--text);
+  }
+  h4 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 28px 0 10px;
+    color: var(--text);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin: 24px 0;
+  }
+  .card-accent {
+    border-color: var(--accent-border);
+    background: linear-gradient(135deg, rgba(48,209,88,0.04) 0%, var(--card-bg) 60%);
+  }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: rgba(48,209,88,0.07);
+    border: 1px solid rgba(48,209,88,0.2);
+    border-radius: 10px;
+    padding: 18px 24px;
+    margin: 16px 0;
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 15px;
+    color: var(--accent);
+    line-height: 1.8;
+  }
+  .formula-box .comment { color: var(--text-faint); font-family: var(--font); font-size: 13px; }
+
+  /* ── SCRIPT BOX ── */
+  .script-box {
+    background: rgba(15,15,15,0.95);
+    border: 1px solid var(--border-mid);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 24px 28px;
+    margin: 16px 0;
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(242,242,242,0.88);
+  }
+  .script-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .script-box p { margin-bottom: 12px; }
+  .script-box p:last-child { margin-bottom: 0; }
+
+  /* ── OBJECTION BOX ── */
+  .objection {
+    background: rgba(255,59,48,0.05);
+    border: 1px solid rgba(255,59,48,0.15);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-style: italic;
+    color: rgba(242,242,242,0.7);
+  }
+  .objection::before { content: '"'; color: rgba(255,59,48,0.5); margin-right: 4px; font-style: normal; }
+  .objection::after { content: '"'; color: rgba(255,59,48,0.5); margin-left: 4px; font-style: normal; }
+
+  /* ── RESPONSE BOX ── */
+  .response {
+    background: rgba(48,209,88,0.04);
+    border: 1px solid rgba(48,209,88,0.15);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: rgba(242,242,242,0.82);
+    line-height: 1.7;
+  }
+  .response::before {
+    content: 'YOUR RESPONSE';
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .callout strong { color: var(--accent); }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border-mid);
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* ── NUMBERED STEPS ── */
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 16px 0; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    background: var(--accent);
+    color: #000;
+    font-size: 12px;
+    font-weight: 900;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── BULLETS ── */
+  .bullets { list-style: none; padding: 0; margin: 12px 0; }
+  .bullets li {
+    padding: 7px 0 7px 22px;
+    position: relative;
+    color: var(--text-muted);
+    font-size: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+  .bullets li:last-child { border-bottom: none; }
+  .bullets li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ── TIER CARDS ── */
+  .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 24px 0; }
+  .tier-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .tier-card:hover { border-color: var(--accent-border); }
+  .tier-card.featured {
+    border-color: var(--accent-border);
+    background: linear-gradient(135deg, rgba(48,209,88,0.06) 0%, var(--card-bg) 100%);
+  }
+  .tier-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .tier-price {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .tier-price span { font-size: 14px; font-weight: 400; color: var(--text-faint); }
+  .tier-includes { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 56px 0;
+  }
+
+  /* ── TEMPLATE BOX ── */
+  .template-box {
+    background: #0c0c0c;
+    border: 1px solid var(--border-mid);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(242,242,242,0.8);
+  }
+  .template-label {
+    display: inline-block;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-mid);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+  .template-box p { margin-bottom: 12px; }
+  .template-box p:last-child { margin-bottom: 0; }
+  .placeholder { color: var(--accent); font-style: italic; }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 60px 0 80px;
+    border-top: 1px solid var(--border);
+    margin-top: 80px;
+    text-align: center;
+  }
+  .footer-logo {
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+  }
+  .footer-copy { font-size: 12px; color: var(--text-faint); }
+
+  /* ── SCRIPT NUMBER ── */
+  .script-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 48px 0 12px;
+  }
+  .script-num-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+  .script-num-title {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── HIGHLIGHT ── */
+  .hl { color: var(--accent); font-weight: 700; }
+
+  /* ── WARNING BOX ── */
+  .warn-box {
+    background: rgba(255,159,10,0.06);
+    border: 1px solid rgba(255,159,10,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: rgba(242,242,242,0.8);
+  }
+  .warn-box strong { color: #ff9f0a; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 0 40px; }
+    .toc { padding: 24px 20px; }
+    .card { padding: 20px; }
+    .script-box { padding: 18px 20px; }
+    .template-box { padding: 20px; }
+    .tier-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HERO -->
+<div class="wrapper">
+  <div class="hero">
+    <div class="hero-badge">Premium Digital Kit</div>
+    <h1>Freelance Rate<br><span>Masterclass Kit</span></h1>
+    <p class="hero-sub">Everything you need to price confidently, command what you're worth, win better clients, and raise your rates without losing sleep — or the client.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-val">6</span>
+        <span class="stat-label">Core Modules</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">15</span>
+        <span class="stat-label">Full Pitch Scripts</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">10</span>
+        <span class="stat-label">Objection Responses</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">30+</span>
+        <span class="stat-label">Templates & Formulas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#part1">Rate Calculation Worksheets</a>
+        <ul class="toc-sub">
+          <li>Minimum Viable Rate Calculator</li>
+          <li>Hourly, Day, Project & Retainer Formulas</li>
+          <li>Worked Examples for Each Formula</li>
+        </ul>
+      </li>
+      <li><a href="#part2">Value-Based Pricing Framework</a>
+        <ul class="toc-sub">
+          <li>Pricing on Outcomes, Not Hours</li>
+          <li>ROI Conversation Script</li>
+          <li>3-Tier Package Architecture</li>
+        </ul>
+      </li>
+      <li><a href="#part3">15 Client Pitch Scripts (Full Copy)</a>
+        <ul class="toc-sub">
+          <li>Cold outreach, negotiation, retainer conversion, re-engagement &amp; more</li>
+        </ul>
+      </li>
+      <li><a href="#part4">Negotiation Playbook</a>
+        <ul class="toc-sub">
+          <li>10 Objections & Exact Responses</li>
+          <li>Anchoring, Silence, Counter-Offer Framework</li>
+        </ul>
+      </li>
+      <li><a href="#part5">Scope Creep Prevention System</a>
+        <ul class="toc-sub">
+          <li>Airtight Project Brief, Change Order Process, Boundary Scripts</li>
+        </ul>
+      </li>
+      <li><a href="#part6">Annual Rate Increase System</a>
+        <ul class="toc-sub">
+          <li>When & How, 3 Announcement Email Templates, Grandfathering</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ PART 1 -->
+  <div class="part-header" id="part1">
+    <div class="part-number">Part 1 of 6</div>
+    <h2>Rate Calculation<br>Worksheets</h2>
+    <p class="part-intro">Stop guessing. These formulas anchor your rates to real numbers — your actual expenses, your real profit targets, and the market reality of your niche.</p>
+  </div>
+
+  <h3>The Minimum Viable Rate (MVR) Calculator</h3>
+  <p style="color:var(--text-muted); margin-bottom: 16px;">Your MVR is the floor — the lowest rate at which your business is profitable and sustainable. Every quote you send must be above this number. Period. Let's calculate it.</p>
+
+  <div class="card card-accent">
+    <h4 style="margin-top:0;">Step 1 — Map Your Annual Expenses</h4>
+    <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Include everything: rent/home office, software subscriptions, equipment, insurance, taxes, health insurance, retirement contributions, professional development, internet, phone, and any subcontractors you rely on.</p>
+    <div class="formula-box">
+      Annual Living Expenses:          $<span class="comment">___________</span><br>
+      Annual Business Expenses:        $<span class="comment">___________</span><br>
+      Annual Tax Liability (est. 28%): $<span class="comment">___________</span><br>
+      Annual Retirement / Savings:     $<span class="comment">___________</span><br>
+      Annual Healthcare / Insurance:   $<span class="comment">___________</span><br>
+      ─────────────────────────────────────────<br>
+      TOTAL ANNUAL COST BASELINE:      $<span class="comment">___________</span>
+    </div>
+  </div>
+
+  <div class="card card-accent">
+    <h4 style="margin-top:0;">Step 2 — Calculate Your Billable Hours</h4>
+    <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Most freelancers dramatically overestimate how many hours they can actually bill. Factor in admin, marketing, sales, and unpaid discovery calls. A realistic billable efficiency for a solo freelancer is 50–60%.</p>
+    <div class="formula-box">
+      Total Work Hours Per Year:        2,080  (52 weeks × 40 hrs)<br>
+      Minus Vacation (3 weeks):        -  120<br>
+      Minus Sick / Admin Days:         -   80<br>
+      Minus Non-Billable Work (40%):   -  752<br>
+      ─────────────────────────────────────────<br>
+      REALISTIC BILLABLE HOURS/YEAR:   1,128
+    </div>
+    <p style="color:var(--text-faint); font-size:13px; margin-top:10px;">Adjust this number based on your actual workload mix. If you do heavy business development, your billable hours may be closer to 900. Be honest.</p>
+  </div>
+
+  <div class="card card-accent">
+    <h4 style="margin-top:0;">Step 3 — Calculate Your MVR</h4>
+    <div class="formula-box">
+      MVR = (Total Annual Cost Baseline + Desired Profit) ÷ Billable Hours<br><br>
+      Example:<br>
+      ($90,000 + $20,000) ÷ 1,128 = <span style="color:#fff; font-weight:700;">$97.52/hr</span><br><br>
+      <span class="comment">Round up to $100/hr as your absolute floor. Never go below this.</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Critical insight:</strong> Your MVR is not your rate. It is your survival rate. Your actual rate should be 30–100% above your MVR to account for gaps between projects, slow months, scope creep, and the cost of being a business rather than an employee.
+  </div>
+
+  <hr class="divider">
+
+  <h3>The Four Core Rate Formulas</h3>
+
+  <h4>Formula 1: Hourly Rate</h4>
+  <p style="color:var(--text-muted); font-size:14px; margin-bottom:12px;">Best for: ongoing support, unknown-scope work, advisory relationships.</p>
+  <div class="formula-box">
+    Hourly Rate = MVR × Niche Premium Multiplier × Experience Multiplier<br><br>
+    Niche Premium Multipliers:<br>
+    <span class="comment">  General writing/design:    1.0×</span><br>
+    <span class="comment">  Specialized industry:      1.3×</span><br>
+    <span class="comment">  High-stakes/regulated:     1.6×</span><br>
+    <span class="comment">  Technical/scarce skill:    2.0×+</span><br><br>
+    Experience Multipliers:<br>
+    <span class="comment">  0–2 years:   1.0×</span><br>
+    <span class="comment">  3–5 years:   1.25×</span><br>
+    <span class="comment">  6–10 years:  1.5×</span><br>
+    <span class="comment">  10+ years:   1.75–2.0×</span>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="template-label">Worked Example</div>
+    <p style="color:var(--text-muted); font-size:14px;">Freelance UX designer, 7 years experience, specializes in fintech apps.</p>
+    <div class="formula-box" style="margin-top:10px;">
+      MVR:                  $95/hr<br>
+      Niche Premium:        1.6× (regulated/high-stakes)<br>
+      Experience:           1.5× (6–10 years)<br>
+      ─────────────────────────────────<br>
+      Calculated Rate:      $95 × 1.6 × 1.5 = $228/hr<br>
+      Market-Adjusted Rate: $200–$225/hr  <span class="comment">(round to market-friendly number)</span><br>
+      Posted Rate:          <span style="color:var(--accent); font-weight:700;">$225/hr</span>
+    </div>
+  </div>
+
+  <h4>Formula 2: Day Rate</h4>
+  <p style="color:var(--text-muted); font-size:14px; margin-bottom:12px;">Best for: on-site consulting, workshop facilitation, sprint-style intensive work.</p>
+  <div class="formula-box">
+    Day Rate = Hourly Rate × 7  (not 8 — account for admin within the day)<br><br>
+    OR for premium positioning:<br>
+    Day Rate = Hourly Rate × 6 × 1.25  (7.5× multiplier — premium day rate)<br><br>
+    Example:<br>
+    $225/hr × 7 = $1,575/day  →  Round to $1,600/day<br>
+    Premium: $225 × 6 × 1.25 = $1,687.50  →  Round to $1,700/day
+  </div>
+  <div class="callout">
+    <strong>Pro tip:</strong> Never offer a day rate that is simply 8× your hourly. Clients will notice and immediately calculate your "implied" hourly. A day rate should represent premium focus and availability — price it accordingly. $1,600–$2,000 per day for a senior specialist is entirely defensible.
+  </div>
+
+  <h4>Formula 3: Project Rate</h4>
+  <p style="color:var(--text-muted); font-size:14px; margin-bottom:12px;">Best for: defined-scope deliverables with clear outcomes: websites, brand identities, campaign assets, audits, reports.</p>
+  <div class="formula-box">
+    Project Rate = (Estimated Hours × Hourly Rate) × Scope Risk Buffer<br><br>
+    Scope Risk Buffers:<br>
+    <span class="comment">  Well-defined, familiar work:     1.1× (10% buffer)</span><br>
+    <span class="comment">  Moderate complexity, new client:  1.25× (25% buffer)</span><br>
+    <span class="comment">  Complex, unclear requirements:    1.5× (50% buffer)</span><br>
+    <span class="comment">  New domain / research-heavy:      1.75× (75% buffer)</span><br><br>
+    Example: Website redesign project<br>
+    Estimated hours: 60<br>
+    Hourly rate:     $225<br>
+    Risk buffer:     1.25× (new client, moderate complexity)<br>
+    ─────────────────────────────────────────────────────<br>
+    Project Rate:    60 × $225 × 1.25 = $16,875<br>
+    Quoted Price:    <span style="color:#fff; font-weight:700;">$17,500</span>  (round up, never round down)
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="template-label">Always Itemize</div>
+    <p style="color:var(--text-muted); font-size:14px; line-height:1.7;">When you present a project rate, break it into phases. Clients are far more comfortable approving $17,500 when they see:</p>
+    <div class="table-wrap" style="margin-top:12px;">
+      <table>
+        <tr><th>Phase</th><th>Deliverable</th><th>Fee</th></tr>
+        <tr><td>Discovery &amp; Strategy</td><td>Kickoff, interviews, audit report</td><td>$2,500</td></tr>
+        <tr><td>UX &amp; Wireframes</td><td>User flows, lo-fi wireframes, feedback loop</td><td>$4,000</td></tr>
+        <tr><td>Visual Design</td><td>Hi-fi mockups, design system, responsive specs</td><td>$5,500</td></tr>
+        <tr><td>Development Handoff</td><td>Dev assets, annotated specs, Loom walkthroughs</td><td>$2,500</td></tr>
+        <tr><td>QA &amp; Launch Support</td><td>2-week launch window support, revision round</td><td>$3,000</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h4>Formula 4: Retainer Rate</h4>
+  <p style="color:var(--text-muted); font-size:14px; margin-bottom:12px;">Best for: ongoing relationships, monthly content, strategic advisory, dedicated capacity agreements.</p>
+  <div class="formula-box">
+    Retainer Rate = (Monthly Committed Hours × Hourly Rate) × Retainer Premium<br><br>
+    Retainer Premium Factors:<br>
+    <span class="comment">  Guaranteed monthly income = you can charge less:    0.85×</span><br>
+    <span class="comment">  Priority access / same-day response:               0.95×</span><br>
+    <span class="comment">  Strategic advisory + execution:                    1.0×</span><br>
+    <span class="comment">  Flexible/on-call availability:                     1.15×+</span><br><br>
+    Example: 20hr/month content retainer, execution only<br>
+    20 × $225 × 0.85 = $3,825/month  →  Quote $4,000/month<br><br>
+    Example: 10hr/month fractional CMO advisory<br>
+    10 × $225 × 1.15 = $2,587.50/month  →  Quote $2,750/month
+  </div>
+  <div class="callout">
+    <strong>Retainer golden rule:</strong> Always require a 3-month minimum commitment on retainers. Month-to-month retainers breed month-to-month anxiety. Three months gives you breathing room to do great work, and gives the client time to see results. Require 30-day cancellation notice in writing.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ PART 2 -->
+  <div class="part-header" id="part2">
+    <div class="part-number">Part 2 of 6</div>
+    <h2>Value-Based<br>Pricing Framework</h2>
+    <p class="part-intro">Time-based pricing caps your income at your available hours. Value-based pricing is uncapped — because the value you create for clients has nothing to do with how long it takes you.</p>
+  </div>
+
+  <h3>The Mindset Shift: From Time to Outcomes</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">When you price by the hour, every efficiency gain punishes you. Finish a logo in 2 hours instead of 4? You just cut your income in half. Value-based pricing flips this completely: the faster you deliver great results (because of your expertise), the higher your effective hourly rate becomes.</p>
+
+  <div class="card">
+    <h4 style="margin-top:0; color:var(--accent);">The Value Equation</h4>
+    <div class="formula-box">
+      Project Value to Client = Revenue Generated<br>
+                              + Cost Savings<br>
+                              + Risk Reduction<br>
+                              + Time Saved (converted to dollars)<br>
+                              + Strategic Optionality Created<br>
+      ─────────────────────────────────────────────<br>
+      Your Price = A fraction of that total value<br><br>
+      <span class="comment">Rule of thumb: charge 10–20% of the direct, measurable value you create.</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="template-label">Value-Based Example</div>
+    <p style="color:var(--text-muted); font-size:14px; line-height:1.7;">You're a conversion rate optimizer. A client has an e-commerce store doing $800,000/year. Their conversion rate is 1.2%. Industry average is 2.5%. You believe you can get them to 2.0%.</p>
+    <div class="formula-box" style="margin-top:12px;">
+      Current revenue at 1.2% CVR:    $800,000<br>
+      At 2.0% CVR (reasonable target): $1,333,000<br>
+      Incremental revenue:             $533,000<br>
+      ────────────────────────────────────────────<br>
+      10% of value:  $53,300<br>
+      15% of value:  $79,950<br>
+      20% of value:  $106,600<br><br>
+      Your quote: $24,000–$36,000 project fee<br>
+      <span class="comment">Even at $36,000 you're charging ~7% of value. Entirely defensible.</span>
+    </div>
+  </div>
+
+  <h3>The ROI Conversation Script</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">Use this framework in your discovery calls to anchor value before you ever mention price. Ask these questions in sequence — they do the heavy lifting for you.</p>
+
+  <div class="script-box">
+    <div class="script-label">Discovery Call — ROI Anchoring Sequence</div>
+    <p>"Before we talk about budget or timelines, I want to make sure I fully understand what success looks like for you. Is that okay?"</p>
+    <p><em style="color:var(--text-faint);">[Client agrees]</em></p>
+    <p>"If we knocked this project completely out of the park — everything went perfectly — what would be different for your business in 6 months?"</p>
+    <p><em style="color:var(--text-faint);">[Listen carefully. Take notes. Let them paint the picture.]</em></p>
+    <p>"That sounds like it would have a real impact. If you had to put a rough number on what that outcome is worth to your business — just ballpark — what would you say?"</p>
+    <p><em style="color:var(--text-faint);">[Most clients will give you a number here. If they hesitate, normalize it:]</em></p>
+    <p>"I know it's hard to predict exactly — even a rough range helps me make sure my proposal is properly scoped to the scale of what you're trying to achieve."</p>
+    <p><em style="color:var(--text-faint);">[After they give a number — and they will — simply say:]</em></p>
+    <p>"Got it. That's really helpful context. Based on everything you've shared, here's how I'd approach this..."</p>
+    <p><em style="color:var(--text-faint);">[Now, when you present your price, they've already anchored to 10–100× that number in their own mind.]</em></p>
+  </div>
+
+  <h3>3-Tier Package Architecture</h3>
+  <p style="color:var(--text-muted); margin-bottom:20px;">Offering one price creates a yes/no decision. Three tiers create a choice between options — all of which result in you getting hired. The middle tier is what most clients will choose. Price it where you actually want to work. The premium tier makes the middle look reasonable. The starter tier creates accessibility without devaluing the work.</p>
+
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-name">Starter</div>
+      <div class="tier-price">$3,500 <span>one-time</span></div>
+      <div class="tier-includes">
+        Core deliverable only. Defined scope, minimal revisions, no strategy layer. Best for clients with clear direction who need clean execution. 1 revision round. Email support only.
+      </div>
+    </div>
+    <div class="tier-card featured">
+      <div class="tier-name">Growth — Most Popular</div>
+      <div class="tier-price">$6,500 <span>one-time</span></div>
+      <div class="tier-includes">
+        Full deliverable + strategic layer. Kickoff call, 2 revision rounds, async support throughout, and a 30-day post-launch check-in. Includes all supporting assets and documentation.
+      </div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name">Premium</div>
+      <div class="tier-price">$12,000 <span>one-time</span></div>
+      <div class="tier-includes">
+        Full-service, white-glove experience. Priority scheduling, unlimited revisions within scope, 1:1 strategy sessions, 90-day support window, and first right of refusal on follow-on work.
+      </div>
+    </div>
+  </div>
+
+  <h3>The Upsell Architecture</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">Every project is an opportunity to create a longer relationship. Build your offer ecosystem so each engagement naturally leads to the next.</p>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Entry Point</th><th>Natural Next Offer</th><th>Value Add</th></tr>
+      <tr><td>Brand identity design</td><td>Brand guidelines doc + asset library subscription</td><td>Consistency, ongoing relationship</td></tr>
+      <tr><td>Website build</td><td>Quarterly refresh retainer + SEO monitoring</td><td>Site stays current, you stay relevant</td></tr>
+      <tr><td>Content audit</td><td>Monthly content strategy + editorial calendar</td><td>Audit findings become the brief</td></tr>
+      <tr><td>Launch campaign</td><td>Post-launch analytics review + iteration</td><td>You're accountable to the results you created</td></tr>
+      <tr><td>Strategy session</td><td>Implementation support retainer</td><td>Strategy without execution is just paper</td></tr>
+      <tr><td>Copywriting project</td><td>Email nurture sequence to follow up on the main asset</td><td>The copy needs a home — and a follow-up</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ PART 3 -->
+  <div class="part-header" id="part3">
+    <div class="part-number">Part 3 of 6</div>
+    <h2>15 Client Pitch Scripts</h2>
+    <p class="part-intro">These are not frameworks or templates. They are fully written scripts you can use immediately — edit the specifics, keep the structure. Every word has been chosen to build trust, demonstrate value, and move the conversation forward.</p>
+  </div>
+
+  <!-- Script 1 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 01</span>
+    <span class="script-num-title">Cold Email to a Dream Client</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Subject: One idea for [Company Name]</div>
+    <p>Hi [First Name],</p>
+    <p>I've been following [Company Name] for a while — specifically what you're doing with [specific initiative, product, or recent thing they published]. It's the kind of work that actually moves the needle in [industry].</p>
+    <p>I'm a [your specialty] who works with [type of company] to [specific outcome you create]. In the last [timeframe], I've helped clients like [Client A] and [Client B] achieve [specific, tangible result].</p>
+    <p>I have one specific idea for [Company Name] that I think could [relevant outcome — more signups, stronger positioning, better retention]. I won't bury the lede: it involves [one-sentence tease of the idea]. I could lay it out in a 15-minute call or a short Loom video — whichever is easier for you.</p>
+    <p>Worth a look?</p>
+    <p>— [Your Name]<br>
+    [Your title] | [Website or portfolio link]<br>
+    [One-line proof point: "Previously: [notable client or result]"]</p>
+  </div>
+
+  <!-- Script 2 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 02</span>
+    <span class="script-num-title">LinkedIn Outreach to a Warm Lead</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">LinkedIn Direct Message</div>
+    <p>Hey [First Name] — I noticed we're both connected to [Mutual Contact] and I've seen a few of your posts about [topic they write about]. Really aligned with how I think about [related topic].</p>
+    <p>I'm a [specialty] who helps [ideal client type] with [specific problem]. Just wrapped up a project with [Client Name] where we [result] — thought it might be relevant to what you're building at [their company].</p>
+    <p>Not pitching you — genuinely just curious if [problem you solve] is something on your radar right now. Happy to share what we did with [Client Name] if it'd be useful.</p>
+    <p>Either way, good to connect.</p>
+  </div>
+
+  <!-- Script 3 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 03</span>
+    <span class="script-num-title">Referral Ask to a Happy Client</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Email — Send After a Win or Project Milestone</div>
+    <p>Hi [Client Name],</p>
+    <p>So glad to hear [result they just shared / milestone just hit]. That's exactly the kind of outcome I set out to create with every engagement — really happy for you.</p>
+    <p>I have a small ask, and feel free to say no — this won't change anything about how we work together.</p>
+    <p>I'm currently looking to take on [1–2] more clients who are a similar fit to you: [describe ideal client in 1–2 sentences]. If anyone comes to mind — a peer, a collaborator, someone in your network who's been dealing with [specific pain point] — I'd love a warm intro.</p>
+    <p>If it leads to a project, I'll give you [referral thank you: $250 credit, a gift, first month discount on a retainer — pick what makes sense]. And if nobody comes to mind, totally understood.</p>
+    <p>Either way, thank you for being the kind of client who makes this work genuinely fun.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 4 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 04</span>
+    <span class="script-num-title">Inbound Inquiry Response</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Email — Respond Within 2 Hours to Inbound Leads</div>
+    <p>Hi [First Name],</p>
+    <p>Thanks for reaching out — [Company/project name] sounds like exactly the kind of work I love doing.</p>
+    <p>To make sure I'm sending you a proposal that actually fits what you need (rather than a generic one), I have a few quick questions:</p>
+    <p>1. What's the main outcome you're hoping this project drives? (More revenue, more users, stronger brand, smoother ops — what does success look like?)<br>
+    2. Do you have a rough timeline in mind, or is this more of a "when it's right" situation?<br>
+    3. Have you worked with a freelancer or agency on this type of work before? If so, what worked well and what didn't?</p>
+    <p>You can reply here, or if it's easier we can jump on a 20-minute call. I have slots available [Day 1] and [Day 2] — just let me know and I'll send a calendar link.</p>
+    <p>Looking forward to learning more.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 5 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 05</span>
+    <span class="script-num-title">Rate Negotiation Response</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">When They Ask You to Lower Your Rate</div>
+    <p>Hi [First Name],</p>
+    <p>I appreciate you being direct about the budget — it really helps me figure out if and how we can make this work.</p>
+    <p>Here's where I am: my rate for this scope of work is [rate/fee]. That reflects the specific expertise I'm bringing — [1–2 sentence reminder of what makes you worth it], and the results I've delivered for clients at this level of engagement.</p>
+    <p>I'm not in a position to reduce the rate and deliver the same scope at the same quality. But here's what I can do: I can reduce the scope to fit your budget. Specifically, for [their budget], I could deliver [reduced version of the project] — which still gets you [core benefit], just without [the piece you're removing].</p>
+    <p>Would that work for where you are right now? And if the full scope is important, it might be worth revisiting the timing when budget is less of a constraint — I'd be happy to hold a start date for you.</p>
+    <p>Let me know what makes most sense.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 6 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 06</span>
+    <span class="script-num-title">"I Can't Afford You" Response</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">When They Say the Price Is Completely Out of Reach</div>
+    <p>Hi [First Name],</p>
+    <p>I hear you — and I genuinely appreciate you being upfront rather than just going quiet.</p>
+    <p>Here's a thought: what if we started smaller? Instead of the full project, we do [smallest meaningful piece of work that demonstrates value — an audit, a strategy session, a single deliverable]. That would run [much lower price], and it gets you something tangible right now while giving us both a chance to see how we work together.</p>
+    <p>If that goes well, the rest of the project will feel like a natural next step rather than a leap of faith.</p>
+    <p>No pressure at all — if the timing just isn't right, I completely understand. I'll keep you in mind for when it is.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 7 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 07</span>
+    <span class="script-num-title">Project Scope Expansion Ask</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">When the Client Asks for More Than the Agreement Covers</div>
+    <p>Hi [First Name],</p>
+    <p>Happy to help with [new request] — that's a great addition to what we're building.</p>
+    <p>Just to be transparent: that's outside the scope of what we agreed to in the original brief. Our current agreement covers [what's covered], and [new request] would be a separate piece of work.</p>
+    <p>I can handle it in one of two ways: I can add it to the current project for an additional [fee], or we can scope it as a separate follow-on engagement once this phase wraps up.</p>
+    <p>Which would you prefer?</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 8 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 08</span>
+    <span class="script-num-title">Retainer Conversion Pitch</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Turning a Project Client Into an Ongoing Partner</div>
+    <p>Hi [First Name],</p>
+    <p>We're coming up on the end of the project, and honestly — this has been one of the more rewarding engagements I've had this year. The work we did on [specific outcome] genuinely moved the needle, and I think there's a lot more runway here.</p>
+    <p>I want to float an idea: would you be open to a monthly retainer arrangement? I've been thinking about what a regular partnership could look like for [Company Name], and here's what I have in mind:</p>
+    <p>For [monthly retainer fee], I'd dedicate [X hours] per month to [specific deliverables or support — content, strategy, design iterations, etc.]. You'd get priority access, consistent quality without the ramp-up time of hiring project-by-project, and I'd be deeply embedded in what you're building rather than just parachuting in.</p>
+    <p>The first month would include [specific immediate value — finishing X, auditing Y, building the framework for Z].</p>
+    <p>I'd want a 3-month minimum so we have enough runway to actually see compounding results. After that, it's month-to-month with 30 days' notice either way.</p>
+    <p>Is this something worth exploring on a call this week?</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 9 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 09</span>
+    <span class="script-num-title">Case Study Request</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Asking a Happy Client for Permission to Document Results</div>
+    <p>Hi [First Name],</p>
+    <p>Now that we've hit [milestone / result], I'd love to write up a brief case study about the work we did together — with your permission, of course.</p>
+    <p>It would cover: what the challenge was, what we built/created/executed, and the specific results. I'd send it to you for review before publishing anything — you'd have full approval over what gets shared.</p>
+    <p>If you're open to it, I'd also love to include a brief quote from you. Nothing that requires a lot of time — even two or three sentences about your experience would mean a lot.</p>
+    <p>This would live on my website/portfolio and would be used in proposals for prospective clients in similar situations. It genuinely helps me work with more companies like yours.</p>
+    <p>Would you be comfortable with that?</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 10 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 10</span>
+    <span class="script-num-title">Testimonial Request</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Making It Easy for Clients to Say Something Nice</div>
+    <p>Hi [First Name],</p>
+    <p>I have a small ask — and I've tried to make it as easy as possible for you.</p>
+    <p>If you've been happy with the work we did together, a short testimonial would mean a lot to me. I know "write a testimonial" can feel like a blank page staring back at you, so here are three prompts you could use as a starting point:</p>
+    <p><em style="color:var(--text-faint);">1. What was the situation before we worked together, and what changed?</em><br>
+    <em style="color:var(--text-faint);">2. What surprised you most about the experience or the results?</em><br>
+    <em style="color:var(--text-faint);">3. Who would you recommend this type of work to, and why?</em></p>
+    <p>Even two or three sentences is genuinely helpful. You can reply here and I'll handle the rest — formatting, posting, all of it.</p>
+    <p>And if you'd prefer, I'm happy to draft something based on what you've shared with me and send it for your approval. Just say the word.</p>
+    <p>Thank you — truly. It's clients like you who make this work worth doing.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 11 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 11</span>
+    <span class="script-num-title">Re-Engagement of a Past Client</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Reaching Back Out After 6+ Months of Silence</div>
+    <p>Hi [First Name],</p>
+    <p>It's been a while — hope [Company Name] is going well. I still think about the [project we worked on] — genuinely proud of what we pulled off on that one.</p>
+    <p>I'm reaching out because I have a bit of capacity opening up in [month], and my best clients always get first access. I wanted to check in on where things are before I fill those slots.</p>
+    <p>Is there anything on your plate right now where [your specialty] would be useful? Even if the timing isn't right, I'd love to catch up and hear how [specific initiative] has been going.</p>
+    <p>No pressure, no pitch — just a genuine check-in from someone who liked working with you.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 12 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 12</span>
+    <span class="script-num-title">Referral Partner Pitch</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Building a Formal Referral Relationship with a Peer</div>
+    <p>Hi [First Name],</p>
+    <p>I've been following your work for a while, and it strikes me that we serve really similar clients without competing directly. You do [their thing], I do [your thing] — different skills, same type of company.</p>
+    <p>I'd love to set up a formal referral relationship. When my clients need [what they do], I refer them to you. When your clients need [what you do], you refer them to me. No awkward fee structures, no conflict — just two people making each other's networks better.</p>
+    <p>I'd want to start by actually getting to know your work better — maybe we do a 30-minute call, I share a recent project, you share one, and we see if there's genuine alignment in how we approach things.</p>
+    <p>Interested? I'm flexible on timing this week and next.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 13 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 13</span>
+    <span class="script-num-title">Rate Increase Notice to Current Clients</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">Announcing a Rate Increase with Confidence and Warmth</div>
+    <p>Hi [First Name],</p>
+    <p>I wanted to give you advance notice about something that affects our ongoing arrangement.</p>
+    <p>Effective [date — ideally 60 days out], my rates are increasing to [new rate]. This reflects the investment I've made in [relevant skill growth, tools, or certifications], the sustained results I'm delivering at this level of the market, and an honest alignment with what the work is worth.</p>
+    <p>Because of the relationship we've built, I'm extending you a [30–60]-day window to lock in additional work at your current rate before the change takes effect. If you have any projects you've been thinking about, now's a good time to green-light them.</p>
+    <p>Going forward, all new agreements will be at the updated rate. Your current retainer/project will [continue as agreed / transition on the renewal date — be specific].</p>
+    <p>I'm proud of what we've built together and I'm looking forward to continuing that. Thank you for being the kind of client who makes this work genuinely worth doing at any rate.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 14 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 14</span>
+    <span class="script-num-title">Project Delay / Scope Creep Boundary</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">When a Client's Delays Are Threatening Your Timeline or Margin</div>
+    <p>Hi [First Name],</p>
+    <p>I want to flag something before it becomes a bigger issue.</p>
+    <p>We're now [X days/weeks] past the originally agreed [milestone / feedback deadline / asset delivery]. This is starting to affect my ability to deliver on the timeline we promised — both for you and for other commitments I've made.</p>
+    <p>I want to make sure we get this back on track. Here's what I need to continue: [specific thing — feedback on draft, asset files, approval on concept, etc.] by [specific date].</p>
+    <p>If we can get that to me by then, I can still deliver the final [deliverable] by [revised date]. If the project continues to be paused beyond [date], I'll need to either [reschedule to a later slot / apply a restart fee of X] to properly re-engage.</p>
+    <p>None of this is meant to be punitive — I just want to be transparent about how my availability works, so we can plan accordingly.</p>
+    <p>What do you think — can we get [specific item] over by [date]?</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- Script 15 -->
+  <div class="script-num">
+    <span class="script-num-badge">Script 15</span>
+    <span class="script-num-title">Closing the Deal Follow-Up</span>
+  </div>
+  <div class="script-box">
+    <div class="script-label">When a Proposal Has Been Out for More Than a Week With No Response</div>
+    <p>Hi [First Name],</p>
+    <p>Circling back on the proposal I sent over on [date]. I know things get busy, so no judgment — I just wanted to check in before I close out some of the capacity I was holding for this.</p>
+    <p>If you're still interested, I'd love to move forward. If something has changed on your end — budget, timeline, internal priorities — I'd genuinely appreciate a quick heads-up so I can plan accordingly. No hard feelings either way.</p>
+    <p>And if you have questions about the proposal before deciding, I'm happy to jump on a quick call and walk through it. Sometimes a conversation clarifies things that an email can't.</p>
+    <p>Looking forward to hearing from you.</p>
+    <p>— [Your Name]</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ PART 4 -->
+  <div class="part-header" id="part4">
+    <div class="part-number">Part 4 of 6</div>
+    <h2>Negotiation Playbook</h2>
+    <p class="part-intro">Negotiation isn't about winning. It's about creating an agreement both parties feel good about — without leaving money on the table or accepting terms that will make you miserable three weeks into the project.</p>
+  </div>
+
+  <h3>The 10 Most Common Objections — and Exactly What to Say</h3>
+
+  <div class="objection">That's more than we budgeted for.</div>
+  <div class="response">
+    "I hear you — budget constraints are real. Let me ask: what were you hoping to invest? I want to see if there's a version of this we can make work, even if it means adjusting the scope." Then listen. If they give you a real number, either adjust scope to fit it or hold your price by reinforcing value: "What I've quoted reflects the outcome we discussed — [specific result]. The question is whether [their budget] is a hard ceiling or a starting point, because the scope that gets you [outcome] requires the investment I've outlined."
+  </div>
+
+  <div class="objection">We had a freelancer do this for half your price.</div>
+  <div class="response">
+    "That's worth exploring. What was the experience like? Did the result move the needle the way you were hoping?" Most of the time, the answer reveals why they're not still working with that person. If they say it went great: "That's great to hear. If the fit was right, it's worth going back to them. What I offer at my rate is [specific differentiator] — if that's important to your goals here, it justifies the difference. If you're primarily budget-driven and the quality bar is flexible, the lower-cost option might be the right call for this one."
+  </div>
+
+  <div class="objection">Can you give us a discount if we give you more work?</div>
+  <div class="response">
+    "I'm happy to think about volume when the commitment is firm and on the table. What specifically are you thinking — are we talking about a retainer agreement, multiple project phases, or something else?" Then only discount when there's a concrete, contracted commitment — not a vague promise of future work. "If we agree today on [specific scope], I can offer [specific discount or additional deliverable] as part of that package. But I'd need the agreement in place to do that."
+  </div>
+
+  <div class="objection">We're a startup — we don't have a big budget but the exposure will be great.</div>
+  <div class="response">
+    "I appreciate that, and I love working with startups. Exposure doesn't cover my expenses, though, so I work with early-stage companies in one of two ways: either a reduced cash rate with a small equity stake, or a deferred payment agreement where you pay my full rate once you hit [revenue milestone]. Would either of those work for your situation?"
+  </div>
+
+  <div class="objection">We need to get sign-off from [other decision maker] first.</div>
+  <div class="response">
+    "Of course — totally understand. Can I ask: is there anything in the proposal that you'd want me to strengthen or clarify before it goes up the chain? I'd rather address any concerns now than have the internal conversation stall on something I can easily answer." Then offer: "Would it be helpful if I joined a brief call with [decision maker] to walk through it directly? Sometimes that removes friction faster than an email chain."
+  </div>
+
+  <div class="objection">Your timeline is too long. We need this faster.</div>
+  <div class="response">
+    "I can move faster — with the right resources. Rush delivery at the quality level you're expecting requires either a rush fee to prioritize your project above my current queue, or we reduce the scope to what's achievable in your timeline. A [X%] rush surcharge gets you delivery by [date]. Which would you prefer to explore?"
+  </div>
+
+  <div class="objection">We want to pay you based on results, not a flat fee.</div>
+  <div class="response">
+    "I'm open to performance components — I do this with select clients. To make it work fairly, I'd need: full access to the analytics and data behind the KPI, a clearly defined baseline, and a base retainer that covers my minimum viable monthly commitment. The performance bonus is then on top of that. What metrics were you thinking about tying it to?"
+  </div>
+
+  <div class="objection">We've decided to go with someone else / bring it in-house.</div>
+  <div class="response">
+    "I understand — thank you for letting me know. Can I ask what made the difference? I'm always trying to improve, and honest feedback is genuinely helpful." Then listen. You might find out it was entirely about budget (in which case ask if there's a smaller engagement that fits), or it reveals something about your positioning or proposal that you can fix for the next one. Either way: "If circumstances change or the internal route doesn't pan out, I'd love to be your first call. I'll keep an eye on what you're building."
+  </div>
+
+  <div class="objection">This is a simple project — it shouldn't cost that much.</div>
+  <div class="response">
+    "I'd push back gently on 'simple.' The output might look simple when it's done — that's actually a sign of expertise. A 400-word homepage headline that converts took me [years of experience / significant iteration] to be able to write. What you're paying for isn't the hour it takes to write it — it's the years it took to know what to write. If the price feels high, it might mean we haven't yet connected the deliverable to the specific outcome it creates for your business. Can we revisit that?"
+  </div>
+
+  <div class="objection">We need to think about it.</div>
+  <div class="response">
+    "Of course — I'd never want you to rush a decision. Can I ask what the main thing is that you'd be thinking through? Is it the investment, the timing, the fit, or something else? I'd rather know now so I can either address it or give you exactly the space you need." If they're vague: "Totally fine. I'll have this proposal available until [date 5–7 days out], at which point the timeline slot may fill. Just let me know before then and we can get started."
+  </div>
+
+  <hr class="divider">
+
+  <h3>Advanced Negotiation Techniques</h3>
+
+  <h4>The Anchor Pricing Technique</h4>
+  <p style="color:var(--text-muted); margin-bottom:14px;">The first number stated in a negotiation becomes the psychological anchor — everything else is measured against it. Always state your price first, and state it high enough that the final agreement lands where you want it.</p>
+  <div class="callout">
+    <strong>In practice:</strong> When a client asks "what do you charge?", respond with your full-scope, premium option first — even if you suspect they'll choose something smaller. "For the complete engagement, we're looking at $18,000. That includes [everything]. If that's outside your range, I also have a more focused version starting at $9,500 that gets you [core outcome]." The $9,500 now feels like a deal.
+  </div>
+
+  <h4>Silence as a Tactic</h4>
+  <p style="color:var(--text-muted); margin-bottom:14px;">After you state your price, stop talking. This is the single most powerful negotiation move and the one most freelancers refuse to use. The discomfort of silence will tempt you to fill it by justifying, over-explaining, or — worst of all — preemptively discounting. Don't.</p>
+  <div class="card">
+    <p style="color:var(--text-muted); font-size:15px; line-height:1.7;">Say your price. Then say: "Does that work for you?" And then go quiet. Let the client respond. Their response tells you everything you need to know about how to proceed — and it may be a simple "yes."</p>
+    <p style="color:var(--text-faint); font-size:13px; margin-top:10px;">Research shows that negotiators who speak first after presenting a price get worse outcomes on average than those who wait for the other party to respond.</p>
+  </div>
+
+  <h4>When to Walk Away</h4>
+  <p style="color:var(--text-muted); margin-bottom:14px;">Walking away is not a failure — it is a business decision. You should walk away when:</p>
+  <ul class="bullets">
+    <li>The client's budget is below your MVR and they won't flex on scope</li>
+    <li>The client has demonstrated bad-faith negotiation (pressure tactics, artificial urgency, shifting goalposts)</li>
+    <li>The terms would require you to work in a way that compromises your standards or ethics</li>
+    <li>Accepting the project means blocking time that could go to a better-fit client</li>
+    <li>Your gut says something is wrong and the money isn't big enough to override your instincts</li>
+  </ul>
+
+  <h4>The Counter-Offer Framework</h4>
+  <p style="color:var(--text-muted); margin-bottom:14px;">When a client makes a counter-offer below your price, never accept it outright — even if it's acceptable. Always give something up in exchange:</p>
+  <ol class="steps">
+    <li><span>Acknowledge the counter without accepting: "I appreciate you being direct about that number."</span></li>
+    <li><span>Identify what you'd need to remove or change to meet it: "To bring this to $X, I'd need to remove [specific deliverable or revision rounds]."</span></li>
+    <li><span>Offer an explicit trade: "If we take [deliverable] off the table, I can do it for $X. Or I can keep the full scope at my original number — which would you prefer?"</span></li>
+    <li><span>Never discount without removing value. Every discount you give teaches the client that your prices are negotiable and that pushing back gets them a better deal.</span></li>
+  </ol>
+
+  <!-- ═══════════════════════════════════════════════════ PART 5 -->
+  <div class="part-header" id="part5">
+    <div class="part-number">Part 5 of 6</div>
+    <h2>Scope Creep<br>Prevention System</h2>
+    <p class="part-intro">Scope creep doesn't happen because clients are malicious. It happens because neither party was specific enough upfront. This system fixes that — before a project starts, and throughout its execution.</p>
+  </div>
+
+  <h3>The Airtight Project Brief Template</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">Before any project kicks off, send this brief to your client and require them to complete and sign off on it. This document becomes your north star — anything outside of it is a scope addition.</p>
+
+  <div class="template-box">
+    <div class="template-label">Project Brief — Complete Before Kickoff</div>
+    <p><strong style="color:var(--accent);">Project Name:</strong> <span class="placeholder">[Working title for this project]</span></p>
+    <p><strong style="color:var(--accent);">Project Owner (Client):</strong> <span class="placeholder">[Name, title, and contact info]</span></p>
+    <p><strong style="color:var(--accent);">Freelancer:</strong> <span class="placeholder">[Your name]</span></p>
+    <p><strong style="color:var(--accent);">Agreement Date:</strong> <span class="placeholder">[Date brief is finalized]</span></p>
+    <p><strong style="color:var(--accent);">Project Objective:</strong><br>
+    In one to three sentences, describe the specific outcome this project is designed to achieve. Be precise — not "improve our website" but "increase homepage conversion rate from 1.2% to 2.0% by redesigning the above-the-fold section and adding a new CTA flow."</p>
+    <p><span class="placeholder">[Client fills this in]</span></p>
+    <p><strong style="color:var(--accent);">What's In Scope (Included Deliverables):</strong></p>
+    <p><span class="placeholder">[Explicit, exhaustive list of every deliverable — e.g., "3 homepage design concepts, 2 revision rounds per concept, final export in Figma with dev-ready specs, one 60-minute design review call"]</span></p>
+    <p><strong style="color:var(--accent);">What's Explicitly Out of Scope:</strong></p>
+    <p><span class="placeholder">[This section is non-negotiable. List what you will NOT do — e.g., "Does not include copywriting, photography sourcing, development/coding, or ongoing maintenance after launch."]</span></p>
+    <p><strong style="color:var(--accent);">Success Criteria:</strong><br>
+    How will we know this project is complete? What does "done" look like?</p>
+    <p><span class="placeholder">[Specific, measurable criteria — "Project is complete when all deliverables listed above have been approved in writing by the client."]</span></p>
+    <p><strong style="color:var(--accent);">Timeline and Key Milestones:</strong></p>
+    <p><span class="placeholder">[Date: Kickoff call] | [Date: First draft delivered] | [Date: Revisions due back] | [Date: Final delivery]</span></p>
+    <p><strong style="color:var(--accent);">Client Responsibilities:</strong><br>
+    What does the client need to provide and when?</p>
+    <p><span class="placeholder">[e.g., "Brand assets by [date], copy by [date], feedback within 48 hours of draft delivery, final approval within 5 business days."]</span></p>
+    <p><strong style="color:var(--accent);">Revision Policy:</strong></p>
+    <p><span class="placeholder">[e.g., "This project includes 2 revision rounds. A revision round is defined as one consolidated set of feedback on each deliverable. Additional revision rounds are billed at $X/hour."]</span></p>
+    <p><strong style="color:var(--accent);">Scope Change Process:</strong><br>
+    Any change to the project scope must be submitted in writing and will be quoted as a separate change order before work begins. The project timeline may be adjusted to accommodate approved scope changes.</p>
+    <p><strong style="color:var(--accent);">Client Sign-Off:</strong><br>
+    By replying "Approved" or signing below, the client confirms they have read, understood, and agreed to the scope defined in this brief.</p>
+    <p><span class="placeholder">[Signature / Date / Email approval]</span></p>
+  </div>
+
+  <h3>The Change Order Process</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">A change order is a formal mini-agreement for anything that falls outside the original project brief. It protects you legally and commercially — and it trains clients to respect your process.</p>
+
+  <div class="template-box">
+    <div class="template-label">Change Order Form</div>
+    <p><strong style="color:var(--accent);">Change Order #:</strong> <span class="placeholder">[CO-001, CO-002, etc.]</span><br>
+    <strong style="color:var(--accent);">Date:</strong> <span class="placeholder">[Today's date]</span><br>
+    <strong style="color:var(--accent);">Related Project:</strong> <span class="placeholder">[Project name]</span></p>
+    <p><strong style="color:var(--accent);">Description of Change:</strong><br>
+    <span class="placeholder">[Clear description of what is being added, removed, or changed]</span></p>
+    <p><strong style="color:var(--accent);">Reason for Change:</strong><br>
+    <span class="placeholder">[Client request / new information / strategic pivot]</span></p>
+    <p><strong style="color:var(--accent);">Impact on Scope:</strong><br>
+    <span class="placeholder">[What this adds to or removes from the project]</span></p>
+    <p><strong style="color:var(--accent);">Additional Fee:</strong> <span class="placeholder">$[Amount]</span><br>
+    <strong style="color:var(--accent);">Timeline Impact:</strong> <span class="placeholder">[Final delivery extended by X days]</span><br>
+    <strong style="color:var(--accent);">Payment Due:</strong> <span class="placeholder">[Upon approval / added to next invoice]</span></p>
+    <p><strong style="color:var(--accent);">Client Approval:</strong><br>
+    Work on this change order will not begin until written approval is received.</p>
+  </div>
+
+  <h3>Scope Boundary Scripts — For Real-Time Conversations</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">These are the exact words to use when a client tries to expand scope in a meeting, on a call, or via message.</p>
+
+  <div class="card">
+    <h4 style="margin-top:0;">"Can you also just quickly..."</h4>
+    <div class="script-box" style="margin-top:10px;">
+      <p>"I love that idea — let me make a note of it. That's actually outside what we agreed to in the brief, so I'll put together a quick change order for it. In the meantime, want me to keep moving forward on [original scope]?"</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">"We've decided we want the final version in [different format/platform]"</h4>
+    <div class="script-box" style="margin-top:10px;">
+      <p>"No problem — I can work in [new format]. That will require [X additional hours / a different workflow], so I'll add a change order for the difference. Want me to send that over before I start on it, or would you prefer I include it in the final invoice?"</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">"We need to completely rethink the direction"</h4>
+    <div class="script-box" style="margin-top:10px;">
+      <p>"I hear you — and I want to make sure we land in the right place. I do want to flag that a full direction change at this stage means we're essentially restarting. I can absolutely pivot, but it would require pausing the current project and scoping the new direction separately. Let me put together a revised scope so we're all aligned on what it takes to get there. I'll have something to you by [tomorrow / end of week]."</p>
+    </div>
+  </div>
+
+  <h3>Project Pause Protocol</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">Sometimes projects stall — client goes silent, internal priorities shift, or they're waiting on something before they can proceed. This protocol protects your time and revenue when that happens.</p>
+
+  <div class="card card-accent">
+    <h4 style="margin-top:0;">The Pause Protocol — 3 Stages</h4>
+    <ol class="steps">
+      <li><span><strong>Day 7 without response:</strong> Send a friendly check-in email. "Hi [Name] — just checking in on [project]. We're currently waiting on [specific input] to move forward. Can you give me a sense of your timeline on that?" No ultimatum yet.</span></li>
+      <li><span><strong>Day 14 without response:</strong> Send a formal pause notice. "Hi [Name] — I've reached out a couple of times about [project]. Without the [input needed], I'm unable to continue. I'm officially pausing the project as of today. When you're ready to re-engage, please note that my availability may have changed and a restart fee of [10–25% of remaining project fee] may apply to reprioritize the project."</span></li>
+      <li><span><strong>Day 30 without response:</strong> Send a project closure notice. "Hi [Name] — unfortunately, [project] has been inactive for 30 days without communication. I'm closing out the project file. Any work completed to this point is invoiced and due within [14 days]. If you'd like to restart in the future, we'll need to create a new agreement at current rates. I wish you all the best."</span></li>
+    </ol>
+  </div>
+  <div class="warn-box">
+    <strong>Important:</strong> Include a project pause/abandonment clause in every contract. It should specify: after how many days of client non-response the project is considered paused, what the restart fee is, and after how many days the project is considered abandoned (with remaining balance due).
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ PART 6 -->
+  <div class="part-header" id="part6">
+    <div class="part-number">Part 6 of 6</div>
+    <h2>Annual Rate<br>Increase System</h2>
+    <p class="part-intro">Raising rates is not optional — it's required. Inflation, skill growth, market positioning, and basic business health all demand it. The only question is how to do it well.</p>
+  </div>
+
+  <h3>When to Raise Your Rates</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">Stop waiting for permission. You should raise your rates when:</p>
+  <ul class="bullets">
+    <li>You have more inbound inquiries than capacity (demand exceeds supply — price clears the market)</li>
+    <li>It's been more than 12 months since your last increase</li>
+    <li>You've acquired significant new skills, certifications, or tools</li>
+    <li>You've landed a notable new client, case study, or result</li>
+    <li>You've raised your minimum project size and your old rate no longer reflects it</li>
+    <li>You notice that comparable freelancers in your market charge more than you</li>
+    <li>You feel a low-level resentment when quoting your current rate (the "ugh, is that all?" feeling)</li>
+    <li>Your calendar is full and you have no incentive to get more efficient</li>
+  </ul>
+
+  <h3>How Much to Raise Your Rates</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Scenario</th><th>Recommended Increase</th><th>Rationale</th></tr>
+      <tr><td>Annual cost-of-living / inflation adjustment</td><td>5–8%</td><td>Minimum to stay even with inflation. Clients expect this.</td></tr>
+      <tr><td>Meaningful skill upgrade or certification</td><td>10–20%</td><td>New skills = new value = new price point.</td></tr>
+      <tr><td>Market repositioning (moving upmarket)</td><td>25–50%</td><td>Signals new positioning. Some clients will leave — that's the point.</td></tr>
+      <tr><td>Full relaunch / rebrand of your services</td><td>50–100%</td><td>New identity, new offer, new price. Clean break.</td></tr>
+      <tr><td>Demand far exceeds supply</td><td>Until it doesn't</td><td>Raise until your acceptance rate drops to ~70%.</td></tr>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>The 70% acceptance rate principle:</strong> If prospects are accepting your proposals at a rate above 80–85%, your prices are almost certainly too low. The right price has some friction. Aim for an acceptance rate of around 70% — enough to be selective, few enough that you're not underpricing.
+  </div>
+
+  <h3>Rate Increase Announcement Email Templates</h3>
+  <p style="color:var(--text-muted); margin-bottom:20px;">Three versions for three different relationships. All are direct, warm, and confident. None apologize for the increase.</p>
+
+  <div class="template-box">
+    <div class="template-label">Version 1 — Ongoing Retainer Client</div>
+    <p>Subject: Update on our arrangement — effective [Date]</p>
+    <br>
+    <p>Hi <span class="placeholder">[First Name]</span>,</p>
+    <p>I wanted to reach out personally to let you know about a change to my pricing, effective <span class="placeholder">[Date — 60 days from now]</span>.</p>
+    <p>Starting then, my retainer rate will be <span class="placeholder">$[New Amount]/month</span>, up from <span class="placeholder">$[Current Amount]</span>. This increase reflects the depth of expertise I bring to our work together, the investment I've made in <span class="placeholder">[skills, tools, training]</span>, and the results we've been able to create — <span class="placeholder">[briefly name a specific result]</span>.</p>
+    <p>Because of the relationship we have, I want to give you the full 60 days' notice, and I'm happy to lock in the current rate for any additional work you'd like to kick off before then.</p>
+    <p>Your current retainer will transition to the new rate on <span class="placeholder">[renewal date]</span>. If that doesn't work for you, I completely understand — just give me 30 days' notice and we can wrap things up cleanly.</p>
+    <p>I genuinely value what we've built together and I'm looking forward to continuing to do meaningful work for <span class="placeholder">[Company]</span>.</p>
+    <p>— <span class="placeholder">[Your Name]</span></p>
+  </div>
+
+  <div class="template-box">
+    <div class="template-label">Version 2 — Project Client (Recurring but Not Retainer)</div>
+    <p>Subject: My rates are changing in <span class="placeholder">[Month]</span> — here's what that means for you</p>
+    <br>
+    <p>Hi <span class="placeholder">[First Name]</span>,</p>
+    <p>Quick heads-up: I'm updating my project rates effective <span class="placeholder">[Date]</span>.</p>
+    <p>New rates for my core services:</p>
+    <p><span class="placeholder">• [Service 1]: $[New Amount] (was $[Old Amount])</span><br>
+    <span class="placeholder">• [Service 2]: $[New Amount] (was $[Old Amount])</span><br>
+    <span class="placeholder">• [Service 3]: $[New Amount] (was $[Old Amount])</span></p>
+    <p>If you have any projects you've been thinking about, I'd encourage you to book them before <span class="placeholder">[Date]</span> to lock in current pricing. Just say the word and I'll hold the slot.</p>
+    <p>After <span class="placeholder">[Date]</span>, all new project quotes will reflect the updated rates.</p>
+    <p>Thanks for being a client I'm genuinely proud to work with. I'm always working to level up what I bring to the table — and this rate reflects that commitment.</p>
+    <p>— <span class="placeholder">[Your Name]</span></p>
+  </div>
+
+  <div class="template-box">
+    <div class="template-label">Version 3 — Prospective / Lapsed Client List (Email Blast)</div>
+    <p>Subject: Rates are going up <span class="placeholder">[Month]</span> — wanted you to hear it first</p>
+    <br>
+    <p>Hi <span class="placeholder">[First Name]</span>,</p>
+    <p>I send this to a small list of people I've worked with or spoken with — people I'd genuinely like to work with again. You're one of them.</p>
+    <p>Quick update: my rates are increasing on <span class="placeholder">[Date]</span>. If we've had a conversation about working together that stalled out, now's a good time to revisit it at the current pricing.</p>
+    <p>I'm taking on <span class="placeholder">[1–2]</span> new projects in <span class="placeholder">[Month]</span>, and I'd love for one of them to be yours.</p>
+    <p>No pressure. Just wanted to give you a real heads-up before the change goes into effect.</p>
+    <p>What's going on at <span class="placeholder">[their company]</span> these days? Anything I could help with?</p>
+    <p>— <span class="placeholder">[Your Name]</span></p>
+  </div>
+
+  <h3>How to Grandfather Loyal Clients</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">Grandfathering is a tool, not a habit. Done right, it rewards loyalty and makes long-term clients feel special. Done wrong, it's an indefinite discount that erodes your business over time.</p>
+
+  <div class="card card-accent">
+    <h4 style="margin-top:0;">The Grandfathering Framework</h4>
+    <ol class="steps">
+      <li><span><strong>Be selective.</strong> Only grandfather clients who have been with you for 12+ months, pay on time consistently, refer others, and are genuinely easy to work with. Problem clients don't deserve a discount for longevity.</span></li>
+      <li><span><strong>Set an expiration.</strong> Grandfather rates should last 6–12 months, not forever. "I'm keeping your rate at $X for the next 6 months. After that, it will move to the new rate of $Y." This is generous AND honest.</span></li>
+      <li><span><strong>Name it as a gift.</strong> "As a thank-you for the relationship we've built, I'm holding your rate at the current level for 6 months while everyone else transitions to the new pricing." This lands as generosity, not obligation.</span></li>
+      <li><span><strong>Never be pressured into it.</strong> If a client demands you grandfather them rather than asking graciously, that's a red flag. Grandfathering is something you give, not something clients take.</span></li>
+    </ol>
+  </div>
+
+  <h3>Positioning a Rate Increase as Premium Positioning</h3>
+  <p style="color:var(--text-muted); margin-bottom:16px;">A rate increase isn't just about getting paid more — it's a positioning event. Done right, it attracts better clients, repels wrong-fit clients, and signals upward market movement. Here's how to use it strategically:</p>
+
+  <div class="card">
+    <h4 style="margin-top:0;">Update Your Public Materials at the Same Time</h4>
+    <p style="color:var(--text-muted); font-size:14px; line-height:1.7;">When you raise rates, refresh your website, portfolio, and LinkedIn at the same time. Add new case studies, update the language to reflect your current positioning, and if possible, update your client roster (add a new logo, a new result). The rate increase and the brand refresh reinforce each other — you're not just charging more, you've leveled up.</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">Use Social Proof to Anchor the New Rate</h4>
+    <p style="color:var(--text-muted); font-size:14px; line-height:1.7;">Before announcing a rate increase, get a new testimonial or case study live. When prospective clients land on your site or profile at the new rate, they should immediately see evidence that the price is justified. "Companies like [Client A] and [Client B] chose to work with me at this level — here's what they got." Social proof is the most powerful price justification in existence.</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">The "I've Moved Upmarket" Announcement</h4>
+    <p style="color:var(--text-muted); font-size:14px; line-height:1.7;">Post this on LinkedIn when your rate increase goes live:</p>
+    <div class="script-box" style="margin-top:12px;">
+      <p>"My rates went up [X]% this month. Here's what changed to justify it:</p>
+      <p>[Specific skill, result, or credential gained in the past year]</p>
+      <p>[Second thing — could be a client result, a case study, a new niche]</p>
+      <p>[Third thing — could be a refined process, a faster delivery time, a new tool]</p>
+      <p>I'm now working with [new type of client at new level]. If that's you, my calendar is open. Link in bio."</p>
+    </div>
+    <p style="color:var(--text-faint); font-size:13px; margin-top:10px;">This post will get responses. Some will be old contacts who want to book before the rate goes higher. Some will be new contacts impressed by the confidence. Both are wins.</p>
+  </div>
+
+  <div class="callout">
+    <strong>Final principle:</strong> Your rate is a signal. A low rate signals low confidence, low stakes, and low value — even if your work is extraordinary. A high rate signals expertise, selectivity, and a serious commitment to outcomes. Price like you believe in your own work, because if you don't, no client ever will.
+  </div>
+
+  <hr class="divider">
+
+  <div class="card card-accent" style="text-align:center; padding: 40px;">
+    <div class="hero-badge" style="display:inline-block; margin-bottom:20px;">You Made It</div>
+    <h3 style="margin: 0 0 12px; font-size: 26px;">Now go charge what you're worth.</h3>
+    <p style="color:var(--text-muted); max-width:480px; margin: 0 auto; font-size:15px; line-height:1.7;">Every formula in this kit, every script, every tactic — none of it matters until you actually use it. Pick one thing from this kit. Use it this week. Then use another. Your rates will follow your confidence. Start there.</p>
+  </div>
+
+  <div class="footer">
+    <div class="footer-logo">GetScrewedScore</div>
+    <div class="footer-copy">Freelance Rate Masterclass Kit &mdash; For freelancers who are done leaving money on the table.</div>
+  </div>
+</div>
+
+</body>
+</html>
