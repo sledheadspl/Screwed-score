@@ -176,7 +176,7 @@ export default function ClipPilotPage() {
           {/* CTAs */}
           <div className="animate-fade-up delay-300 flex flex-col sm:flex-row gap-3 justify-center mb-14">
             <a
-              href="#download"
+              href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.0/ClipPilot_0.1.0_x64-setup.exe"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-black transition-all hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
@@ -543,7 +543,7 @@ if score ≥ threshold (default 50):
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="/downloads/ClipPilot-Setup.exe"
+                href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.0/ClipPilot_0.1.0_x64-setup.exe"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold text-black transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{
                   background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
