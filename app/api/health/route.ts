@@ -1,7 +1,18 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 
-export async function GET(): Promise<NextResponse> {
+export const dynamic = 'force-dynamic'
+
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Require X-Health-Token header if HEALTH_SECRET is configured
+  const healthSecret = process.env.HEALTH_SECRET
+  if (healthSecret) {
+    const provided = req.headers.get('x-health-token')
+    if (provided !== healthSecret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+  }
+
   const checks: Record<string, 'ok' | 'error'> = {}
 
   // Check Supabase connectivity

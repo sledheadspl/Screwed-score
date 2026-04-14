@@ -13,8 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
   try {
-    const ip     = (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ?? '0.0.0.0'
-    const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 16)
+    // Prefer x-real-ip (set by reverse proxy) over x-forwarded-for to prevent spoofing
+    const ip     = (req.headers['x-real-ip'] as string) ??
+      (req.headers['cf-connecting-ip'] as string) ??
+      (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+      '0.0.0.0'
+    const ipHash = createHash('sha256').update(`waitlist:${ip}`).digest('hex')
 
     const supabase = createServiceClient()
 

@@ -3,7 +3,7 @@ import { createServerClient } from '@supabase/ssr'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const code = typeof req.query.code === 'string' ? req.query.code : null
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://getscrewedscore.com'
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
 
   if (code) {
     const pendingCookies: string[] = []

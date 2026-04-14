@@ -49,8 +49,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ businesses: data ?? [], stats })
   }
 
-  // POST — upsert business score from experience submission
+  // POST — upsert business score from experience submission (internal only)
   if (req.method === 'POST') {
+    // Restrict to internal server-to-server calls only
+    const internalSecret = req.headers['x-internal-secret']
+    if (!internalSecret || internalSecret !== process.env.GSS_TOKEN_SECRET) {
+      return res.status(403).json({ error: 'Forbidden' })
+    }
+
     const { business_name, category, city, state, score, amount_dollars } = req.body
     if (!business_name?.trim() || !score) return res.status(400).json({ error: 'Missing fields' })
 

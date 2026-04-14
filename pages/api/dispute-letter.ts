@@ -1,10 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import Anthropic from '@anthropic-ai/sdk'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import type { DocumentType } from '@/lib/types'
 
 const anthropic = new Anthropic()
+
+// Max 5 dispute letters per IP per hour
+const LIMIT     = 5
+const WINDOW_MS = 60 * 60 * 1000
 
 const RECIPIENT_BY_TYPE: Record<string, string> = {
   mechanic_invoice:    'Service Manager / Billing Department',
@@ -24,12 +29,47 @@ const RECIPIENT_BY_TYPE: Record<string, string> = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
+  // Rate limit by IP
+  const ip     = (req.headers['x-real-ip'] as string) ??
+    (req.headers['cf-connecting-ip'] as string) ??
+    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+    '0.0.0.0'
+  const ipHash = createHash('sha256').update(`dispute-letter:${ip}`).digest('hex')
+
+  const supabase = createServiceClient()
+
+  try {
+    const { data } = await supabase
+      .from('rate_limits')
+      .select('request_count, window_start')
+      .eq('ip_hash', ipHash)
+      .maybeSingle()
+
+    if (data) {
+      const windowAge = Date.now() - new Date(data.window_start).getTime()
+      if (windowAge < WINDOW_MS && data.request_count >= LIMIT) {
+        return res.status(429).json({ error: 'Too many requests. Try again later.' })
+      }
+    }
+
+    const now          = new Date().toISOString()
+    const windowExpired = !data || Date.now() - new Date(data.window_start).getTime() >= WINDOW_MS
+    await supabase.from('rate_limits').upsert(
+      {
+        ip_hash:       ipHash,
+        request_count: windowExpired ? 1 : (data!.request_count + 1),
+        window_start:  windowExpired ? now : data!.window_start,
+        updated_at:    now,
+      },
+      { onConflict: 'ip_hash' }
+    )
+  } catch { /* non-fatal */ }
+
   const { analysis_id } = req.body as { analysis_id?: string }
   if (!analysis_id || typeof analysis_id !== 'string') {
     return res.status(400).json({ error: 'analysis_id required' })
   }
 
-  const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('analyses')
     .select('*')

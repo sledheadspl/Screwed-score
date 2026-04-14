@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, { params }: Params): Promise<NextRe
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
     }
 
-    const { body: msgBody, is_vendor_rep } = body as Record<string, unknown>
+    const { body: msgBody } = body as Record<string, unknown>
     if (typeof msgBody !== 'string' || !msgBody.trim()) {
       return NextResponse.json({ error: 'body is required' }, { status: 400 })
     }
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest, { params }: Params): Promise<NextRe
 
     const message = await replyToDispute(
       id,
-      { body: msgBody, is_vendor_rep: is_vendor_rep === true },
+      { body: msgBody, is_vendor_rep: false },
       userId
     )
 

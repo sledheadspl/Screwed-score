@@ -1,10 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createHash } from 'crypto'
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
 import { verifyToken } from '@/lib/auth'
 import { isValidUUID, extractJSON } from '@/lib/utils'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+// Max 50 content generations per Pro user (by IP) per day
+const LIMIT     = 50
+const WINDOW_MS = 24 * 60 * 60 * 1000
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -15,6 +20,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!proToken || !verifyToken(proToken)) {
     return res.status(403).json({ error: 'PRO_REQUIRED' })
   }
+
+  // Rate limit by IP
+  const ip     = (req.headers['x-real-ip'] as string) ??
+    (req.headers['cf-connecting-ip'] as string) ??
+    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+    '0.0.0.0'
+  const ipHash = createHash('sha256').update(`generate-content:${ip}`).digest('hex')
+
+  try {
+    const supabase = createServiceClient()
+    const { data } = await supabase
+      .from('rate_limits')
+      .select('request_count, window_start')
+      .eq('ip_hash', ipHash)
+      .maybeSingle()
+
+    if (data) {
+      const windowAge = Date.now() - new Date(data.window_start).getTime()
+      if (windowAge < WINDOW_MS && data.request_count >= LIMIT) {
+        return res.status(429).json({ error: 'Daily generation limit reached. Try again tomorrow.' })
+      }
+    }
+
+    const now          = new Date().toISOString()
+    const windowExpired = !data || Date.now() - new Date(data.window_start).getTime() >= WINDOW_MS
+    await supabase.from('rate_limits').upsert(
+      {
+        ip_hash:       ipHash,
+        request_count: windowExpired ? 1 : (data!.request_count + 1),
+        window_start:  windowExpired ? now : data!.window_start,
+        updated_at:    now,
+      },
+      { onConflict: 'ip_hash' }
+    )
+  } catch { /* non-fatal */ }
 
   const { analysis_id } = req.body
   if (!analysis_id || !isValidUUID(analysis_id)) {
@@ -71,15 +111,15 @@ Return ONLY valid JSON in this exact format:
   "on_screen_text": ["3-5 short bold text overlays to show during the video"]
 }`
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1200,
-    messages: [{ role: 'user', content: prompt }],
-  })
-
-  const text = response.content[0]?.type === 'text' ? response.content[0].text : ''
-
   try {
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: prompt }],
+    })
+
+    const text = response.content[0]?.type === 'text' ? response.content[0].text : ''
+
     const content = extractJSON(text)
 
     const flaggedItems = (analysis.overcharge_output?.line_items ?? [])
@@ -103,7 +143,8 @@ Return ONLY valid JSON in this exact format:
         doc_label:      (analysis.document_type ?? 'document').replace(/_/g, ' '),
       },
     })
-  } catch {
-    return res.status(500).json({ error: 'Failed to parse generated content' })
+  } catch (err) {
+    console.error('[generate-content]', err)
+    return res.status(500).json({ error: 'Failed to generate content' })
   }
 }

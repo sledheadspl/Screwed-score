@@ -1,9 +1,11 @@
+import { randomBytes } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 function randomGroup(): string {
-  return Array.from({ length: 4 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join('')
+  // Use crypto.randomBytes for cryptographically secure random key generation
+  return Array.from(randomBytes(4), b => CHARS[b % CHARS.length]).join('')
 }
 
 export function generateLicenseKey(): string {

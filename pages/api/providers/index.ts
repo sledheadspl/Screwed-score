@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServiceClient } from '@/lib/supabase'
+import { VENDOR_CATEGORIES } from '@/lib/types/vendors'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const supabase = createServiceClient()
@@ -16,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (state) query = query.eq('state', state)
 
     const { data, error } = await query
-    if (error) return res.status(500).json({ error: error.message })
+    if (error) return res.status(500).json({ error: 'Database error' })
     return res.status(200).json(data)
   }
 
@@ -25,6 +26,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!name?.trim() || !category) {
       return res.status(400).json({ error: 'name and category are required' })
+    }
+    if (!VENDOR_CATEGORIES.has(category)) {
+      return res.status(400).json({ error: 'Invalid category' })
+    }
+    // Validate website URL — must be https if provided
+    if (website && typeof website === 'string' && website.trim()) {
+      if (!website.trim().startsWith('https://')) {
+        return res.status(400).json({ error: 'website must be a valid https URL' })
+      }
     }
 
     const { data, error } = await supabase
@@ -42,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .select('id')
       .single()
 
-    if (error) return res.status(500).json({ error: error.message })
+    if (error) return res.status(500).json({ error: 'Database error' })
     return res.status(201).json({ id: data.id })
   }
 

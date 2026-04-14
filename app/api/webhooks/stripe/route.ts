@@ -4,18 +4,15 @@ import { createServiceClient } from '@/lib/supabase'
 import { sendProductDeliveryEmail, sendClipPilotLicenseEmail, PRODUCT_CATALOG } from '@/lib/email/product-delivery'
 import { getClipPilotTier, createLicense } from '@/lib/clippilot/license'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY environment variable is required')
-}
-if (!process.env.STRIPE_WEBHOOK_SECRET) {
-  throw new Error('STRIPE_WEBHOOK_SECRET environment variable is required')
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2026-03-25.dahlia' as Stripe.LatestApiVersion,
-})
-
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2026-03-25.dahlia' as Stripe.LatestApiVersion,
+  })
+
   const sig = req.headers.get('stripe-signature')
   if (!sig) {
     return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 })
