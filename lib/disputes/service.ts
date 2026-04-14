@@ -122,6 +122,9 @@ export async function resolveDispute(
 
   if (!existing) throw new Error('Dispute not found')
 
+  // Require authentication to resolve any dispute
+  if (!userId) throw new Error('Not authorized to resolve this dispute')
+
   // If the dispute has a recorded owner, require the caller to be that owner
   if (existing.user_id !== null && userId !== existing.user_id) {
     throw new Error('Not authorized to resolve this dispute')
