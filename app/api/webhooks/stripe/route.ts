@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createServiceClient } from '@/lib/supabase'
-import { sendProductDeliveryEmail, PRODUCT_CATALOG } from '@/lib/email/product-delivery'
+import { sendProductDeliveryEmail, sendClipPilotLicenseEmail, PRODUCT_CATALOG } from '@/lib/email/product-delivery'
+import { getClipPilotTier, createLicense } from '@/lib/clippilot/license'
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY environment variable is required')
@@ -40,12 +41,35 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const session = event.data.object as Stripe.Checkout.Session
         const productId = session.metadata?.product_id
 
-        // Only handle one-time product purchases (not scan credits or subscriptions)
-        if (productId && productId in PRODUCT_CATALOG) {
-          const customerEmail =
-            session.customer_details?.email ??
-            (typeof session.customer_email === 'string' ? session.customer_email : null)
+        const customerEmail =
+          session.customer_details?.email ??
+          (typeof session.customer_email === 'string' ? session.customer_email : null)
 
+        // ClipPilot subscription purchase — generate and email license key
+        const clipPilotTier = productId ? getClipPilotTier(productId) : null
+        if (clipPilotTier && customerEmail) {
+          try {
+            const licenseKey = await createLicense({
+              stripeSessionId: session.id,
+              customerEmail,
+              productId: productId!,
+              tier: clipPilotTier,
+            })
+            const result = await sendClipPilotLicenseEmail({
+              toEmail: customerEmail,
+              licenseKey,
+              tier: clipPilotTier,
+            })
+            if (!result.ok) {
+              console.error('[stripe-webhook] ClipPilot license email failed:', result.error)
+            }
+          } catch (err) {
+            console.error('[stripe-webhook] ClipPilot license creation failed:', err)
+          }
+        }
+
+        // Digital product purchase — email download link
+        if (productId && productId in PRODUCT_CATALOG) {
           if (customerEmail) {
             const result = await sendProductDeliveryEmail({
               toEmail: customerEmail,
@@ -53,7 +77,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
               stripeSessionId: session.id,
             })
             if (!result.ok) {
-              // Log but don't return 500 — Stripe would retry and re-send the email
               console.error('[stripe-webhook] Product delivery failed:', result.error)
             }
           } else {

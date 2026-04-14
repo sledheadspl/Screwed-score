@@ -212,6 +212,103 @@ function buildEmailHtml(opts: {
 </html>`
 }
 
+export async function sendClipPilotLicenseEmail(opts: {
+  toEmail: string
+  licenseKey: string
+  tier: 'pro' | 'unlimited'
+}): Promise<{ ok: boolean; error?: string }> {
+  const { toEmail, licenseKey, tier } = opts
+  const tierLabel = tier === 'unlimited' ? 'Unlimited' : 'Pro'
+  const fromAddress = process.env.RESEND_FROM_EMAIL ?? 'products@screwedscore.com'
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your ClipPilot ${tierLabel} License Key</title>
+</head>
+<body style="margin:0;padding:0;background-color:#080808;font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#080808;min-height:100vh;">
+    <tr>
+      <td align="center" style="padding:48px 16px;">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+          <tr>
+            <td style="padding-bottom:40px;text-align:center;">
+              <span style="font-size:20px;font-weight:900;color:#f2f2f2;letter-spacing:-0.02em;">Clip</span><span style="font-size:20px;font-weight:900;background:linear-gradient(135deg,#67e8f9,#00E5FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.02em;">Pilot</span>
+              <div style="margin-top:6px;font-size:11px;font-weight:600;color:rgba(242,242,242,0.3);letter-spacing:0.12em;text-transform:uppercase;">by REMbyDesign</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:rgba(15,15,15,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:20px;overflow:hidden;">
+              <tr><td style="height:3px;background:linear-gradient(90deg,#00E5FF00,#00E5FF,#00E5FF00);"></td></tr>
+              <tr>
+                <td style="padding:40px 36px;">
+                  <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:rgba(0,229,255,0.6);letter-spacing:0.2em;text-transform:uppercase;">Purchase Confirmed</p>
+                  <h1 style="margin:0 0 8px;font-size:28px;font-weight:900;color:#f2f2f2;letter-spacing:-0.03em;line-height:1.1;">ClipPilot ${tierLabel}</h1>
+                  <p style="margin:0 0 32px;font-size:15px;color:rgba(242,242,242,0.5);line-height:1.5;">Your license key is ready. Activate it in the ClipPilot app under Settings → License.</p>
+                  <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;width:100%;">
+                    <tr>
+                      <td style="border-radius:12px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);padding:20px 24px;text-align:center;">
+                        <p style="margin:0 0 6px;font-size:11px;font-weight:700;color:rgba(0,229,255,0.5);letter-spacing:0.2em;text-transform:uppercase;">Your License Key</p>
+                        <p style="margin:0;font-size:22px;font-weight:900;color:#00E5FF;letter-spacing:0.08em;font-family:monospace;">${licenseKey}</p>
+                      </td>
+                    </tr>
+                  </table>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:16px 20px;">
+                        <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:rgba(242,242,242,0.6);">How to activate</p>
+                        <p style="margin:0;font-size:13px;color:rgba(242,242,242,0.4);line-height:1.6;">
+                          1. Open ClipPilot on your Windows PC<br/>
+                          2. Go to Settings → License<br/>
+                          3. Paste your license key and click Activate<br/>
+                          4. Your ${tierLabel} features unlock immediately
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin:0;font-size:12px;color:rgba(242,242,242,0.25);line-height:1.6;">
+                    Questions? Reply to this email — we respond within 24 hours.<br/>
+                    REMbyDesign · <a href="https://screwedscore.com/clippilot" style="color:rgba(242,242,242,0.35);text-decoration:none;">screwedscore.com/clippilot</a>
+                  </p>
+                </td>
+              </tr>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 0 0;text-align:center;">
+              <p style="margin:0;font-size:11px;color:rgba(242,242,242,0.2);">
+                © ${new Date().getFullYear()} REMbyDesign. You received this because you purchased ClipPilot ${tierLabel}.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+
+  try {
+    const { error } = await getResend().emails.send({
+      from: `ClipPilot <${fromAddress}>`,
+      to: toEmail,
+      subject: `Your ClipPilot ${tierLabel} license key`,
+      html,
+    })
+    if (error) {
+      console.error('[clippilot-license-email] Resend error:', error)
+      return { ok: false, error: error.message }
+    }
+    console.log(`[clippilot-license-email] Sent ${tier} key to ${toEmail}`)
+    return { ok: true }
+  } catch (err) {
+    console.error('[clippilot-license-email] Unexpected error:', err)
+    return { ok: false, error: String(err) }
+  }
+}
+
 export async function sendProductDeliveryEmail(opts: {
   toEmail: string
   productId: string

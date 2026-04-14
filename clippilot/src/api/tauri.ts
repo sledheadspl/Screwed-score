@@ -120,19 +120,33 @@ export interface LicenseValidation {
   clips_remaining: number | null;
 }
 
+const LICENSE_API = "https://screwedscore.com/api/clippilot-license/validate";
+
 export async function validateLicense(key: string): Promise<LicenseValidation> {
-  // In Phase 7, this will call the backend API
-  // For now, validate key format locally
   const keyPattern = /^CLIP-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
   if (!keyPattern.test(key)) {
     throw new Error("Invalid license key format. Expected: CLIP-XXXX-XXXX-XXXX-XXXX");
   }
 
-  // Demo: keys starting with CLIP-PRO = pro tier
-  const tier = key.startsWith("CLIP-PRO") ? "pro" : key.startsWith("CLIP-UNL") ? "unlimited" : "pro";
+  const res = await fetch(LICENSE_API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`License server error (${res.status})`);
+  }
+
+  const data = await res.json() as { valid: boolean; tier: string | null };
+
+  if (!data.valid || !data.tier) {
+    throw new Error("License key not found or inactive");
+  }
+
   return {
     valid: true,
-    tier,
+    tier: data.tier as "pro" | "unlimited",
     expires_at: null,
     clips_remaining: null,
   };

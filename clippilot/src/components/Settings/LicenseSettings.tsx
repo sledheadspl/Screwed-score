@@ -1,9 +1,12 @@
-import { Crown, Key, RefreshCw, Zap } from "lucide-react";
+import { Crown, ExternalLink, Key, RefreshCw, Zap } from "lucide-react";
 import { useState } from "react";
 import Button from "../Common/Button";
 import { useSettingsStore } from "../../store/settingsStore";
 import { toast } from "../Common/Toast";
 import { validateLicense } from "../../api/tauri";
+import { open } from "@tauri-apps/plugin-shell";
+
+const UPGRADE_URL = "https://screwedscore.com/clippilot#pricing";
 
 const TIER_COLORS: Record<string, string> = {
   free: "text-dark-300",
@@ -151,10 +154,12 @@ export default function LicenseSettings() {
             Get 100 clips/month, remove watermarks, and enable auto-posting for $19/mo or $149/yr.
           </p>
           <div className="flex gap-2">
-            <Button variant="primary">
+            <Button variant="primary" onClick={() => open(UPGRADE_URL)}>
               <Crown size={14} /> Get Pro — $19/mo
             </Button>
-            <Button variant="secondary">View All Plans</Button>
+            <Button variant="secondary" icon={<ExternalLink size={14} />} onClick={() => open(UPGRADE_URL)}>
+              View All Plans
+            </Button>
           </div>
         </div>
       )}

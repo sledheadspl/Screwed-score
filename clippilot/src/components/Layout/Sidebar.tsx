@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useStreamStore } from "../../store/streamStore";
+import { useSettingsStore } from "../../store/settingsStore";
 
 const navItems = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -18,8 +19,14 @@ const navItems = [
   { to: "/settings", icon: Settings, label: "Settings" },
 ];
 
+const TIER_LABEL: Record<string, string> = { free: "Free", pro: "Pro", unlimited: "Unlimited" }
+const TIER_COLOR: Record<string, string> = { free: "text-dark-300", pro: "text-brand-400", unlimited: "text-yellow-400" }
+const TIER_DOT: Record<string, string> = { free: "bg-dark-400", pro: "bg-brand-400", unlimited: "bg-yellow-400" }
+
 export default function Sidebar() {
   const { isMonitoring, currentPlatform } = useStreamStore();
+  const { settings } = useSettingsStore();
+  const tier = settings.license_status ?? "free";
 
   return (
     <aside className="w-16 lg:w-56 flex flex-col bg-dark-900 border-r border-white/5 shrink-0">
@@ -81,20 +88,20 @@ export default function Sidebar() {
       {/* License badge */}
       <div className="p-3 border-t border-white/5">
         <NavLink
-          to="/license"
+          to="/settings"
           className="hidden lg:flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-dark-400
                      hover:text-white hover:bg-white/5 transition-all duration-150"
         >
-          <div className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-dark-700 text-dark-300 border border-white/10 uppercase tracking-wide">
-            Free
+          <div className={`px-1.5 py-0.5 rounded text-[10px] font-bold bg-dark-700 border border-white/10 uppercase tracking-wide ${TIER_COLOR[tier] ?? "text-dark-300"}`}>
+            {TIER_LABEL[tier] ?? "Free"}
           </div>
-          <span>Upgrade Plan</span>
+          {tier === "free" && <span>Upgrade Plan</span>}
         </NavLink>
         <NavLink
-          to="/license"
+          to="/settings"
           className="flex lg:hidden justify-center px-2.5 py-2 rounded-lg text-dark-400 hover:text-white hover:bg-white/5"
         >
-          <div className="w-2 h-2 rounded-full bg-yellow-500" title="Free plan" />
+          <div className={`w-2 h-2 rounded-full ${TIER_DOT[tier] ?? "bg-dark-400"}`} title={`${TIER_LABEL[tier] ?? "Free"} plan`} />
         </NavLink>
       </div>
     </aside>
