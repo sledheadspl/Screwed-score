@@ -92,11 +92,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           { subscription_id: sub.id, reason: 'cancelled', revoked_at: new Date().toISOString() },
           { onConflict: 'subscription_id' }
         )
-        // Also mark profile as inactive if one exists
         await supabase
           .from('profiles')
           .update({ subscription_status: 'cancelled' })
           .eq('stripe_subscription_id', sub.id)
+        // Deactivate any ClipPilot license tied to this subscription's customer
+        const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id
+        if (customerId) {
+          const stripeCustomer = await stripe.customers.retrieve(customerId) as Stripe.Customer
+          const email = stripeCustomer.email
+          if (email) {
+            await supabase
+              .from('clippilot_licenses')
+              .update({ is_active: false })
+              .eq('customer_email', email)
+            console.log('[stripe-webhook] ClipPilot license deactivated for:', email)
+          }
+        }
         console.log('[stripe-webhook] Subscription cancelled:', sub.id)
         break
       }
