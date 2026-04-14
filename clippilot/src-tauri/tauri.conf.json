@@ -38,11 +38,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": {
-      "binaries/ffmpeg/*": "binaries/ffmpeg/",
-      "binaries/whisper/main.exe": "binaries/whisper/",
-      "binaries/whisper/models/ggml-base.en.bin": "binaries/whisper/models/"
-    },
+    "resources": {},
     "windows": {
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
