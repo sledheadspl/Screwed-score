@@ -28,6 +28,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   checks.anthropic_key  = process.env.ANTHROPIC_API_KEY   ? 'ok' : 'error'
   checks.stripe_key     = process.env.STRIPE_SECRET_KEY    ? 'ok' : 'error'
   checks.token_secret   = process.env.GSS_TOKEN_SECRET     ? 'ok' : 'error'
+  checks.owner_secret   = process.env.OWNER_ACCESS_SECRET  ? 'ok' : 'error'
 
   const allOk = Object.values(checks).every(v => v === 'ok')
 
