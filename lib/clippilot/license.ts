@@ -68,6 +68,25 @@ export async function createLicense(opts: {
   return key
 }
 
+export async function lookupLicenseByEmail(email: string): Promise<{
+  found: boolean
+  tier: ClipPilotTier | null
+  license_key: string | null
+}> {
+  const supabase = createServiceClient()
+  const { data } = await supabase
+    .from('clippilot_licenses')
+    .select('tier, license_key, is_active')
+    .eq('customer_email', email)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (!data) return { found: false, tier: null, license_key: null }
+  return { found: true, tier: data.tier as ClipPilotTier, license_key: data.license_key }
+}
+
 export async function validateLicenseKey(key: string): Promise<{
   valid: boolean
   tier: ClipPilotTier | null
