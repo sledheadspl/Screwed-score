@@ -37,3 +37,9 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# ClipPilot desktop app build artifacts and binaries
+clippilot/src-tauri/target/
+clippilot/src-tauri/binaries/
+clippilot/node_modules/
+clippilot/dist/
