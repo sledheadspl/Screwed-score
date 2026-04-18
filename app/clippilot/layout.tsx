@@ -32,8 +32,8 @@ const jsonLd = {
     'Chat velocity analysis',
     'Local processing — no cloud required',
   ],
-  softwareVersion: '0.1.4',
-  downloadUrl: 'https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.4/ClipPilot_0.1.4_x64-setup.exe',
+  softwareVersion: '0.1.5',
+  downloadUrl: 'https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.5/ClipPilot_0.1.5_x64-setup.exe',
   fileSize: '10MB',
 }
 

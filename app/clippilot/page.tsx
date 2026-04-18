@@ -234,7 +234,7 @@ export default function ClipPilotPage() {
           {/* CTAs */}
           <div className="animate-fade-up delay-300 flex flex-col sm:flex-row gap-3 justify-center mb-14">
             <a
-              href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.4/ClipPilot_0.1.4_x64-setup.exe"
+              href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.5/ClipPilot_0.1.5_x64-setup.exe"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold text-black transition-all hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
@@ -706,7 +706,7 @@ if score ≥ threshold (default 50):
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.4/ClipPilot_0.1.4_x64-setup.exe"
+                href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.5/ClipPilot_0.1.5_x64-setup.exe"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold text-black transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{
                   background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
@@ -747,7 +747,7 @@ if score ≥ threshold (default 50):
           <p className="text-xs" style={{ color: 'rgba(242,242,242,0.4)' }}>Auto-clip your best stream moments. Windows 10/11.</p>
         </div>
         <a
-          href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.4/ClipPilot_0.1.4_x64-setup.exe"
+          href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.5/ClipPilot_0.1.5_x64-setup.exe"
           className="ml-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-black whitespace-nowrap transition-all hover:opacity-90"
           style={{
             background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
