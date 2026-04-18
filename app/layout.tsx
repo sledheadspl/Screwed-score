@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/navigation/Navbar'
+
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://screwedscore.com'),
@@ -77,11 +80,6 @@ const jsonLd = {
     priceCurrency: 'USD',
     description: '3 free scans, additional scans for $2.99',
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1240',
-  },
   featureList: [
     'Bill overcharge detection',
     'Contract red flag analysis',
@@ -95,7 +93,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

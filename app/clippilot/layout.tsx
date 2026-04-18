@@ -10,6 +10,41 @@ export const metadata: Metadata = {
   },
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'ClipPilot',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Windows',
+  url: 'https://screwedscore.com/clippilot',
+  description: 'AI-powered desktop app that detects viral moments from live streams, crops them vertical, adds AI captions, and auto-publishes to TikTok, YouTube Shorts, and Twitter/X.',
+  offers: [
+    { '@type': 'Offer', price: '0', priceCurrency: 'USD', name: 'Free' },
+    { '@type': 'Offer', price: '19', priceCurrency: 'USD', name: 'Pro', billingIncrement: 'MONTH' },
+    { '@type': 'Offer', price: '49', priceCurrency: 'USD', name: 'Unlimited', billingIncrement: 'MONTH' },
+  ],
+  featureList: [
+    'Live stream moment detection',
+    'Auto vertical crop (9:16)',
+    'On-device AI captions via Whisper.cpp',
+    'One-click publish to TikTok, YouTube Shorts, Twitter/X',
+    'Real-time audio spike detection',
+    'Chat velocity analysis',
+    'Local processing — no cloud required',
+  ],
+  softwareVersion: '0.1.4',
+  downloadUrl: 'https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.4/ClipPilot_0.1.4_x64-setup.exe',
+  fileSize: '10MB',
+}
+
 export default function ClipPilotLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {children}
+    </>
+  )
 }

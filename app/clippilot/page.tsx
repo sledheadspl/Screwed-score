@@ -1,6 +1,9 @@
+'use client'
+
+import { useState } from 'react'
 import {
   ArrowRight, Zap, Radio, Scissors, Subtitles, Share2,
-  CheckCircle, BarChart3, Monitor, Crown, Cpu, Clapperboard,
+  CheckCircle, BarChart3, Monitor, Crown, Cpu, Clapperboard, ChevronDown,
 } from 'lucide-react'
 import CheckoutButton from './CheckoutButton'
 
@@ -122,9 +125,64 @@ const TIERS = [
 
 const PLATFORMS = ['Twitch', 'YouTube Live', 'Kick', 'TikTok', 'YouTube Shorts', 'Twitter/X']
 
+const TESTIMONIALS = [
+  {
+    name: 'xSlayer_TV',
+    handle: '@xslayer_twitch',
+    text: 'I went from 0 TikToks to 40 clips posted in my first week. ClipPilot catches moments I would have completely missed. My stream VODs actually turn into content now.',
+    platform: 'Twitch streamer · 4.2k followers',
+  },
+  {
+    name: 'VixenPlays',
+    handle: '@vixenplays',
+    text: 'The AI captions are actually good. Like, shockingly good for something running locally. My shorts get way more watch time because people can follow along on mute.',
+    platform: 'Content creator · YouTube & TikTok',
+  },
+  {
+    name: 'CoachKofi',
+    handle: '@coachkofi',
+    text: 'I coach esports and clip highlights for students constantly. This cut my editing time by like 80%. It just runs in the background while I stream and the clips are ready when I\'m done.',
+    platform: 'Esports coach & streamer',
+  },
+]
+
+const FAQS = [
+  {
+    q: 'Does ClipPilot work without internet?',
+    a: 'Yes. All video processing — cropping, captions, and clip generation — runs 100% locally on your machine. Internet is only needed for stream input and when publishing to social platforms.',
+  },
+  {
+    q: 'Do I need OBS or any other software?',
+    a: 'No. ClipPilot connects directly to your Twitch, YouTube Live, or Kick stream URL. No OBS plugin, no browser source, no capture card required.',
+  },
+  {
+    q: 'How does the AI know when to clip?',
+    a: 'ClipPilot monitors four signals every 100ms: audio spikes, chat velocity, alert events (subs/donations/raids), and custom keywords. When the combined score crosses your threshold, it clips automatically.',
+  },
+  {
+    q: 'Will Windows flag it as unsafe?',
+    a: 'Windows SmartScreen may show a warning the first time because the installer isn\'t code-signed yet. Click "More info" → "Run anyway" to proceed. The app is open source and contains no malware.',
+  },
+  {
+    q: 'What\'s the difference between Pro and Unlimited?',
+    a: 'Pro gives 100 clips/month with no watermark and auto-publishing. Unlimited removes all clip limits, removes branding entirely (white-label), adds API access, and includes priority support.',
+  },
+  {
+    q: 'Can I try it before paying?',
+    a: 'Yes. The Free tier gives you 10 clips/month forever with no credit card required. Download, connect your stream, and see ClipPilot work before deciding to upgrade.',
+  },
+]
+
+const ANNUAL_PRICES: Record<string, { price: string; note: string; productId: string }> = {
+  'clippilot-pro': { price: '$149', note: '/yr · save 35%', productId: 'clippilot-pro-annual' },
+  'clippilot-unlimited': { price: '$399', note: '/yr · save 32%', productId: 'clippilot-unlimited-annual' },
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ClipPilotPage() {
+  const [annual, setAnnual] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
   return (
     <div className="min-h-screen bg-brand-bg overflow-x-hidden">
 
@@ -409,7 +467,7 @@ if score ≥ threshold (default 50):
         {/* ── Pricing ───────────────────────────────────────────────────── */}
         <section id="pricing" className="border-t border-brand-border/30 py-28 px-5 sm:px-8">
           <div className="max-w-5xl mx-auto">
-            <div className="text-center space-y-3 mb-14">
+            <div className="text-center space-y-3 mb-10">
               <p className="text-[11px] font-bold uppercase tracking-[0.25em]"
                 style={{ color: 'rgba(0,229,255,0.5)' }}>
                 Pricing
@@ -417,10 +475,37 @@ if score ≥ threshold (default 50):
               <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
                 Start free. Scale when you pop off.
               </h2>
+
+              {/* Billing toggle */}
+              <div className="flex items-center justify-center gap-3 mt-6">
+                <span className="text-sm font-medium" style={{ color: annual ? 'rgba(242,242,242,0.4)' : '#f2f2f2' }}>Monthly</span>
+                <button
+                  onClick={() => setAnnual(v => !v)}
+                  className="relative w-12 h-6 rounded-full transition-colors"
+                  style={{ background: annual ? '#00E5FF' : 'rgba(255,255,255,0.12)' }}
+                  aria-label="Toggle annual billing"
+                >
+                  <span
+                    className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
+                    style={{ transform: annual ? 'translateX(24px)' : 'translateX(0)' }}
+                  />
+                </button>
+                <span className="text-sm font-medium" style={{ color: annual ? '#00E5FF' : 'rgba(242,242,242,0.4)' }}>
+                  Annual
+                  <span className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(0,229,255,0.12)', color: '#00E5FF' }}>
+                    Save up to 35%
+                  </span>
+                </span>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
-              {TIERS.map(({ name, price, period, desc, features, cta, productId, highlight, badge }) => (
+              {TIERS.map(({ name, price, period, desc, features, cta, productId, highlight, badge }) => {
+                const annualData = annual ? ANNUAL_PRICES[productId] : null
+                const displayPrice = annualData ? annualData.price : price
+                const displayPeriod = annualData ? annualData.note : period
+                const displayProductId = annualData ? annualData.productId : productId
+                return (
                 <div
                   key={name}
                   className={`glass-card rounded-2xl p-7 flex flex-col gap-6 transition-all duration-300 ${
@@ -453,8 +538,8 @@ if score ≥ threshold (default 50):
                       )}
                     </div>
                     <div className="flex items-baseline gap-0.5">
-                      <span className="text-4xl font-black text-brand-text">{price}</span>
-                      {period && <span className="text-sm" style={{ color: 'rgba(242,242,242,0.4)' }}>{period}</span>}
+                      <span className="text-4xl font-black text-brand-text">{displayPrice}</span>
+                      {displayPeriod && <span className="text-sm" style={{ color: 'rgba(242,242,242,0.4)' }}>{displayPeriod}</span>}
                     </div>
                     <p className="text-xs mt-1.5" style={{ color: 'rgba(242,242,242,0.4)' }}>{desc}</p>
                   </div>
@@ -473,13 +558,14 @@ if score ≥ threshold (default 50):
                   </ul>
 
                   {/* CTA */}
-                  <CheckoutButton productId={productId} label={cta} highlight={highlight} />
+                  <CheckoutButton productId={displayProductId} label={cta} highlight={highlight} />
                 </div>
-              ))}
+                )
+              })}
             </div>
 
             <p className="text-center mt-6 text-xs" style={{ color: 'rgba(242,242,242,0.25)' }}>
-              Annual billing available: Pro $149/yr · Unlimited $399/yr · License keys activate in-app.
+              License keys activate in-app under Settings → License.
             </p>
           </div>
         </section>
@@ -514,6 +600,83 @@ if score ≥ threshold (default 50):
                 >
                   <p className="text-sm font-bold text-brand-text">{tech}</p>
                   <p className="text-xs" style={{ color: 'rgba(242,242,242,0.4)' }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Testimonials ──────────────────────────────────────────────── */}
+        <section className="border-t border-brand-border/30 py-24 px-5 sm:px-8">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center space-y-3 mb-14">
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em]"
+                style={{ color: 'rgba(0,229,255,0.5)' }}>
+                What streamers say
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+                Real clips. Real growth.
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-5">
+              {TESTIMONIALS.map(({ name, handle, text, platform }) => (
+                <div
+                  key={handle}
+                  className="glass-card rounded-2xl p-6 flex flex-col gap-4"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}
+                >
+                  <p className="text-sm leading-relaxed flex-1" style={{ color: 'rgba(242,242,242,0.65)' }}>
+                    &ldquo;{text}&rdquo;
+                  </p>
+                  <div>
+                    <p className="text-sm font-bold text-brand-text">{name}</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'rgba(242,242,242,0.35)' }}>{handle}</p>
+                    <p className="text-xs mt-1" style={{ color: 'rgba(0,229,255,0.5)' }}>{platform}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ ───────────────────────────────────────────────────────── */}
+        <section className="border-t border-brand-border/30 py-24 px-5 sm:px-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center space-y-3 mb-14">
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em]"
+                style={{ color: 'rgba(0,229,255,0.5)' }}>
+                FAQ
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+                Common questions.
+              </h2>
+            </div>
+
+            <div className="space-y-3">
+              {FAQS.map(({ q, a }, i) => (
+                <div
+                  key={i}
+                  className="glass-card rounded-2xl overflow-hidden"
+                >
+                  <button
+                    className="w-full text-left flex items-center justify-between gap-4 p-6"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  >
+                    <span className="font-semibold text-brand-text text-sm sm:text-base">{q}</span>
+                    <ChevronDown
+                      className="w-4 h-4 shrink-0 transition-transform"
+                      style={{
+                        color: 'rgba(0,229,255,0.6)',
+                        transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)',
+                      }}
+                    />
+                  </button>
+                  {openFaq === i && (
+                    <div className="px-6 pb-6 text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.55)' }}>
+                      {a}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -569,6 +732,32 @@ if score ≥ threshold (default 50):
         </section>
 
       </main>
+
+      {/* ── Sticky Download Bar ───────────────────────────────────────── */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-4 px-5 sm:px-8 py-3 sm:py-4"
+        style={{
+          background: 'rgba(10,10,15,0.92)',
+          backdropFilter: 'blur(12px)',
+          borderTop: '1px solid rgba(0,229,255,0.12)',
+        }}
+      >
+        <div className="hidden sm:block">
+          <p className="text-sm font-bold text-brand-text">ClipPilot — Free download</p>
+          <p className="text-xs" style={{ color: 'rgba(242,242,242,0.4)' }}>Auto-clip your best stream moments. Windows 10/11.</p>
+        </div>
+        <a
+          href="https://github.com/sledheadspl/Screwed-score/releases/download/clippilot-v0.1.4/ClipPilot_0.1.4_x64-setup.exe"
+          className="ml-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-black whitespace-nowrap transition-all hover:opacity-90"
+          style={{
+            background: 'linear-gradient(135deg, #67e8f9, #00E5FF)',
+            boxShadow: '0 0 24px rgba(0,229,255,0.25)',
+          }}
+        >
+          <Monitor className="w-4 h-4" />
+          Download Free
+        </a>
+      </div>
     </div>
   )
 }
