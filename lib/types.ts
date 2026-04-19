@@ -152,6 +152,7 @@ export interface AnalysisResult {
 export interface UploadResponse {
   document_id: string
   document_type: DocumentType
+  limit_reached?: boolean
 }
 
 /** Client sends only the document_id. Text is fetched server-side. */

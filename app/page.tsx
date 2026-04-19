@@ -132,6 +132,7 @@ const FAQ_ITEMS = [
 export default function HomePage() {
   const [state, setState]           = useState<AppState>(INITIAL_STATE)
   const [showPaywall, setShowPaywall] = useState(false)
+  const [limitReached, setLimitReached] = useState(false)
   const [isPro, setIsPro]           = useState(false)
   const [userEmail, setUserEmail]   = useState<string | null>(null)
   const [refToken, setRefToken]     = useState<string | null>(null)
@@ -209,7 +210,8 @@ export default function HomePage() {
         return
       }
 
-      const { document_id, document_type } = uploadData as UploadResponse
+      const { document_id, document_type, limit_reached } = uploadData as UploadResponse
+      if (limit_reached) setLimitReached(true)
       if (refToken) { setRefToken(null); setRefBanner(false) }
       setPhase('parsing', 45, 'Reading your document...')
       await delay(400)
@@ -251,7 +253,7 @@ export default function HomePage() {
     }
   }, [refToken])
 
-  const handleReset = () => setState(INITIAL_STATE)
+  const handleReset = () => { setState(INITIAL_STATE); setLimitReached(false) }
   const isLoading   = state.phase === 'uploading' || state.phase === 'parsing' || state.phase === 'analyzing'
 
   return (
@@ -872,6 +874,21 @@ export default function HomePage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {limitReached && (
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-brand-border bg-brand-surface px-4 py-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-brand-text">You&apos;ve used your free scans</p>
+                  <p className="text-xs text-brand-sub">Unlock unlimited scans for 30 days — one-time payment, no subscription.</p>
+                </div>
+                <button
+                  onClick={() => setShowPaywall(true)}
+                  className="shrink-0 px-4 py-2 rounded-lg text-sm font-black text-white transition-all hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
+                  $2.99
+                </button>
               </div>
             )}
 

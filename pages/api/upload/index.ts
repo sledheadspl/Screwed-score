@@ -115,12 +115,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (rateData) {
         const windowAge    = Date.now() - new Date(rateData.window_start).getTime()
         const windowActive = windowAge < WINDOW_MS
-        if (windowActive && rateData.request_count >= limit) {
+        // Allow one over-limit scan (teaser) — hard block only after limit + 1
+        if (windowActive && rateData.request_count > limit) {
           return res.status(429).json({ error: 'LIMIT_REACHED' })
         }
         if (!windowActive) rateData = null
       }
     }
+
+    // True when this is the user's one teaser scan (at exactly the limit)
+    const limitReached = !isPro && !refBypassed &&
+      !!rateData &&
+      Date.now() - new Date(rateData.window_start).getTime() < WINDOW_MS &&
+      rateData.request_count === limit
 
     // ── 5. Parse multipart form data with formidable ─────────────────────────
     const form = formidable({ maxFileSize: MAX_FILE_SIZE_BYTES, keepExtensions: true })
@@ -221,6 +228,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const response: UploadResponse = {
       document_id:   doc.id,
       document_type: documentType,
+      ...(limitReached ? { limit_reached: true } : {}),
     }
 
     return res.status(200).json(response)
