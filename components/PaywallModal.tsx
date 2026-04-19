@@ -9,9 +9,9 @@ interface Props {
 }
 
 const PERKS = [
-  'Unlimited document analyses',
+  'Unlimited scans for 30 days',
   'All document types — bills, contracts, invoices',
-  'Priority AI processing',
+  'Full AI analysis + Fight Back Kit access',
   'Shareable result links forever',
 ]
 
@@ -45,12 +45,12 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-red-400" />
-            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Free limit reached</span>
+            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Free scans used up</span>
           </div>
           <h2 className="text-xl font-black text-brand-text leading-tight">
-            Unlock unlimited<br />analyses for $9.99/mo
+            Unlock 30 days of<br />unlimited scans — <span style={{ color: '#ff6b60' }}>$2.99</span>
           </h2>
-          <p className="text-xs text-brand-sub">Cancel anytime. No contracts.</p>
+          <p className="text-xs text-brand-sub">One-time payment. No subscription. No hidden fees.</p>
         </div>
 
         {/* Perks */}
@@ -71,7 +71,7 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
             <span className="flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
             </span>
-          ) : 'Go Pro — $9.99/month'}
+          ) : 'Unlock Now — $2.99'}
         </button>
 
         {/* Divider */}
@@ -90,11 +90,11 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Sign in with Google
+          Sign in with Google for more free scans
         </button>
 
         <p className="text-center text-[10px] text-brand-sub/50">
-          Sign in to get 5 free scans/day · Anonymous limit is 2/day
+          Signed-in users get 5 free scans/day · Anonymous limit is 3/day
         </p>
       </div>
     </div>

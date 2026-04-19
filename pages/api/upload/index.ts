@@ -23,8 +23,8 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 2 analyses per IP per 24 hours. */
-const ANON_LIMIT = 2
+/** Anonymous users: 3 analyses per IP per 24 hours. */
+const ANON_LIMIT = 3
 /** Authenticated (signed-in) users: 5 analyses per user per 24 hours. */
 const AUTH_LIMIT = 5
 const WINDOW_MS  = 24 * 60 * 60 * 1000
