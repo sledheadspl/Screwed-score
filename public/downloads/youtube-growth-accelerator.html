@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Growth Accelerator — Channel Audit, Titles, Thumbnails &amp; SEO</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080808;
+    --card: rgba(15,15,15,0.8);
+    --accent: #ff4040;
+    --accent-dim: rgba(255,64,64,0.12);
+    --accent-border: rgba(255,64,64,0.3);
+    --text: #f2f2f2;
+    --text-muted: rgba(242,242,242,0.6);
+    --text-faint: rgba(242,242,242,0.35);
+    --border: rgba(255,255,255,0.06);
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,64,64,0.08) 0%, transparent 70%); }
+  .hero-badge { display: inline-block; background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 20px; }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { font-size: 1.15rem; color: var(--text-muted); max-width: 620px; margin-bottom: 36px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 24px; font-size: 13px; color: var(--text-faint); }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px 36px; margin: 40px 0 0; }
+  .toc h3 { margin-bottom: 18px; font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 8px; font-size: 0.95rem; }
+  .toc a { color: var(--text); opacity: 0.8; }
+  .toc a:hover { color: var(--accent); opacity: 1; text-decoration: none; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; }
+  .card.accent-border { border-color: var(--accent-border); }
+  .card-number { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 800; margin-bottom: 14px; }
+  .part-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; }
+  h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; color: var(--text); }
+  h4 { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-intro { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 40px; max-width: 680px; }
+  .formula { background: rgba(255,64,64,0.06); border: 1px solid var(--accent-border); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 0.88rem; color: var(--accent); margin: 14px 0; word-break: break-word; }
+  .highlight { background: rgba(255,64,64,0.05); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 0.95rem; color: var(--text-muted); }
+  .highlight strong { color: var(--text); }
+  ul.styled, ol.styled { padding-left: 0; list-style: none; }
+  ul.styled li, ol.styled li { padding: 10px 0 10px 24px; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text-muted); position: relative; }
+  ul.styled li:last-child, ol.styled li:last-child { border-bottom: none; }
+  ul.styled li::before { content: '→'; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+  ol.styled { counter-reset: item; }
+  ol.styled li { counter-increment: item; }
+  ol.styled li::before { content: counter(item) '.'; color: var(--accent); position: absolute; left: 0; font-weight: 700; font-size: 12px; top: 12px; }
+  .checklist { padding-left: 0; list-style: none; }
+  .checklist li { padding: 10px 0 10px 28px; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text-muted); position: relative; }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before { content: '☐'; color: var(--accent); position: absolute; left: 0; font-size: 16px; line-height: 1.4; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-faint); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .rank-high { color: #4ade80; font-weight: 700; }
+  .rank-med { color: #facc15; font-weight: 700; }
+  .rank-low { color: #f87171; font-weight: 700; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .footer { padding: 48px 0; text-align: center; border-top: 1px solid var(--border); }
+  .footer p { font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
+  .footer strong { color: var(--text-muted); }
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+  .mt-24 { margin-top: 24px; }
+  .mt-40 { margin-top: 40px; }
+  .title-formula { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 12px; }
+  .title-formula .formula-name { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .title-formula .formula-template { font-family: 'Courier New', monospace; font-size: 0.9rem; color: var(--text); margin-bottom: 8px; }
+  .title-formula .formula-example { font-size: 0.85rem; color: var(--text-faint); font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">Premium Digital Product</div>
+    <h1>YouTube Growth<br><span>Accelerator</span></h1>
+    <p class="hero-sub">The complete system to grow a YouTube channel: channel audit framework, 50 click-worthy title formulas, thumbnail psychology, 48-hour algorithm playbook, and a full keyword/SEO system. Stop guessing, start compounding.</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> Channel Audit Checklist</span>
+      <span><span class="dot"></span> 50 Title Formulas</span>
+      <span><span class="dot"></span> Thumbnail Psychology Guide</span>
+      <span><span class="dot"></span> Algorithm &amp; SEO System</span>
+    </div>
+    <div class="toc">
+      <h3>Table of Contents</h3>
+      <ol>
+        <li><a href="#part1">Part 1 — Channel Audit Framework (47 Checkpoints)</a></li>
+        <li><a href="#part2">Part 2 — 50 Title Formulas with Examples</a></li>
+        <li><a href="#part3">Part 3 — Thumbnail Psychology &amp; Design System</a></li>
+        <li><a href="#part4">Part 4 — 48-Hour Algorithm Playbook</a></li>
+        <li><a href="#part5">Part 5 — YouTube Keyword &amp; SEO System</a></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part1">
+  <div class="container">
+    <p class="part-label">Part 1</p>
+    <h2>Channel Audit Framework</h2>
+    <p class="section-intro">Run this audit on any channel — including your own — to identify exactly what's killing growth. 47 checkpoints across 5 areas. Each checkpoint is either Pass, Needs Work, or Fix Now.</p>
+
+    <h3>Section A: Channel Fundamentals</h3>
+    <div class="card">
+      <ul class="checklist">
+        <li>Channel name is searchable, memorable, and clearly signals the niche</li>
+        <li>Channel icon is recognizable at 40px (no small text, no cluttered images)</li>
+        <li>Channel banner clearly communicates who the channel is for and upload schedule</li>
+        <li>Channel description contains primary keywords in the first 100 characters</li>
+        <li>Handle (@username) is consistent with other social profiles</li>
+        <li>Channel trailer targets non-subscribers, not existing fans</li>
+        <li>Featured sections are organized: popular uploads, latest videos, playlists</li>
+        <li>About section links to primary CTA (newsletter, website, product)</li>
+        <li>All social links and website are connected in the channel About section</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Section B: Video Performance Signals</h3>
+    <div class="card">
+      <ul class="checklist">
+        <li>Average View Duration (AVD) is above 40% for your video length</li>
+        <li>Click-Through Rate (CTR) from Browse Features is above 4%</li>
+        <li>Impressions are growing month over month (check YouTube Studio)</li>
+        <li>Top 10 videos account for less than 60% of total channel watch time (healthy distribution)</li>
+        <li>Audience retention graph shows no cliff-drop in the first 30 seconds</li>
+        <li>Comment-to-view ratio is above 0.5% (signals engaged audience)</li>
+        <li>Like-to-view ratio is above 3% on recent videos</li>
+        <li>Videos are getting external traffic (search, suggested, browse — check Traffic Sources)</li>
+        <li>At least 20% of watch time comes from Suggested Videos (algorithm validation)</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Section C: Thumbnail &amp; Title Analysis</h3>
+    <div class="card">
+      <ul class="checklist">
+        <li>Thumbnails are consistent in style, color, and font (instantly recognizable as your channel)</li>
+        <li>Every thumbnail has a clear focal point visible at 120×67px (mobile size)</li>
+        <li>Thumbnails use 3 colors or fewer (background, accent, text)</li>
+        <li>Text in thumbnails is under 5 words</li>
+        <li>Thumbnail and title work together — they complete each other, don't repeat</li>
+        <li>Titles are under 60 characters (to avoid truncation on mobile)</li>
+        <li>Titles contain the primary keyword in the first half</li>
+        <li>No clickbait titles that don't deliver on the video content (harms AVD)</li>
+        <li>All top-performing videos have A/B tested thumbnails (YouTube's test feature)</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Section D: Content &amp; Upload Strategy</h3>
+    <div class="card">
+      <ul class="checklist">
+        <li>Upload schedule is consistent (same day/time each week minimum)</li>
+        <li>Videos are organized into coherent playlists</li>
+        <li>Each video ends with a strong verbal CTA and end screen</li>
+        <li>Cards are placed at high-retention moments (not the beginning)</li>
+        <li>Video descriptions include: keyword-rich first 2 lines, full summary, chapters, links</li>
+        <li>All videos have manually-added chapters (improves search visibility)</li>
+        <li>Tags include: exact match keyword, broad match, related topics (15–20 tags)</li>
+        <li>Captions are added (auto-captions or uploaded SRT — improves search indexing)</li>
+        <li>Videos are posted at optimal time for audience (check YouTube Analytics → Audience)</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Section E: Channel Growth Health</h3>
+    <div class="card">
+      <ul class="checklist">
+        <li>Subscriber growth is trending up over the last 90 days</li>
+        <li>New subscribers per video is 0.5–2% of views (healthy conversion)</li>
+        <li>Channel is not shadowlimited (check: no community guidelines strikes, monetization enabled/eligible)</li>
+        <li>Comments are being replied to within 24 hours of publish (boosts early engagement)</li>
+        <li>Channel has a consistent content pillar — not randomly covering unrelated topics</li>
+        <li>Shorts (if any) are not cannibalizing long-form (separate audience, tracked separately)</li>
+        <li>Cross-promotion strategy exists (email list, other socials driving YouTube traffic)</li>
+        <li>Collaborations with similarly-sized channels in the last 90 days</li>
+        <li>Videos are being pinned/featured strategically (not auto-pinned to latest)</li>
+        <li>Revenue (if monetized) is being reinvested in production quality</li>
+      </ul>
+    </div>
+
+    <div class="highlight">
+      <strong>How to score your audit:</strong> Count your checkmarks. 40–47: High-performing channel — focus on scaling what works. 30–39: Strong foundation with specific gaps — prioritize the Needs Work items in order of impact. Under 30: Structural issues — start with Channel Fundamentals and Video Performance Signals before optimizing anything else.
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part2">
+  <div class="container">
+    <p class="part-label">Part 2</p>
+    <h2>50 Title Formulas</h2>
+    <p class="section-intro">Every formula has been proven to generate above-average CTR. Replace [brackets] with your specific content. Mix formulas to keep your title library fresh — using the same formula every video trains the algorithm against you.</p>
+
+    <h3>Curiosity &amp; Open Loop (12 Formulas)</h3>
+    <div class="title-formula">
+      <div class="formula-name">The Unexpected Result</div>
+      <div class="formula-template">I [did common thing] for [time period]. Here's what happened.</div>
+      <div class="formula-example">Example: "I Posted Every Day for 365 Days. Here's What Happened."</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Hidden Truth</div>
+      <div class="formula-template">The [topic] Nobody Talks About</div>
+      <div class="formula-example">Example: "The YouTube Algorithm Nobody Talks About"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Counterintuitive Finding</div>
+      <div class="formula-template">Why [common belief] Is [wrong/hurting you/a lie]</div>
+      <div class="formula-example">Example: "Why Posting More Is Killing Your Channel Growth"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Secret</div>
+      <div class="formula-template">The Real Reason [outcome most people want] (It's Not [what they think])</div>
+      <div class="formula-example">Example: "The Real Reason Your Videos Aren't Going Viral (It's Not Your Content)"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Honest Confession</div>
+      <div class="formula-template">I Was Wrong About [topic]</div>
+      <div class="formula-example">Example: "I Was Wrong About Thumbnails for 3 Years"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Warning</div>
+      <div class="formula-template">Stop [doing common thing] (Do This Instead)</div>
+      <div class="formula-example">Example: "Stop Chasing Viral Videos (Do This Instead)"</div>
+    </div>
+
+    <h3 class="mt-40">Numbers &amp; Specificity (12 Formulas)</h3>
+    <div class="title-formula">
+      <div class="formula-name">The Exact Number</div>
+      <div class="formula-template">[Number] [Things/Ways/Reasons] [Specific Outcome]</div>
+      <div class="formula-example">Example: "7 Thumbnail Mistakes That Are Killing Your CTR"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Timeframe Promise</div>
+      <div class="formula-template">How to [achieve outcome] in [specific timeframe]</div>
+      <div class="formula-example">Example: "How to Get Your First 1,000 Subscribers in 30 Days"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Case Study Result</div>
+      <div class="formula-template">How I [achieved specific result with numbers]</div>
+      <div class="formula-example">Example: "How I Went From 0 to 10K Subscribers in 6 Months"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Ranked List</div>
+      <div class="formula-template">[Number] Best [Things] for [Audience], Ranked</div>
+      <div class="formula-example">Example: "10 Best YouTube Editing Tools for Beginners, Ranked"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Cost/Value Reveal</div>
+      <div class="formula-template">I Spent [$X] on [thing]. Was It Worth It?</div>
+      <div class="formula-example">Example: "I Spent $500 on YouTube Ads. Was It Worth It?"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Experiment</div>
+      <div class="formula-template">I Tested [X] vs [Y] for [time period]. The Results Were [unexpected]</div>
+      <div class="formula-example">Example: "I Tested 2 Thumbnails on 50 Videos. The Results Shocked Me."</div>
+    </div>
+
+    <h3 class="mt-40">Transformation &amp; Outcome (14 Formulas)</h3>
+    <div class="title-formula">
+      <div class="formula-name">The Beginner's Complete Guide</div>
+      <div class="formula-template">[Topic] for Beginners: Everything You Need to Know</div>
+      <div class="formula-example">Example: "YouTube SEO for Beginners: Everything You Need to Know"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Ultimate Guide</div>
+      <div class="formula-template">The Ultimate [Topic] Guide for [Year]</div>
+      <div class="formula-example">Example: "The Ultimate YouTube Growth Guide for 2025"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Without Formula</div>
+      <div class="formula-template">How to [desired outcome] Without [common obstacle]</div>
+      <div class="formula-example">Example: "How to Grow on YouTube Without Showing Your Face"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Fast Track</div>
+      <div class="formula-template">The Fastest Way to [achieve outcome] (Step-by-Step)</div>
+      <div class="formula-example">Example: "The Fastest Way to Monetize Your Channel (Step-by-Step)"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Before/After</div>
+      <div class="formula-template">From [bad state] to [good state]: [How/What I Did]</div>
+      <div class="formula-example">Example: "From 200 Views to 200K Views: What Changed Everything"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Exact System</div>
+      <div class="formula-template">The Exact [System/Process/Strategy] I Used to [Result]</div>
+      <div class="formula-example">Example: "The Exact System I Used to Hit 100K Subscribers"</div>
+    </div>
+
+    <h3 class="mt-40">Question &amp; Challenge (12 Formulas)</h3>
+    <div class="title-formula">
+      <div class="formula-name">The Direct Question</div>
+      <div class="formula-template">Is [common belief] Actually [true/worth it/dead]?</div>
+      <div class="formula-example">Example: "Is YouTube SEO Actually Worth It in 2025?"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Challenge</div>
+      <div class="formula-template">Can You [achieve outcome] in [timeframe]? (I Tried)</div>
+      <div class="formula-example">Example: "Can You Hit 1,000 Subscribers in 7 Days? I Tried."</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Audience Question</div>
+      <div class="formula-template">What Happens When You [take action]?</div>
+      <div class="formula-example">Example: "What Happens When You Post 3 Videos a Day for a Month?"</div>
+    </div>
+    <div class="title-formula">
+      <div class="formula-name">The Viewer-Targeted Question</div>
+      <div class="formula-template">Are You Making These [topic] Mistakes?</div>
+      <div class="formula-example">Example: "Are You Making These YouTube Algorithm Mistakes?"</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part3">
+  <div class="container">
+    <p class="part-label">Part 3</p>
+    <h2>Thumbnail Psychology &amp; Design System</h2>
+    <p class="section-intro">CTR starts and ends with the thumbnail. A 2% CTR vs a 6% CTR on 100,000 impressions is the difference between 2,000 views and 6,000 views — same video, same algorithm push. Master this.</p>
+
+    <h3>The 5 Laws of High-CTR Thumbnails</h3>
+    <div class="card accent-border">
+      <div class="card-number">01</div>
+      <h3>The 3-Second Test</h3>
+      <p style="color:var(--text-muted);font-size:.95rem">A viewer spends an average of 1.8 seconds scanning thumbnails. Your thumbnail must communicate one clear message in that window. Show your thumbnail to someone unfamiliar with your content for 3 seconds. If they can't tell you what the video is about, the thumbnail fails. Simplify until they can.</p>
+    </div>
+    <div class="card">
+      <div class="card-number">02</div>
+      <h3>Contrast Over Aesthetics</h3>
+      <p style="color:var(--text-muted);font-size:.95rem">YouTube's background is white. Dark thumbnails with a white background are invisible. High-contrast combinations that work: dark background + bright text, bright background + dark subject, complementary color pairs (red/cyan, orange/blue, yellow/purple). Don't design for beauty — design for contrast.</p>
+    </div>
+    <div class="card">
+      <div class="card-number">03</div>
+      <h3>Faces Drive CTR</h3>
+      <p style="color:var(--text-muted);font-size:.95rem">Thumbnails with human faces showing strong emotion consistently outperform faceless thumbnails by 15–30%. The emotion must match the video content (curiosity, shock, excitement, concern). Neutral faces perform worse than no face. If you use a face, commit to a strong expression. Crop tight — the face should fill at least 40% of the thumbnail.</p>
+    </div>
+    <div class="card">
+      <div class="card-number">04</div>
+      <h3>Text as Support, Not Explanation</h3>
+      <p style="color:var(--text-muted);font-size:.95rem">Thumbnail text should add information the image alone doesn't convey — not repeat what the image shows. Maximum 5 words. Use a bold, heavy-weight sans-serif font (never thin fonts on thumbnails). Add a 2–4px drop shadow or dark stroke to ensure legibility on any background. Size: text should be readable at 120×67px.</p>
+    </div>
+    <div class="card">
+      <div class="card-number">05</div>
+      <h3>Brand Consistency Compounds</h3>
+      <p style="color:var(--text-muted);font-size:.95rem">After 50+ videos, viewers begin to recognize your thumbnails in their feed before reading the title. This recognition drives CTR from returning audiences — often 2–3× higher than from new viewers. Define your: brand colors (2–3 max), font pair (1 heading font, 1 body font), layout grid (where face goes, where text goes), and background style. Apply without exception.</p>
+    </div>
+
+    <h3 class="mt-40">Thumbnail Design Templates by Video Type</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Tutorial / How-To</h4>
+        <p style="color:var(--text-muted);font-size:.9rem;margin-top:8px;">Layout: Before/after split OR face (surprised/focused) + bold benefit text. Colors: blue/white or dark/orange. Text: "How to [outcome]" or just the outcome. Arrow pointing at key element works well.</p>
+      </div>
+      <div class="card">
+        <h4>List / Roundup</h4>
+        <p style="color:var(--text-muted);font-size:.9rem;margin-top:8px;">Layout: Number in large type (left) + visual collage (right) OR face + "[X] things" text overlay. Colors: bold, high-contrast. Make the number the dominant visual element.</p>
+      </div>
+      <div class="card">
+        <h4>Opinion / Commentary</h4>
+        <p style="color:var(--text-muted);font-size:.9rem;margin-top:8px;">Layout: Strong facial expression filling most of frame + short reaction text. Colors: match emotional tone (red for controversy, yellow for excitement). Text: 1–3 words max, large.</p>
+      </div>
+      <div class="card">
+        <h4>Case Study / Results</h4>
+        <p style="color:var(--text-muted);font-size:.9rem;margin-top:8px;">Layout: Result number prominently displayed + face showing appropriate emotion. Use a "before arrow after" visual if possible. Make the specific result number the biggest element on the thumbnail.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part4">
+  <div class="container">
+    <p class="part-label">Part 4</p>
+    <h2>48-Hour Algorithm Playbook</h2>
+    <p class="section-intro">The first 48 hours after publishing are the most critical. YouTube uses early performance signals to determine how broadly to distribute your video. Here's exactly what to do, hour by hour.</p>
+
+    <div class="highlight">
+      <strong>Why the first 48 hours matter:</strong> YouTube's algorithm tests every video with a small audience segment first. If your CTR, AVD, and engagement signals are strong in the test window, YouTube expands distribution. If they're weak, the video gets buried. You can't buy your way out of this — only engineer it.
+    </div>
+
+    <h3>Hours 0–2: Publish Sequence</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Publish at your audience's peak active time (check Analytics → Audience → When your viewers are on YouTube)</li>
+        <li>Write a keyword-rich description with chapters immediately — don't publish without it</li>
+        <li>Add all cards and end screens before publishing</li>
+        <li>Pin a comment within 10 minutes of publish — ask a question that invites replies</li>
+        <li>Share to your email list or community within 30 minutes of publish</li>
+        <li>Post the video to your most engaged social channel with a native teaser clip</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Hours 2–24: Engagement Amplification</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Reply to every comment within the first 6 hours (each reply is an engagement signal)</li>
+        <li>Share a behind-the-scenes or teaser on Instagram Stories/TikTok linking to video</li>
+        <li>Post in any relevant communities, Discord servers, or Facebook groups (add value first — don't just drop the link)</li>
+        <li>If you have a Patreon or membership, post an early-access or exclusive angle there</li>
+        <li>Share the video in a tweet thread that adds value beyond the title</li>
+        <li>Check CTR in YouTube Studio at the 6-hour mark — if below 3%, consider A/B testing the thumbnail immediately</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Hours 24–48: Sustain &amp; Optimize</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Check Audience Retention report — identify the biggest drop-off points and note them for future videos</li>
+        <li>If CTR is above 5% but views are low, check impressions — the problem is reach, not the thumbnail</li>
+        <li>If impressions are high but CTR is low, change the thumbnail</li>
+        <li>If CTR is high but AVD is under 35%, the video isn't delivering on the title's promise</li>
+        <li>Respond to all remaining comments</li>
+        <li>Add the video to any relevant playlists (playlists drive session time — a key algorithm signal)</li>
+        <li>Link to the video from 2–3 older videos in the same topic cluster (internal linking)</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Algorithm Signals Ranked by Impact</h3>
+    <div class="card">
+      <table>
+        <thead><tr><th>Signal</th><th>Impact</th><th>What to Optimize</th></tr></thead>
+        <tbody>
+          <tr><td>Click-Through Rate (CTR)</td><td class="rank-high">Very High</td><td>Thumbnail + Title</td></tr>
+          <tr><td>Average View Duration %</td><td class="rank-high">Very High</td><td>Hook + Pacing + Delivery</td></tr>
+          <tr><td>Absolute Watch Time</td><td class="rank-high">High</td><td>Video length × completion rate</td></tr>
+          <tr><td>Like / Dislike Ratio</td><td class="rank-med">Medium</td><td>Ask for likes at peak moment</td></tr>
+          <tr><td>Comments (count + speed)</td><td class="rank-med">Medium</td><td>Ask a specific question in video</td></tr>
+          <tr><td>Shares</td><td class="rank-med">Medium</td><td>Create "shareable moments" in content</td></tr>
+          <tr><td>New Subscriber Rate</td><td class="rank-med">Medium</td><td>Strong CTA at end + value delivery</td></tr>
+          <tr><td>Tags</td><td class="rank-low">Low</td><td>Correct but not a growth lever</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part5">
+  <div class="container">
+    <p class="part-label">Part 5</p>
+    <h2>YouTube Keyword &amp; SEO System</h2>
+    <p class="section-intro">YouTube is the second largest search engine in the world. These are the searches people make at the exact moment they're ready to watch a video on your topic. Capturing them is free, compounding traffic.</p>
+
+    <h3>Step 1: Keyword Research Process</h3>
+    <div class="card accent-border">
+      <ol class="styled">
+        <li>Go to YouTube search bar. Type your topic + a space. Screenshot the autocomplete suggestions — these are real searches people are making right now.</li>
+        <li>Search your main keyword. Look at the top 10 results. Note: which channels are ranking, video lengths, upload dates, and view counts. If channels under 50K subscribers are ranking in the top 5, this keyword is winnable.</li>
+        <li>Use TubeBuddy or vidIQ (free tier) to see the keyword competition score. Target: low competition + medium/high search volume.</li>
+        <li>Find your "goldilocks keyword" — specific enough to rank, broad enough to have real search volume. "YouTube growth" is too broad. "How to grow YouTube channel without subscribers" is just right.</li>
+        <li>Build a keyword cluster: one primary keyword per video + 5–8 related terms to include naturally in the description and spoken in the video.</li>
+      </ol>
+    </div>
+
+    <h3 class="mt-40">Step 2: On-Video Optimization</h3>
+    <div class="card">
+      <h4>Title Optimization</h4>
+      <ul class="styled">
+        <li>Primary keyword in the first 40 characters (before mobile truncation)</li>
+        <li>Title under 60 characters total</li>
+        <li>Avoid keyword stuffing — one keyword, naturally placed</li>
+        <li>Title should create curiosity OR promise a specific outcome (not both — pick one)</li>
+      </ul>
+    </div>
+    <div class="card mt-24">
+      <h4>Description Optimization</h4>
+      <ul class="styled">
+        <li>First 2 sentences: primary keyword + core value proposition (this is what shows in search)</li>
+        <li>Full 200–300 word description including related keywords naturally</li>
+        <li>Chapters (timestamps) for any video over 4 minutes</li>
+        <li>Links: CTA link first, then social, then website</li>
+        <li>Do not stuff keywords in a list at the bottom — this no longer helps and looks spammy</li>
+      </ul>
+    </div>
+    <div class="card mt-24">
+      <h4>Tags Strategy</h4>
+      <ul class="styled">
+        <li>First tag: exact match of primary keyword</li>
+        <li>Tags 2–5: variations and related phrases</li>
+        <li>Tags 6–10: broader category terms</li>
+        <li>Tags 11–15: your channel name and brand terms</li>
+        <li>Total: 15–20 tags. More than 20 dilutes relevance.</li>
+      </ul>
+    </div>
+
+    <h3 class="mt-40">Step 3: Content Cluster Strategy</h3>
+    <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:24px;">One video rarely dominates a topic. A cluster of 4–6 interlinked videos on the same topic creates an authority signal — YouTube and Google both rank topic-dense channels higher for related searches.</p>
+    <div class="formula">Pillar Video (broad, high search volume) → 3–5 Supporting Videos (specific subtopics) → All interlinked via cards, end screens, and description links</div>
+    <div class="card">
+      <h4>Example Cluster: "YouTube Growth"</h4>
+      <ul class="styled">
+        <li>Pillar: "How to Grow a YouTube Channel From 0 (Complete Guide)"</li>
+        <li>Support 1: "YouTube Thumbnail Guide: How to Get 8%+ CTR"</li>
+        <li>Support 2: "How to Write YouTube Titles That Get Clicked"</li>
+        <li>Support 3: "YouTube Algorithm Explained (How to Make It Work For You)"</li>
+        <li>Support 4: "YouTube SEO: How to Rank #1 on YouTube Search"</li>
+        <li>Support 5: "Why Your YouTube Videos Aren't Getting Views (And How to Fix It)"</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p><strong>YouTube Growth Accelerator</strong></p>
+    <p>A REMbyDesign product — <a href="https://screwedscore.com">screwedscore.com</a></p>
+    <p style="margin-top:16px;">Questions? <a href="mailto:hello@rembydesign.com">hello@rembydesign.com</a></p>
+  </div>
+</div>
+
+</body>
+</html>

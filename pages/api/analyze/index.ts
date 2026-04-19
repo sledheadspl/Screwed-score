@@ -7,6 +7,7 @@ import { assembleResult } from '@/lib/score'
 import { isValidUUID } from '@/lib/utils'
 import { isDocumentType } from '@/lib/types'
 import type { AnalyzeRequest, DocumentType } from '@/lib/types'
+import { sendGAEvent } from '@/lib/ga'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -75,6 +76,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (saveError) {
       console.error('[analyze] Failed to persist analysis:', saveError.message)
     }
+
+    await sendGAEvent('scan_complete', {
+      score:                result.screwed_score,
+      document_type:        result.document_type,
+      screwed_score_percent: result.screwed_score_percent,
+    })
 
     return res.status(200).json({ analysis_id: analysisId, result })
   } catch (err) {

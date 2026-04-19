@@ -3,6 +3,7 @@ import Stripe from 'stripe'
 import { createServiceClient } from '@/lib/supabase'
 import { sendProductDeliveryEmail, sendClipPilotLicenseEmail, PRODUCT_CATALOG } from '@/lib/email/product-delivery'
 import { getClipPilotTier, createLicense } from '@/lib/clippilot/license'
+import { sendGAEvent } from '@/lib/ga'
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -64,6 +65,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             console.error('[stripe-webhook] ClipPilot license creation failed:', err)
           }
         }
+
+        // GA4 purchase event
+        const itemName = clipPilotTier
+          ? `ClipPilot ${clipPilotTier}`
+          : productId && productId in PRODUCT_CATALOG
+            ? PRODUCT_CATALOG[productId].name
+            : session.metadata?.analysis_id
+              ? 'Fight Back Kit'
+              : 'Scan Token Pack'
+        await sendGAEvent('purchase', {
+          transaction_id: session.id,
+          value:          (session.amount_total ?? 0) / 100,
+          currency:       (session.currency ?? 'usd').toUpperCase(),
+          item_name:      itemName,
+        })
 
         // Digital product purchase — email download link
         if (productId && productId in PRODUCT_CATALOG) {

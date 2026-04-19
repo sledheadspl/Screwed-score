@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Vault for Creators — 500+ Battle-Tested Prompts</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080808;
+    --card: rgba(15,15,15,0.8);
+    --accent: #a855f7;
+    --accent-dim: rgba(168,85,247,0.12);
+    --accent-border: rgba(168,85,247,0.3);
+    --text: #f2f2f2;
+    --text-muted: rgba(242,242,242,0.6);
+    --text-faint: rgba(242,242,242,0.35);
+    --border: rgba(255,255,255,0.06);
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(168,85,247,0.08) 0%, transparent 70%); }
+  .hero-badge { display: inline-block; background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 20px; }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { font-size: 1.15rem; color: var(--text-muted); max-width: 620px; margin-bottom: 36px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 24px; font-size: 13px; color: var(--text-faint); }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px 36px; margin: 40px 0 0; }
+  .toc h3 { margin-bottom: 18px; font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 8px; font-size: 0.95rem; }
+  .toc a { color: var(--text); opacity: 0.8; }
+  .toc a:hover { color: var(--accent); opacity: 1; text-decoration: none; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; }
+  .card.accent-border { border-color: var(--accent-border); }
+  .part-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; }
+  h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; color: var(--text); }
+  h4 { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-intro { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 40px; max-width: 680px; }
+  .formula { background: rgba(168,85,247,0.06); border: 1px solid var(--accent-border); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 0.88rem; color: var(--accent); margin: 14px 0; word-break: break-word; }
+  .highlight { background: rgba(168,85,247,0.05); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 0.95rem; color: var(--text-muted); }
+  .highlight strong { color: var(--text); }
+  ul.styled { padding-left: 0; list-style: none; }
+  ul.styled li { padding: 10px 0 10px 24px; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text-muted); position: relative; }
+  ul.styled li:last-child { border-bottom: none; }
+  ul.styled li::before { content: '→'; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+  .prompt-block { background: rgba(168,85,247,0.04); border: 1px solid rgba(168,85,247,0.15); border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; }
+  .prompt-block strong { display: block; font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .prompt-block em { color: rgba(168,85,247,0.7); font-style: normal; font-weight: 600; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .footer { padding: 48px 0; text-align: center; border-top: 1px solid var(--border); }
+  .footer p { font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
+  .footer strong { color: var(--text-muted); }
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+  .mt-24 { margin-top: 24px; }
+  .mt-40 { margin-top: 40px; }
+  .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .category-count { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">Premium Digital Product</div>
+    <h1>AI Prompt Vault<br><span>for Creators</span></h1>
+    <p class="hero-sub">500+ battle-tested AI prompts organized by creator use case. Stop staring at a blank screen. Copy a prompt, fill in your details, ship. Every prompt is proven to produce usable output on the first or second try.</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> 500+ Prompts</span>
+      <span><span class="dot"></span> 6 Creator Categories</span>
+      <span><span class="dot"></span> Platform-Specific Variations</span>
+      <span><span class="dot"></span> Copy, Fill, Ship</span>
+    </div>
+    <div class="toc">
+      <h3>Table of Contents</h3>
+      <ol>
+        <li><a href="#how-to-use">How to Use This Vault</a></li>
+        <li><a href="#part1">Part 1 — Content Writing (90 Prompts)</a></li>
+        <li><a href="#part2">Part 2 — Email Marketing (80 Prompts)</a></li>
+        <li><a href="#part3">Part 3 — Ad Copy &amp; Sales (75 Prompts)</a></li>
+        <li><a href="#part4">Part 4 — Video Scripts &amp; Hooks (85 Prompts)</a></li>
+        <li><a href="#part5">Part 5 — Strategy &amp; Business (70 Prompts)</a></li>
+        <li><a href="#part6">Part 6 — Social Media &amp; Repurposing (100 Prompts)</a></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="how-to-use">
+  <div class="container">
+    <p class="part-label">Getting Started</p>
+    <h2>How to Use This Vault</h2>
+    <p class="section-intro">Every prompt uses <em style="color:var(--accent);font-style:normal;">[brackets]</em> for the parts you fill in. The more specific you are in the brackets, the better the output. These prompts work with ChatGPT, Claude, Gemini, or any other LLM.</p>
+    <div class="highlight">
+      <strong>The 3-Step System:</strong> (1) Find your use case in the table of contents. (2) Copy the prompt. (3) Replace everything in [brackets] with your specific details. Run it. If the output needs refinement, add "Make it more [concise/punchy/formal/casual]" as a follow-up.
+    </div>
+    <div class="card accent-border">
+      <h4>Pro Tips</h4>
+      <ul class="styled">
+        <li>Add "Write in my voice — here's an example of my writing: [paste 2–3 sentences]" to any prompt for better style matching</li>
+        <li>For long-form content, break it into sections and run one prompt per section</li>
+        <li>If the output is too generic, add more context: audience, product, pain point, desired outcome</li>
+        <li>Save outputs you love as templates — your best prompts + your best outputs become your personal system</li>
+        <li>Use "Give me 10 variations of the above" after any strong output to multiply your options</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part1">
+  <div class="container">
+    <p class="part-label">Part 1</p>
+    <div class="category-header">
+      <h2>Content Writing</h2>
+      <span class="category-count">90 PROMPTS</span>
+    </div>
+    <p class="section-intro">Blog posts, articles, newsletters, thought leadership, and long-form content. These prompts handle everything from first drafts to finishing touches.</p>
+
+    <h3>Blog Post &amp; Article Prompts</h3>
+    <div class="prompt-block"><strong>Blog Post Outline</strong>Write a detailed outline for a blog post titled "[Your Title]" targeting [your audience]. Include an intro hook, 5–7 main sections with subpoints, and a conclusion with a clear CTA. The tone should be [professional/conversational/authoritative].</div>
+    <div class="prompt-block"><strong>Full Blog Post Draft</strong>Write a [800/1200/2000]-word blog post on "[topic]" for [audience]. Open with a hook that addresses the pain point of [pain point]. Use short paragraphs, subheadings every 200–300 words, and end with a CTA to [desired action]. Tone: [casual/expert/direct].</div>
+    <div class="prompt-block"><strong>Opinion / Hot Take Post</strong>Write a contrarian take on "[common belief in your niche]." Start by acknowledging the conventional wisdom, then flip it with data, logic, or real-world examples. End with a clear position. Make it punchy and under 600 words.</div>
+    <div class="prompt-block"><strong>How-To Post (Step by Step)</strong>Write a step-by-step guide on how to [achieve specific outcome] for [audience]. Each step should have: a clear title, 2–3 sentences of explanation, and a concrete action item. Include a short intro explaining why this matters and a summary at the end.</div>
+    <div class="prompt-block"><strong>Listicle</strong>Write a "[number] ways to [achieve outcome]" article for [audience]. Each item should have a bold headline, 3–4 sentences of explanation, and where relevant, a specific example or tool. Keep the total under [word count].</div>
+    <div class="prompt-block"><strong>Case Study Format</strong>Write a case study about [subject/client/story]. Structure: (1) The Problem — what they faced. (2) The Approach — what was done. (3) The Results — specific outcomes with numbers. (4) Key Takeaways — what others can apply. Tone: factual, specific, story-driven.</div>
+    <div class="prompt-block"><strong>SEO Blog Post</strong>Write a [1500-word] blog post targeting the keyword "[target keyword]." Include the keyword naturally in the title, first paragraph, at least 2 subheadings, and the conclusion. Also naturally include related terms: [related term 1], [related term 2], [related term 3]. Prioritize readability over keyword density.</div>
+    <div class="prompt-block"><strong>Comparison Post</strong>Write a detailed comparison of [Option A] vs [Option B] for [audience]. Cover: pricing, features, ease of use, best for, and verdict. Be direct about which is better for which use case. Include a comparison table if helpful.</div>
+
+    <h3 class="mt-40">Newsletter Prompts</h3>
+    <div class="prompt-block"><strong>Newsletter Issue Draft</strong>Write a newsletter issue for [your audience] on the topic of [topic]. Open with a personal anecdote or recent observation (2–3 sentences). Cover the main insight in 200–300 words. Add one actionable tip. Close with a question to drive replies. Subject line: [provide 3 options].</div>
+    <div class="prompt-block"><strong>Newsletter Subject Lines</strong>Write 15 subject line options for a newsletter issue about [topic]. Mix: curiosity gaps, specific numbers, bold statements, personal openers, and question formats. Mark the top 3 with an asterisk.</div>
+    <div class="prompt-block"><strong>Story-Driven Newsletter</strong>Write a story-based newsletter about [topic or lesson]. Start with a specific scene or moment (not "I want to tell you a story about..."). Build to the lesson naturally. Keep under 400 words. The takeaway should feel earned, not stated.</div>
+    <div class="prompt-block"><strong>Curation Newsletter</strong>Write a curated newsletter issue with the theme "[theme]." Include 5 items: each with a bold title, a 2-sentence summary of what it is and why it matters, and a placeholder for a link. Add a short intro (3 sentences) and a one-line closing. Tone: [casual/editorial/opinionated].</div>
+
+    <h3 class="mt-40">Thought Leadership &amp; LinkedIn Articles</h3>
+    <div class="prompt-block"><strong>Thought Leadership Post</strong>Write a [500-word] thought leadership piece on "[your position/belief about your industry]." Open with a bold claim. Support it with 2–3 observations from [your experience/industry trends]. End with a call to rethink the conventional approach. Tone: direct and confident.</div>
+    <div class="prompt-block"><strong>Lessons Learned Post</strong>Write a "lessons learned" article based on [experience/project/year]. Format: numbered list of [5–7] lessons. Each lesson has: a headline, a 3–4 sentence story or explanation, and one practical takeaway. Keep it honest — include at least one mistake.</div>
+    <div class="prompt-block"><strong>Trend Analysis</strong>Write a [700-word] analysis of [trend in your industry]. Cover: what's happening, why it's happening now, what it means for [your audience], and what they should do about it. Use a confident, informed tone. Avoid jargon.</div>
+  </div>
+</div>
+
+<div class="section" id="part2">
+  <div class="container">
+    <p class="part-label">Part 2</p>
+    <div class="category-header">
+      <h2>Email Marketing</h2>
+      <span class="category-count">80 PROMPTS</span>
+    </div>
+    <p class="section-intro">Welcome sequences, sales emails, re-engagement campaigns, and broadcast emails. These prompts are built around proven email frameworks that drive opens, clicks, and conversions.</p>
+
+    <h3>Welcome Sequence Prompts</h3>
+    <div class="prompt-block"><strong>Welcome Email (Day 1)</strong>Write a welcome email for new subscribers to [your newsletter/list]. It should: thank them for joining, tell them exactly what to expect (frequency, topics), deliver the lead magnet with a clear link, and end with a personal question to encourage replies. Subject line: [provide 2 options]. Under 250 words.</div>
+    <div class="prompt-block"><strong>Origin Story Email</strong>Write an origin story email (Day 2 of a welcome sequence) for [your brand/product]. The story should: start with the problem you faced, show the turning point, and connect to how your product/newsletter solves that same problem for the reader. Keep it under 350 words. First-person, conversational.</div>
+    <div class="prompt-block"><strong>Social Proof Email</strong>Write a social proof email for a welcome sequence promoting [your product/service]. Include: one detailed success story (real or hypothetical), 2–3 short testimonials, and a CTA to [desired action]. Don't be salesy — let the results speak. Under 300 words.</div>
+    <div class="prompt-block"><strong>Soft Pitch Email</strong>Write a Day 4 welcome sequence email that introduces [product/offer] without being pushy. Open with a valuable tip related to [topic]. Transition naturally into mentioning the product as a resource. End with a low-pressure CTA. Under 300 words.</div>
+    <div class="prompt-block"><strong>Hard Pitch Email</strong>Write a direct sales email for [product/offer] targeting [audience]. Use the PAS framework: Problem (their pain point), Agitate (make it vivid), Solution (your offer). Include: a clear price, 3 bullet-point benefits, and one strong CTA. Under 400 words.</div>
+
+    <h3 class="mt-40">Broadcast &amp; Campaign Emails</h3>
+    <div class="prompt-block"><strong>Product Launch Email</strong>Write a launch email for [product name] launching on [date]. Open with the problem it solves. Describe what it is in 2–3 sentences. List 4–5 benefits (not features). Add urgency (limited time/spots/price). End with a clear CTA button text. Subject line options: provide 3.</div>
+    <div class="prompt-block"><strong>Flash Sale Email</strong>Write a flash sale email for [product] offering [discount]% off until [deadline]. Open with the offer immediately — no burying it. Use urgency language throughout. Keep it under 200 words. Subject line should create urgency without being spammy.</div>
+    <div class="prompt-block"><strong>Re-engagement Email</strong>Write a re-engagement email for subscribers who haven't opened in 60+ days. Subject line: something that calls out the silence (e.g., "Is this thing on?"). Body: acknowledge the lapse, share something genuinely valuable, and give them a reason to stay (or an easy way to unsubscribe). Under 200 words.</div>
+    <div class="prompt-block"><strong>Testimonial-Driven Email</strong>Write a broadcast email built around a single customer success story for [product/service]. Open with a compelling quote or result from a real customer. Tell their before/after story in 150 words. Connect it to what the reader could achieve. End with a CTA. Don't make up numbers.</div>
+    <div class="prompt-block"><strong>Content Roundup Email</strong>Write a weekly content roundup email for [your audience] summarizing [number] pieces of content I published this week: [list titles/topics]. Give each a 2-sentence summary + a "why you should read this" line. Open with a 3-sentence personal note about the week. Close with a one-liner teaser about next week.</div>
+
+    <h3 class="mt-40">Subject Lines &amp; Preview Text</h3>
+    <div class="prompt-block"><strong>Subject Line Batch</strong>Write 20 email subject lines for [email topic]. Include at least 3 in each category: (1) curiosity/open loop, (2) specific number or stat, (3) bold statement, (4) personal/conversational, (5) question. Mark the top 5 with ★.</div>
+    <div class="prompt-block"><strong>Preview Text</strong>Write 10 preview text options (under 90 characters each) to pair with this subject line: "[subject line]." They should add intrigue, not repeat the subject line.</div>
+  </div>
+</div>
+
+<div class="section" id="part3">
+  <div class="container">
+    <p class="part-label">Part 3</p>
+    <div class="category-header">
+      <h2>Ad Copy &amp; Sales</h2>
+      <span class="category-count">75 PROMPTS</span>
+    </div>
+    <p class="section-intro">Facebook/Instagram ads, Google ads, sales page copy, landing page headlines, and offer descriptions. Built around direct-response frameworks that convert.</p>
+
+    <h3>Facebook &amp; Instagram Ad Prompts</h3>
+    <div class="prompt-block"><strong>Hook-First Ad Copy</strong>Write 5 Facebook/Instagram ad variations for [product/offer] targeting [audience]. Each should open with a different hook type: (1) bold statement, (2) question, (3) "If you [situation]...", (4) number-driven claim, (5) story opener. Include a CTA for each. Keep each under 150 words.</div>
+    <div class="prompt-block"><strong>Pain Point Ad</strong>Write a Facebook ad for [product] that opens by describing the exact feeling of [audience pain point]. Don't name the problem — describe how it feels to live with it. Transition to the solution after 2–3 sentences. End with CTA. Under 120 words.</div>
+    <div class="prompt-block"><strong>Social Proof Ad</strong>Write a Facebook ad formatted as a testimonial/case study for [product]. Start with a before/after result (specific numbers if possible). Show the transformation in 3–4 sentences. End with "Here's how to get the same result" and a CTA. Keep under 150 words.</div>
+    <div class="prompt-block"><strong>Retargeting Ad</strong>Write 3 retargeting ad copy variations for people who visited [landing page] but didn't convert. Address possible objections: (1) price, (2) "I'll do it later," (3) skepticism about results. Each should be under 100 words with a different angle.</div>
+
+    <h3 class="mt-40">Sales Page &amp; Landing Page Copy</h3>
+    <div class="prompt-block"><strong>Hero Headline Set</strong>Write 10 hero headline options for a sales page for [product] targeting [audience]. The product solves [main problem] and delivers [main outcome]. Mix: benefit-driven, curiosity, specific result, question, and bold claim formats.</div>
+    <div class="prompt-block"><strong>Bullet Points (Benefits)</strong>Write 15 benefit-driven bullet points for [product]. Each should follow one of these formulas: "How to [outcome] without [objection]" / "The [adjective] way to [outcome]" / "Discover [thing] that [result]." Make each specific and outcome-focused.</div>
+    <div class="prompt-block"><strong>FAQ Section</strong>Write a 10-question FAQ section for a sales page selling [product] to [audience]. Address: price objections, "will this work for me" doubt, what's included, time required, refund policy placeholder, and comparison to free alternatives. Keep answers honest and concise (2–4 sentences each).</div>
+    <div class="prompt-block"><strong>Guarantee Copy</strong>Write a risk-reversal/guarantee section for a sales page for [product] priced at [$X]. Make the guarantee feel specific and credible (not just "money back guaranteed"). Explain what they can expect, what they need to try, and exactly how to claim a refund. Under 120 words.</div>
+  </div>
+</div>
+
+<div class="section" id="part4">
+  <div class="container">
+    <p class="part-label">Part 4</p>
+    <div class="category-header">
+      <h2>Video Scripts &amp; Hooks</h2>
+      <span class="category-count">85 PROMPTS</span>
+    </div>
+    <p class="section-intro">YouTube scripts, short-form hooks, podcast intros, and video outlines. These prompts understand the difference between writing for the page and writing for the ear.</p>
+
+    <h3>YouTube Script Prompts</h3>
+    <div class="prompt-block"><strong>Full YouTube Script</strong>Write a YouTube script for a [8–12 minute] video titled "[title]" for [your channel/audience]. Structure: (1) Hook (first 30 seconds — promise the payoff), (2) Quick intro (who you are, why you're credible on this), (3) Main content in [3–5] sections, (4) CTA. Write as spoken word — contractions, short sentences, natural pauses marked with [pause].</div>
+    <div class="prompt-block"><strong>Video Hook (30 seconds)</strong>Write 8 hook variations for a YouTube video about [topic]. Each hook should be under 30 seconds when read aloud (roughly 70–80 words). Hooks should create an open loop or promise a specific outcome. Avoid "Hey guys, welcome back to my channel."</div>
+    <div class="prompt-block"><strong>Video Outline</strong>Write a detailed video outline for "[title]" targeting [audience]. Include: hook concept, 5 main talking points with sub-bullets, a pattern interrupt at the [2-minute] mark, and a CTA strategy for the end screen. Also suggest the ideal thumbnail concept in one sentence.</div>
+    <div class="prompt-block"><strong>YouTube Description</strong>Write a YouTube video description for a video titled "[title]." Include: a keyword-rich first 2 sentences (for SEO preview), a 150-word summary of the video, timestamps placeholder section, links placeholder, and a subscribe/notification CTA. Primary keyword: [keyword].</div>
+
+    <h3 class="mt-40">Short-Form (TikTok, Reels, Shorts)</h3>
+    <div class="prompt-block"><strong>Short-Form Script (60 seconds)</strong>Write a 60-second short-form video script about [topic] for [TikTok/Reels/Shorts]. Hook in the first 3 words (no warm-up). Deliver one clear, specific insight. End with a hook to watch again or a comment-driving question. Write as spoken word under 150 words total.</div>
+    <div class="prompt-block"><strong>Hook Library (Short-Form)</strong>Write 25 opening line hooks for short-form videos about [your niche]. Categorize them: (1) Curiosity gaps (5 hooks), (2) Controversy/bold take (5 hooks), (3) Relatable pain (5 hooks), (4) Surprising statistic (5 hooks), (5) Story openers (5 hooks). Each hook should be under 10 words.</div>
+    <div class="prompt-block"><strong>Comment Bait Endings</strong>Write 15 video ending lines designed to drive comments for content about [niche/topic]. Each should ask a specific question or make a statement that begs a response. Avoid "let me know in the comments what you think."</div>
+
+    <h3 class="mt-40">Podcast &amp; Audio</h3>
+    <div class="prompt-block"><strong>Podcast Episode Intro</strong>Write a 60-second podcast intro script for an episode about [topic]. Open with the core problem or question the episode answers. Briefly introduce the guest or your credentials on this topic. End with a clear signal that the value is coming. Write as natural speech.</div>
+    <div class="prompt-block"><strong>Podcast Episode Outline</strong>Write a podcast episode outline for "[episode title]" with guest [guest name/role]. Include: 5 key questions with follow-up probes, one segment for personal story/experience, one "hot take" question to spark debate, and a lightning round of 5 rapid questions. Target length: [30/45/60] minutes.</div>
+  </div>
+</div>
+
+<div class="section" id="part5">
+  <div class="container">
+    <p class="part-label">Part 5</p>
+    <div class="category-header">
+      <h2>Strategy &amp; Business</h2>
+      <span class="category-count">70 PROMPTS</span>
+    </div>
+    <p class="section-intro">Product strategy, positioning, market research, competitor analysis, and business planning. Use these when you need a thinking partner, not just a writer.</p>
+
+    <div class="prompt-block"><strong>Offer Positioning</strong>Act as a direct-response copywriter. I'm selling [product] to [audience]. Here's what it does: [description]. Write 5 different positioning angles for this offer. Each angle should frame the product differently (e.g., time-saving, risk-reduction, status, simplicity, transformation). Include a headline and 2-sentence description for each angle.</div>
+    <div class="prompt-block"><strong>Ideal Customer Profile</strong>Build a detailed ideal customer profile for [product/business]. Include: demographics, psychographics, top 5 frustrations related to [niche], top 5 desires, what they've already tried, where they spend time online, what language/words they use to describe their problem, and what would make them immediately trust a solution.</div>
+    <div class="prompt-block"><strong>Competitor Analysis</strong>I'm building [product/business] in the [niche] space. My main competitors are [Competitor 1], [Competitor 2], and [Competitor 3]. Analyze their likely positioning, pricing strategy, and target audience. Then identify 3 gaps or underserved angles I could own. Be specific and direct.</div>
+    <div class="prompt-block"><strong>Product Naming</strong>Generate 20 name ideas for a [type of product] that [does what] for [audience]. Names should be: easy to spell, memorable, domain-friendly if possible, and convey [desired brand feeling: e.g., speed/trust/premium/approachability]. Group by naming style: descriptive, abstract, portmanteau, metaphor.</div>
+    <div class="prompt-block"><strong>Pricing Strategy</strong>I'm launching [product] and considering these price points: [$X], [$Y], [$Z]. My audience is [description]. My closest competitor charges [$competitor price]. Help me think through the psychology and strategy of each price point — what it signals, who it attracts, and what objections each creates. Then recommend one with reasoning.</div>
+    <div class="prompt-block"><strong>Launch Strategy</strong>Write a 4-week pre-launch content strategy for [product] launching on [date]. I have access to: [list your channels — email, Instagram, YouTube, etc.]. Create a week-by-week content plan with specific post/email topics for each week. The goal is to build anticipation and a waitlist of [target number] people before launch day.</div>
+    <div class="prompt-block"><strong>FAQ Generation</strong>I'm selling [product] to [audience]. Generate the 15 most likely questions/objections a potential customer would have before buying. For each, write a 2–3 sentence answer that's honest, direct, and confidence-building. Include at least 3 hard objections (price, skepticism, alternatives).</div>
+    <div class="prompt-block"><strong>Revenue Model Analysis</strong>I run [type of business] with [revenue streams]. My current monthly revenue is approximately [$X]. Analyze my revenue model and suggest 3 ways to increase revenue without significantly increasing workload. For each, estimate the effort level (Low/Medium/High) and potential monthly upside.</div>
+  </div>
+</div>
+
+<div class="section" id="part6">
+  <div class="container">
+    <p class="part-label">Part 6</p>
+    <div class="category-header">
+      <h2>Social Media &amp; Repurposing</h2>
+      <span class="category-count">100 PROMPTS</span>
+    </div>
+    <p class="section-intro">Platform-specific prompts for LinkedIn, Twitter/X, Instagram, TikTok, and repurposing long-form content across channels. More output, less time.</p>
+
+    <h3>LinkedIn</h3>
+    <div class="prompt-block"><strong>LinkedIn Text Post</strong>Write a LinkedIn post about [topic] for [your role/industry]. Open with a single-sentence hook (no "I'm excited to share"). Build to a clear insight or lesson in 150–200 words. End with a question that invites professional discussion. Use line breaks every 1–2 sentences for readability. No hashtag spam — 2–3 max.</div>
+    <div class="prompt-block"><strong>LinkedIn Story Post</strong>Write a LinkedIn personal story post about [lesson or experience]. Structure: one-line hook → scene-setting (what was happening) → the conflict or challenge → the turn/insight → the lesson. Under 250 words. First-person. Honest. Avoid corporate language.</div>
+    <div class="prompt-block"><strong>LinkedIn Carousel Script</strong>Write a 10-slide LinkedIn carousel about [topic]. Slide 1: hook headline. Slides 2–9: one point per slide with a headline and 2-sentence explanation. Slide 10: CTA + summary. Each slide should be scannable in 5 seconds. Include a suggested cover image concept for each slide.</div>
+
+    <h3 class="mt-40">Twitter / X</h3>
+    <div class="prompt-block"><strong>Thread</strong>Write a 10-tweet thread about [topic] for [audience]. Tweet 1: hook that makes people stop scrolling (under 200 characters). Tweets 2–9: one insight per tweet, each self-contained but building on the last. Tweet 10: summary + CTA. No filler. Every tweet should be worth reading alone.</div>
+    <div class="prompt-block"><strong>Single Tweet (Engagement)</strong>Write 10 single tweet options about [topic or opinion]. Mix formats: bold statement, question, hot take, list (3 items max), and observation. Each under 240 characters. Mark the top 3 most likely to get engagement with ★.</div>
+    <div class="prompt-block"><strong>Twitter Bio</strong>Write 5 Twitter/X bio options for [your role/what you do]. Each under 160 characters. Include: what you do, who you help or what you talk about, and one credibility signal or personality hook. Avoid buzzwords like "passionate" or "guru."</div>
+
+    <h3 class="mt-40">Instagram &amp; TikTok</h3>
+    <div class="prompt-block"><strong>Instagram Caption</strong>Write 5 Instagram caption options for a post about [topic/image description]. Formats: (1) storytelling, (2) tip/value, (3) question-based, (4) bold opinion, (5) behind-the-scenes. Each under 150 words. Include 5 relevant hashtag suggestions per caption.</div>
+    <div class="prompt-block"><strong>Instagram Bio</strong>Write 5 Instagram bio options for [your account — describe what you post and who follows you]. Each must fit in 150 characters. Include a hook, what you offer, and a CTA (follow, link in bio, etc.). Make each feel human, not corporate.</div>
+    <div class="prompt-block"><strong>TikTok Caption &amp; Hashtags</strong>Write 5 TikTok captions for a video about [topic]. Each should be under 100 characters, create curiosity about the video, or add context that makes the viewer want to watch. Include 6 TikTok-specific hashtag recommendations per caption (mix of large and niche).</div>
+
+    <h3 class="mt-40">Content Repurposing</h3>
+    <div class="prompt-block"><strong>Blog to Social</strong>Here's a blog post: [paste blog post]. Repurpose it into: (1) a LinkedIn text post (200 words), (2) a Twitter thread (8 tweets), (3) an Instagram carousel outline (8 slides), (4) a TikTok/Reel hook + 3 key talking points, (5) an email newsletter teaser (100 words). Maintain the core message across all formats.</div>
+    <div class="prompt-block"><strong>YouTube to Written</strong>Here's a YouTube transcript: [paste transcript]. Convert it into: (1) a 1000-word blog post with proper structure and headings, (2) a LinkedIn article intro (250 words), (3) 5 standalone tweet ideas pulled from the best insights. Clean up the spoken language for written format.</div>
+    <div class="prompt-block"><strong>Repurposing Calendar</strong>I have these content assets this week: [list your content — e.g., 1 YouTube video, 1 newsletter, 1 podcast episode]. Create a 7-day repurposing calendar across [your platforms]. Assign specific formats to specific days, and note which assets to repurpose for each. Goal: maximum reach from what already exists.</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p><strong>AI Prompt Vault for Creators</strong></p>
+    <p>A REMbyDesign product — <a href="https://screwedscore.com">screwedscore.com</a></p>
+    <p style="margin-top:16px;">Questions? <a href="mailto:hello@rembydesign.com">hello@rembydesign.com</a></p>
+  </div>
+</div>
+
+</body>
+</html>

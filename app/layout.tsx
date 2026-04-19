@@ -107,6 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-MZCC8P2NG7');
+          gtag('config', 'G-23L7FKP8VQ');
         `}</Script>
         {/* Google Ads conversion tracking */}
         <Script

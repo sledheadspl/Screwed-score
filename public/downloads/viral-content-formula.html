@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viral Content Formula — 90 Hook Templates &amp; Repurposing Matrix</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080808;
+    --card: rgba(15,15,15,0.8);
+    --accent: #f97316;
+    --accent-dim: rgba(249,115,22,0.12);
+    --accent-border: rgba(249,115,22,0.3);
+    --text: #f2f2f2;
+    --text-muted: rgba(242,242,242,0.6);
+    --text-faint: rgba(242,242,242,0.35);
+    --border: rgba(255,255,255,0.06);
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(249,115,22,0.08) 0%, transparent 70%); }
+  .hero-badge { display: inline-block; background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 20px; }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { font-size: 1.15rem; color: var(--text-muted); max-width: 620px; margin-bottom: 36px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 24px; font-size: 13px; color: var(--text-faint); }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px 36px; margin: 40px 0 0; }
+  .toc h3 { margin-bottom: 18px; font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 8px; font-size: 0.95rem; }
+  .toc a { color: var(--text); opacity: 0.8; }
+  .toc a:hover { color: var(--accent); opacity: 1; text-decoration: none; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; }
+  .card.accent-border { border-color: var(--accent-border); }
+  .part-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; }
+  h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; color: var(--text); }
+  h4 { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-intro { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 40px; max-width: 680px; }
+  .formula { background: rgba(249,115,22,0.06); border: 1px solid var(--accent-border); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 0.88rem; color: var(--accent); margin: 14px 0; word-break: break-word; }
+  .highlight { background: rgba(249,115,22,0.05); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 0.95rem; color: var(--text-muted); }
+  .highlight strong { color: var(--text); }
+  ul.styled { padding-left: 0; list-style: none; }
+  ul.styled li { padding: 10px 0 10px 24px; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text-muted); position: relative; }
+  ul.styled li:last-child { border-bottom: none; }
+  ul.styled li::before { content: '→'; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+  .hook-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 10px; }
+  .hook-card .hook-type { font-size: 10px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
+  .hook-card .hook-template { font-size: 0.95rem; color: var(--text); margin-bottom: 6px; font-weight: 600; }
+  .hook-card .hook-example { font-size: 0.85rem; color: var(--text-faint); font-style: italic; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-faint); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .footer { padding: 48px 0; text-align: center; border-top: 1px solid var(--border); }
+  .footer p { font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
+  .footer strong { color: var(--text-muted); }
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+  .mt-24 { margin-top: 24px; }
+  .mt-40 { margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">Premium Digital Product</div>
+    <h1>Viral Content<br><span>Formula</span></h1>
+    <p class="hero-sub">The repeatable framework behind content that spreads. 90 proven hook templates, platform-specific content formats, and a repurposing matrix that multiplies your reach without multiplying your workload.</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> The Viral Framework</span>
+      <span><span class="dot"></span> 90 Hook Templates</span>
+      <span><span class="dot"></span> Platform Format Guides</span>
+      <span><span class="dot"></span> Repurposing Matrix</span>
+    </div>
+    <div class="toc">
+      <h3>Table of Contents</h3>
+      <ol>
+        <li><a href="#part1">Part 1 — The Viral Content Framework (Why Content Spreads)</a></li>
+        <li><a href="#part2">Part 2 — 90 Hook Templates by Type</a></li>
+        <li><a href="#part3">Part 3 — Platform Format Guides</a></li>
+        <li><a href="#part4">Part 4 — The Repurposing Matrix</a></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part1">
+  <div class="container">
+    <p class="part-label">Part 1</p>
+    <h2>The Viral Content Framework</h2>
+    <p class="section-intro">Virality isn't random. Every piece of content that spreads does so because it triggers one or more of six psychological drivers. Understanding these is the difference between hoping your content goes viral and engineering it.</p>
+
+    <h3>The 6 Virality Drivers</h3>
+    <div class="card accent-border">
+      <h4>Driver 1 — Identity Signal</h4>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:0;">People share content that says something about who they are. "This is so me." "This is exactly how I think." Content that lets someone signal their identity, values, or tribal membership to their audience gets shared because sharing it is itself the message. Ask: does sharing this content say something about the person sharing it?</p>
+    </div>
+    <div class="card">
+      <h4>Driver 2 — Emotional Activation</h4>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:0;">High-arousal emotions drive sharing. Awe, anger, anxiety, and excitement cause people to act. Low-arousal emotions (sadness, contentment) slow sharing. Design content to spike one of the four high-arousal emotions. Note: you don't need to be controversial — awe and excitement work just as well as outrage, with less blowback.</p>
+    </div>
+    <div class="card">
+      <h4>Driver 3 — Practical Value</h4>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:0;">"News you can use." Content that makes someone better at something, saves them money, or helps them solve a specific problem gets shared because sharing it is a gift. The more specific and immediately actionable the value, the more shareable it is. "5 ways to be more productive" is less shareable than "The 2-minute trick that eliminated 40% of my email time."</p>
+    </div>
+    <div class="card">
+      <h4>Driver 4 — Social Currency</h4>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:0;">People share things that make them look good — smart, informed, funny, or in-the-know. If sharing your content makes someone look like they're ahead of the curve, they'll share it. Contrarian takes, under-the-radar information, and insider knowledge all create social currency. Tip: position content as "most people don't know this."</p>
+    </div>
+    <div class="card">
+      <h4>Driver 5 — Story &amp; Narrative</h4>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:0;">Humans are wired for story. Information delivered as story is 22× more memorable than information delivered as data. A good story has: a character the audience relates to, a conflict or obstacle, and a resolution with a takeaway. Short-form story works in 60 seconds. You don't need long content — you need narrative structure.</p>
+    </div>
+    <div class="card">
+      <h4>Driver 6 — Novelty &amp; Surprise</h4>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:0;">The brain's reward system activates on novelty. Unexpected angles, surprising data points, and counterintuitive conclusions generate dopamine and keep attention. If your content confirms what people already believe, it's forgettable. If it flips an assumption, it's shareable. Pattern-interrupt early — in the first 3 seconds — or you've already lost them.</p>
+    </div>
+
+    <h3 class="mt-40">The ACER Content Structure</h3>
+    <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:20px;">Use this 4-part structure for any piece of content — short or long. It's built around how attention actually works online.</p>
+    <div class="formula">A — Attention (0–3 seconds): Stop the scroll. The hook. Makes them stay.<br>C — Curiosity (3–15 seconds): Open a loop. Tease the payoff. Don't deliver yet.<br>E — Engagement (15 seconds – end): Deliver real value. Keep the loop open until the last moment.<br>R — Retention (end): Satisfy the loop. Give the CTA. Make them want to come back.</div>
+    <div class="highlight">
+      <strong>The most common mistake:</strong> Creators front-load context before the hook. "Hey guys, today we're going to talk about..." kills content before it starts. Start with the hook — every time, on every platform.
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part2">
+  <div class="container">
+    <p class="part-label">Part 2</p>
+    <h2>90 Hook Templates</h2>
+    <p class="section-intro">Hooks organized by psychological driver. The template is in bold — the example shows it applied. Replace [brackets] with your niche and topic.</p>
+
+    <h3>Curiosity Gap Hooks (18 Hooks)</h3>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">The [thing] nobody tells you about [topic]</div><div class="hook-example">"The part of growing a business nobody tells you about"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">I discovered [unexpected thing] and it changed [outcome]</div><div class="hook-example">"I discovered one sentence that doubled my email open rates"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">What [successful people/thing] does differently</div><div class="hook-example">"What $10M/year businesses do differently than everyone else"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">The [number]-second rule that [result]</div><div class="hook-example">"The 3-second rule that changed how I edit every video"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">Here's what [most people / the industry / everyone] gets wrong about [topic]</div><div class="hook-example">"Here's what most creators get wrong about going viral"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">The real reason [common frustration happens]</div><div class="hook-example">"The real reason your content isn't converting into followers"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">I [did unusual thing] and here's what I learned</div><div class="hook-example">"I read 52 books in a year and here's the only thing that mattered"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">This [small / overlooked] thing is [having massive effect]</div><div class="hook-example">"This 40-word bio change is getting me 3× more profile visits"</div></div>
+    <div class="hook-card"><div class="hook-type">Curiosity</div><div class="hook-template">Nobody talks about [topic] but [surprising fact]</div><div class="hook-example">"Nobody talks about content repurposing but it's how most big creators actually grow"</div></div>
+
+    <h3 class="mt-40">Controversial &amp; Bold Take Hooks (18 Hooks)</h3>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">[Common advice] is [wrong / killing you / overrated]</div><div class="hook-example">"Consistency is overrated. Here's what actually matters."</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">I don't believe in [popular concept]</div><div class="hook-example">"I don't believe in work-life balance — and I'm more productive for it"</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">[Popular thing] is a waste of time. Do [alternative] instead.</div><div class="hook-example">"Cold outreach is a waste of time. Do this instead."</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">If you're doing [common thing], you're doing it wrong</div><div class="hook-example">"If you're posting every day and still not growing, you're doing it wrong"</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">Unpopular opinion: [your contrarian take]</div><div class="hook-example">"Unpopular opinion: most people don't need a content strategy"</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">Stop [common behavior]. It's [negative consequence].</div><div class="hook-example">"Stop optimizing for followers. It's making your content worse."</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">The [industry / niche] is [broken / lying to you / wrong about something]</div><div class="hook-example">"The creator economy is lying to you about passive income"</div></div>
+    <div class="hook-card"><div class="hook-type">Bold Take</div><div class="hook-template">Everyone told me [advice]. I did the opposite and [result].</div><div class="hook-example">"Everyone told me to niche down. I went broad and hit 100K."</div></div>
+
+    <h3 class="mt-40">Story &amp; Relatable Hooks (18 Hooks)</h3>
+    <div class="hook-card"><div class="hook-type">Story</div><div class="hook-template">A [timeframe] ago, I [was in bad state]. Now [good state]. Here's what changed.</div><div class="hook-example">"3 years ago I was $40K in debt. Here's what actually changed."</div></div>
+    <div class="hook-card"><div class="hook-type">Story</div><div class="hook-template">I almost [gave up / failed / quit]. Then [thing happened].</div><div class="hook-example">"I almost deleted my channel after 6 months of zero growth. Then this happened."</div></div>
+    <div class="hook-card"><div class="hook-type">Story</div><div class="hook-template">The day I realized [insight that changed everything]</div><div class="hook-example">"The day I realized I'd been building an audience wrong for two years"</div></div>
+    <div class="hook-card"><div class="hook-type">Story</div><div class="hook-template">This is the story of how I [achieved outcome] starting from [humble beginning]</div><div class="hook-example">"This is the story of how I built a $500K/year business from a $500 laptop"</div></div>
+    <div class="hook-card"><div class="hook-type">Relatable</div><div class="hook-template">If you've ever [relatable frustration], this is for you</div><div class="hook-example">"If you've ever spent 3 hours on a post that got 12 likes, this is for you"</div></div>
+    <div class="hook-card"><div class="hook-type">Relatable</div><div class="hook-template">You know that feeling when [specific relatable moment]?</div><div class="hook-example">"You know that feeling when you post your best content and nobody sees it?"</div></div>
+    <div class="hook-card"><div class="hook-type">Relatable</div><div class="hook-template">I used to [relatable bad habit]. Here's how I fixed it.</div><div class="hook-example">"I used to spend 4 hours writing captions. Here's how I cut it to 20 minutes."</div></div>
+    <div class="hook-card"><div class="hook-type">Relatable</div><div class="hook-template">Nobody prepares you for [specific real challenge]</div><div class="hook-example">"Nobody prepares you for what happens when your content actually goes viral"</div></div>
+
+    <h3 class="mt-40">Value &amp; Practical Hooks (18 Hooks)</h3>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">[Number] things I wish I knew before [experience]</div><div class="hook-example">"7 things I wish I knew before starting a YouTube channel"</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">The [adjective] way to [achieve outcome] in [short timeframe]</div><div class="hook-example">"The simplest way to write a month of content in one afternoon"</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">How to [achieve outcome] without [common obstacle]</div><div class="hook-example">"How to grow an audience without posting every day"</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">In [short time], you'll [positive outcome]. Here's exactly how.</div><div class="hook-example">"In 10 minutes, you'll have 30 days of content ideas. Here's exactly how."</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">The [thing] that [improved specific metric] by [impressive amount]</div><div class="hook-example">"The thumbnail change that increased my CTR by 140%"</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">Every [role] should know how to do [skill]</div><div class="hook-example">"Every content creator should know how to do this in 60 seconds"</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">I analyzed [number] [things]. Here's what I found.</div><div class="hook-example">"I analyzed 500 viral tweets. Here's the pattern I found."</div></div>
+    <div class="hook-card"><div class="hook-type">Value</div><div class="hook-template">The [number]-step system I use to [outcome] every [timeframe]</div><div class="hook-example">"The 3-step system I use to write 5 pieces of content every Sunday"</div></div>
+
+    <h3 class="mt-40">Question &amp; Challenge Hooks (18 Hooks)</h3>
+    <div class="hook-card"><div class="hook-type">Question</div><div class="hook-template">What would happen if you [took bold action]?</div><div class="hook-example">"What would happen if you posted content for 90 days straight?"</div></div>
+    <div class="hook-card"><div class="hook-type">Question</div><div class="hook-template">Can [common goal] actually be achieved in [short timeframe]?</div><div class="hook-example">"Can you build a real audience in 30 days starting from zero?"</div></div>
+    <div class="hook-card"><div class="hook-type">Question</div><div class="hook-template">Are you [unknowingly making this mistake]?</div><div class="hook-example">"Are you accidentally training your audience to ignore you?"</div></div>
+    <div class="hook-card"><div class="hook-type">Question</div><div class="hook-template">Is [popular thing] actually [what people think it is]?</div><div class="hook-example">"Is 'authentic content' actually just bad content with an excuse?"</div></div>
+    <div class="hook-card"><div class="hook-type">Challenge</div><div class="hook-template">I challenged myself to [do unusual thing] for [timeframe]. Here's what happened.</div><div class="hook-example">"I challenged myself to write 1,000 words every morning for 6 months. Here's what happened."</div></div>
+    <div class="hook-card"><div class="hook-type">Challenge</div><div class="hook-template">I gave myself [timeframe] to [achieve hard goal] with no [normal resource]</div><div class="hook-example">"I gave myself 7 days to get 1,000 followers with no existing audience"</div></div>
+    <div class="hook-card"><div class="hook-type">Challenge</div><div class="hook-template">Most people can't [do this thing]. Can you?</div><div class="hook-example">"Most creators can't name their content pillars in 30 seconds. Can you?"</div></div>
+    <div class="hook-card"><div class="hook-type">Challenge</div><div class="hook-template">The [timeframe] challenge that [changed outcome] for [me / thousands]</div><div class="hook-example">"The 7-day challenge that changed how I approach every piece of content"</div></div>
+  </div>
+</div>
+
+<div class="section" id="part3">
+  <div class="container">
+    <p class="part-label">Part 3</p>
+    <h2>Platform Format Guides</h2>
+    <p class="section-intro">Each platform has its own physics. What works on LinkedIn breaks on TikTok. What dominates Twitter dies on YouTube. These guides map the formats, lengths, and behaviors that consistently perform on each platform.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>TikTok</h4>
+        <ul class="styled" style="margin-top:12px;">
+          <li>Hook in first 1–2 words (not first sentence — first words)</li>
+          <li>Best lengths: 21–34 seconds and 60–90 seconds (sweet spots for completion)</li>
+          <li>Text overlay on-screen for the first 3 seconds — catches silent viewers</li>
+          <li>End on a cliffhanger or loop point to increase rewatch rate</li>
+          <li>Trending sounds boost reach even for non-music content</li>
+          <li>Post between 7–9am or 7–9pm in your audience's timezone</li>
+          <li>Reply to comments with videos — these often outperform originals</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Instagram Reels</h4>
+        <ul class="styled" style="margin-top:12px;">
+          <li>Best lengths: 7–15 seconds (highest share rate) or 30–60 seconds</li>
+          <li>Captions matter more than on TikTok — add 3–5 sentences of context</li>
+          <li>First frame must work as a static image (previewed before autoplay)</li>
+          <li>Trending audio gives 2–3× boost — use it even quietly in background</li>
+          <li>Shares (DMs) are weighted more than likes — create "send this to someone who..." moments</li>
+          <li>Saves signal value — end with a reason to save ("screenshot this")</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>LinkedIn</h4>
+        <ul class="styled" style="margin-top:12px;">
+          <li>First line determines whether anyone clicks "see more" — make it a standalone hook</li>
+          <li>Single line breaks between every 1–2 sentences (no dense paragraphs)</li>
+          <li>Best formats: personal story, numbered lessons, contrarian take</li>
+          <li>First 60 minutes of engagement heavily determines reach</li>
+          <li>Comments beat likes for distribution — end with a discussion question</li>
+          <li>Don't include links in the post body — add in first comment instead</li>
+          <li>Best times: Tuesday–Thursday, 8–10am</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Twitter / X</h4>
+        <ul class="styled" style="margin-top:12px;">
+          <li>Thread Tweet 1 is everything — it must work as a complete, shareable thought</li>
+          <li>Threads: each tweet should end with a reason to read the next one</li>
+          <li>Images add reach — even simple text-on-image outperforms text-only</li>
+          <li>Replies to large accounts in your niche drive more new followers than original posts</li>
+          <li>Ratio matters — aim for 2× replies vs likes (shows conversation)</li>
+          <li>Best engagement: 8–10am and 6–9pm weekdays</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="part4">
+  <div class="container">
+    <p class="part-label">Part 4</p>
+    <h2>The Repurposing Matrix</h2>
+    <p class="section-intro">One piece of long-form content should produce 8–12 platform-native pieces. This isn't cross-posting — it's extracting different value angles from the same source material and reformatting each for the platform it lives on.</p>
+
+    <div class="highlight">
+      <strong>The rule:</strong> Never just copy-paste content between platforms. Each platform has native behavior. A YouTube video description posted as a LinkedIn update will flop. The same insight, reformatted as a LinkedIn story, can go viral. Extract the idea — reformat completely.
+    </div>
+
+    <h3>The Core Repurposing Flow</h3>
+    <div class="formula">Long-Form Anchor (YouTube/Podcast/Blog) → Short Clips + Quotes + Key Insights → Platform-Specific Formats → Distribution → Email Digest</div>
+
+    <h3 class="mt-40">Full Repurposing Matrix</h3>
+    <div class="card">
+      <table>
+        <thead><tr><th>Source Content</th><th>Repurpose Into</th><th>Platform</th><th>Format</th></tr></thead>
+        <tbody>
+          <tr><td>YouTube Video (10 min)</td><td>3–5 short clips (best moments)</td><td>TikTok, Reels, Shorts</td><td>60–90 sec vertical</td></tr>
+          <tr><td>YouTube Video</td><td>Key insight as thread</td><td>Twitter/X</td><td>8–10 tweet thread</td></tr>
+          <tr><td>YouTube Video</td><td>Story angle from video</td><td>LinkedIn</td><td>250-word story post</td></tr>
+          <tr><td>YouTube Video</td><td>Full blog post transcript</td><td>Blog/SEO</td><td>1,000–1,500 words</td></tr>
+          <tr><td>YouTube Video</td><td>Email teaser + link</td><td>Newsletter</td><td>150-word summary + CTA</td></tr>
+          <tr><td>Blog Post</td><td>Key points as carousel</td><td>Instagram / LinkedIn</td><td>8–10 slide carousel</td></tr>
+          <tr><td>Blog Post</td><td>Hook + quote images</td><td>Instagram Stories</td><td>5–7 swipe-up stories</td></tr>
+          <tr><td>Blog Post</td><td>One surprising stat or fact</td><td>Twitter/X</td><td>Single tweet + thread</td></tr>
+          <tr><td>Podcast Episode</td><td>Best 60-second audio clip</td><td>Twitter/X, LinkedIn</td><td>Native audio post</td></tr>
+          <tr><td>Podcast Episode</td><td>Guest's best quote</td><td>All platforms</td><td>Quote image</td></tr>
+          <tr><td>Newsletter Issue</td><td>Main framework as video</td><td>YouTube, TikTok</td><td>Explainer video</td></tr>
+          <tr><td>Newsletter Issue</td><td>One tip expanded into thread</td><td>Twitter/X</td><td>Thread</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-40">Weekly Content Engine (One Anchor → Full Week)</h3>
+    <div class="card accent-border">
+      <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:16px;">Create one anchor piece per week. Run it through this workflow and you'll have daily content across all platforms without creating anything new.</p>
+      <ul class="styled">
+        <li><strong style="color:var(--text);">Monday:</strong> Publish anchor content (YouTube / blog / podcast). Send email to list.</li>
+        <li><strong style="color:var(--text);">Tuesday:</strong> Post best short clip on TikTok and Reels. LinkedIn story post on the main lesson.</li>
+        <li><strong style="color:var(--text);">Wednesday:</strong> Twitter thread on the key framework or insight. Instagram carousel outline.</li>
+        <li><strong style="color:var(--text);">Thursday:</strong> Instagram carousel posted. Behind-the-scenes or process clip on Reels/Stories.</li>
+        <li><strong style="color:var(--text);">Friday:</strong> Second short clip (different angle). Twitter single-tweet insight from the same content.</li>
+        <li><strong style="color:var(--text);">Saturday:</strong> Quote image or micro-lesson on Instagram/LinkedIn. TikTok response to comments from Monday.</li>
+        <li><strong style="color:var(--text);">Sunday:</strong> Prep next week's anchor. Review what performed best — double down on that angle.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p><strong>Viral Content Formula</strong></p>
+    <p>A REMbyDesign product — <a href="https://screwedscore.com">screwedscore.com</a></p>
+    <p style="margin-top:16px;">Questions? <a href="mailto:hello@rembydesign.com">hello@rembydesign.com</a></p>
+  </div>
+</div>
+
+</body>
+</html>
