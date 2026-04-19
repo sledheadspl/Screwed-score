@@ -328,7 +328,7 @@ export default function HomePage() {
 
               {/* Subhead */}
               <p className="animate-fade-up delay-200 text-lg sm:text-xl text-brand-sub/75 max-w-lg mx-auto leading-relaxed mb-2">
-                The average American overpays <span className="text-brand-text font-bold">$1,400/year</span> on bills they never read.
+                The average American overpays <span className="text-brand-text font-bold">$1,300/year</span> on bills they never read.
               </p>
               <p className="animate-fade-up delay-300 text-sm text-brand-sub/45 mb-10 max-w-md mx-auto">
                 Upload any document. AI flags overcharges, hidden fees, and red flags in 20 seconds.
@@ -369,7 +369,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <span className="text-sm text-brand-sub/50">
-                  <span className="text-brand-text/80 font-bold">23,400+</span> documents scanned
+                  Used by early access members
                 </span>
               </div>
             </section>
@@ -382,9 +382,9 @@ export default function HomePage() {
               <div className="max-w-6xl mx-auto px-5 sm:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
-                    { value: '$4.2M+*',  label: 'in overcharges found',      color: '#ff3b30' },
-                    { value: '23,400+', label: 'documents analyzed',         color: '#60a5fa' },
-                    { value: '78%*',    label: 'of scans flag something',    color: '#ffd60a' },
+                    { value: '20 sec',  label: 'average analysis time',      color: '#ff3b30' },
+                    { value: '$2.99',   label: 'per scan after 3 free',      color: '#60a5fa' },
+                    { value: '78%',     label: 'of scans flag something',    color: '#ffd60a' },
                     { value: '12',      label: 'languages supported',        color: '#30d158' },
                   ].map(({ value, label, color }, idx) => (
                     <div key={label} className={`px-4 sm:px-8 py-6 text-center ${idx > 0 ? 'stat-divider' : ''}`}>
@@ -396,10 +396,6 @@ export default function HomePage() {
                     </div>
                   ))}
                 </div>
-                {/* Stats footnote */}
-                <p className="mt-6 text-center text-[10px] text-brand-sub/25 tracking-wide">
-                  * Figures based on documents analyzed through this platform. Results vary by document type.
-                </p>
 
                 {/* Victory banner sits flush inside the stats band */}
                 <div className="mt-6 pt-6 border-t border-brand-border/20">
