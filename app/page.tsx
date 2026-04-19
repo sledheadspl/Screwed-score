@@ -20,7 +20,6 @@ import { TrustedProviders } from '@/components/TrustedProviders'
 import { RecommendedProviders } from '@/components/RecommendedProviders'
 import { ShareExperience } from '@/components/ShareExperience'
 import { ReferralCard } from '@/components/ReferralCard'
-import { DisputeLetter } from '@/components/DisputeLetter'
 import { BenchmarkCard } from '@/components/BenchmarkCard'
 import { LiveTicker } from '@/components/LiveTicker'
 import { OutcomeReport } from '@/components/OutcomeReport'
@@ -876,15 +875,13 @@ export default function HomePage() {
               </div>
             )}
 
+            <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />
+
             <BenchmarkCard
               documentType={state.result.document_type}
               scorePercent={state.result.screwed_score_percent}
               score={state.result.screwed_score}
             />
-
-            <DisputeLetter analysisId={state.analysisId} score={state.result.screwed_score} />
-
-            <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />
 
             <OutcomeReport analysisId={state.analysisId} score={state.result.screwed_score} />
 
