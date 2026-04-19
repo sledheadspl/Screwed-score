@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Productivity Digital Media',
-  description: 'Elite-grade digital assets, automations, and productivity systems engineered to scale your income and eliminate friction.',
+  title: 'Digital Products for Creators — Templates, Systems & Playbooks',
+  description: 'Premium digital products for content creators: YouTube growth systems, viral content frameworks, email list builders, AI prompt vaults, and more. Instant download.',
+  alternates: { canonical: 'https://screwedscore.com/productivity' },
   openGraph: {
-    title: 'Productivity Digital Media — REMbyDesign',
-    description: 'Tools engineered for creators who refuse to operate at average speed.',
+    title: 'Digital Products for Creators — REMbyDesign',
+    description: 'Premium templates, systems, and playbooks for content creators. Instant download.',
+    url: 'https://screwedscore.com/productivity',
     type: 'website',
   },
 }

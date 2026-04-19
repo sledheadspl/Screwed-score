@@ -110,6 +110,7 @@ export async function generateMetadata({ params }: { params: { type: string } })
   return {
     title: `${config.title} | GetScrewedScore`,
     description: config.subheadline,
+    alternates: { canonical: `https://screwedscore.com/analyze/${params.type}` },
     openGraph: {
       title: config.title,
       description: config.subheadline,

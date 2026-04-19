@@ -1,7 +1,23 @@
 import { MetadataRoute } from 'next'
 
+const ANALYZE_TYPES = [
+  'mechanic-invoice',
+  'medical-bill',
+  'contractor-estimate',
+  'lease-agreement',
+  'phone-bill',
+  'brand-deal',
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://screwedscore.com'
+
+  const analyzePages: MetadataRoute.Sitemap = ANALYZE_TYPES.map(type => ({
+    url: `${base}/analyze/${type}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }))
 
   return [
     {
@@ -52,5 +68,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.3,
     },
+    ...analyzePages,
   ]
 }
