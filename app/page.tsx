@@ -1068,6 +1068,29 @@ export default function HomePage() {
         )}
       </main>
 
+      {/* ── Sticky sample CTA ───────────────────────────────────────────────── */}
+      {isSample && (
+        <div className="fixed bottom-0 inset-x-0 z-50 p-3 sm:p-4"
+          style={{ background: 'linear-gradient(to top, rgba(2,3,8,0.98) 60%, transparent)' }}>
+          <div className="max-w-lg mx-auto">
+            <button
+              onClick={handleReset}
+              className="w-full py-4 rounded-2xl font-black text-base tracking-tight transition-all duration-200 active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
+                boxShadow: '0 0 40px rgba(255,59,48,0.35)',
+                color: '#fff',
+              }}
+            >
+              Scan my own bill — it's free →
+            </button>
+            <p className="text-center text-[11px] mt-2" style={{ color: 'rgba(107,122,153,0.5)' }}>
+              No account · No credit card · Files deleted after scan
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer className="border-t border-brand-border mt-10 py-8">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-sub">
