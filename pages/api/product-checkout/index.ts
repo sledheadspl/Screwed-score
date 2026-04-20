@@ -3,27 +3,27 @@ import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
 
-const PRODUCT_MAP: Record<string, { priceEnvKey: string; subscription: boolean }> = {
-  'creator-os':              { priceEnvKey: 'STRIPE_PRICE_CREATOR_OS',                subscription: false },
-  'content-pipeline':        { priceEnvKey: 'STRIPE_PRICE_CONTENT_PIPELINE',           subscription: false },
-  'brand-deal':              { priceEnvKey: 'STRIPE_PRICE_BRAND_DEAL',                 subscription: false },
-  'revenue-dashboard':       { priceEnvKey: 'STRIPE_PRICE_REVENUE_DASHBOARD',          subscription: false },
-  'social-assets':           { priceEnvKey: 'STRIPE_PRICE_SOCIAL_ASSETS',              subscription: false },
-  'launch-sequence':         { priceEnvKey: 'STRIPE_PRICE_LAUNCH_SEQUENCE',            subscription: false },
-  'ai-prompt-vault':         { priceEnvKey: 'STRIPE_PRICE_AI_PROMPT_VAULT',            subscription: false },
-  'youtube-accelerator':     { priceEnvKey: 'STRIPE_PRICE_YOUTUBE_ACCELERATOR',        subscription: false },
-  'email-list-builder':      { priceEnvKey: 'STRIPE_PRICE_EMAIL_LIST_BUILDER',         subscription: false },
-  'viral-content-formula':   { priceEnvKey: 'STRIPE_PRICE_VIRAL_CONTENT',              subscription: false },
-  'freelance-rate-kit':      { priceEnvKey: 'STRIPE_PRICE_FREELANCE_RATE',             subscription: false },
-  'personal-brand-kit':      { priceEnvKey: 'STRIPE_PRICE_PERSONAL_BRAND',             subscription: false },
-  'creator-legal-toolkit':   { priceEnvKey: 'STRIPE_PRICE_CREATOR_LEGAL',              subscription: false },
-  'passive-income-blueprint':{ priceEnvKey: 'STRIPE_PRICE_PASSIVE_INCOME',             subscription: false },
-  'video-script-formula':    { priceEnvKey: 'STRIPE_PRICE_VIDEO_SCRIPT',               subscription: false },
-  'course-creator-kit':      { priceEnvKey: 'STRIPE_PRICE_COURSE_CREATOR',             subscription: false },
-  'clippilot-pro':           { priceEnvKey: 'CLIPPILOT_PRO_MONTHLY_PRICE_ID',          subscription: true  },
-  'clippilot-pro-yearly':    { priceEnvKey: 'CLIPPILOT_PRO_YEARLY_PRICE_ID',           subscription: true  },
-  'clippilot-unlimited':     { priceEnvKey: 'CLIPPILOT_UNLIMITED_MONTHLY_PRICE_ID',    subscription: true  },
-  'clippilot-unlimited-yearly': { priceEnvKey: 'CLIPPILOT_UNLIMITED_YEARLY_PRICE_ID', subscription: true  },
+const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = {
+  'creator-os':               { priceId: 'price_1TOBsNEKDzEsz6UjOSSTcBF8', subscription: false },
+  'content-pipeline':         { priceId: 'price_1TOBsNEKDzEsz6UjnlC4T1Gg', subscription: false },
+  'brand-deal':               { priceId: 'price_1TOBsNEKDzEsz6UjNRge33ad', subscription: false },
+  'revenue-dashboard':        { priceId: 'price_1TOBsOEKDzEsz6Uj6cuJsF81', subscription: false },
+  'social-assets':            { priceId: 'price_1TOBsOEKDzEsz6UjK8FO2JGm', subscription: false },
+  'launch-sequence':          { priceId: 'price_1TOBsPEKDzEsz6Uj9C2IBsDE', subscription: false },
+  'ai-prompt-vault':          { priceId: 'price_1TOBsPEKDzEsz6Uj9i1fEh6K', subscription: false },
+  'youtube-accelerator':      { priceId: 'price_1TOBsQEKDzEsz6UjBEtGvzSB', subscription: false },
+  'email-list-builder':       { priceId: 'price_1TOBsQEKDzEsz6Uj1SkOunOo', subscription: false },
+  'viral-content-formula':    { priceId: 'price_1TOBsQEKDzEsz6UjKe6xUmMn', subscription: false },
+  'freelance-rate-kit':       { priceId: 'price_1TOBsREKDzEsz6UjEMtUfOfg', subscription: false },
+  'personal-brand-kit':       { priceId: 'price_1TOBsREKDzEsz6UjTC6YTAk4', subscription: false },
+  'creator-legal-toolkit':    { priceId: 'price_1TOBsSEKDzEsz6UjPowJACDo', subscription: false },
+  'passive-income-blueprint': { priceId: 'price_1TOBsSEKDzEsz6UjxIRdcMlT', subscription: false },
+  'video-script-formula':     { priceId: 'price_1TOBsTEKDzEsz6UjuCUofmzN', subscription: false },
+  'course-creator-kit':       { priceId: 'price_1TOBsTEKDzEsz6UjwFYftZjL', subscription: false },
+  'clippilot-pro':            { priceId: 'price_1TOBsTEKDzEsz6UjvlIWpNVO', subscription: true  },
+  'clippilot-pro-yearly':     { priceId: 'price_1TOBsUEKDzEsz6UjnXVJq7om', subscription: true  },
+  'clippilot-unlimited':      { priceId: 'price_1TOBsUEKDzEsz6UjtyQlLYaG', subscription: true  },
+  'clippilot-unlimited-yearly': { priceId: 'price_1TOBsVEKDzEsz6Uj0QtpIXnc', subscription: true },
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -45,15 +45,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const entry = product_id ? PRODUCT_MAP[product_id] : null
   if (!entry) return res.status(400).json({ error: 'Invalid product_id' })
 
-  const priceId = process.env[entry.priceEnvKey]
-  if (!priceId) return res.status(500).json({ error: `Price not configured for ${product_id}` })
-
   const isClipPilot = product_id!.startsWith('clippilot')
 
   try {
     const session = await stripe.checkout.sessions.create({
       mode: entry.subscription ? 'subscription' : 'payment',
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [{ price: entry.priceId, quantity: 1 }],
       metadata: { product_id: product_id! },
       success_url: isClipPilot
         ? `${origin}/clippilot/success?product=${product_id}&session_id={CHECKOUT_SESSION_ID}`
