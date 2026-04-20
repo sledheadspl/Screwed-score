@@ -430,10 +430,26 @@ export default function HomePage() {
                 <UploadZone onUpload={handleUpload} isLoading={false} />
               </div>
 
-              {/* Try sample link */}
-              <div className="animate-fade-up delay-350 text-center -mt-4 mb-2">
-                <button onClick={handleSample} className="text-xs text-brand-sub/50 hover:text-brand-sub transition-colors underline underline-offset-2">
-                  Not ready to upload? See a sample result →
+              {/* Try sample CTA */}
+              <div className="animate-fade-up delay-350 w-full max-w-xl mx-auto -mt-2 mb-2">
+                <button
+                  onClick={handleSample}
+                  className="w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-95 hover:border-brand-border"
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    color: 'rgba(240,244,255,0.55)',
+                  }}
+                  onMouseOver={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
+                    e.currentTarget.style.color = 'rgba(240,244,255,0.8)'
+                  }}
+                  onMouseOut={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
+                    e.currentTarget.style.color = 'rgba(240,244,255,0.55)'
+                  }}
+                >
+                  See a live example first →
                 </button>
               </div>
 
