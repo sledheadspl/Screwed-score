@@ -315,6 +315,10 @@ export default function HomePage() {
       }
 
       const { analysis_id, result } = analyzeData as unknown as AnalyzeResponse
+      ;(window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.(
+        'event', 'scan_complete',
+        { score: result.screwed_score, document_type, screwed_score_percent: result.screwed_score_percent }
+      )
       setState(s => ({
         ...s, phase: 'done', progress: 100, progressLabel: 'Done',
         analysisId: analysis_id, documentType: document_type,
