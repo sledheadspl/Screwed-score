@@ -25,6 +25,7 @@ import { LiveTicker } from '@/components/LiveTicker'
 import { OutcomeReport } from '@/components/OutcomeReport'
 import { VictoryBanner } from '@/components/VictoryBanner'
 import { FightBackKit } from '@/components/FightBackKit'
+import { ScrewedScoreGame } from '@/components/ScrewedScoreGame'
 import { supabase } from '@/lib/supabase'
 
 const INITIAL_STATE: AppState = {
@@ -725,6 +726,9 @@ export default function HomePage() {
                 ))}
               </div>
             </section>
+
+            {/* ════ SCREWED SCORE GAME ════════════════════════════════════ */}
+            <ScrewedScoreGame />
 
             {/* ════ EXAMPLE RESULTS — BENTO ═══════════════════════════════ */}
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
