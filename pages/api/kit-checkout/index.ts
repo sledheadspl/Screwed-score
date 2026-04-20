@@ -63,19 +63,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    const fightbackPriceId = process.env.STRIPE_FIGHTBACK_PRICE_ID
+    const lineItems = fightbackPriceId
+      ? [{ price: fightbackPriceId, quantity: 1 }]
+      : [{
+          price_data: {
+            currency: 'usd',
+            unit_amount: KIT_PRICE_CENTS,
+            product_data: {
+              name: 'Fight Back Kit',
+              description: 'Professional demand letter, phone script, chargeback guide, escalation path, and 3-part follow-up email sequence — personalized to your analysis.',
+            },
+          },
+          quantity: 1,
+        }]
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      line_items: [{
-        price_data: {
-          currency: 'usd',
-          unit_amount: KIT_PRICE_CENTS,
-          product_data: {
-            name: 'Fight Back Kit',
-            description: 'Professional demand letter, phone script, chargeback guide, escalation path, and 3-part follow-up email sequence — personalized to your analysis.',
-          },
-        },
-        quantity: 1,
-      }],
+      line_items: lineItems,
       metadata: { analysis_id },
       success_url: `${origin}/r/${analysis_id}?kit_session={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${origin}/`,
