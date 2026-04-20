@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https:",
               "font-src 'self' data:",
               "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://analytics.google.com https://*.supabase.co wss://*.supabase.co",
-              "frame-src https://js.stripe.com https://hooks.stripe.com",
+              "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
               "object-src 'none'",
               "base-uri 'self'",
             ].join('; '),
