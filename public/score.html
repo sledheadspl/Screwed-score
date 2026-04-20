@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScrewedScore – How Screwed Are You?</title>
+<meta name="description" content="Tap once to see how screwed you are. Get your ScrewedScore, tier, archetype, and percentile.">
+<meta property="og:title" content="ScrewedScore – How Screwed Are You?">
+<meta property="og:description" content="Tap once. Get ranked by the universe. Find out your ScrewedScore, tier, and archetype.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://screwedscore.com/score">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #020308;
+    --surface: #05070f;
+    --card: #080b14;
+    --cyan: #00f5ff;
+    --magenta: #ff00e5;
+    --gold: #ffd700;
+    --text: #f0f4ff;
+    --muted: #6b7a99;
+    --border: rgba(0,245,255,0.15);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+    min-height: 100dvh;
+  }
+
+  /* ── Ambient bg ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(0,245,255,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 35% at 80% 90%, rgba(255,0,229,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 32px 0 28px;
+    width: 100%;
+  }
+
+  .logo {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    text-shadow: 0 0 20px rgba(0,245,255,0.6);
+    margin-bottom: 18px;
+  }
+
+  .title {
+    font-size: clamp(36px, 10vw, 52px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text) 0%, rgba(0,245,255,0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+
+  .tagline {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .subtext {
+    font-size: 13px;
+    color: rgba(107,122,153,0.7);
+  }
+
+  /* ── CTA Button ── */
+  .cta-wrap {
+    width: 100%;
+    padding: 8px 0 32px;
+  }
+
+  .btn-main {
+    width: 100%;
+    padding: 20px 24px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,245,255,0.05));
+    border: 1.5px solid rgba(0,245,255,0.4);
+    color: var(--cyan);
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 30px rgba(0,245,255,0.1), inset 0 1px 0 rgba(0,245,255,0.1);
+    animation: pulseglow 3s ease-in-out infinite;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-main:hover, .btn-main:focus-visible {
+    background: linear-gradient(135deg, rgba(0,245,255,0.25), rgba(0,245,255,0.1));
+    box-shadow: 0 0 50px rgba(0,245,255,0.25), inset 0 1px 0 rgba(0,245,255,0.2);
+    transform: scale(1.01);
+    outline: none;
+  }
+
+  .btn-main:active { transform: scale(0.98); }
+
+  @keyframes pulseglow {
+    0%, 100% { box-shadow: 0 0 30px rgba(0,245,255,0.1), inset 0 1px 0 rgba(0,245,255,0.1); }
+    50%       { box-shadow: 0 0 50px rgba(0,245,255,0.2), inset 0 1px 0 rgba(0,245,255,0.15); }
+  }
+
+  /* ── Result Section ── */
+  #result { width: 100%; display: none; }
+  #result.visible { display: block; }
+
+  /* ── Social Ladder Card ── */
+  .card {
+    background: var(--card);
+    border: 1.5px solid rgba(0,245,255,0.3);
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(0,245,255,0.1), 0 0 120px rgba(0,245,255,0.04), inset 0 1px 0 rgba(0,245,255,0.08);
+    animation: cardin 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  @keyframes cardin {
+    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .card-brand {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(0,245,255,0.5);
+    margin-bottom: 20px;
+  }
+
+  .card-score {
+    font-size: clamp(72px, 22vw, 96px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--cyan);
+    text-shadow: 0 0 40px rgba(0,245,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  .card-tier-letter {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    text-shadow: 0 0 20px rgba(255,0,229,0.5);
+    margin-bottom: 2px;
+  }
+
+  .card-tier-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), transparent);
+    margin: 14px 0;
+  }
+
+  .card-archetype {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .card-percentile {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .card-percentile strong {
+    color: var(--cyan);
+    font-weight: 800;
+  }
+
+  .card-roast {
+    font-size: 13px;
+    color: rgba(240,244,255,0.7);
+    line-height: 1.5;
+    font-style: italic;
+    margin-bottom: 14px;
+    padding: 0 8px;
+  }
+
+  .card-caption {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(107,122,153,0.6);
+  }
+
+  /* ── Action Buttons ── */
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); }
+
+  .btn-challenge {
+    background: linear-gradient(135deg, rgba(255,0,229,0.12), rgba(255,0,229,0.05));
+    border: 1.5px solid rgba(255,0,229,0.35);
+    color: var(--magenta);
+    text-shadow: 0 0 15px rgba(255,0,229,0.4);
+  }
+  .btn-challenge:hover { background: linear-gradient(135deg, rgba(255,0,229,0.2), rgba(255,0,229,0.08)); box-shadow: 0 0 30px rgba(255,0,229,0.15); }
+
+  /* ── Daily Forecast ── */
+  .daily {
+    width: 100%;
+    background: rgba(0,245,255,0.03);
+    border: 1px solid rgba(0,245,255,0.1);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+
+  .daily-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(0,245,255,0.45);
+    margin-bottom: 10px;
+  }
+
+  .daily-score {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cyan);
+    margin-bottom: 4px;
+  }
+
+  .daily-sub {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .daily-return {
+    font-size: 11px;
+    color: rgba(107,122,153,0.5);
+    margin-top: 8px;
+  }
+
+  /* ── Premium CTA ── */
+  .premium-cta {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(255,215,0,0.06), rgba(255,0,229,0.04));
+    border: 1.5px solid rgba(255,215,0,0.2);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .premium-cta-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.3);
+    margin-bottom: 6px;
+  }
+
+  .premium-cta-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    line-height: 1.5;
+  }
+
+  .premium-price {
+    font-size: 11px;
+    color: rgba(255,215,0,0.4);
+    margin-bottom: 14px;
+  }
+
+  .btn-premium {
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,0,229,0.1));
+    border: 1.5px solid rgba(255,215,0,0.3);
+    color: var(--gold);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-premium:hover { box-shadow: 0 0 30px rgba(255,215,0,0.15); transform: scale(1.01); }
+  .btn-premium:active { transform: scale(0.97); }
+
+  /* ── Brand back-link ── */
+  .backlink {
+    font-size: 11px;
+    color: rgba(107,122,153,0.4);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .backlink a { color: rgba(0,245,255,0.4); text-decoration: none; }
+  .backlink a:hover { color: var(--cyan); }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0,245,255,0.12);
+    border: 1px solid rgba(0,245,255,0.3);
+    color: var(--cyan);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 100px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 999;
+    backdrop-filter: blur(8px);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── Fallback copy modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2,3,8,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1.5px solid rgba(0,245,255,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .modal-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .modal textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 12px;
+    resize: none;
+    height: 100px;
+    font-family: inherit;
+    margin-bottom: 12px;
+  }
+
+  .modal-close {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ── Premium Panel ── */
+  .premium-panel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2,3,8,0.9);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    overflow-y: auto;
+    padding: 20px 16px 48px;
+  }
+  .premium-panel.open { display: block; }
+
+  .premium-inner {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .premium-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-top: 8px;
+  }
+
+  .premium-heading {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 15px rgba(255,215,0,0.4);
+  }
+
+  .btn-close {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-close:hover { color: var(--text); }
+
+  .premium-card {
+    background: linear-gradient(135deg, #090c18, #06080f);
+    border: 1.5px solid rgba(255,215,0,0.25);
+    border-radius: 20px;
+    padding: 28px 22px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(255,215,0,0.06), 0 0 120px rgba(255,0,229,0.04);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-tag {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.25);
+    border-radius: 4px;
+    padding: 3px 7px;
+  }
+
+  .premium-archetype {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255,215,0,0.3);
+    margin-bottom: 8px;
+  }
+
+  .premium-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .premium-section {
+    text-align: left;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .premium-section-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 10px;
+  }
+
+  .risk-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .risk-list li {
+    font-size: 13px;
+    color: rgba(240,244,255,0.75);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .risk-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--magenta);
+    font-size: 10px;
+    top: 2px;
+  }
+
+  .premium-text {
+    font-size: 13px;
+    color: rgba(240,244,255,0.75);
+    line-height: 1.6;
+  }
+
+  .premium-advice {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .premium-back {
+    font-size: 11px;
+    text-align: center;
+    color: rgba(107,122,153,0.4);
+    margin-top: 16px;
+  }
+  .premium-back a { color: rgba(0,245,255,0.35); text-decoration: none; }
+  .premium-back a:hover { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">ScrewedScore</div>
+    <h1 class="title">How Screwed<br>Are You?</h1>
+    <p class="tagline">Quantifying how cooked you are.</p>
+    <p class="subtext">Tap once. Get ranked by the universe.</p>
+  </header>
+
+  <!-- CTA -->
+  <div class="cta-wrap" id="ctaWrap">
+    <button class="btn-main" id="btnMain" aria-label="Tap to see your Screwed Score">
+      Tap to See How Screwed You Are
+    </button>
+  </div>
+
+  <!-- Result -->
+  <section id="result" aria-live="polite">
+
+    <!-- Social Ladder Card -->
+    <div class="card" id="scoreCard">
+      <div class="card-brand">ScrewedScore · Official Reading</div>
+      <div class="card-score" id="cardScore">--</div>
+      <div class="card-tier-letter" id="cardTierLetter"></div>
+      <div class="card-tier-label" id="cardTierLabel"></div>
+      <div class="card-divider"></div>
+      <div class="card-archetype" id="cardArchetype"></div>
+      <div class="card-percentile" id="cardPercentile"></div>
+      <div class="card-roast" id="cardRoast"></div>
+      <div class="card-divider"></div>
+      <div class="card-caption" id="cardCaption"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-secondary" id="btnAgain">↺ Try Again</button>
+      <button class="btn btn-challenge" id="btnChallenge">⚡ Challenge a Friend</button>
+    </div>
+
+    <!-- Daily Forecast -->
+    <div class="daily" id="dailySection">
+      <div class="daily-label">📅 Daily Screwed Forecast</div>
+      <div class="daily-score" id="dailyScore"></div>
+      <div class="daily-sub" id="dailySub"></div>
+      <div class="daily-return" id="dailyReturn"></div>
+    </div>
+
+    <!-- Premium CTA -->
+    <div class="premium-cta">
+      <div class="premium-cta-title">🔐 Unlock Your Full Screwed Analysis</div>
+      <div class="premium-cta-sub">See your archetype breakdown, risk factors, luck curve, and life advice.</div>
+      <div class="premium-price">Demo — $1.99 value, free today</div>
+      <button class="btn-premium" id="btnPremium">View Demo Premium Analysis</button>
+    </div>
+
+    <!-- Back to main site -->
+    <div class="backlink">
+      Got a real bill? <a href="https://screwedscore.com">Get your actual Screwed Score →</a>
+    </div>
+
+  </section>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Fallback copy modal -->
+<div class="modal-overlay" id="copyModal" role="dialog" aria-modal="true" aria-label="Copy share text">
+  <div class="modal">
+    <div class="modal-title">Copy and send to a friend</div>
+    <textarea id="copyText" readonly></textarea>
+    <button class="modal-close" id="btnModalClose">Done</button>
+  </div>
+</div>
+
+<!-- Premium Panel -->
+<div class="premium-panel" id="premiumPanel" role="dialog" aria-modal="true" aria-label="Premium Screwed Analysis">
+  <div class="premium-inner">
+    <div class="premium-header">
+      <div class="premium-heading">✦ Premium Analysis</div>
+      <button class="btn-close" id="btnClosePremium" aria-label="Close premium analysis">Close</button>
+    </div>
+
+    <div class="premium-card">
+      <div class="premium-tag">Premium</div>
+      <div class="premium-archetype" id="premArchetype"></div>
+      <div class="premium-desc" id="premDesc"></div>
+    </div>
+
+    <div class="premium-section">
+      <div class="premium-section-label">Risk Factors</div>
+      <ul class="risk-list" id="premRisks"></ul>
+    </div>
+
+    <div class="premium-section">
+      <div class="premium-section-label">Luck Curve</div>
+      <div class="premium-text" id="premLuck"></div>
+    </div>
+
+    <div class="premium-section">
+      <div class="premium-section-label">Life Advice</div>
+      <div class="premium-advice" id="premAdvice"></div>
+    </div>
+
+    <div class="premium-back">
+      Ready to check a real bill or contract? <a href="https://screwedscore.com">screwedscore.com →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+
+  function ri(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function today() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function ls(key, val) {
+    try {
+      if (val === undefined) return localStorage.getItem(key);
+      localStorage.setItem(key, val);
+    } catch (_) {}
+  }
+
+  // ── Score logic ───────────────────────────────────────────────────────────────
+
+  function getWeightedScore() {
+    const r = Math.random() * 100;
+    if (r < 5)             return ri(0, 10);
+    if (r < 25)            return ri(11, 30);
+    if (r < 60)            return ri(31, 60);
+    if (r < 90)            return ri(61, 85);
+    if (r < 98)            return ri(86, 95);
+    return ri(96, 100);
+  }
+
+  function getTier(s) {
+    if (s <= 10)  return { letter: 'S', label: 'S – Untouchable' };
+    if (s <= 30)  return { letter: 'A', label: 'A – Barely Holding It Together' };
+    if (s <= 60)  return { letter: 'B', label: 'B – Functional Disaster' };
+    if (s <= 75)  return { letter: 'C', label: 'C – Walking Red Flag' };
+    if (s <= 90)  return { letter: 'D', label: 'D – Catastrophic Human' };
+    return { letter: 'F', label: 'F – Final Boss of Bad Decisions' };
+  }
+
+  function getArchetype(s) {
+    if (s <= 10)  return 'The Untouchable';
+    if (s <= 30)  return 'The Lucky Idiot';
+    if (s <= 60)  return 'The Functional Disaster';
+    if (s <= 75)  return 'The Walking Red Flag';
+    if (s <= 90)  return 'The Chaotic Gambler';
+    return 'The Final Boss of Bad Decisions';
+  }
+
+  function getRoast(s) {
+    if (s <= 10)  return "You're basically immortal. Nothing can touch you.";
+    if (s <= 30)  return "You're skating by on pure luck and bad decisions.";
+    if (s <= 60)  return "Mildly screwed. Manageable if you stop self-sabotaging.";
+    if (s <= 75)  return "Oh yeah, you're cooked. This absolutely tracks.";
+    if (s <= 90)  return "Catastrophic levels of chaos. People worry about you.";
+    return "You are a walking cautionary tale. Future generations will study you.";
+  }
+
+  const CAPTIONS = [
+    "This explains everything.",
+    "My life is a speedrun.",
+    "Send help.",
+    "I did NOT need this today.",
+    "Screenshot and ruin a friend's day.",
+    "Therapy won't fix this.",
+    "Yeah, that feels accurate.",
+    "I blame the timeline.",
+    "Put this on my tombstone.",
+    "HR needs to see this.",
+    "The math is mathing.",
+    "Completely on brand.",
+    "Not surprised. Disappointed, but not surprised.",
+    "This is fine. Everything is fine.",
+  ];
+
+  function getCaption() {
+    return CAPTIONS[Math.floor(Math.random() * CAPTIONS.length)];
+  }
+
+  function getPercentile(s) {
+    if (s <= 10)  return ri(1, 20);
+    if (s <= 30)  return ri(20, 50);
+    if (s <= 60)  return ri(40, 70);
+    if (s <= 75)  return ri(60, 85);
+    if (s <= 90)  return ri(80, 95);
+    return ri(90, 99);
+  }
+
+  // ── Premium analysis ─────────────────────────────────────────────────────────
+
+  function getPremiumAnalysis(s) {
+    if (s <= 10) return {
+      archetype: 'The Untouchable',
+      description: 'You operate on a frequency the universe respects. Obstacles dissolve around you. People describe your life as "suspiciously charmed." They\'re right to be suspicious.',
+      riskFactors: ['Overconfidence in high-stakes moments', 'Underestimating how quickly luck reverses', 'Reckless optimism in new situations', 'Making others feel bad by existing'],
+      luckCurve: 'Your luck index is abnormally stable — sitting in the 94th percentile. This is statistically unusual. Enjoy it. Quietly.',
+      lifeAdvice: '"Don\'t get cocky. The universe is watching, and it loves a plot twist."',
+    };
+    if (s <= 30) return {
+      archetype: 'The Lucky Idiot',
+      description: 'You make questionable decisions at an alarming rate — yet somehow land on your feet. This is not skill. This is dumb luck and the universe having a good day. Do not test it.',
+      riskFactors: ['Confusing luck with competence', 'Impulse decisions without data', 'Overextending when things go well', 'Accidentally inspiring others to copy bad ideas'],
+      luckCurve: 'Your luck curve is erratic but net-positive. Like a rubber ball down a staircase — chaotic, but it keeps bouncing.',
+      lifeAdvice: '"Stop taking credit. Thank the void, stay humble, and maybe read the fine print next time."',
+    };
+    if (s <= 60) return {
+      archetype: 'The Functional Disaster',
+      description: 'You are, technically, functioning. Bills are mostly paid. Plans are sort of made. There\'s a low-grade chaos humming beneath your surface at all times, and everyone around you can hear it.',
+      riskFactors: ['Chronic procrastination on important things', 'Impulse decisions that "seemed fine at the time"', 'Optimism bias ("it\'ll work out") on repeat', 'Mild financial chaos', 'Saying yes to things without checking the calendar'],
+      luckCurve: 'Volatile but survivable. Your luck spikes randomly, which is both your saving grace and your worst enemy.',
+      lifeAdvice: '"Pick one thing today. Just one. Plan it in advance. See what happens."',
+    };
+    if (s <= 75) return {
+      archetype: 'The Walking Red Flag',
+      description: 'You are a cautionary tale told in real time. Not irredeemable — just very, very recognizable. People who know you have a "they\'re at it again" face they make when your name comes up.',
+      riskFactors: ['Red flag energy that precedes you into rooms', 'Pattern blindness to obvious warning signs', 'Optimizing for short-term chaos over long-term stability', 'Attracting situations that match your energy', 'Legendary commitment to questionable plans'],
+      luckCurve: 'Trending downward, with occasional dramatic reversals that reset the cycle. The pattern is: crisis, recovery, overconfidence, crisis.',
+      lifeAdvice: '"The first step is admitting you are, in fact, a walking red flag. The second step is… honestly, just that first one for now."',
+    };
+    if (s <= 90) return {
+      archetype: 'The Chaotic Gambler',
+      description: 'You have elevated chaos to an art form. Not maliciously — you genuinely believe each new decision is the one that turns it around. It is not. But your conviction is, genuinely, impressive.',
+      riskFactors: ['Chronic high-stakes decision making', 'Sunk cost fallacy on a spiritual level', 'Selective memory about past outcomes', 'Infectious chaos that affects those around you', 'Zero risk models, maximum vibes'],
+      luckCurve: 'Down only, with occasional dead-cat bounces. Your luck curve looks like a startup that should\'ve pivoted three years ago.',
+      lifeAdvice: '"Log off. Sit with stillness for 48 hours. Do not make any decisions during this time. This is not optional."',
+    };
+    return {
+      archetype: 'The Final Boss of Bad Decisions',
+      description: 'You have achieved a level of screwed-ness that most people cannot even theorize. You are not just a cautionary tale — you are a case study. A legend. A monument to what happens when someone fully commits to the bit.',
+      riskFactors: ['Catastrophic decision velocity', 'Immunity to good advice', 'Actively manifesting chaos', 'People have stopped giving you warnings', 'The universe is now just documenting you'],
+      luckCurve: 'Your luck curve has left the chart. Analysts describe it as "a vertical line pointed toward the earth\'s core." There is no floor.',
+      lifeAdvice: '"Consider logging off. From everything. Including life decisions. Let someone else drive for a bit."',
+    };
+  }
+
+  // ── Daily logic ───────────────────────────────────────────────────────────────
+
+  let currentScore = null;
+  let currentTier = null;
+  let currentPercentile = null;
+
+  function saveDailyIfNeeded(score, tier, percentile) {
+    const d = today();
+    if (ls('dailyDate') !== d) {
+      ls('dailyDate', d);
+      ls('dailyScore', score);
+      ls('dailyTier', tier.label);
+      ls('dailyPercentile', percentile);
+    }
+  }
+
+  function renderDailyInfo() {
+    const d = today();
+    const dailyEl = document.getElementById('dailySection');
+    const scoreEl = document.getElementById('dailyScore');
+    const subEl   = document.getElementById('dailySub');
+    const retEl   = document.getElementById('dailyReturn');
+
+    if (ls('dailyDate') !== d) {
+      dailyEl.style.display = 'none';
+      return;
+    }
+
+    const dScore = ls('dailyScore');
+    const dTier  = ls('dailyTier');
+    const dPct   = ls('dailyPercentile');
+
+    dailyEl.style.display = 'block';
+    scoreEl.textContent = `${dScore} / 100 — ${dTier}`;
+    subEl.textContent   = `You're more screwed than ${dPct}% of people today.`;
+    retEl.textContent   = 'Come back tomorrow for a new official reading.';
+  }
+
+  // ── Render result ─────────────────────────────────────────────────────────────
+
+  function renderResult(score) {
+    const tier       = getTier(score);
+    const archetype  = getArchetype(score);
+    const roast      = getRoast(score);
+    const caption    = getCaption();
+    const percentile = getPercentile(score);
+
+    currentScore      = score;
+    currentTier       = tier;
+    currentPercentile = percentile;
+
+    document.getElementById('cardScore').textContent      = score;
+    document.getElementById('cardTierLetter').textContent = tier.letter + ' TIER';
+    document.getElementById('cardTierLabel').textContent  = tier.label;
+    document.getElementById('cardArchetype').textContent  = archetype;
+    document.getElementById('cardPercentile').innerHTML   = `You are more screwed than <strong>${percentile}%</strong> of people.`;
+    document.getElementById('cardRoast').textContent      = roast;
+    document.getElementById('cardCaption').textContent    = caption;
+
+    saveDailyIfNeeded(score, tier, percentile);
+    renderDailyInfo();
+
+    const premBtn = document.getElementById('btnPremium');
+    premBtn.textContent = ls('premiumDemoSeen') === '1'
+      ? 'View Premium Analysis Again'
+      : 'View Demo Premium Analysis';
+
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    result.classList.add('visible');
+
+    // Re-trigger card animation
+    const card = document.getElementById('scoreCard');
+    card.style.animation = 'none';
+    card.offsetHeight; // reflow
+    card.style.animation = '';
+  }
+
+  // ── Premium panel ─────────────────────────────────────────────────────────────
+
+  function showPremiumAnalysis(score) {
+    ls('premiumDemoSeen', '1');
+    document.getElementById('btnPremium').textContent = 'View Premium Analysis Again';
+
+    const p = getPremiumAnalysis(score);
+
+    document.getElementById('premArchetype').textContent = p.archetype;
+    document.getElementById('premDesc').textContent      = p.description;
+    document.getElementById('premLuck').textContent      = p.luckCurve;
+    document.getElementById('premAdvice').textContent    = p.lifeAdvice;
+
+    const riskEl = document.getElementById('premRisks');
+    riskEl.innerHTML = p.riskFactors.map(r => `<li>${r}</li>`).join('');
+
+    document.getElementById('premiumPanel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePremiumPanel() {
+    document.getElementById('premiumPanel').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── Challenge / share ─────────────────────────────────────────────────────────
+
+  function copyChallengeText() {
+    if (currentScore === null) return;
+    const msg = `My ScrewedScore is ${currentScore} (${currentTier.label}) and I'm more screwed than ${currentPercentile}% of people. Can you beat that? https://screwedscore.com`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).then(() => {
+        showToast('Copied! Paste this to ruin a friend\'s day.');
+      }).catch(() => showFallbackModal(msg));
+    } else {
+      showFallbackModal(msg);
+    }
+  }
+
+  function showFallbackModal(msg) {
+    document.getElementById('copyText').value = msg;
+    document.getElementById('copyModal').classList.add('open');
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────────
+
+  let toastTimer;
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
+
+  function init() {
+    // Hide daily section until first score
+    document.getElementById('dailySection').style.display = 'none';
+
+    // If daily score already exists today, show it (returning visitor)
+    const d = today();
+    if (ls('dailyDate') === d) {
+      renderDailyInfo();
+    }
+
+    document.getElementById('btnMain').addEventListener('click', () => {
+      const score = getWeightedScore();
+      renderResult(score);
+      document.getElementById('ctaWrap').style.marginBottom = '0';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('btnAgain').addEventListener('click', () => {
+      const score = getWeightedScore();
+      renderResult(score);
+    });
+
+    document.getElementById('btnChallenge').addEventListener('click', copyChallengeText);
+
+    document.getElementById('btnPremium').addEventListener('click', () => {
+      if (currentScore !== null) showPremiumAnalysis(currentScore);
+    });
+
+    document.getElementById('btnClosePremium').addEventListener('click', closePremiumPanel);
+
+    document.getElementById('btnModalClose').addEventListener('click', () => {
+      document.getElementById('copyModal').classList.remove('open');
+    });
+
+    // Close modals on overlay click
+    document.getElementById('copyModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('copyModal'))
+        document.getElementById('copyModal').classList.remove('open');
+    });
+
+    document.getElementById('premiumPanel').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('premiumPanel')) closePremiumPanel();
+    });
+
+    // Keyboard escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePremiumPanel();
+        document.getElementById('copyModal').classList.remove('open');
+      }
+    });
+  }
+
+  init();
+</script>
+</body>
+</html>
