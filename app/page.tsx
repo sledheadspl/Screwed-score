@@ -26,6 +26,7 @@ import { OutcomeReport } from '@/components/OutcomeReport'
 import { VictoryBanner } from '@/components/VictoryBanner'
 import { FightBackKit } from '@/components/FightBackKit'
 import { HumanAuditCard } from '@/components/HumanAuditCard'
+import { ExitIntentPopup } from '@/components/ExitIntentPopup'
 import { ScrewedScoreGame } from '@/components/ScrewedScoreGame'
 import { supabase } from '@/lib/supabase'
 
@@ -345,6 +346,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-brand-bg overflow-x-hidden">
+
+      {state.phase === 'idle' && <ExitIntentPopup />}
 
       {showPaywall && (
         <PaywallModal onClose={() => setShowPaywall(false)} onGoogleLogin={handleGoogleLogin} />
