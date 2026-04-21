@@ -81,6 +81,56 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           item_name:      itemName,
         })
 
+        // Human audit purchase — create job + send confirmation
+        if (session.metadata?.type === 'human_audit') {
+          const analysisId   = session.metadata.analysis_id
+          const documentType = session.metadata.document_type ?? 'bill'
+          const scorePercent = session.metadata.score_percent ?? '?'
+
+          // Create a job in the marketplace for this audit
+          await supabase.from('jobs').insert({
+            title:           `Human Audit — ${documentType.replace(/_/g, ' ')} (Score: ${scorePercent}%)`,
+            description:     `Customer paid $9.99 for a human bill audit.\n\nAnalysis ID: ${analysisId}\nDocument type: ${documentType}\nAI score: ${scorePercent}%\nCustomer email: ${customerEmail ?? 'unknown'}\n\nReview the analysis at the admin panel, flag all overcharges and errors in plain English, and email the customer your findings within 48 hours.`,
+            category:        'research',
+            skills_required: ['research', 'medical billing'],
+            pay_description: '$7',
+            location_type:   'remote',
+            status:          'open',
+            min_reputation:  40,
+            max_applicants:  1,
+          })
+
+          // Confirmation email to customer
+          if (customerEmail) {
+            const { Resend } = await import('resend')
+            const resend = new Resend(process.env.RESEND_API_KEY)
+            await resend.emails.send({
+              from:    process.env.RESEND_FROM_EMAIL ?? 'hello@screwedscore.com',
+              to:      customerEmail,
+              subject: 'Your Human Bill Audit is confirmed — 48hr turnaround',
+              html: `
+                <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#111">
+                  <h2 style="color:#ff3b30">Your audit is in the queue.</h2>
+                  <p>A real person is now reviewing your ${documentType.replace(/_/g, ' ')} and will send you a plain-English breakdown of what we found — overcharges, errors, and your action plan.</p>
+                  <p><strong>Delivery:</strong> Within 48 hours to this email address.</p>
+                  <p><strong>What we're looking at:</strong> Your AI scan scored this bill at ${scorePercent}% screwed. Our auditor will verify those findings and dig deeper.</p>
+                  <hr style="border:none;border-top:1px solid #eee;margin:24px 0"/>
+                  <p style="color:#888;font-size:13px">Questions? Reply to this email. — ScrewedScore Team</p>
+                </div>
+              `,
+            }).catch(e => console.error('[audit email]', e))
+
+            // Notify Ryan
+            await resend.emails.send({
+              from:    process.env.RESEND_FROM_EMAIL ?? 'hello@screwedscore.com',
+              to:      'sledheadspl@gmail.com',
+              subject: `New Human Audit — ${documentType} — ${scorePercent}% — $9.99`,
+              html: `<p>New paid audit request.</p><p><b>Customer:</b> ${customerEmail}<br/><b>Document:</b> ${documentType}<br/><b>AI Score:</b> ${scorePercent}%<br/><b>Analysis ID:</b> ${analysisId}</p><p>Job has been added to the marketplace queue.</p>`,
+            }).catch(e => console.error('[audit notify]', e))
+          }
+          break
+        }
+
         // Digital product purchase — email download link
         if (productId && productId in PRODUCT_CATALOG) {
           if (customerEmail) {

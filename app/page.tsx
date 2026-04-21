@@ -25,6 +25,7 @@ import { LiveTicker } from '@/components/LiveTicker'
 import { OutcomeReport } from '@/components/OutcomeReport'
 import { VictoryBanner } from '@/components/VictoryBanner'
 import { FightBackKit } from '@/components/FightBackKit'
+import { HumanAuditCard } from '@/components/HumanAuditCard'
 import { ScrewedScoreGame } from '@/components/ScrewedScoreGame'
 import { supabase } from '@/lib/supabase'
 
@@ -1019,6 +1020,15 @@ export default function HomePage() {
             )}
 
             {!isSample && <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />}
+
+            {!isSample && (
+              <HumanAuditCard
+                analysisId={state.analysisId}
+                documentType={state.result.document_type}
+                scorePercent={state.result.screwed_score_percent}
+                userEmail={userEmail}
+              />
+            )}
 
             <BenchmarkCard
               documentType={state.result.document_type}
