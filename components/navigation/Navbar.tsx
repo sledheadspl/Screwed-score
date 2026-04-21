@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: 'Screwed Score',  href: '/',            exact: true, accent: 'red'  },
   { label: 'Wall of Shame',  href: '/shame',        exact: false, accent: 'red'  },
   { label: 'Community',      href: '/community',    exact: false, accent: 'red'  },
+  { label: 'Jobs',           href: '/jobs',         exact: false, accent: 'cyan' },
   { label: 'DPS',            href: '/dps',          exact: false, accent: 'cyan' },
   { label: 'Productivity',   href: '/productivity', exact: false, accent: 'cyan' },
   { label: 'Elite Suite',    href: '/elite-suite',  exact: false, accent: 'gold' },
