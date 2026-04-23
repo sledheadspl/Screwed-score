@@ -2,6 +2,8 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['mammoth'],
+  // Force webpack (disables Turbopack default in Next.js 16) — required for Netlify edge bundler compatibility
+  webpack: (config) => config,
   images: {
     remotePatterns: [
       {

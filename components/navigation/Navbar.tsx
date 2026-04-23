@@ -7,21 +7,23 @@ import { Zap, Menu, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 const NAV_LINKS = [
-  { label: 'Screwed Score',  href: '/',            exact: true, accent: 'red'  },
-  { label: 'Wall of Shame',  href: '/shame',        exact: false, accent: 'red'  },
-  { label: 'Community',      href: '/community',    exact: false, accent: 'red'  },
-  { label: 'Jobs',           href: '/jobs',         exact: false, accent: 'cyan' },
-  { label: 'DPS',            href: '/dps',          exact: false, accent: 'cyan' },
-  { label: 'Productivity',   href: '/productivity', exact: false, accent: 'cyan' },
-  { label: 'Elite Suite',    href: '/elite-suite',  exact: false, accent: 'gold' },
+  { label: 'Screwed Score',   href: '/',               exact: true,  accent: 'red'   },
+  { label: 'Wall of Shame',   href: '/shame',           exact: false, accent: 'red'   },
+  { label: 'Community',       href: '/community',       exact: false, accent: 'red'   },
+  { label: 'For Businesses',  href: '/for-businesses',  exact: false, accent: 'green' },
+  { label: 'Jobs',            href: '/jobs',            exact: false, accent: 'cyan'  },
+  { label: 'DPS',             href: '/dps',             exact: false, accent: 'cyan'  },
+  { label: 'Productivity',    href: '/productivity',    exact: false, accent: 'cyan'  },
+  { label: 'Elite Suite',     href: '/elite-suite',     exact: false, accent: 'gold'  },
 ] as const
 
-type Accent = 'red' | 'cyan' | 'gold'
+type Accent = 'red' | 'cyan' | 'gold' | 'green'
 
 const ACCENTS: Record<Accent, { active: string; hover: string; dot: string; glow: string }> = {
-  red:  { active: 'text-brand-text',  hover: 'hover:text-brand-text hover:bg-brand-muted/50',      dot: 'bg-red-500',    glow: '' },
-  cyan: { active: 'text-cyan-400',    hover: 'hover:text-cyan-400 hover:bg-cyan-500/5',            dot: 'bg-cyan-400',   glow: '0 0 20px rgba(0,229,255,0.55)' },
-  gold: { active: 'text-yellow-300',  hover: 'hover:text-yellow-300 hover:bg-yellow-400/5',        dot: 'bg-yellow-300', glow: '0 0 20px rgba(255,214,0,0.5)' },
+  red:   { active: 'text-brand-text',  hover: 'hover:text-brand-text hover:bg-brand-muted/50',        dot: 'bg-red-500',    glow: '' },
+  cyan:  { active: 'text-cyan-400',    hover: 'hover:text-cyan-400 hover:bg-cyan-500/5',              dot: 'bg-cyan-400',   glow: '0 0 20px rgba(0,229,255,0.55)' },
+  gold:  { active: 'text-yellow-300',  hover: 'hover:text-yellow-300 hover:bg-yellow-400/5',          dot: 'bg-yellow-300', glow: '0 0 20px rgba(255,214,0,0.5)'  },
+  green: { active: 'text-green-400',   hover: 'hover:text-green-400 hover:bg-green-500/5',            dot: 'bg-green-400',  glow: '0 0 20px rgba(74,222,128,0.5)' },
 }
 
 const GoogleIcon = () => (

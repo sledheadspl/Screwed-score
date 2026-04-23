@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  TURBOPACK = "0"
+
 [functions."*"]
   timeout = 26
 

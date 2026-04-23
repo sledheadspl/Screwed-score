@@ -13,12 +13,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const limitRaw = searchParams.get('limit')
     const offsetRaw = searchParams.get('offset')
 
-    const category = isVendorCategory(categoryRaw) ? categoryRaw : undefined
-    const limit = limitRaw ? Math.min(parseInt(limitRaw, 10) || 20, 50) : 20
-    const offset = offsetRaw ? Math.max(parseInt(offsetRaw, 10) || 0, 0) : 0
+    const category    = isVendorCategory(categoryRaw) ? categoryRaw : undefined
+    const claimed_by  = searchParams.get('claimed_by') ?? undefined
+    const claimedOnly = searchParams.get('claimed') === 'true'
+    const limit       = limitRaw  ? Math.min(parseInt(limitRaw, 10)  || 20, 50) : 20
+    const offset      = offsetRaw ? Math.max(parseInt(offsetRaw, 10) || 0,  0)  : 0
 
-    const vendors = await searchVendors({ q, category, state, limit, offset })
-    return NextResponse.json({ vendors, limit, offset })
+    const vendors = await searchVendors({ q, category, state, claimed_by, claimedOnly, limit, offset })
+    return NextResponse.json(vendors)
   } catch (err: unknown) {
     console.error('[vendors/search] error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

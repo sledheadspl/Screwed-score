@@ -1,8 +1,19 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Users, ThumbsUp, Filter, ShieldCheck, AlertTriangle, CheckCircle, Plus } from 'lucide-react'
+import { Users, ThumbsUp, Filter, ShieldCheck, AlertTriangle, CheckCircle, Plus, BadgeCheck } from 'lucide-react'
 import Link from 'next/link'
+
+interface VerifiedBusiness {
+  id: string
+  name: string
+  category: string
+  city: string | null
+  state: string | null
+  tagline: string | null
+  logo_url: string | null
+  verified: boolean
+}
 
 interface Experience {
   id: string
@@ -53,6 +64,7 @@ export default function CommunityPage() {
   const [scoreFilter, setScoreFilter] = useState('all')
   const [loading, setLoading]         = useState(true)
   const [upvoted, setUpvoted]         = useState<Set<string>>(new Set())
+  const [verifiedBizs, setVerifiedBizs] = useState<VerifiedBusiness[]>([])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -69,6 +81,13 @@ export default function CommunityPage() {
   }, [category, scoreFilter])
 
   useEffect(() => { load() }, [load])
+
+  useEffect(() => {
+    fetch('/api/vendors/search?claimed=true&limit=8')
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setVerifiedBizs(data) })
+      .catch(() => {})
+  }, [])
 
   const handleUpvote = async (id: string) => {
     if (upvoted.has(id)) return
@@ -204,18 +223,58 @@ export default function CommunityPage() {
           </div>
         )}
 
-        {/* Trusted Providers CTA */}
-        <div className="rounded-2xl border border-brand-border bg-brand-surface p-6 text-center space-y-3">
-          <ShieldCheck className="w-10 h-10 text-green-400 mx-auto" />
-          <h3 className="font-bold text-brand-text">Know Someone Trustworthy?</h3>
+        {/* Verified Businesses */}
+        {verifiedBizs.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BadgeCheck className="w-5 h-5" style={{ color: '#4ade80' }} />
+                <h2 className="font-black text-brand-text">Verified Honest Businesses</h2>
+              </div>
+              <Link href="/for-businesses" className="text-xs text-brand-sub hover:text-brand-text transition-colors underline underline-offset-2">
+                Add your business →
+              </Link>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {verifiedBizs.map(v => (
+                <div key={v.id} className="flex items-center gap-3 rounded-2xl px-4 py-3"
+                  style={{ background: 'rgba(74,222,128,0.04)', border: '1px solid rgba(74,222,128,0.12)' }}>
+                  {v.logo_url ? (
+                    <img src={v.logo_url} alt={v.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-black flex-shrink-0"
+                      style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80' }}>
+                      {v.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-bold text-sm text-brand-text truncate">{v.name}</span>
+                      {v.verified && <BadgeCheck className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#4ade80' }} />}
+                    </div>
+                    <p className="text-xs text-brand-sub capitalize truncate">
+                      {v.category}{v.city || v.state ? ` · ${[v.city, v.state].filter(Boolean).join(', ')}` : ''}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* For Businesses CTA */}
+        <div className="rounded-2xl border p-6 text-center space-y-3"
+          style={{ background: 'rgba(74,222,128,0.03)', borderColor: 'rgba(74,222,128,0.15)' }}>
+          <ShieldCheck className="w-10 h-10 mx-auto" style={{ color: '#4ade80' }} />
+          <h3 className="font-bold text-brand-text">Are you an honest business?</h3>
           <p className="text-sm text-brand-sub">
-            Help the community find honest mechanics, doctors, contractors, and more.
-            Submit a business you&apos;d genuinely recommend.
+            Claim your profile, add your bio, and earn the Verified Honest Business badge.
+            Free — takes about 5 minutes.
           </p>
-          <Link href="/"
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
-            style={{ background: 'linear-gradient(135deg, #22c55e, #16a34a)' }}>
-            <ShieldCheck className="w-4 h-4" /> Submit a Trusted Provider
+          <Link href="/for-businesses"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold"
+            style={{ background: 'linear-gradient(135deg, #4ade80, #16a34a)', color: '#000' }}>
+            <ShieldCheck className="w-4 h-4" /> Get Verified — Free
           </Link>
         </div>
 

@@ -28,6 +28,13 @@ export interface Vendor {
   website: string | null
   phone: string | null
   created_by: string | null
+  claimed_by: string | null
+  claimed_at: string | null
+  verified: boolean
+  bio: string | null
+  tagline: string | null
+  logo_url: string | null
+  response_statement: string | null
   created_at: string
   updated_at: string
 }
@@ -62,6 +69,8 @@ export interface VendorSearchParams {
   q?: string
   category?: VendorCategory
   state?: string
+  claimed_by?: string
+  claimedOnly?: boolean
   limit?: number
   offset?: number
 }
