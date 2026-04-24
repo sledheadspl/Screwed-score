@@ -4,8 +4,6 @@ import { useState, useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { UploadZone } from '@/components/UploadZone'
 import { ProgressBar } from '@/components/ProgressBar'
-import { ScoreCard } from '@/components/ScoreCard'
-import { FindingsList } from '@/components/FindingsList'
 import {
   RotateCcw, AlertCircle, Receipt, FileText, DollarSign,
   Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
@@ -20,6 +18,8 @@ import { supabase } from '@/lib/supabase'
 // Done-state and modal components — lazy-loaded to keep initial bundle small.
 // These only render after upload completes (or on user action), so they don't
 // need to ship in the landing-page chunk.
+const ScoreCard          = dynamic(() => import('@/components/ScoreCard').then(m => m.ScoreCard),                   { ssr: false })
+const FindingsList       = dynamic(() => import('@/components/FindingsList').then(m => m.FindingsList),             { ssr: false })
 const EmailCapture       = dynamic(() => import('@/components/EmailCapture').then(m => m.EmailCapture),             { ssr: false })
 const ShareButton        = dynamic(() => import('@/components/ShareButton').then(m => m.ShareButton),               { ssr: false })
 const PaywallModal       = dynamic(() => import('@/components/PaywallModal').then(m => m.PaywallModal),             { ssr: false })
