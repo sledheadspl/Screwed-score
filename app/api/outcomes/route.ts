@@ -14,7 +14,11 @@ export async function GET() {
     .select('outcome, recovered')
 
   if (error) {
-    return NextResponse.json({ error: 'Query failed' }, { status: 500 })
+    console.error('[/api/outcomes GET] supabase error:', error)
+    return NextResponse.json(
+      { error: 'Query failed', detail: error.message, code: error.code },
+      { status: 500 }
+    )
   }
 
   const rows = data ?? []
