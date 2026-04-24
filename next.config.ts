@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://analytics.google.com https://*.supabase.co wss://*.supabase.co",
+              "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://*.supabase.co wss://*.supabase.co",
               "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
               "object-src 'none'",
               "base-uri 'self'",
