@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { UploadZone } from '@/components/UploadZone'
 import { ProgressBar } from '@/components/ProgressBar'
 import { ScoreCard } from '@/components/ScoreCard'
 import { FindingsList } from '@/components/FindingsList'
-import { EmailCapture } from '@/components/EmailCapture'
-import { ShareButton } from '@/components/ShareButton'
 import {
   RotateCcw, AlertCircle, Receipt, FileText, DollarSign,
   Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
@@ -14,21 +13,27 @@ import {
 } from 'lucide-react'
 import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
-import { PaywallModal } from '@/components/PaywallModal'
-import { ContentGenerator } from '@/components/ContentGenerator'
-import { TrustedProviders } from '@/components/TrustedProviders'
-import { RecommendedProviders } from '@/components/RecommendedProviders'
-import { ShareExperience } from '@/components/ShareExperience'
-import { ReferralCard } from '@/components/ReferralCard'
-import { BenchmarkCard } from '@/components/BenchmarkCard'
 import { LiveTicker } from '@/components/LiveTicker'
-import { OutcomeReport } from '@/components/OutcomeReport'
 import { VictoryBanner } from '@/components/VictoryBanner'
-import { FightBackKit } from '@/components/FightBackKit'
-import { HumanAuditCard } from '@/components/HumanAuditCard'
-import { ExitIntentPopup } from '@/components/ExitIntentPopup'
-import { ScrewedScoreGame } from '@/components/ScrewedScoreGame'
 import { supabase } from '@/lib/supabase'
+
+// Done-state and modal components — lazy-loaded to keep initial bundle small.
+// These only render after upload completes (or on user action), so they don't
+// need to ship in the landing-page chunk.
+const EmailCapture       = dynamic(() => import('@/components/EmailCapture').then(m => m.EmailCapture),             { ssr: false })
+const ShareButton        = dynamic(() => import('@/components/ShareButton').then(m => m.ShareButton),               { ssr: false })
+const PaywallModal       = dynamic(() => import('@/components/PaywallModal').then(m => m.PaywallModal),             { ssr: false })
+const ContentGenerator   = dynamic(() => import('@/components/ContentGenerator').then(m => m.ContentGenerator),     { ssr: false })
+const TrustedProviders   = dynamic(() => import('@/components/TrustedProviders').then(m => m.TrustedProviders),     { ssr: false })
+const RecommendedProviders = dynamic(() => import('@/components/RecommendedProviders').then(m => m.RecommendedProviders), { ssr: false })
+const ShareExperience    = dynamic(() => import('@/components/ShareExperience').then(m => m.ShareExperience),       { ssr: false })
+const ReferralCard       = dynamic(() => import('@/components/ReferralCard').then(m => m.ReferralCard),             { ssr: false })
+const BenchmarkCard      = dynamic(() => import('@/components/BenchmarkCard').then(m => m.BenchmarkCard),           { ssr: false })
+const OutcomeReport      = dynamic(() => import('@/components/OutcomeReport').then(m => m.OutcomeReport),           { ssr: false })
+const FightBackKit       = dynamic(() => import('@/components/FightBackKit').then(m => m.FightBackKit),             { ssr: false })
+const HumanAuditCard     = dynamic(() => import('@/components/HumanAuditCard').then(m => m.HumanAuditCard),         { ssr: false })
+const ExitIntentPopup    = dynamic(() => import('@/components/ExitIntentPopup').then(m => m.ExitIntentPopup),       { ssr: false })
+const ScrewedScoreGame   = dynamic(() => import('@/components/ScrewedScoreGame').then(m => m.ScrewedScoreGame),     { ssr: false })
 
 const INITIAL_STATE: AppState = {
   phase: 'idle', progress: 0, progressLabel: '',

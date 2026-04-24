@@ -15,10 +15,15 @@ export async function GET() {
 
   if (error) {
     console.error('[/api/outcomes GET] supabase error:', error)
-    return NextResponse.json(
-      { error: 'Query failed', detail: error.message, code: error.code },
-      { status: 500 }
-    )
+    // PGRST205 = table missing. Migration 003_outcomes.sql hasn't been run.
+    // Return zeros so the UI degrades gracefully instead of a 500 console error.
+    if (error.code === 'PGRST205') {
+      return NextResponse.json(
+        { total_recovered: 0, total_reports: 0, total_wins: 0 },
+        { headers: { 'Cache-Control': 's-maxage=60' } }
+      )
+    }
+    return NextResponse.json({ error: 'Query failed' }, { status: 500 })
   }
 
   const rows = data ?? []
