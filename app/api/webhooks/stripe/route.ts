@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { sendProductDeliveryEmail, sendClipPilotLicenseEmail, PRODUCT_CATALOG } from '@/lib/email/product-delivery'
 import { getClipPilotTier, createLicense } from '@/lib/clippilot/license'
 import { sendGAEvent } from '@/lib/ga'
+import { logError } from '@/lib/log'
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -31,6 +32,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const supabase = createServiceClient()
+
+  // Idempotency guard. Insert event.id; PK conflict means we've already
+  // processed this event (Stripe is retrying). Bail with 200 so Stripe stops.
+  const { error: dedupErr } = await supabase
+    .from('stripe_webhook_events')
+    .insert({ event_id: event.id, type: event.type })
+  if (dedupErr) {
+    if (dedupErr.code === '23505') {
+      // Duplicate — already processed. Acknowledge so Stripe stops retrying.
+      console.log(`[stripe-webhook] duplicate event ${event.id}, skipping`)
+      return NextResponse.json({ received: true, deduped: true })
+    }
+    // If the dedup table is missing (PGRST205) just proceed — better to
+    // process the event than to 500. Migration 011 fixes this.
+    if (dedupErr.code !== 'PGRST205') {
+      console.error('[stripe-webhook] dedup insert failed:', dedupErr)
+    }
+  }
 
   try {
     switch (event.type) {
@@ -140,7 +159,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
               stripeSessionId: session.id,
             })
             if (!result.ok) {
-              console.error('[stripe-webhook] Product delivery failed:', result.error)
+              await logError('stripe-webhook/product-delivery', new Error(result.error ?? 'unknown'), {
+                product_id: productId,
+                customer_email: customerEmail,
+                session_id: session.id,
+              })
             }
           } else {
             console.warn('[stripe-webhook] No customer email for session:', session.id)
@@ -217,7 +240,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         break
     }
   } catch (err) {
-    console.error('[stripe-webhook] Handler error:', err)
+    await logError('stripe-webhook', err, { event_type: event.type, event_id: event.id })
     return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
 

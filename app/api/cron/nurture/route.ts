@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { sendNurtureStep, NURTURE_DELAYS_HOURS } from '@/lib/email/nurture'
+import { logError } from '@/lib/log'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -43,7 +44,7 @@ async function handle(req: NextRequest): Promise<NextResponse> {
     .limit(BATCH_LIMIT)
 
   if (queryErr) {
-    console.error('[cron/nurture] query error:', queryErr)
+    await logError('cron/nurture', queryErr, { stage: 'query' })
     return NextResponse.json({ error: 'Query failed' }, { status: 500 })
   }
 
