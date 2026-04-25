@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .select('*')
         .eq('business_slug', slug)
         .maybeSingle()
+      res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600')
       return res.status(200).json({ business: data ?? null })
     }
 
@@ -46,6 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const { data } = await query
+    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=300')
     return res.status(200).json({ businesses: data ?? [], stats })
   }
 
