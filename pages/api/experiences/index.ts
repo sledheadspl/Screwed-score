@@ -1,8 +1,49 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { VENDOR_CATEGORIES } from '@/lib/types/vendors'
 
 const VALID_SCORES = new Set(['SCREWED', 'MAYBE', 'SAFE'])
+
+// 10 mutations (POST + PATCH combined) per IP per hour — spam/vote-stuffing guard
+const RATE_LIMIT = 10
+const WINDOW_MS = 60 * 60 * 1000
+
+async function checkAndIncrementRateLimit(
+  supabase: ReturnType<typeof createServiceClient>,
+  req: NextApiRequest,
+  scope: string
+): Promise<{ ok: boolean }> {
+  const ip = (req.headers['x-real-ip'] as string) ??
+    (req.headers['cf-connecting-ip'] as string) ??
+    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+    '0.0.0.0'
+  const ipHash = createHash('sha256').update(`${scope}:${ip}`).digest('hex')
+
+  const { data } = await supabase
+    .from('rate_limits')
+    .select('request_count, window_start')
+    .eq('ip_hash', ipHash)
+    .maybeSingle()
+
+  if (data) {
+    const windowAge = Date.now() - new Date(data.window_start).getTime()
+    if (windowAge < WINDOW_MS && data.request_count >= RATE_LIMIT) return { ok: false }
+  }
+
+  const now = new Date().toISOString()
+  const windowExpired = !data || Date.now() - new Date(data.window_start).getTime() >= WINDOW_MS
+  await supabase.from('rate_limits').upsert(
+    {
+      ip_hash:       ipHash,
+      request_count: windowExpired ? 1 : (data!.request_count + 1),
+      window_start:  windowExpired ? now : data!.window_start,
+      updated_at:    now,
+    },
+    { onConflict: 'ip_hash' }
+  )
+  return { ok: true }
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const supabase = createServiceClient()
@@ -29,6 +70,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'POST') {
+    const { ok } = await checkAndIncrementRateLimit(supabase, req, 'experiences-mutate')
+    if (!ok) return res.status(429).json({ error: 'Too many submissions. Try again later.' })
+
     const { business_name, category, score, story, city, state, amount_dollars, analysis_id } = req.body
 
     if (!business_name?.trim() || !category || !score) {
@@ -74,6 +118,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'PATCH') {
+    const { ok } = await checkAndIncrementRateLimit(supabase, req, 'experiences-mutate')
+    if (!ok) return res.status(429).json({ error: 'Too many votes. Try again later.' })
+
     // Upvote
     const { id } = req.query
     if (!id || typeof id !== 'string') return res.status(400).json({ error: 'Missing id' })

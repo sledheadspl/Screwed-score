@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { VENDOR_CATEGORIES } from '@/lib/types/vendors'
+
+const POST_RATE_LIMIT = 10 // submissions per IP per hour
+const POST_WINDOW_MS = 60 * 60 * 1000
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const supabase = createServiceClient()
@@ -23,6 +27,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'POST') {
+    // Per-IP rate limit on provider submissions (spam guard)
+    const ip = (req.headers['x-real-ip'] as string) ??
+      (req.headers['cf-connecting-ip'] as string) ??
+      (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
+      '0.0.0.0'
+    const ipHash = createHash('sha256').update(`providers:${ip}`).digest('hex')
+    const { data: rl } = await supabase
+      .from('rate_limits')
+      .select('request_count, window_start')
+      .eq('ip_hash', ipHash)
+      .maybeSingle()
+    if (rl) {
+      const age = Date.now() - new Date(rl.window_start).getTime()
+      if (age < POST_WINDOW_MS && rl.request_count >= POST_RATE_LIMIT) {
+        return res.status(429).json({ error: 'Too many submissions. Try again later.' })
+      }
+    }
+    const now = new Date().toISOString()
+    const expired = !rl || Date.now() - new Date(rl.window_start).getTime() >= POST_WINDOW_MS
+    await supabase.from('rate_limits').upsert(
+      {
+        ip_hash:       ipHash,
+        request_count: expired ? 1 : (rl!.request_count + 1),
+        window_start:  expired ? now : rl!.window_start,
+        updated_at:    now,
+      },
+      { onConflict: 'ip_hash' }
+    )
+
     const { name, category, city, state, website, phone, description, submitted_by } = req.body
 
     if (!name?.trim() || !category) {

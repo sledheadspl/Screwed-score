@@ -189,13 +189,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // ── 8. Persist document record ──────────────────────────────────────────
+    // Cap extracted_text at 100KB to prevent row bloat. Practical AI analysis
+    // works fine well below this; long PDFs sometimes extract hundreds of KB.
+    const MAX_TEXT_BYTES = 100_000
+    const truncatedText = extractedText.length > MAX_TEXT_BYTES
+      ? extractedText.slice(0, MAX_TEXT_BYTES)
+      : extractedText
+
     const { data: doc, error: docError } = await supabase
       .from('documents')
       .insert({
         original_file_name: (uploadedFile.originalFilename ?? 'upload').slice(0, 255),
         storage_path:       storageError ? null : storagePath,
         mime_type:          uploadedFile.mimetype ?? '',
-        extracted_text:     extractedText,
+        extracted_text:     truncatedText,
         document_type:      documentType,
         file_size_bytes:    uploadedFile.size,
         ip_hash:            ipHash,
