@@ -397,20 +397,22 @@ export default function HomePage() {
             )}
 
             {/* ════ HERO ══════════════════════════════════════════════════ */}
-            <section className="relative flex flex-col items-center justify-center min-h-[88vh] px-4 pt-20 pb-16 text-center overflow-hidden">
+            {/* Hero shrunk on mobile so the upload zone is visible above the fold:
+                min-h reduced from 88vh, padding tightened, headline floor smaller. */}
+            <section className="relative flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[78vh] px-4 pt-10 sm:pt-16 pb-10 sm:pb-14 text-center overflow-hidden">
 
               {/* Overline */}
-              <p className="animate-fade-up text-[11px] font-bold text-brand-sub/45 uppercase tracking-[0.25em] mb-8">
+              <p className="animate-fade-up text-[11px] font-bold text-brand-sub/45 uppercase tracking-[0.25em] mb-4 sm:mb-6">
                 Live AI · Free · No account required
               </p>
 
               {/* Headline */}
-              <div className="animate-fade-up delay-100 mb-8">
-                <p className="font-black text-brand-text/55 tracking-tight" style={{ fontSize: 'clamp(20px, 3.2vw, 32px)', lineHeight: 1.1 }}>
+              <div className="animate-fade-up delay-100 mb-4 sm:mb-6">
+                <p className="font-black text-brand-text/55 tracking-tight" style={{ fontSize: 'clamp(18px, 3vw, 32px)', lineHeight: 1.1 }}>
                   Are you being
                 </p>
                 <h1 className="font-black tracking-tighter" style={{
-                  fontSize: 'clamp(72px, 14vw, 138px)',
+                  fontSize: 'clamp(56px, 13vw, 128px)',
                   lineHeight: 0.88,
                   background: 'linear-gradient(135deg, #ff9080 0%, #ff3b30 45%, #bf1a0e 100%)',
                   WebkitBackgroundClip: 'text',
@@ -422,16 +424,29 @@ export default function HomePage() {
                 </h1>
               </div>
 
+              {/* Above-the-fold CTA — jumps to upload zone for visitors who land
+                  on mobile and don't immediately see the dropzone. */}
+              <a
+                href="#upload"
+                className="animate-fade-up delay-150 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-black text-white transition-all hover:opacity-90 active:scale-95 mb-5 sm:hidden"
+                style={{
+                  background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
+                  boxShadow: '0 0 30px rgba(255,59,48,0.4)',
+                }}
+              >
+                Scan a bill — free ↓
+              </a>
+
               {/* Subhead */}
-              <p className="animate-fade-up delay-200 text-lg sm:text-xl text-brand-sub/75 max-w-lg mx-auto leading-relaxed mb-2">
+              <p className="animate-fade-up delay-200 text-base sm:text-xl text-brand-sub/75 max-w-lg mx-auto leading-relaxed mb-2">
                 The average American overpays <span className="text-brand-text font-bold">$1,300/year</span> on bills they never read.
               </p>
-              <p className="animate-fade-up delay-300 text-sm text-brand-sub/45 mb-10 max-w-md mx-auto">
+              <p className="animate-fade-up delay-300 text-sm text-brand-sub/45 mb-6 sm:mb-8 max-w-md mx-auto">
                 Upload any document. AI flags overcharges, hidden fees, and red flags in 20 seconds.
               </p>
 
               {/* Upload zone */}
-              <div className="animate-fade-up delay-300 w-full max-w-xl mx-auto relative mb-7">
+              <div id="upload" className="animate-fade-up delay-300 w-full max-w-xl mx-auto relative mb-7 scroll-mt-20">
                 <div className="absolute -inset-6 rounded-3xl -z-10" style={{
                   background: 'radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255,59,48,0.16) 0%, transparent 70%)',
                   filter: 'blur(24px)',
