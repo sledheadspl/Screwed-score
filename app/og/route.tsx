@@ -149,6 +149,14 @@ export async function GET(req: NextRequest) {
         </div>
       </div>
     ),
-    { width: 1200, height: 630 }
+    {
+      width: 1200,
+      height: 630,
+      headers: {
+        // OG images for a given URL never change — cache aggressively at the
+        // CDN so every social-media crawler hit doesn't spawn an edge invocation.
+        'Cache-Control': 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400',
+      },
+    }
   )
 }
