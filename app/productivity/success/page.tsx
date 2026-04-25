@@ -3,21 +3,35 @@
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { CheckCircle, ArrowRight, Mail } from 'lucide-react'
+import { CheckCircle, ArrowRight, Mail, Download } from 'lucide-react'
 
-const PRODUCT_NAMES: Record<string, string> = {
-  'creator-os':       'Creator OS Bundle',
-  'content-pipeline': 'Content Pipeline Pro',
-  'brand-deal':       'Brand Deal Negotiation Pack',
-  'revenue-dashboard':'Revenue Dashboard Kit',
-  'social-assets':    'Social Media Asset Pack',
-  'launch-sequence':  'Launch Sequence Playbook',
+// Mirror of PRODUCT_CATALOG in lib/email/product-delivery.ts — kept here for
+// instant client-side rendering of the download link without a server round-trip.
+const PRODUCTS: Record<string, { name: string; download: string }> = {
+  'creator-os':               { name: 'Creator OS Bundle',                 download: '/downloads/creator-os-bundle.html' },
+  'content-pipeline':         { name: 'Content Pipeline Pro',              download: '/downloads/content-pipeline-pro.html' },
+  'brand-deal':               { name: 'Brand Deal Negotiation Pack',       download: '/downloads/brand-deal-negotiation-pack.html' },
+  'revenue-dashboard':        { name: 'Revenue Dashboard Kit',             download: '/downloads/revenue-dashboard-kit.html' },
+  'social-assets':            { name: 'Social Media Asset Pack',           download: '/downloads/social-media-asset-pack.html' },
+  'launch-sequence':          { name: 'Launch Sequence Playbook',          download: '/downloads/launch-sequence-playbook.html' },
+  'ai-prompt-vault':          { name: 'AI Prompt Vault for Creators',      download: '/downloads/ai-prompt-vault.html' },
+  'youtube-accelerator':      { name: 'YouTube Growth Accelerator',        download: '/downloads/youtube-growth-accelerator.html' },
+  'email-list-builder':       { name: 'Email List Builder System',         download: '/downloads/email-list-builder.html' },
+  'viral-content-formula':    { name: 'Viral Content Formula',             download: '/downloads/viral-content-formula.html' },
+  'freelance-rate-kit':       { name: 'Freelance Rate Masterclass Kit',    download: '/downloads/freelance-rate-kit.html' },
+  'personal-brand-kit':       { name: 'Personal Brand Positioning Kit',    download: '/downloads/personal-brand-positioning-kit.html' },
+  'creator-legal-toolkit':    { name: 'Creator Legal Toolkit',             download: '/downloads/creator-legal-toolkit.html' },
+  'passive-income-blueprint': { name: 'Passive Income Blueprint',          download: '/downloads/passive-income-blueprint.html' },
+  'video-script-formula':     { name: 'Video Script & Hook Formula',       download: '/downloads/video-script-formula.html' },
+  'course-creator-kit':       { name: 'Digital Course Creator Kit',        download: '/downloads/course-creator-kit.html' },
 }
 
 function SuccessInner() {
   const params = useSearchParams()
   const productId = params?.get('product') ?? ''
-  const productName = PRODUCT_NAMES[productId] ?? 'Your purchase'
+  const product = PRODUCTS[productId]
+  const productName = product?.name ?? 'Your purchase'
+  const downloadUrl = product?.download
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-5 overflow-x-hidden">
@@ -57,6 +71,23 @@ function SuccessInner() {
           </p>
         </div>
 
+        {/* Instant download — don't make the buyer wait for email */}
+        {downloadUrl && (
+          <a
+            href={downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full px-6 py-4 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+            style={{
+              background: 'linear-gradient(135deg, #00E5FF, #67e8f9)',
+              color: '#080808',
+              boxShadow: '0 0 40px rgba(0,229,255,0.25)',
+            }}
+          >
+            <Download className="w-4 h-4" /> Open your download now
+          </a>
+        )}
+
         {/* Email notice */}
         <div className="glass-card rounded-2xl p-5 flex items-start gap-4 text-left">
           <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
@@ -64,9 +95,9 @@ function SuccessInner() {
             <Mail className="w-4 h-4 text-cyan-400" />
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-bold text-brand-text">Check your email</p>
+            <p className="text-sm font-bold text-brand-text">A copy is on the way to your inbox</p>
             <p className="text-xs leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>
-              Your download link and access instructions have been sent to the email you used at checkout. Check your spam folder if you don&apos;t see it within a few minutes.
+              We sent your download link to the email you used at checkout — bookmark it for future access. Check your spam folder if you don&apos;t see it within a few minutes.
             </p>
           </div>
         </div>

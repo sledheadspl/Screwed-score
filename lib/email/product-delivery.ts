@@ -8,110 +8,136 @@ function getResend(): Resend {
 }
 
 // ── Product registry ──────────────────────────────────────────────────────────
-// Set each PRODUCT_LINK_* env var in Netlify to your actual download URL
-// (Google Drive share link, Dropbox, S3 signed URL, Gumroad, etc.)
+// `defaultPath` is the production download URL — the actual deliverable file
+// served from the Next.js public directory. To override (e.g. swap to a Gumroad
+// or signed-S3 link without redeploying), set the corresponding PRODUCT_LINK_*
+// env var in Netlify.
 export const PRODUCT_CATALOG: Record<string, {
   name: string
   tagline: string
   deliveryEnvKey: string
+  defaultPath: string
   accentColor: string
 }> = {
   'creator-os': {
     name: 'Creator OS Bundle',
     tagline: 'Your complete operating system for digital creators.',
     deliveryEnvKey: 'PRODUCT_LINK_CREATOR_OS',
+    defaultPath: '/downloads/creator-os-bundle.html',
     accentColor: '#00E5FF',
   },
   'content-pipeline': {
     name: 'Content Pipeline Pro',
     tagline: 'End-to-end content automation — built in Make/Zapier.',
     deliveryEnvKey: 'PRODUCT_LINK_CONTENT_PIPELINE',
+    defaultPath: '/downloads/content-pipeline-pro.html',
     accentColor: '#00E5FF',
   },
   'brand-deal': {
     name: 'Brand Deal Negotiation Pack',
     tagline: '12 proven email scripts and contract templates.',
     deliveryEnvKey: 'PRODUCT_LINK_BRAND_DEAL',
+    defaultPath: '/downloads/brand-deal-negotiation-pack.html',
     accentColor: '#00E5FF',
   },
   'revenue-dashboard': {
     name: 'Revenue Dashboard Kit',
     tagline: 'Your custom Google Sheets + Notion income dashboard.',
     deliveryEnvKey: 'PRODUCT_LINK_REVENUE_DASHBOARD',
+    defaultPath: '/downloads/revenue-dashboard-kit.html',
     accentColor: '#30d158',
   },
   'social-assets': {
     name: 'Social Media Asset Pack',
     tagline: '200+ premium Canva templates across every platform.',
     deliveryEnvKey: 'PRODUCT_LINK_SOCIAL_ASSETS',
+    defaultPath: '/downloads/social-media-asset-pack.html',
     accentColor: '#00E5FF',
   },
   'launch-sequence': {
     name: 'Launch Sequence Playbook',
     tagline: 'Step-by-step digital product launch system.',
     deliveryEnvKey: 'PRODUCT_LINK_LAUNCH_SEQUENCE',
+    defaultPath: '/downloads/launch-sequence-playbook.html',
     accentColor: '#ffd60a',
   },
   'ai-prompt-vault': {
     name: 'AI Prompt Vault for Creators',
     tagline: '500+ battle-tested AI prompts, organized by use case.',
     deliveryEnvKey: 'PRODUCT_LINK_AI_PROMPT_VAULT',
+    defaultPath: '/downloads/ai-prompt-vault.html',
     accentColor: '#a78bfa',
   },
   'youtube-accelerator': {
     name: 'YouTube Growth Accelerator',
     tagline: 'The full system to grow your channel from any starting point.',
     deliveryEnvKey: 'PRODUCT_LINK_YOUTUBE_ACCELERATOR',
+    defaultPath: '/downloads/youtube-growth-accelerator.html',
     accentColor: '#ff4444',
   },
   'email-list-builder': {
     name: 'Email List Builder System',
     tagline: 'Lead magnets, opt-in copy, and 14 emails that convert.',
     deliveryEnvKey: 'PRODUCT_LINK_EMAIL_LIST_BUILDER',
+    defaultPath: '/downloads/email-list-builder.html',
     accentColor: '#00E5FF',
   },
   'viral-content-formula': {
     name: 'Viral Content Formula',
     tagline: 'The repeatable framework behind content that spreads.',
     deliveryEnvKey: 'PRODUCT_LINK_VIRAL_CONTENT_FORMULA',
+    defaultPath: '/downloads/viral-content-formula.html',
     accentColor: '#ff6b35',
   },
   'freelance-rate-kit': {
     name: 'Freelance Rate Masterclass Kit',
     tagline: 'Price your work confidently and negotiate like a pro.',
     deliveryEnvKey: 'PRODUCT_LINK_FREELANCE_RATE_KIT',
+    defaultPath: '/downloads/freelance-rate-kit.html',
     accentColor: '#30d158',
   },
   'personal-brand-kit': {
     name: 'Personal Brand Positioning Kit',
     tagline: 'Build a brand so sharp it sells itself.',
     deliveryEnvKey: 'PRODUCT_LINK_PERSONAL_BRAND_KIT',
+    defaultPath: '/downloads/personal-brand-positioning-kit.html',
     accentColor: '#00E5FF',
   },
   'creator-legal-toolkit': {
     name: 'Creator Legal Toolkit',
     tagline: '7 contract templates that protect your business and IP.',
     deliveryEnvKey: 'PRODUCT_LINK_CREATOR_LEGAL_TOOLKIT',
+    defaultPath: '/downloads/creator-legal-toolkit.html',
     accentColor: '#ffd60a',
   },
   'passive-income-blueprint': {
     name: 'Passive Income Blueprint',
     tagline: '7 income streams, fully mapped. Start building tomorrow.',
     deliveryEnvKey: 'PRODUCT_LINK_PASSIVE_INCOME_BLUEPRINT',
+    defaultPath: '/downloads/passive-income-blueprint.html',
     accentColor: '#30d158',
   },
   'video-script-formula': {
     name: 'Video Script & Hook Formula',
     tagline: '50 hook templates and the structure behind high-retention video.',
     deliveryEnvKey: 'PRODUCT_LINK_VIDEO_SCRIPT_FORMULA',
+    defaultPath: '/downloads/video-script-formula.html',
     accentColor: '#00E5FF',
   },
   'course-creator-kit': {
     name: 'Digital Course Creator Kit',
     tagline: 'Everything you need to build, launch, and sell a $500+ course.',
     deliveryEnvKey: 'PRODUCT_LINK_COURSE_CREATOR_KIT',
+    defaultPath: '/downloads/course-creator-kit.html',
     accentColor: '#ffd60a',
   },
+}
+
+function buildDownloadUrl(envKey: string, defaultPath: string): string {
+  const override = process.env[envKey]
+  if (override && override.startsWith('http')) return override
+  const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com').replace(/\/+$/, '')
+  return `${origin}${defaultPath}`
 }
 
 function buildEmailHtml(opts: {
@@ -321,11 +347,7 @@ export async function sendProductDeliveryEmail(opts: {
     return { ok: false, error: `Unknown product_id: ${productId}` }
   }
 
-  const downloadUrl = process.env[product.deliveryEnvKey]
-  if (!downloadUrl) {
-    console.error(`[product-delivery] Missing env var: ${product.deliveryEnvKey}`)
-    return { ok: false, error: `Download URL not configured for ${productId}` }
-  }
+  const downloadUrl = buildDownloadUrl(product.deliveryEnvKey, product.defaultPath)
 
   const fromAddress = process.env.RESEND_FROM_EMAIL ?? 'products@screwedscore.com'
 
