@@ -53,8 +53,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const allowedSources = new Set(['result_page', 'share_page', 'landing'])
     const source = allowedSources.has(body.source) ? body.source : 'result_page'
 
+    // Schedule the first nurture email 24h from now. ignoreDuplicates means
+    // existing subscribers retain their current nurture_next_at — they won't
+    // get re-enrolled or re-spammed.
+    const nurtureNextAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     await supabase.from('waitlist').upsert(
-      { email, source, analysis_id: analysisId },
+      { email, source, analysis_id: analysisId, nurture_step: 0, nurture_next_at: nurtureNextAt },
       { onConflict: 'email', ignoreDuplicates: true }
     )
 

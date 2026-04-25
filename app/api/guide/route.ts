@@ -94,10 +94,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
     }
 
-    // Store in waitlist
+    // Store in waitlist + schedule first nurture email 24h after this signup.
+    // ignoreDuplicates prevents re-enrolling existing subscribers.
     const supabase = createServiceClient()
+    const nurtureNextAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     await supabase.from('waitlist')
-      .upsert({ email, source: 'exit_intent_guide' }, { onConflict: 'email', ignoreDuplicates: true })
+      .upsert(
+        { email, source: 'exit_intent_guide', nurture_step: 0, nurture_next_at: nurtureNextAt },
+        { onConflict: 'email', ignoreDuplicates: true }
+      )
 
     // Send guide email
     const resend = new Resend(process.env.RESEND_API_KEY)
