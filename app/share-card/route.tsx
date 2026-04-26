@@ -18,6 +18,11 @@ export async function GET(req: NextRequest) {
   const amount  = parseInt(searchParams.get('amount') ?? '0', 10)
   const finding1 = searchParams.get('f1') ?? ''
   const finding2 = searchParams.get('f2') ?? ''
+  // fmt=story → 1080×1920 vertical (IG Stories, TikTok background, Reels cover).
+  // fmt=post (default) → 1080×1080 square (IG/FB feed post).
+  const isStory = searchParams.get('fmt') === 'story'
+  const W = 1080
+  const H = isStory ? 1920 : 1080
 
   const safeScore = ['SCREWED','MAYBE','SAFE'].includes(score) ? score : 'SCREWED'
   const color  = SCORE_COLOR[safeScore]
@@ -30,7 +35,7 @@ export async function GET(req: NextRequest) {
   return new ImageResponse(
     (
       <div style={{
-        width: '1080px', height: '1080px',
+        width: `${W}px`, height: `${H}px`,
         background: '#09090b',
         display: 'flex', flexDirection: 'column',
         fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -220,6 +225,13 @@ export async function GET(req: NextRequest) {
         </div>
       </div>
     ),
-    { width: 1080, height: 1080 }
+    {
+      width: W,
+      height: H,
+      headers: {
+        // Deterministic from URL params — cache aggressively at the CDN
+        'Cache-Control': 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400',
+      },
+    }
   )
 }

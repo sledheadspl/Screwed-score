@@ -1085,7 +1085,7 @@ export default function HomePage() {
                 style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
                 <p className="text-sm font-bold text-brand-text">Share your results</p>
                 <p className="text-xs text-brand-sub">Your result page is public at a shareable link. No personal info included.</p>
-                <ShareButton analysisId={state.analysisId} score={state.result.screwed_score} variant="full" />
+                <ShareButton analysisId={state.analysisId} score={state.result.screwed_score} variant="full" result={state.result} />
               </div>
             )}
 

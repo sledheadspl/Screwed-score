@@ -123,7 +123,7 @@ export function ScoreCard({ result, analysisId, isPublic = false }: ScoreCardPro
                 </span>
               )}
             </div>
-            {!isPublic && <ShareButton analysisId={analysisId} score={result.screwed_score} />}
+            {!isPublic && <ShareButton analysisId={analysisId} score={result.screwed_score} result={result} />}
           </div>
 
           {/* Score reveal */}
