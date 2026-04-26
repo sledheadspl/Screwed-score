@@ -6,15 +6,14 @@ import Link from 'next/link'
 import { Zap, Menu, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
+// Stripped to two-item nav. Empty community pages are conversion killers
+// (signals "abandoned site"), single-purpose landing pages convert 2-3x
+// better than multi-product navs. Wall of Shame is the brand moat — public
+// record of bad businesses, share-bait, SEO long-tail. Everything else
+// still works at its URL but is hidden from the nav.
 const NAV_LINKS = [
-  { label: 'Screwed Score',   href: '/',               exact: true,  accent: 'red'   },
-  { label: 'Wall of Shame',   href: '/shame',           exact: false, accent: 'red'   },
-  { label: 'Community',       href: '/community',       exact: false, accent: 'red'   },
-  { label: 'For Businesses',  href: '/for-businesses',  exact: false, accent: 'green' },
-  { label: 'Jobs',            href: '/jobs',            exact: false, accent: 'cyan'  },
-  { label: 'DPS',             href: '/dps',             exact: false, accent: 'cyan'  },
-  { label: 'Productivity',    href: '/productivity',    exact: false, accent: 'cyan'  },
-  { label: 'Elite Suite',     href: '/elite-suite',     exact: false, accent: 'gold'  },
+  { label: 'Screwed Score',  href: '/',      exact: true,  accent: 'red' },
+  { label: 'Wall of Shame',  href: '/shame', exact: false, accent: 'red' },
 ] as const
 
 type Accent = 'red' | 'cyan' | 'gold' | 'green'
