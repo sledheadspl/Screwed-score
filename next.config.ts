@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Homepage: allow CDN/Edge to cache the prerendered HTML.
+        // s-maxage=300 = Edge stores 5min; stale-while-revalidate=86400 = serves stale up to 24h while refreshing.
+        // Browser still revalidates (max-age=0) so users always get fresh after edge expiry.
+        source: '/',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400' },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
