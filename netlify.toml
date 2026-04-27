@@ -10,3 +10,10 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Edge-cache the prerendered homepage so cold-PoP hits don't pay a Durable round-trip.
+# `Netlify-CDN-Cache-Control` is Netlify-specific and overrides the public Cache-Control for CDN behavior only.
+[[headers]]
+  for = "/"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=300, stale-while-revalidate=86400"
