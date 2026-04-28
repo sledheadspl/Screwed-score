@@ -7,11 +7,11 @@ import { NextRequest, NextResponse } from 'next/server'
 export function proxy(req: NextRequest): NextResponse {
   const res = NextResponse.next()
 
-  // Edge-cache the prerendered homepage. Setting Netlify-CDN-Cache-Control here
-  // (response-level from middleware) is what actually triggers Netlify Durable/Edge
-  // storage; the same directive in netlify.toml [[headers]] does NOT (verified via
-  // 15-hit test on 2026-04-28: 0/15 Edge:hit when set in netlify.toml).
-  if (req.nextUrl.pathname === '/') {
+  // Edge-cache prerendered marketing/landing pages. Setting Netlify-CDN-Cache-Control
+  // here (response-level from middleware) is what actually triggers Netlify Edge storage;
+  // the same directive in netlify.toml [[headers]] does NOT (verified 2026-04-28).
+  const EDGE_CACHEABLE = new Set(['/', '/clippilot', '/productivity', '/community', '/shame', '/for-businesses', '/jobs', '/weekly'])
+  if (EDGE_CACHEABLE.has(req.nextUrl.pathname)) {
     res.headers.set('Netlify-CDN-Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400')
   }
 
