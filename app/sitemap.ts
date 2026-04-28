@@ -10,7 +10,7 @@ const ANALYZE_TYPES = [
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://screwedscore.com'
+  const base = 'https://www.screwedscore.com'
 
   const analyzePages: MetadataRoute.Sitemap = ANALYZE_TYPES.map(type => ({
     url: `${base}/analyze/${type}`,
