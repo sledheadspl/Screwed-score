@@ -8,7 +8,7 @@ import {
   muteUser,
 } from "./lib/youtube.js";
 import { matchMessage } from "./lib/matcher.js";
-import { RESPONSES } from "./config/responses.js";
+import { RESPONSES, HYPE_MESSAGES, negativeWarnMessage, SEVERITY_MUTE } from "./config/responses.js";
 import { SPAM_CONFIG } from "./config/triggers.js";
 
 const RECONNECT_DELAY_MS = 10_000;
@@ -64,42 +64,59 @@ async function run() {
       const action = await matchMessage(msg);
       if (!action) continue;
 
-      if (action.type === "respond") {
-        const response = RESPONSES[action.key];
-        if (!response) continue;
-        console.log(`[bot] Auto-respond ${action.key} triggered by ${author}: "${text}"`);
-        try {
-          await postMessage(auth, liveChatId, response);
-        } catch (err: any) {
-          console.error(`[bot] Failed to post ${action.key}:`, err?.message ?? err);
+      try {
+        // ── Auto-response (stream/shop question) ──────────────────────────
+        if (action.type === "respond") {
+          console.log(`[bot] ${action.key} ← "${text}" by ${author}`);
+          await postMessage(auth, liveChatId, RESPONSES[action.key]);
         }
-      }
 
-      if (action.type === "delete_warn") {
-        const warning =
-          action.reason === "profanity" ? RESPONSES.LANGUAGE_WARNING : RESPONSES.SPAM_WARNING;
-        console.log(`[bot] ${action.reason} from ${author} — deleting + warning`);
-        try {
+        // ── Hype participation ────────────────────────────────────────────
+        else if (action.type === "hype") {
+          const hypeMsg = HYPE_MESSAGES[Math.floor(Math.random() * HYPE_MESSAGES.length)];
+          console.log(`[bot] Hype ← "${text}" by ${author} → "${hypeMsg}"`);
+          await postMessage(auth, liveChatId, hypeMsg);
+        }
+
+        // ── Profanity / spam: delete + warn ───────────────────────────────
+        else if (action.type === "delete_warn") {
+          const warning = action.reason === "profanity"
+            ? RESPONSES.LANGUAGE_WARNING
+            : RESPONSES.SPAM_WARNING;
+          console.log(`[bot] Delete+warn (${action.reason}) ← "${text}" by ${author}`);
           await deleteMessage(auth, action.messageId);
           await postMessage(auth, liveChatId, warning);
-        } catch (err: any) {
-          console.error(`[bot] delete_warn failed:`, err?.message ?? err);
         }
-      }
 
-      if (action.type === "mute") {
-        console.log(`[bot] Spam repeat from ${author} — muting for ${SPAM_CONFIG.muteDurationSeconds}s`);
-        try {
+        // ── Spam mute (repeat offender) ───────────────────────────────────
+        else if (action.type === "mute") {
+          console.log(`[bot] Spam mute ← ${author}`);
           await deleteMessage(auth, action.messageId);
           await muteUser(auth, liveChatId, action.userId, SPAM_CONFIG.muteDurationSeconds);
-          await postMessage(
-            auth,
-            liveChatId,
-            `${author} has been temporarily muted for continued spamming.`
+          await postMessage(auth, liveChatId,
+            `${author} has been timed out for continued spamming.`
           );
-        } catch (err: any) {
-          console.error(`[bot] mute failed:`, err?.message ?? err);
         }
+
+        // ── Negativity warning (strike 1, 2, or 3) ───────────────────────
+        else if (action.type === "neg_warn") {
+          const warning = negativeWarnMessage(action.username, action.strike);
+          console.log(`[bot] Neg warn ${action.strike}/3 (${action.severity}) ← "${text}" by ${author}`);
+          await postMessage(auth, liveChatId, warning);
+        }
+
+        // ── Negativity mute (after 3 warnings) ───────────────────────────
+        else if (action.type === "neg_mute") {
+          const duration = SEVERITY_MUTE[action.severity];
+          const mins = Math.round(duration / 60);
+          console.log(`[bot] Neg mute (${action.severity}, ${duration}s) ← ${author}`);
+          await muteUser(auth, liveChatId, action.userId, duration);
+          await postMessage(auth, liveChatId,
+            `${action.username} has been timed out for ${mins} minute(s) after repeated warnings. Let's keep the vibes positive 🔥`
+          );
+        }
+      } catch (err: any) {
+        console.error(`[bot] Action failed (${action.type}):`, err?.message ?? err);
       }
     }
 

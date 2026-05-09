@@ -45,4 +45,35 @@ export const RESPONSES = {
     "Chat you heard the man CLOVERS IN 🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀",
 } as const;
 
+// Hype messages — randomly selected when chat is celebrating a pull or big moment
+export const HYPE_MESSAGES = [
+  "GGs chat!! 🎉🎉🎉",
+  "WWW 🔥🔥🔥",
+  "LETSGOOO 🔥🍀",
+  "GGs!!! 🎉",
+  "W for chat 🔥🔥",
+  "WWWWW 🍀🔥",
+  "GG GG GG 🎉🎉",
+  "LFG 🔥🔥🔥",
+];
+
 export type ResponseKey = keyof typeof RESPONSES;
+
+// Dynamic warning messages — username is injected at runtime
+export function negativeWarnMessage(username: string, strike: 1 | 2 | 3): string {
+  switch (strike) {
+    case 1:
+      return `Hey ${username} — let's keep the vibes positive in here! Good vibes only 🔥 (warning 1/3)`;
+    case 2:
+      return `${username}, 2nd reminder to keep it positive and hype in here! We're all here for a good time 🙏 (warning 2/3)`;
+    case 3:
+      return `⚠️ ${username}, this is your final warning. Keep it positive or you will be timed out. (warning 3/3)`;
+  }
+}
+
+// Mute duration in seconds based on severity of negativity
+export const SEVERITY_MUTE: Record<"low" | "medium" | "high", number> = {
+  low:    300,    // 5 minutes — minor negativity, complaining
+  medium: 3600,   // 1 hour — arguing with others, directed negativity
+  high:   86000,  // ~24 hours — bullying, harassment, targeted attacks
+};
