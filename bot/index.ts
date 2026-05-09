@@ -65,8 +65,31 @@ async function run() {
       if (!action) continue;
 
       try {
+        // ── Viewer addressed the bot ──────────────────────────────────────
+        if (action.type === "addressed") {
+          console.log(`[bot] Addressed ← "${text}" by ${author}`);
+          await postMessage(auth, liveChatId, "Sled left me in charge — how can I assist? 🤖");
+        }
+
+        // ── Streamer instructions ─────────────────────────────────────────
+        else if (action.type === "streamer_post_response") {
+          console.log(`[bot] Streamer → post ${action.key}`);
+          await postMessage(auth, liveChatId, RESPONSES[action.key]);
+        }
+
+        else if (action.type === "streamer_post_hype") {
+          const hypeMsg = HYPE_MESSAGES[Math.floor(Math.random() * HYPE_MESSAGES.length)];
+          console.log(`[bot] Streamer → hype "${hypeMsg}"`);
+          await postMessage(auth, liveChatId, hypeMsg);
+        }
+
+        else if (action.type === "streamer_post_custom") {
+          console.log(`[bot] Streamer → custom "${action.message}"`);
+          await postMessage(auth, liveChatId, action.message);
+        }
+
         // ── Auto-response (stream/shop question) ──────────────────────────
-        if (action.type === "respond") {
+        else if (action.type === "respond") {
           console.log(`[bot] ${action.key} ← "${text}" by ${author}`);
           await postMessage(auth, liveChatId, RESPONSES[action.key]);
         }

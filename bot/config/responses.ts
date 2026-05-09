@@ -54,7 +54,7 @@ export const HYPE_MESSAGES = [
   "W for chat 🔥🔥",
   "WWWWW 🍀🔥",
   "GG GG GG 🎉🎉",
-  "LFG 🔥🔥🔥",
+  "LETS GO 🔥🔥🔥",
 ];
 
 export type ResponseKey = keyof typeof RESPONSES;

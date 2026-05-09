@@ -1,11 +1,16 @@
 import { youtube_v3 } from "googleapis";
 import { PROFANITY_PATTERNS, SPAM_CONFIG, RESPONSE_COOLDOWNS } from "../config/triggers.js";
 import { classifyMessage } from "./classify.js";
+import { interpretStreamerMessage, logStreamerMessage } from "./streamer.js";
 import type { ResponseKey } from "../config/responses.js";
 
 export type Action =
   | { type: "respond"; key: ResponseKey }
   | { type: "hype" }
+  | { type: "addressed" }
+  | { type: "streamer_post_response"; key: ResponseKey }
+  | { type: "streamer_post_hype" }
+  | { type: "streamer_post_custom"; message: string }
   | { type: "delete_warn"; messageId: string; userId: string; reason: "profanity" | "spam" }
   | { type: "mute"; messageId: string; userId: string; reason: "spam" }
   | { type: "neg_warn"; userId: string; username: string; strike: 1 | 2 | 3; severity: "low" | "medium" | "high" }
@@ -28,6 +33,18 @@ const STRIKE_RESET_MS = 30 * 60 * 1000; // reset strikes after 30min of good beh
 const lastFired: Map<string, number> = new Map();
 const HYPE_COOLDOWN_MS = 45_000; // don't spam hype — one burst per 45 seconds
 
+// Bot's own display name — used to detect when viewers address the bot directly
+const BOT_NAME = (process.env.BOT_NAME ?? "").toLowerCase();
+
+// Phrases that indicate a viewer is talking to the bot
+const ADDRESSED_HINTS = ["hey bot", "bot can you", "bot, ", "bot please", "bot help", "ask the bot"];
+
+function isAddressedToBot(text: string): boolean {
+  const lower = text.toLowerCase();
+  if (BOT_NAME && lower.includes(BOT_NAME)) return true;
+  return ADDRESSED_HINTS.some((hint) => lower.includes(hint));
+}
+
 export async function matchMessage(
   msg: youtube_v3.Schema$LiveChatMessage
 ): Promise<Action | null> {
@@ -35,8 +52,36 @@ export async function matchMessage(
   const userId = msg.authorDetails?.channelId;
   const username = msg.authorDetails?.displayName ?? "Chat";
   const text = msg.snippet?.textMessageDetails?.messageText ?? "";
+  const isOwner = msg.authorDetails?.isChatOwner === true;
 
   if (!messageId || !userId) return null;
+
+  // ── Streamer (Sled) speaking — log it and check for bot instructions ───
+  if (isOwner) {
+    let action: Action | null = null;
+    try {
+      const interpreted = await interpretStreamerMessage(text);
+      if (interpreted) {
+        if (interpreted.type === "post_response") {
+          action = { type: "streamer_post_response", key: interpreted.key };
+        } else if (interpreted.type === "post_hype") {
+          action = { type: "streamer_post_hype" };
+        } else if (interpreted.type === "post_custom") {
+          action = { type: "streamer_post_custom", message: interpreted.message };
+        }
+      }
+      logStreamerMessage(text, interpreted);
+    } catch (err: any) {
+      console.error("[streamer] Interpret error:", err?.message ?? err);
+      logStreamerMessage(text, null);
+    }
+    return action; // null = streamer chatted normally, no bot action needed
+  }
+
+  // ── Viewer addressing the bot directly ────────────────────────────────
+  if (isAddressedToBot(text)) {
+    return { type: "addressed" };
+  }
 
   // ── Profanity: delete immediately ──────────────────────────────────────
   if (PROFANITY_PATTERNS.some((p) => p.test(text))) {

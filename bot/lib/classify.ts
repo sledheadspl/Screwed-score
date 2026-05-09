@@ -54,7 +54,7 @@ const ACTION_HINTS = [
   "shut up", "stfu", "idiot", "boring", "waste", "pathetic",
   "argument", "fighting", "stop", "you're", "youre",
   // hype signals
-  "gg", "ww", "lets go", "letsgo", "lfg", "fire", "rare", "pull",
+  "gg", "ww", "lets go", "letsgo", "fire", "rare", "pull",
   "pogchamp", "pog", "hype", "omg", "holy", "insane", "crazy",
 ];
 
