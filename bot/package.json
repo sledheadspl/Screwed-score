@@ -1,0 +1,21 @@
+{
+  "name": "poke-bank-mod-bot",
+  "version": "1.0.0",
+  "description": "YouTube live chat mod bot for poke-bank.com",
+  "type": "module",
+  "scripts": {
+    "start": "node --loader ts-node/esm index.ts",
+    "build": "tsc",
+    "start:prod": "node dist/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "google-auth-library": "^9.14.0",
+    "googleapis": "^144.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  }
+}
