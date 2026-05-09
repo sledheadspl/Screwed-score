@@ -26,8 +26,38 @@ export const RESPONSE_COOLDOWNS: Record<ResponseKey, number> = {
   CLOVERS:          30,
 };
 
-// Profanity list — any match → delete message + warn with LANGUAGE_WARNING
-// Add words in lowercase; partial-word matching is used
-export const PROFANITY: string[] = [
-  // Add your blocked words here
+// Profanity patterns — message is deleted immediately + LANGUAGE_WARNING is posted.
+//
+// Each pattern uses word-boundary matching so short roots don't fire on unrelated words
+// (e.g. "ass" won't match "class", "mass", "pass").
+// Prefix patterns like /\bfuck/i intentionally catch derivatives (fucking, fucker, etc.).
+export const PROFANITY_PATTERNS: RegExp[] = [
+  // Curse words
+  /\bfuck/i,       // fuck, fucking, fucker, fucked
+  /\bshit/i,       // shit, shitty, bullshit
+  /\bbitch/i,
+  /\bcunt/i,
+  /\bpussy/i,
+  /\bcock\b/i,
+  /\bdick\b/i,     // exact — avoids "dictionary", "Dickens"
+  /\bass\b/i,      // exact "ass" on its own
+  /\basshole/i,    // asshole, assholes
+  /\bjackass/i,
+  /\bbastard/i,
+  /\bwhore/i,
+  /\bslut/i,
+  /\bpiss/i,
+  /\bdamn\b/i,
+
+  // Slurs
+  /\bfaggot/i,
+  /\bfag\b/i,
+  /\bretard/i,
+  /\bnigger/i,
+  /\bnigga/i,
+  /\bgay\b/i,      // used as an insult in stream chat
+
+  // Business attacks
+  /\bscam/i,       // scam, scammer, scamming
+  /\bscalper/i,    // scalper, scalpers, scalping
 ];

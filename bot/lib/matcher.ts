@@ -1,5 +1,5 @@
 import { youtube_v3 } from "googleapis";
-import { PROFANITY, SPAM_CONFIG, RESPONSE_COOLDOWNS } from "../config/triggers.js";
+import { PROFANITY_PATTERNS, SPAM_CONFIG, RESPONSE_COOLDOWNS } from "../config/triggers.js";
 import { classifyMessage } from "./classify.js";
 import type { ResponseKey } from "../config/responses.js";
 
@@ -22,8 +22,8 @@ export async function matchMessage(
 
   if (!messageId || !userId) return null;
 
-  // Profanity check
-  if (PROFANITY.length > 0 && PROFANITY.some((word) => lower.includes(word))) {
+  // Profanity check — word-boundary regex matching (see config/triggers.ts)
+  if (PROFANITY_PATTERNS.some((pattern) => pattern.test(text))) {
     return { type: "delete_warn", messageId, userId, reason: "profanity" };
   }
 
