@@ -61,7 +61,7 @@ async function run() {
     for (const msg of data.items ?? []) {
       const author = msg.authorDetails?.displayName ?? "unknown";
       const text = msg.snippet?.textMessageDetails?.messageText ?? "";
-      const action = matchMessage(msg);
+      const action = await matchMessage(msg);
       if (!action) continue;
 
       if (action.type === "respond") {
@@ -77,7 +77,7 @@ async function run() {
 
       if (action.type === "delete_warn") {
         const warning =
-          action.reason === "profanity" ? RESPONSES.F5 : RESPONSES.F1;
+          action.reason === "profanity" ? RESPONSES.LANGUAGE_WARNING : RESPONSES.SPAM_WARNING;
         console.log(`[bot] ${action.reason} from ${author} — deleting + warning`);
         try {
           await deleteMessage(auth, action.messageId);

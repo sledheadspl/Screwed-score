@@ -1,17 +1,15 @@
 import { youtube_v3 } from "googleapis";
 import { PROFANITY, SPAM_CONFIG, RESPONSE_COOLDOWNS } from "../config/triggers.js";
 import { classifyMessage } from "./classify.js";
+import type { ResponseKey } from "../config/responses.js";
 
 export type Action =
-  | { type: "respond"; key: string }
+  | { type: "respond"; key: ResponseKey }
   | { type: "delete_warn"; messageId: string; userId: string; reason: "profanity" | "spam" }
   | { type: "mute"; messageId: string; userId: string };
 
-// Per-user message timestamps for spam detection (sliding window)
 const userMessages: Map<string, number[]> = new Map();
-// Users who received a spam warning — next violation triggers mute
 const spamWarned: Set<string> = new Set();
-// Last-fired timestamps per response key (cooldown enforcement)
 const lastFired: Map<string, number> = new Map();
 
 export async function matchMessage(
@@ -24,17 +22,15 @@ export async function matchMessage(
 
   if (!messageId || !userId) return null;
 
-  // --- Profanity check (fast, no API call) ---
+  // Profanity check
   if (PROFANITY.length > 0 && PROFANITY.some((word) => lower.includes(word))) {
     return { type: "delete_warn", messageId, userId, reason: "profanity" };
   }
 
-  // --- Spam check (fast, no API call) ---
+  // Spam check
   const now = Date.now();
   const windowMs = SPAM_CONFIG.windowSeconds * 1000;
-  const timestamps = (userMessages.get(userId) ?? []).filter(
-    (t) => now - t < windowMs
-  );
+  const timestamps = (userMessages.get(userId) ?? []).filter((t) => now - t < windowMs);
   timestamps.push(now);
   userMessages.set(userId, timestamps);
 
@@ -49,21 +45,20 @@ export async function matchMessage(
     }
   }
 
-  // --- Claude AI classification for stream/shop questions ---
+  // AI question classification
   try {
     const key = await classifyMessage(text);
     if (key && canFire(key)) {
       return { type: "respond", key };
     }
   } catch (err: any) {
-    // Non-fatal — log and continue rather than crashing the loop
     console.error("[classify] Error:", err?.message ?? err);
   }
 
   return null;
 }
 
-function canFire(key: string): boolean {
+function canFire(key: ResponseKey): boolean {
   const cooldown = (RESPONSE_COOLDOWNS[key] ?? 120) * 1000;
   const last = lastFired.get(key) ?? 0;
   if (Date.now() - last < cooldown) return false;
