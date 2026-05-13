@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contractor Estimate Review Checklist — ScrewedScore</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #020308; --surface: #0d0f18; --red: #ff3b30; --red-dim: rgba(255,59,48,0.08);
+    --red-border: rgba(255,59,48,0.2); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--red); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .subtitle { color: var(--sub); font-size: 15px; max-width: 540px; margin-bottom: 40px; }
+  .section { margin-bottom: 40px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid var(--red-border); border-radius: 4px; margin-top: 2px; }
+  .item-title { font-weight: 800; font-size: 14px; display: block; margin-bottom: 4px; }
+  .item-detail { font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { display: flex; gap: 14px; background: var(--red-dim); border: 1px solid var(--red-border); border-radius: 12px; padding: 14px 16px; }
+  .step-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,59,48,0.15); border: 1px solid var(--red-border); color: var(--red); font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .payment-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .payment-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); margin-bottom: 6px; }
+  .payment-card p { font-size: 13px; color: var(--sub); }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 48px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,59,48,0.3); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; }
+    .brand-logo span { color: #d00; }
+    .section-label, .payment-card .label { color: #d00; }
+    .checklist li, .steps li, .payment-card { border: 1px solid #ddd; background: #fafafa; }
+    .box { border-color: #999; }
+    .step-num { background: #fef0ef; color: #d00; border-color: #d00; }
+    .item-detail, .subtitle, .payment-card p { color: #555; }
+    .cta, .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Free Checklist</div>
+  </div>
+
+  <h1>Contractor Estimate Review Checklist</h1>
+  <p class="subtitle">Go through this checklist before signing any contractor estimate. The best time to dispute is before you sign — 60% of disputes are resolved when raised before the contract is signed.</p>
+
+  <div class="section">
+    <div class="section-label">Red Flags — Check Each One</div>
+    <ul class="checklist">
+      <li><div class="box"></div><div><span class="item-title">Materials Priced Above Retail</span><span class="item-detail">Contractors typically mark up materials 10–20% — that's reasonable. Look up lumber, tile, or fixtures on HomeDepot.com or the manufacturer's site. Markups of 50–100% above retail are excessive and negotiable.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Vague Scope Description</span><span class="item-detail">"Demo and remodel bathroom" with no square footage, no specified fixtures, no material grades. Vague scope is how contractors add $10,000 in "extras" that you thought were included. Demand itemized scope before signing.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Front-Loaded Payment Schedule</span><span class="item-detail">Requiring 50%+ upfront before work starts gives no incentive to finish. Standard: 10–15% down, payments tied to milestones, 10–15% held until final completion and your sign-off.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Unlimited Change Order Language</span><span class="item-detail">"Additional work billed at time and materials" or "changes subject to additional charges" with no cap or written approval process is a blank check. Add: "All change orders approved in writing before work begins."</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">No Workmanship Warranty</span><span class="item-detail">Any reputable contractor warrants their labor for at least 1 year. If the estimate has no warranty language, ask for it explicitly in writing. If they refuse, consider that a signal about their confidence in their work.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Dispute Steps — In Order</div>
+    <ul class="steps">
+      <li><div class="step-num">1</div><div><span class="item-title">Get at least three estimates</span><span class="item-detail">Never sign the first estimate you receive. Three estimates gives you a real market rate. If two estimates are within 15% of each other and one is 40% higher, you know where the padding is.</span></div></li>
+      <li><div class="step-num">2</div><div><span class="item-title">Break out labor vs. materials</span><span class="item-detail">Ask for separate line items for labor and materials on every major item. Blended line items hide markups — you can't comparison-shop what you can't see.</span></div></li>
+      <li><div class="step-num">3</div><div><span class="item-title">Tie payments to milestones</span><span class="item-detail">Negotiate: 10% to start · 25% after demo/framing · 25% after rough-ins · 25% after finishing · 15% on final walkthrough and sign-off. Put the schedule in the contract, not just the estimate.</span></div></li>
+      <li><div class="step-num">4</div><div><span class="item-title">Define the change order process</span><span class="item-detail">Add to the contract: "All change orders must be approved in writing by owner before work begins. Changes will be quoted at itemized material cost plus [X%] labor markup." This eliminates surprise add-ons.</span></div></li>
+      <li><div class="step-num">5</div><div><span class="item-title">Verify license and insurance</span><span class="item-detail">Check your state's contractor license lookup before signing anything. Ask for proof of general liability insurance and workers' comp. Unlicensed contractors are a legal and financial liability.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Standard Payment Schedule Reference</div>
+    <div class="payment-grid">
+      <div class="payment-card"><div class="label">Project Start</div><p>10–15% down payment to cover material deposits and mobilization</p></div>
+      <div class="payment-card"><div class="label">Demo / Framing Complete</div><p>25% of total contract price — confirmed by walkthrough</p></div>
+      <div class="payment-card"><div class="label">Rough-Ins Complete</div><p>25% — plumbing, electrical, HVAC rough-in inspected and approved</p></div>
+      <div class="payment-card"><div class="label">Finishing Complete</div><p>25% — drywall, paint, flooring, fixtures installed</p></div>
+      <div class="payment-card"><div class="label">Final Completion</div><p>10–15% — punch list complete, your walkthrough sign-off required</p></div>
+      <div class="payment-card"><div class="label">Change Orders</div><p>Written approval required before work begins. Never authorize verbally.</p></div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <p>Upload your contractor estimate and our AI flags red flags in seconds — before you sign anything.</p>
+    <a href="https://screwedscore.com">Scan My Estimate Free →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

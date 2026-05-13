@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Deal Contract Review Checklist — ScrewedScore</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #020308; --surface: #0d0f18; --red: #ff3b30; --red-dim: rgba(255,59,48,0.08);
+    --red-border: rgba(255,59,48,0.2); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--red); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .subtitle { color: var(--sub); font-size: 15px; max-width: 540px; margin-bottom: 40px; }
+  .section { margin-bottom: 40px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid var(--red-border); border-radius: 4px; margin-top: 2px; }
+  .item-title { font-weight: 800; font-size: 14px; display: block; margin-bottom: 4px; }
+  .item-detail { font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { display: flex; gap: 14px; background: var(--red-dim); border: 1px solid var(--red-border); border-radius: 12px; padding: 14px 16px; }
+  .step-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,59,48,0.15); border: 1px solid var(--red-border); color: var(--red); font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .terms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .term-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .term-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); margin-bottom: 6px; }
+  .term-card .good { color: #4ade80; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .term-card .bad { color: var(--red); font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .term-card p { font-size: 12px; color: var(--sub); }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 48px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,59,48,0.3); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; }
+    .brand-logo span { color: #d00; }
+    .section-label, .term-card .label { color: #d00; }
+    .checklist li, .steps li, .term-card { border: 1px solid #ddd; background: #fafafa; }
+    .box { border-color: #999; }
+    .step-num { background: #fef0ef; color: #d00; border-color: #d00; }
+    .term-card .good { color: #006600; }
+    .term-card .bad { color: #d00; }
+    .item-detail, .subtitle, .term-card p { color: #555; }
+    .cta, .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Free Checklist</div>
+  </div>
+
+  <h1>Brand Deal Contract Review Checklist</h1>
+  <p class="subtitle">Go through this before signing any sponsorship or brand deal contract. Brands send first-draft contracts expecting negotiation — creators who don't push back leave significant money and rights on the table.</p>
+
+  <div class="section">
+    <div class="section-label">Quick Reference — Good vs. Bad Terms</div>
+    <div class="terms-grid">
+      <div class="term-card">
+        <div class="label">IP Rights</div>
+        <div class="good">Good: Limited license, specific platforms, defined time period</div>
+        <div class="bad">Bad: "Perpetual, irrevocable, worldwide assignment of all rights"</div>
+        <p>A license is not an assignment. Never assign copyright in a first-draft deal.</p>
+      </div>
+      <div class="term-card">
+        <div class="label">Exclusivity</div>
+        <div class="good">Good: Named competitors only, 30–90 days, content category defined</div>
+        <div class="bad">Bad: "All competitive brands in the category" with no definition</div>
+        <p>Without a defined list of competitors, "exclusivity" can freeze your entire income.</p>
+      </div>
+      <div class="term-card">
+        <div class="label">Payment Terms</div>
+        <div class="good">Good: 50% on signing, 50% on delivery — or Net-30</div>
+        <div class="bad">Bad: Net-60, Net-90, or "on brand's approval" with no timeline</div>
+        <p>Include a kill fee of 25–50% if the brand cancels after you've created content.</p>
+      </div>
+      <div class="term-card">
+        <div class="label">Revisions</div>
+        <div class="good">Good: "Up to 2 revision rounds; additional rounds billed at $X/hr"</div>
+        <div class="bad">Bad: "As reasonably requested" with no cap or timeline</div>
+        <p>Without a revision cap, one deliverable can become six weeks of back-and-forth.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Red Flags — Check Each One</div>
+    <ul class="checklist">
+      <li><div class="box"></div><div><span class="item-title">Perpetual IP Assignment</span><span class="item-detail">The brand owns your content forever across all media for any use. They can run your video as a paid ad two years from now — and owe you nothing. Push back: "I grant a limited license, not an assignment. Usage in paid ads requires separate usage rights compensation."</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Broad Exclusivity</span><span class="item-detail">"You agree not to work with any competitive brand for 12 months." Without defining "competitive," this can lock you out of entire income categories. Push for a named competitor list and a 30–90 day window.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Unlimited Revisions</span><span class="item-detail">"Creator will revise content as reasonably requested." No cap, no timeline. Add: "Brand is entitled to up to 2 rounds of revision requests. Additional revisions will be billed at $[rate]/hour."</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Net-60 or Worse Payment Terms</span><span class="item-detail">Net-60 means 60 days after delivery. Net-90 is three months. For a one-time deliverable, these are unreasonable. Push for Net-15 or Net-30 with a kill fee if the brand cancels after you've created content.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Unlimited Morality Clause</span><span class="item-detail">"Brand may terminate at its sole discretion for any conduct inconsistent with brand values." Without defining "brand values" or requiring cause, you can be terminated without pay for anything. Push for: "Termination for cause requires written notice and 7-day cure period."</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Negotiation Steps — In Order</div>
+    <ul class="steps">
+      <li><div class="step-num">1</div><div><span class="item-title">Replace assignment with a limited license</span><span class="item-detail">Redline: "Creator grants Brand a non-exclusive, limited license to use the Content on [specific platforms] for [X months] for organic social only." Add: "Paid ad usage requires separate written agreement and usage rights compensation."</span></div></li>
+      <li><div class="step-num">2</div><div><span class="item-title">Define the exclusivity scope tightly</span><span class="item-detail">Replace vague exclusivity with: "Creator will not create sponsored content for the following named competitors: [Brand A, Brand B, Brand C] during the campaign period of [X days after delivery]." Nothing broader.</span></div></li>
+      <li><div class="step-num">3</div><div><span class="item-title">Add a revision cap</span><span class="item-detail">Add to the deliverables section: "Brand is entitled to 2 rounds of revision requests. Each round must be submitted within 5 business days. Additional revision rounds requested by Brand will be billed at $[rate]/hour."</span></div></li>
+      <li><div class="step-num">4</div><div><span class="item-title">Restructure payment timeline</span><span class="item-detail">Counter with: "50% on contract signing, 50% within 14 days of delivery approval. If Brand cancels after content creation begins, a kill fee of [25–50% of deal value] is owed within 14 days."</span></div></li>
+      <li><div class="step-num">5</div><div><span class="item-title">Define approval and FTC terms</span><span class="item-detail">Add: "Brand will approve or request revisions within 5 business days of content submission. Brand is responsible for FTC disclosure compliance review. Silence for 7 business days constitutes approval."</span></div></li>
+    </ul>
+  </div>
+
+  <div class="cta">
+    <p>Upload your brand deal contract and our AI flags the red flags in seconds — before you sign anything.</p>
+    <a href="https://screwedscore.com">Scan My Brand Deal Free →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

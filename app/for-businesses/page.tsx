@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ShieldCheck, Star, MessageSquare, TrendingUp, CheckCircle, Users } from 'lucide-react'
+import { ShieldCheck, Star, MessageSquare, TrendingUp, CheckCircle, Users, DollarSign } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -158,6 +158,32 @@ export default function ForBusinessesPage() {
             You can&apos;t remove community reviews — but you can respond to them, correct misinformation, and demonstrate that you take customer concerns seriously. That&apos;s more powerful than a review platform where businesses can pay to suppress negative feedback.
           </p>
         </div>
+
+        {/* Cross-sell to bill audit */}
+        <Link
+          href="/business-audit"
+          className="block rounded-2xl p-6 sm:p-8 transition-all hover:opacity-95"
+          style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.06), rgba(0,229,255,0.04))', border: '1px solid rgba(74,222,128,0.18)' }}
+        >
+          <div className="flex items-start gap-4">
+            <div
+              className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ background: 'rgba(74,222,128,0.15)', border: '1px solid rgba(74,222,128,0.3)' }}
+            >
+              <DollarSign className="w-5 h-5" style={{ color: '#4ade80' }} />
+            </div>
+            <div className="flex-1 space-y-1">
+              <p className="text-xs uppercase tracking-widest font-bold" style={{ color: '#4ade80' }}>
+                Different goal?
+              </p>
+              <p className="font-black text-brand-text">Audit your own business bills</p>
+              <p className="text-sm text-brand-sub leading-relaxed">
+                We also run paid bill audits for small businesses — credit card processing, telecom, waste, insurance, software.
+                $3,000+/yr in savings or full refund. <span className="font-semibold text-brand-text">$497 flat, 48-hour turnaround. →</span>
+              </p>
+            </div>
+          </div>
+        </Link>
 
         {/* FAQ */}
         <div className="space-y-5">

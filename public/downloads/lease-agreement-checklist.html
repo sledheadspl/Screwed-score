@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease Agreement Review Checklist — ScrewedScore</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #020308; --surface: #0d0f18; --red: #ff3b30; --red-dim: rgba(255,59,48,0.08);
+    --red-border: rgba(255,59,48,0.2); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--red); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .subtitle { color: var(--sub); font-size: 15px; max-width: 540px; margin-bottom: 40px; }
+  .section { margin-bottom: 40px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid var(--red-border); border-radius: 4px; margin-top: 2px; }
+  .item-title { font-weight: 800; font-size: 14px; display: block; margin-bottom: 4px; }
+  .item-detail { font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { display: flex; gap: 14px; background: var(--red-dim); border: 1px solid var(--red-border); border-radius: 12px; padding: 14px 16px; }
+  .step-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,59,48,0.15); border: 1px solid var(--red-border); color: var(--red); font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .move-in-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .move-in-section h3 { font-size: 14px; font-weight: 800; margin-bottom: 10px; }
+  .move-in-section ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .move-in-section li { display: flex; gap: 10px; font-size: 13px; color: var(--sub); }
+  .move-in-section li::before { content: "□"; color: var(--red); flex-shrink: 0; }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 48px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,59,48,0.3); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; }
+    .brand-logo span { color: #d00; }
+    .section-label { color: #d00; }
+    .checklist li, .steps li, .move-in-section { border: 1px solid #ddd; background: #fafafa; }
+    .box { border-color: #999; }
+    .step-num { background: #fef0ef; color: #d00; border-color: #d00; }
+    .item-detail, .subtitle, .move-in-section li { color: #555; }
+    .cta, .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Free Checklist</div>
+  </div>
+
+  <h1>Lease Agreement Review Checklist</h1>
+  <p class="subtitle">Read through this before signing any lease. 1 in 4 leases contains a clause that is unenforceable in that state — but you still need to know it's there before you sign.</p>
+
+  <div class="section">
+    <div class="section-label">Red Flags — Check Each One</div>
+    <ul class="checklist">
+      <li><div class="box"></div><div><span class="item-title">Broad Entry Rights</span><span class="item-detail">Landlord can enter "at any time" or "with reasonable notice" without defining what that means. Most states require 24–48 hours written notice except in emergencies. If the lease doesn't specify, add language defining it.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Automatic Renewal Trap</span><span class="item-detail">Lease auto-renews for 12 months unless you give 60–90 days notice. The window is designed to be easy to miss. Set a calendar reminder immediately — and ask for the renewal notice window to be shortened.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Tenant Responsible for Major Repairs</span><span class="item-detail">You're responsible for HVAC, appliances, or structural issues that are legally the landlord's obligation in most states. These clauses shift hundreds in annual costs to you — and may be unenforceable anyway.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Excessive or Unexplained Fees</span><span class="item-detail">Late fees over 5–10% of rent are illegal in many states. "Administrative fees," "processing fees," and "renewal fees" with no explanation are padding. Ask for itemization and compare to your state's legal cap.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Vague Security Deposit Terms</span><span class="item-detail">No defined timeline for return, no itemization requirement, or language like "deposit forfeited for any damage" with no definition of normal wear and tear. These clauses enable illegal deposit withholding.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Dispute Steps — In Order</div>
+    <ul class="steps">
+      <li><div class="step-num">1</div><div><span class="item-title">Know your state's tenant rights</span><span class="item-detail">Every state has a landlord-tenant law setting minimums for entry notice, deposit limits, habitability, and fee caps. Search "[your state] landlord tenant law" — these override anything the lease says.</span></div></li>
+      <li><div class="step-num">2</div><div><span class="item-title">Document the unit before move-in</span><span class="item-detail">Photograph and video every room, every surface, every appliance — before you bring your belongings in. Date-stamp everything. This is your evidence against damage claims at move-out. Email the photos to yourself for a date-stamped record.</span></div></li>
+      <li><div class="step-num">3</div><div><span class="item-title">Get verbal promises in writing</span><span class="item-detail">If the landlord said the broken dishwasher will be fixed before you move in, it needs to be in the lease or a signed addendum. Verbal promises are unenforceable and easy to deny later.</span></div></li>
+      <li><div class="step-num">4</div><div><span class="item-title">Challenge illegal clauses before signing</span><span class="item-detail">Identify each clause that violates state law. Put your requests in writing: "Per [state] landlord-tenant code, Section X, I'm requesting this clause be removed." Document the landlord's response.</span></div></li>
+      <li><div class="step-num">5</div><div><span class="item-title">Track all maintenance requests in writing</span><span class="item-detail">Send all repair requests by email or text — never verbal only. If a habitability issue goes unaddressed for 14+ days after written notice, most states allow rent withholding or lease termination.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Move-In Documentation Checklist</div>
+    <div class="move-in-section">
+      <h3>Complete this before moving anything in</h3>
+      <ul>
+        <li>Photograph every wall in every room</li>
+        <li>Photograph all appliances (open refrigerator, oven, dishwasher)</li>
+        <li>Photograph all flooring — especially carpets, tile grout, hardwood scratches</li>
+        <li>Photograph all windows and window locks</li>
+        <li>Photograph bathroom fixtures (toilet, tub, sink condition)</li>
+        <li>Test all light switches and outlets</li>
+        <li>Test all door locks and deadbolts</li>
+        <li>Note any pre-existing damage in writing and send to landlord via email</li>
+        <li>Request written acknowledgment of pre-existing conditions</li>
+        <li>Save all photos to cloud storage with automatic date stamps</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta">
+    <p>Upload your lease before you sign and our AI flags problem clauses in seconds — free.</p>
+    <a href="https://screwedscore.com">Scan My Lease Free →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

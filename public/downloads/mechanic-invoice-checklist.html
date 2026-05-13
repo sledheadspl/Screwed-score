@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanic Invoice Dispute Checklist — ScrewedScore</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #020308; --surface: #0d0f18; --red: #ff3b30; --red-dim: rgba(255,59,48,0.08);
+    --red-border: rgba(255,59,48,0.2); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--red); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .subtitle { color: var(--sub); font-size: 15px; max-width: 540px; margin-bottom: 40px; }
+  .section { margin-bottom: 40px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid var(--red-border); border-radius: 4px; margin-top: 2px; }
+  .item-title { font-weight: 800; font-size: 14px; display: block; margin-bottom: 4px; }
+  .item-detail { font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { display: flex; gap: 14px; background: var(--red-dim); border: 1px solid var(--red-border); border-radius: 12px; padding: 14px 16px; }
+  .step-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,59,48,0.15); border: 1px solid var(--red-border); color: var(--red); font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .ref-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 10px; }
+  .ref-box h3 { font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+  .ref-box p { font-size: 13px; color: var(--sub); }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 48px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,59,48,0.3); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; }
+    .brand-logo span { color: #d00; }
+    .section-label { color: #d00; }
+    .checklist li, .steps li, .ref-box { border: 1px solid #ddd; background: #fafafa; }
+    .box { border-color: #999; }
+    .step-num { background: #fef0ef; color: #d00; border-color: #d00; }
+    .item-detail, .subtitle, .ref-box p { color: #555; }
+    .cta, .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Free Checklist</div>
+  </div>
+
+  <h1>Mechanic Invoice Dispute Checklist</h1>
+  <p class="subtitle">Use this checklist before paying any auto repair invoice. 1 in 3 customers report being overcharged — and you have 48 hours after pickup before you lose most of your leverage.</p>
+
+  <div class="section">
+    <div class="section-label">Red Flags — Check Each One</div>
+    <ul class="checklist">
+      <li><div class="box"></div><div><span class="item-title">Labor Rate Over $150/hr</span><span class="item-detail">Independent shops average $75–125/hr. Dealerships run $150–200/hr. Specialty shops can go higher — but it must be disclosed upfront. Anything above $200/hr for a general shop is worth questioning.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Parts Marked Up Over 30%</span><span class="item-detail">Look up every part number on RockAuto, AutoZone, or O'Reilly. A 20–30% markup above retail is normal. Markups of 100–200% are excessive and worth negotiating.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Diagnostic Fee + Full Repair Fee</span><span class="item-detail">Many shops waive or reduce the diagnostic fee when they also perform the repair. If both are charged at full price, ask for the diagnostic fee to be credited against the repair total.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Vague "Shop Supplies" Charge</span><span class="item-detail">"Shop supplies," "hazmat disposal," or "misc. materials" should be trivial ($5–15). If they're $50–100 with no itemization, push back — these are often padding.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Work Done Without Written Authorization</span><span class="item-detail">Most states require written authorization before repairs begin. If the shop performed work you didn't explicitly approve in writing, you may not be legally obligated to pay for it.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Dispute Steps — In Order</div>
+    <ul class="steps">
+      <li><div class="step-num">1</div><div><span class="item-title">Get the itemized invoice in writing</span><span class="item-detail">Before leaving the shop, get a fully itemized invoice with every part number, every labor line item, and the rate charged. Verbal explanations at the counter don't hold up in disputes.</span></div></li>
+      <li><div class="step-num">2</div><div><span class="item-title">Look up the published labor time</span><span class="item-detail">Industry-standard labor times are published by Mitchell, Chilton, and ALLDATA. If the shop billed 4 hours and the book time is 2, that gap is your dispute. Many libraries offer free access to these databases.</span></div></li>
+      <li><div class="step-num">3</div><div><span class="item-title">Check parts pricing against retail</span><span class="item-detail">Take every part number from your invoice to RockAuto.com. Compare prices. A 20–30% markup above retail is standard. More than that is excessive and negotiable.</span></div></li>
+      <li><div class="step-num">4</div><div><span class="item-title">Contact the shop in writing</span><span class="item-detail">Email or text — not just verbal — with specific line items you're disputing and why. Keep it factual: "The invoice shows 4 labor hours for X — the published labor time is 2.0 hours."</span></div></li>
+      <li><div class="step-num">5</div><div><span class="item-title">Escalate if needed</span><span class="item-detail">File a complaint with your state's Bureau of Automotive Repair (BAR) or equivalent consumer protection office. A complaint filed often results in resolution without further action.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Quick Reference — Labor Rate Benchmarks</div>
+    <div class="ref-box">
+      <h3>Average Shop Labor Rates (U.S.)</h3>
+      <p>Independent shop: $75–125/hr &nbsp;|&nbsp; Dealership: $150–200/hr &nbsp;|&nbsp; Specialty (European/performance): $175–250/hr &nbsp;|&nbsp; National chain (Midas, Firestone): $90–130/hr</p>
+    </div>
+    <div class="ref-box">
+      <h3>Parts Markup Benchmarks</h3>
+      <p>Acceptable: 20–30% above retail &nbsp;|&nbsp; High but negotiable: 30–60% &nbsp;|&nbsp; Excessive: 60%+ above retail price on major retail sites</p>
+    </div>
+  </div>
+
+  <div class="cta">
+    <p>Upload your mechanic invoice and our AI flags every overcharge in seconds — free.</p>
+    <a href="https://screwedscore.com">Scan My Invoice Free →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

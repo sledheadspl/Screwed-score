@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phone Bill Hidden Fees Checklist — ScrewedScore</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #020308; --surface: #0d0f18; --red: #ff3b30; --red-dim: rgba(255,59,48,0.08);
+    --red-border: rgba(255,59,48,0.2); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--red); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .subtitle { color: var(--sub); font-size: 15px; max-width: 540px; margin-bottom: 40px; }
+  .section { margin-bottom: 40px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid var(--red-border); border-radius: 4px; margin-top: 2px; }
+  .item-title { font-weight: 800; font-size: 14px; display: block; margin-bottom: 4px; }
+  .item-detail { font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { display: flex; gap: 14px; background: var(--red-dim); border: 1px solid var(--red-border); border-radius: 12px; padding: 14px 16px; }
+  .step-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,59,48,0.15); border: 1px solid var(--red-border); color: var(--red); font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .fee-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .fee-table th { text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--sub); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .fee-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  .fee-table tr:last-child td { border-bottom: none; }
+  .fee-table .real { color: #4ade80; font-weight: 700; }
+  .fee-table .fake { color: var(--red); font-weight: 700; }
+  .fee-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 48px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ff6b60,#ff3b30); color: #fff; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,59,48,0.3); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; }
+    .brand-logo span { color: #d00; }
+    .section-label { color: #d00; }
+    .checklist li, .steps li, .fee-table-wrap { border: 1px solid #ddd; background: #fafafa; }
+    .box { border-color: #999; }
+    .step-num { background: #fef0ef; color: #d00; border-color: #d00; }
+    .fee-table th { color: #777; }
+    .fee-table td { color: #111; }
+    .fee-table .real { color: #006600; }
+    .fee-table .fake { color: #d00; }
+    .item-detail, .subtitle { color: #555; }
+    .cta, .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Free Checklist</div>
+  </div>
+
+  <h1>Phone Bill Hidden Fees Checklist</h1>
+  <p class="subtitle">The average American overpays $300+ per year on telecom bills. Use this checklist to find hidden fees, unauthorized charges, and rate increases on your current bill.</p>
+
+  <div class="section">
+    <div class="section-label">Real Taxes vs. Fake Fees</div>
+    <div class="fee-table-wrap">
+      <table class="fee-table">
+        <thead><tr><th>Charge Name</th><th>Type</th><th>Negotiable?</th></tr></thead>
+        <tbody>
+          <tr><td>State and local sales tax</td><td class="real">Real government tax</td><td>No</td></tr>
+          <tr><td>Federal Excise Tax (3%)</td><td class="real">Real government tax</td><td>No</td></tr>
+          <tr><td>911 surcharge</td><td class="real">Real government fee</td><td>No</td></tr>
+          <tr><td>"Administrative Recovery Fee"</td><td class="fake">Carrier invented</td><td>Yes — call and ask</td></tr>
+          <tr><td>"Network Access Fee"</td><td class="fake">Carrier invented</td><td>Yes — call and ask</td></tr>
+          <tr><td>"Federal Universal Service Charge"</td><td class="fake">Carrier-inflated version</td><td>Partially — compare to FCC rate</td></tr>
+          <tr><td>"Regulatory Recovery Fee"</td><td class="fake">Carrier invented</td><td>Yes — call and ask</td></tr>
+          <tr><td>Equipment rental fee</td><td class="fake">Carrier profit</td><td>Yes — buy your own router</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Red Flags — Check Each One</div>
+    <ul class="checklist">
+      <li><div class="box"></div><div><span class="item-title">Administrative and Regulatory Fees</span><span class="item-detail">"Administrative Recovery Fee," "Network Access Fee," "Regulatory Recovery" — these look like taxes but are entirely carrier-invented. They are fully negotiable and have been removed for millions of customers who called and asked.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Charges for Cancelled Services</span><span class="item-detail">You cancelled a line or service months ago. It's still appearing on your bill under a slightly different name. Telecom billing systems are notoriously slow to process cancellations — find the date you cancelled and demand a refund from that date.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Equipment Rental Fee</span><span class="item-detail">Paying $10–15/month to "rent" a router you've had for 3+ years? You've paid full price multiple times. Buy a compatible router (typically $60–100) and eliminate this charge permanently.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">"Unlimited" Plan With Overage Fees</span><span class="item-detail">If you're on an "unlimited" plan but being charged after a certain data threshold, read your plan details. "Unlimited" often means throttled — not unlimited high-speed. Overage fees on an unlimited plan are worth disputing.</span></div></li>
+      <li><div class="box"></div><div><span class="item-title">Rate Increases Without Notice</span><span class="item-detail">Your rate went up $5–15/month. The "notice" was an insert buried in your bill months ago. These increases are legal but highly negotiable — simply calling and mentioning a competitor gets a discount more than 50% of the time.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Dispute Steps — In Order</div>
+    <ul class="steps">
+      <li><div class="step-num">1</div><div><span class="item-title">Get a full itemized statement</span><span class="item-detail">Log in to your carrier's account and pull the full itemized bill. Print or screenshot every charge separately. This is your baseline before calling.</span></div></li>
+      <li><div class="step-num">2</div><div><span class="item-title">Separate taxes from fees</span><span class="item-detail">Go line by line and categorize: government taxes (non-negotiable) vs. carrier fees (negotiable). Anything that isn't a named government charge is fair game to dispute.</span></div></li>
+      <li><div class="step-num">3</div><div><span class="item-title">Call the retention department — not customer service</span><span class="item-detail">Ask for "retention" or say "I'm considering cancelling." Retention agents have authority to offer discounts, credits, and fee removals that front-line reps cannot.</span></div></li>
+      <li><div class="step-num">4</div><div><span class="item-title">Mention a competitor</span><span class="item-detail">The single most effective phrase: "I'm considering switching to [competitor]." Carriers spend $300–500 acquiring a customer — they'll absorb a $10/month discount to keep you. Have a competitor's current offer in front of you when you call.</span></div></li>
+      <li><div class="step-num">5</div><div><span class="item-title">File an FCC complaint if needed</span><span class="item-detail">Go to consumercomplaints.fcc.gov. A complaint isn't a lawsuit — it's an inquiry the carrier must respond to within 30 days. Filing one frequently resolves billing issues faster than any other escalation.</span></div></li>
+    </ul>
+  </div>
+
+  <div class="cta">
+    <p>Upload your phone bill and our AI finds hidden fees and overcharges in seconds — free.</p>
+    <a href="https://screwedscore.com">Scan My Phone Bill Free →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>
