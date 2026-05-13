@@ -63,8 +63,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'https://screwedscore.com'
 
     const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      line_items: [{ price: process.env.GSS_STRIPE_PRICE_ID!, quantity: 1 }],
+      mode: 'subscription',
+      line_items: [{ price: process.env.GSS_STRIPE_GUARDIAN_PRICE_ID!, quantity: 1 }],
       success_url: `${origin}/paid?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${origin}/`,
       allow_promotion_codes: true,

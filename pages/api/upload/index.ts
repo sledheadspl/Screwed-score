@@ -23,11 +23,13 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 3 analyses per IP per 24 hours. */
-const ANON_LIMIT = 3
-/** Authenticated (signed-in) users: 5 analyses per user per 24 hours. */
-const AUTH_LIMIT = 5
+/** Scans are free — these limits exist only to block bots/scrapers, not as a paywall. */
+const ANON_LIMIT = 50
+const AUTH_LIMIT = 200
 const WINDOW_MS  = 24 * 60 * 60 * 1000
+
+/** After this many free scans, surface the Guardian subscription upsell (soft nudge, not a block). */
+const GUARDIAN_NUDGE_AT = 5
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -123,11 +125,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // True when this is the user's one teaser scan (at exactly the limit)
+    // True after GUARDIAN_NUDGE_AT scans — shows the Guardian subscription upsell (not a block)
     const limitReached = !isPro && !refBypassed &&
       !!rateData &&
       Date.now() - new Date(rateData.window_start).getTime() < WINDOW_MS &&
-      rateData.request_count === limit
+      rateData.request_count >= GUARDIAN_NUDGE_AT
 
     // ── 5. Parse multipart form data with formidable ─────────────────────────
     const form = formidable({ maxFileSize: MAX_FILE_SIZE_BYTES, keepExtensions: true })

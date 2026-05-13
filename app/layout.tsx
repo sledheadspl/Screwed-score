@@ -78,7 +78,7 @@ const jsonLd = {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
-    description: '3 free scans, additional scans for $2.99',
+    description: 'Free unlimited scans. Upgrade to Guardian ($7.99/mo) for passive bill monitoring.',
   },
   featureList: [
     'Bill overcharge detection',

@@ -187,7 +187,7 @@ const TESTIMONIALS = [
 const FAQ_ITEMS = [
   {
     q: 'Is this actually free?',
-    a: 'Yes — 3 full scans are free, no account required. After that, unlock additional scans for $2.99 each — one-time, no subscription.',
+    a: 'Yes — scans are completely free, no account required, no limits. Upgrade to Guardian ($7.99/mo) for passive bill monitoring that alerts you before you overpay.',
   },
   {
     q: 'What file types can I upload?',
@@ -517,7 +517,7 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
                     { value: '20 sec',  label: 'average analysis time',      color: '#ff3b30' },
-                    { value: '$2.99',   label: 'per scan after 3 free',      color: '#60a5fa' },
+                    { value: 'Free',    label: 'scans — always, no limits',   color: '#60a5fa' },
                     { value: '78%',     label: 'of scans flag something',    color: '#ffd60a' },
                     { value: '12',      label: 'languages supported',        color: '#30d158' },
                   ].map(({ value, label, color }, idx) => (
@@ -652,7 +652,7 @@ export default function HomePage() {
                     <p className="text-sm text-brand-sub/55 leading-relaxed flex-1">
                       Demand letter, phone script, chargeback guide, escalation path, and a 3-email follow-up sequence — generated for your exact situation.
                     </p>
-                    <p className="mt-5 text-xs font-black" style={{ color: 'rgba(245,158,11,0.7)' }}>$14.99 · One-time</p>
+                    <p className="mt-5 text-xs font-black" style={{ color: 'rgba(245,158,11,0.7)' }}>30% of what you recover · Only if you win</p>
                   </div>
                 </div>
 
@@ -1030,14 +1030,14 @@ export default function HomePage() {
             {limitReached && (
               <div className="flex items-center justify-between gap-4 rounded-xl border border-brand-border bg-brand-surface px-4 py-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-brand-text">You&apos;ve used your free scans</p>
-                  <p className="text-xs text-brand-sub">Unlock unlimited scans for 30 days — one-time payment, no subscription.</p>
+                  <p className="text-sm font-bold text-brand-text">You&apos;re scanning a lot — nice.</p>
+                  <p className="text-xs text-brand-sub">Scans stay free forever. Upgrade to Guardian for 24/7 passive bill monitoring.</p>
                 </div>
                 <button
                   onClick={() => setShowPaywall(true)}
                   className="shrink-0 px-4 py-2 rounded-lg text-sm font-black text-white transition-all hover:opacity-90"
                   style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-                  $2.99
+                  $7.99/mo
                 </button>
               </div>
             )}

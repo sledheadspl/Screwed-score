@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Zap, CheckCircle, Loader2 } from 'lucide-react'
+import { X, Shield, CheckCircle, Loader2 } from 'lucide-react'
 
 interface Props {
   onClose: () => void
@@ -9,16 +9,17 @@ interface Props {
 }
 
 const PERKS = [
-  'Unlimited scans for 30 days',
-  'All document types — bills, contracts, invoices',
-  'Full AI analysis + Fight Back Kit access',
+  'Unlimited scans — always free',
+  'Passive bill monitoring — we alert you before you overpay',
+  'Auto-detect new charges on linked accounts',
+  'Priority Fight Back Kit generation',
   'Shareable result links forever',
 ]
 
 export function PaywallModal({ onClose, onGoogleLogin }: Props) {
   const [loading, setLoading] = useState(false)
 
-  const handlePro = async () => {
+  const handleGuardian = async () => {
     setLoading(true)
     try {
       const res = await fetch('/api/checkout', { method: 'POST' })
@@ -44,13 +45,13 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         {/* Header */}
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-red-400" />
-            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Free scans used up</span>
+            <Shield className="w-5 h-5 text-red-400" />
+            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Guardian Protection</span>
           </div>
           <h2 className="text-xl font-black text-brand-text leading-tight">
-            Unlock 30 days of<br />unlimited scans — <span style={{ color: '#ff6b60' }}>$2.99</span>
+            Stop overpaying<br />every month — <span style={{ color: '#ff6b60' }}>$7.99/mo</span>
           </h2>
-          <p className="text-xs text-brand-sub">One-time payment. No subscription. No hidden fees.</p>
+          <p className="text-xs text-brand-sub">We watch your bills 24/7 and alert you the moment something looks wrong.</p>
         </div>
 
         {/* Perks */}
@@ -64,18 +65,18 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
         </ul>
 
         {/* CTA */}
-        <button onClick={handlePro} disabled={loading}
+        <button onClick={handleGuardian} disabled={loading}
           className="w-full py-3 rounded-xl font-black text-sm text-white transition-all disabled:opacity-60"
           style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
             </span>
-          ) : 'Unlock Now — $2.99'}
+          ) : 'Start Guardian — $7.99/mo'}
         </button>
 
         <p className="text-center text-[10px] text-brand-sub/50">
-          Secure checkout via Stripe · Instant access · No subscription
+          Cancel anytime · Secure checkout via Stripe · Scans stay free forever
         </p>
       </div>
     </div>
