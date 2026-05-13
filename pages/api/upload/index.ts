@@ -24,9 +24,9 @@ const ALLOWED_MIME_TYPES = new Set([
 ])
 
 /** Anonymous users: 3 analyses per IP per 24 hours. */
-const ANON_LIMIT = 3
+const ANON_LIMIT = 25
 /** Authenticated (signed-in) users: 5 analyses per user per 24 hours. */
-const AUTH_LIMIT = 5
+const AUTH_LIMIT = 50
 const WINDOW_MS  = 24 * 60 * 60 * 1000
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -78,7 +78,7 @@ const jsonLd = {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
-    description: '3 free scans, additional scans for $2.99',
+    description: 'Free AI bill, contract, and invoice analysis — no account required',
   },
   featureList: [
     'Bill overcharge detection',

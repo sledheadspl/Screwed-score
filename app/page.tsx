@@ -187,7 +187,7 @@ const TESTIMONIALS = [
 const FAQ_ITEMS = [
   {
     q: 'Is this actually free?',
-    a: 'Yes — 3 full scans are free, no account required. After that, unlock additional scans for $2.99 each — one-time, no subscription.',
+    a: 'Yes — every scan is free, no account required. No paywall, no credit card, no subscription.',
   },
   {
     q: 'What file types can I upload?',
@@ -517,7 +517,7 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
                     { value: '20 sec',  label: 'average analysis time',      color: '#ff3b30' },
-                    { value: '$2.99',   label: 'per scan after 3 free',      color: '#60a5fa' },
+                    { value: 'Free',    label: 'every scan, no account',     color: '#60a5fa' },
                     { value: '78%',     label: 'of scans flag something',    color: '#ffd60a' },
                     { value: '12',      label: 'languages supported',        color: '#30d158' },
                   ].map(({ value, label, color }, idx) => (
@@ -909,7 +909,7 @@ export default function HomePage() {
                     }}>Start knowing.</span>
                   </h2>
                   <p className="text-brand-sub/50 text-base max-w-sm mx-auto leading-relaxed">
-                    3 free scans. No account. No credit card. If you find something, you'll want to share it.
+                    Free scans. No account. No credit card. If you find something, you&apos;ll want to share it.
                   </p>
                 </div>
 
@@ -1027,22 +1027,7 @@ export default function HomePage() {
               </div>
             )}
 
-            {limitReached && (
-              <div className="flex items-center justify-between gap-4 rounded-xl border border-brand-border bg-brand-surface px-4 py-3">
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-brand-text">You&apos;ve used your free scans</p>
-                  <p className="text-xs text-brand-sub">Unlock unlimited scans for 30 days — one-time payment, no subscription.</p>
-                </div>
-                <button
-                  onClick={() => setShowPaywall(true)}
-                  className="shrink-0 px-4 py-2 rounded-lg text-sm font-black text-white transition-all hover:opacity-90"
-                  style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-                  $2.99
-                </button>
-              </div>
-            )}
-
-            {!isSample && <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />}
+{!isSample && <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />}
 
             {!isSample && (
               <HumanAuditCard
