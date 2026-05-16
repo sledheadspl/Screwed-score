@@ -43,3 +43,10 @@ clippilot/src-tauri/target/
 clippilot/src-tauri/binaries/
 clippilot/node_modules/
 clippilot/dist/
+
+# SEO content engine
+tools/seo-engine/.env
+tools/seo-engine/.engine_state.json
+tools/seo-engine/.venv/
+tools/seo-engine/__pycache__/
+tools/seo-engine/articles/

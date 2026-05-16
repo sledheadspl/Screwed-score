@@ -7,7 +7,11 @@
     "dev:local": "NEXT_PUBLIC_APP_URL=http://10.0.0.228:3000 next dev --hostname 0.0.0.0",
     "build": "cross-env TURBOPACK=0 next build && node fix-netlify-handler.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seo:plan": "cd tools/seo-engine && python screwedscore_seo.py --plan",
+    "seo:generate": "cd tools/seo-engine && python screwedscore_seo.py",
+    "seo:reset": "cd tools/seo-engine && python screwedscore_seo.py --reset",
+    "seo:setup": "cd tools/seo-engine && python -m venv .venv && .venv\\Scripts\\pip install -r requirements.txt"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
@@ -16,12 +20,16 @@
     "@types/formidable": "^3.5.0",
     "clsx": "^2.1.1",
     "formidable": "^3.5.4",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.441.0",
     "mammoth": "^1.11.0",
     "next": "^16.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-html": "^16.0.1",
     "resend": "^6.10.0",
     "stripe": "^21.0.1",
     "tailwind-merge": "^2.5.2"
