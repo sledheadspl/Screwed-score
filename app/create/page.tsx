@@ -5,6 +5,7 @@ import {
   FileText, Receipt, Home, Key, AlertCircle, Shield,
   Gavel, Plus, Trash2, Download, RotateCcw,
   Loader2, CheckCircle, DollarSign, Sparkles, ArrowRight,
+  Tag, HandCoins, ScrollText,
 } from 'lucide-react'
 
 type DocType =
@@ -16,6 +17,9 @@ type DocType =
   | 'demand_letter'
   | 'nda'
   | 'court_paperwork'
+  | 'bill_of_sale'
+  | 'promissory_note'
+  | 'receipt'
 
 interface LineItem { description: string; qty: string; price: string }
 
@@ -28,6 +32,9 @@ const DOC_TYPES: { id: DocType; label: string; icon: React.ReactNode; desc: stri
   { id: 'demand_letter',    label: 'Demand Letter',        icon: <AlertCircle className="w-5 h-5" />,desc: 'Formal demand for payment or action', accent: 'red' },
   { id: 'nda',              label: 'NDA',                  icon: <Shield className="w-5 h-5" />,     desc: 'Non-disclosure / confidentiality agreement', accent: 'green' },
   { id: 'court_paperwork',  label: 'Court / Small Claims', icon: <Gavel className="w-5 h-5" />,      desc: 'Small claims complaint or court filing', accent: 'red' },
+  { id: 'bill_of_sale',     label: 'Bill of Sale',         icon: <Tag className="w-5 h-5" />,         desc: 'Sell a vehicle, equipment, or any item', accent: 'cyan' },
+  { id: 'promissory_note',  label: 'Promissory Note',      icon: <HandCoins className="w-5 h-5" />,   desc: 'Formal loan or IOU agreement', accent: 'yellow' },
+  { id: 'receipt',          label: 'Receipt',              icon: <ScrollText className="w-5 h-5" />,  desc: 'Proof of payment received', accent: 'green' },
 ]
 
 const ACCENT_STYLES: Record<string, { border: string; text: string; bg: string; btn: string }> = {
@@ -112,14 +119,17 @@ function LineItemsEditor({ items, onAdd, onRemove, onUpdate }: {
 
 // Keyword rules to auto-detect doc type from a plain-English prompt
 const KEYWORD_MAP: [DocType, RegExp][] = [
-  ['invoice',          /\b(invoice|bill|billing|billing a client|charge|receipt for)\b/i],
+  ['invoice',          /\b(invoice|bill(ing)?( a client)?|charge( for)?|receipt for)\b/i],
   ['estimate',         /\b(estimate|quote|quotation|bid|price for|cost for|how much|proposal)\b/i],
-  ['service_contract', /\b(contract|agreement|service agreement|freelance|hire|engagement|scope of work|consulting)\b/i],
+  ['service_contract', /\b(contract|service agreement|freelance|hire|engagement|scope of work|consulting)\b/i],
   ['lease_agreement',  /\b(lease|leasing|residential lease|apartment|rental property|landlord|tenant)\b/i],
   ['rental_agreement', /\b(rent(ing|al)? (out|a )?(car|truck|vehicle|equipment|tool|item)|short.?term rental)\b/i],
-  ['demand_letter',    /\b(demand (letter|payment)|demand for|owe me|owes me|owed money|collect debt|threatening letter|haven.t paid)\b/i],
+  ['demand_letter',    /\b(demand (letter|payment)|demand for|owe me|owes me|owed money|collect debt|haven.t paid)\b/i],
   ['nda',              /\b(nda|non.?disclosure|confidential(ity)?|secret|proprietary|trade secret)\b/i],
   ['court_paperwork',  /\b(court|sue|suing|small claims|lawsuit|complaint|plaintiff|defendant|legal action|file a claim)\b/i],
+  ['bill_of_sale',     /\b(bill of sale|selling (a |my )?(car|truck|vehicle|item|equipment)|sold (a|my)|transfer ownership)\b/i],
+  ['promissory_note',  /\b(promissory note|loan|lend|lending|owe|iou|borrow(ing)?|repay)\b/i],
+  ['receipt',          /\b(receipt|proof of payment|paid for|payment received|acknowledge payment)\b/i],
 ]
 
 function detectDocType(text: string): DocType | null {
@@ -192,7 +202,7 @@ export default function CreatePage() {
       const res = await fetch('/api/create-document', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: selected, fields: buildFields() }),
+        body: JSON.stringify({ type: selected, fields: buildFields(), userPrompt: prompt }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Generation failed')
@@ -254,9 +264,22 @@ export default function CreatePage() {
           </div>
 
           {promptDone && selected && (
-            <div className="flex items-center justify-center gap-2 text-xs text-green-400">
-              <Sparkles className="w-3.5 h-3.5" />
-              Got it — selected <strong>{DOC_TYPES.find(d => d.id === selected)?.label}</strong> for you. Scroll down or pick a different type below.
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 text-xs text-green-400">
+                <Sparkles className="w-3.5 h-3.5" />
+                Detected: <strong>{DOC_TYPES.find(d => d.id === selected)?.label}</strong> — generating from your description or fill in details below.
+              </div>
+              <button
+                onClick={generate}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm text-white bg-brand-red hover:bg-red-500 transition-colors disabled:opacity-50"
+              >
+                {loading
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating…</>
+                  : <><Sparkles className="w-4 h-4" /> Quick Generate from description</>
+                }
+              </button>
+              <p className="text-xs text-brand-sub text-center">or fill in the form below for more control</p>
             </div>
           )}
           {promptDone && !selected && (
@@ -532,6 +555,86 @@ export default function CreatePage() {
                   <Field label="Basis of Claim" id="claim_basis" value={fields.claim_basis ?? ''} onChange={v => set('claim_basis', v)} placeholder="Breach of contract — mechanic failed to complete agreed repairs" rows={2} />
                   <Field label="Statement of Facts (what happened, in order)" id="facts" value={fields.facts ?? ''} onChange={v => set('facts', v)} placeholder="On [date] I brought my vehicle in for... The mechanic agreed to... They failed to..." rows={5} />
                   <Field label="Relief Requested" id="relief" value={fields.relief ?? ''} onChange={v => set('relief', v)} placeholder="$3,200 for cost of repairs, $200 towing fee, and court costs" rows={2} />
+                </Section>
+              </>
+            )}
+
+            {selected === 'bill_of_sale' && (
+              <>
+                <Section title="Seller">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Seller Name" id="seller_name" value={fields.seller_name ?? ''} onChange={v => set('seller_name', v)} placeholder="Mike Johnson" />
+                    <Field label="Seller Address" id="seller_address" value={fields.seller_address ?? ''} onChange={v => set('seller_address', v)} placeholder="123 Main St, City, ST 00000" />
+                    <Field label="Seller Phone / Email" id="seller_contact" value={fields.seller_contact ?? ''} onChange={v => set('seller_contact', v)} placeholder="(555) 000-0000" />
+                  </div>
+                </Section>
+                <Section title="Buyer">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Buyer Name" id="buyer_name" value={fields.buyer_name ?? ''} onChange={v => set('buyer_name', v)} placeholder="Sarah Lee" />
+                    <Field label="Buyer Address" id="buyer_address" value={fields.buyer_address ?? ''} onChange={v => set('buyer_address', v)} placeholder="456 Oak Ave, City, ST 00000" />
+                  </div>
+                </Section>
+                <Section title="Item Being Sold">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Item Description" id="item_description" value={fields.item_description ?? ''} onChange={v => set('item_description', v)} placeholder="2018 Honda Civic, VIN: 1HGC..." />
+                    <Field label="Condition" id="condition" value={fields.condition ?? ''} onChange={v => set('condition', v)} placeholder="Used — good condition" />
+                    <Field label="Sale Price ($)" id="sale_price" value={fields.sale_price ?? ''} onChange={v => set('sale_price', v)} placeholder="8500" />
+                    <Field label="Payment Method" id="payment_method" value={fields.payment_method ?? ''} onChange={v => set('payment_method', v)} placeholder="Cash / Cashier's Check / Zelle" />
+                    <Field label="Date of Sale" id="sale_date" value={fields.sale_date ?? ''} onChange={v => set('sale_date', v)} type="date" />
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {selected === 'promissory_note' && (
+              <>
+                <Section title="Borrower">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Borrower Name" id="borrower_name" value={fields.borrower_name ?? ''} onChange={v => set('borrower_name', v)} placeholder="John Smith" />
+                    <Field label="Borrower Address" id="borrower_address" value={fields.borrower_address ?? ''} onChange={v => set('borrower_address', v)} placeholder="123 Main St, City, ST" />
+                  </div>
+                </Section>
+                <Section title="Lender">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Lender Name" id="lender_name" value={fields.lender_name ?? ''} onChange={v => set('lender_name', v)} placeholder="Jane Doe" />
+                    <Field label="Lender Address" id="lender_address" value={fields.lender_address ?? ''} onChange={v => set('lender_address', v)} placeholder="456 Oak Ave, City, ST" />
+                  </div>
+                </Section>
+                <Section title="Loan Terms">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Principal Amount ($)" id="principal" value={fields.principal ?? ''} onChange={v => set('principal', v)} placeholder="5000" />
+                    <Field label="Interest Rate (% annual, or 0 for none)" id="interest_rate" value={fields.interest_rate ?? ''} onChange={v => set('interest_rate', v)} placeholder="0" />
+                    <Field label="Loan Date" id="loan_date" value={fields.loan_date ?? ''} onChange={v => set('loan_date', v)} type="date" />
+                    <Field label="Due Date / Repayment Schedule" id="repayment" value={fields.repayment ?? ''} onChange={v => set('repayment', v)} placeholder="Lump sum by 12/31/2026 / $500/month" />
+                    <Field label="Governing State" id="governing_state" value={fields.governing_state ?? ''} onChange={v => set('governing_state', v)} placeholder="Texas" />
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {selected === 'receipt' && (
+              <>
+                <Section title="Received By (Payee)">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Business / Your Name" id="payee_name" value={fields.payee_name ?? ''} onChange={v => set('payee_name', v)} placeholder="Ace Auto Repair" />
+                    <Field label="Phone / Email" id="payee_contact" value={fields.payee_contact ?? ''} onChange={v => set('payee_contact', v)} placeholder="(555) 000-0000" />
+                  </div>
+                </Section>
+                <Section title="Received From (Payer)">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Payer Name" id="payer_name" value={fields.payer_name ?? ''} onChange={v => set('payer_name', v)} placeholder="John Smith" />
+                    <Field label="Payer Address" id="payer_address" value={fields.payer_address ?? ''} onChange={v => set('payer_address', v)} placeholder="456 Oak Ave, City, ST" />
+                  </div>
+                </Section>
+                <Section title="Payment Details">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field label="Receipt #" id="receipt_number" value={fields.receipt_number ?? ''} onChange={v => set('receipt_number', v)} placeholder="REC-001" />
+                    <Field label="Date" id="receipt_date" value={fields.receipt_date ?? ''} onChange={v => set('receipt_date', v)} type="date" />
+                    <Field label="Amount Received ($)" id="amount" value={fields.amount ?? ''} onChange={v => set('amount', v)} placeholder="500" />
+                    <Field label="Payment Method" id="payment_method" value={fields.payment_method ?? ''} onChange={v => set('payment_method', v)} placeholder="Cash / Check / Card" />
+                    <Field label="Balance Remaining (or Paid in Full)" id="balance" value={fields.balance ?? ''} onChange={v => set('balance', v)} placeholder="Paid in Full / $200 remaining" />
+                  </div>
+                  <Field label="Description of What Was Paid For" id="description" value={fields.description ?? ''} onChange={v => set('description', v)} placeholder="Oil change, brake pad replacement, labor" rows={2} />
                 </Section>
               </>
             )}

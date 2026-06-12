@@ -15,6 +15,9 @@ type DocType =
   | 'demand_letter'
   | 'nda'
   | 'court_paperwork'
+  | 'bill_of_sale'
+  | 'promissory_note'
+  | 'receipt'
 
 const SYSTEM_PROMPT = `You are a professional legal document and business form generator. You create clean, complete, legally-sound documents in HTML format.
 
@@ -24,8 +27,9 @@ Rules:
 - Typography: font-family: Georgia, serif; color: #111; line-height: 1.6
 - Max width: 720px, margin: auto, padding: 40px
 - Headings: bold, 18px for title, 14px for sections
-- Tables: full width, border-collapse: collapse, thin 1px #ccc borders
+- Tables: full width, border-collapse: collapse, thin 1px #ccc borders, cell padding 8px
 - Signature blocks: two-column flex layout with underline lines
+- Extract and use ANY names, amounts, dates, addresses, or details mentioned in the user's description
 - Include all standard clauses appropriate to the document type
 - Dates shown as blanks (___________) when not provided
 - Dollar amounts formatted as $0.00
@@ -136,12 +140,50 @@ const TYPE_PROMPTS: Record<DocType, string> = {
 - Relief requested (specific dollar amount + any other remedy)
 - Certification / declaration under penalty of perjury
 - Plaintiff signature block and date`,
+
+  bill_of_sale: `Generate a bill of sale document. Include:
+- Title "BILL OF SALE"
+- Seller information (name, address, contact)
+- Buyer information (name, address, contact)
+- Description of item(s) being sold (make, model, year, serial/VIN if applicable)
+- Condition of item ("as-is" language or condition description)
+- Sale price and payment method
+- Date of sale
+- Warranties (none / "as-is" disclaimer OR specific warranty terms)
+- Both parties' acknowledgment of the transaction
+- Signature blocks for Seller and Buyer with date lines
+- Notary block (optional)`,
+
+  promissory_note: `Generate a promissory note / loan agreement. Include:
+- Title "PROMISSORY NOTE"
+- Borrower information (name, address)
+- Lender information (name, address)
+- Principal loan amount
+- Interest rate (or "0% / interest-free" if applicable)
+- Repayment schedule (lump sum / installments / on demand)
+- Due date or payment schedule table
+- Late payment penalty clause
+- Default clause (what happens if borrower doesn't pay)
+- Prepayment clause (borrower may pay early without penalty)
+- Governing law
+- Signature blocks for both parties with date lines`,
+
+  receipt: `Generate a professional payment receipt. Include:
+- Title "RECEIPT" or "PAYMENT RECEIPT"
+- Receipt number and date
+- Received FROM (payer name and address)
+- Received BY (payee/business name and address)
+- Itemized description of what was paid for
+- Amount received and payment method (cash/check/card/transfer)
+- Balance remaining (if partial payment) or "PAID IN FULL"
+- Thank you line
+- Authorized signature line`,
 }
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null)
-  if (!body?.type || !body?.fields) {
-    return NextResponse.json({ error: 'Missing type or fields' }, { status: 400 })
+  if (!body?.type) {
+    return NextResponse.json({ error: 'Missing type' }, { status: 400 })
   }
 
   const docType = body.type as DocType
@@ -150,15 +192,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unknown document type' }, { status: 400 })
   }
 
-  const fieldsText = Object.entries(body.fields as Record<string, string>)
+  const fields: Record<string, string> = body.fields ?? {}
+  const userPrompt: string = body.userPrompt ?? ''
+
+  const fieldsText = Object.entries(fields)
     .filter(([, v]) => v?.trim())
     .map(([k, v]) => `${k}: ${v}`)
     .join('\n')
 
-  const userMessage = `${typePrompt}
+  const promptSection = userPrompt.trim()
+    ? `\nUser's description (extract any names, amounts, dates, or details from this):\n"${userPrompt.trim()}"\n`
+    : ''
 
-Use these details provided by the user (fill in blanks for anything not provided):
-${fieldsText || '(No details provided — use placeholder values)'}
+  const userMessage = `${typePrompt}
+${promptSection}
+Structured fields provided:
+${fieldsText || '(none — rely on the description above, or use placeholder values)'}
 
 Generate the complete document HTML now.`
 
