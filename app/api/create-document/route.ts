@@ -30,6 +30,7 @@ Rules:
 - Tables: full width, border-collapse: collapse, thin 1px #ccc borders, cell padding 8px
 - Signature blocks: two-column flex layout with underline lines
 - Extract and use ANY names, amounts, dates, addresses, or details mentioned in the user's description
+- If a logo_url field is provided, render it as <img src="{url}" style="height:56px;max-width:180px;object-fit:contain;" alt="logo" /> at the top-left of the document header
 - Include all standard clauses appropriate to the document type
 - Dates shown as blanks (___________) when not provided
 - Dollar amounts formatted as $0.00

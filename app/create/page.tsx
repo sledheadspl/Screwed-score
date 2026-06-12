@@ -142,7 +142,7 @@ function detectDocType(text: string): DocType | null {
   return null
 }
 
-export default function CreatePage() {
+export default function CreatePage({ defaultType }: { defaultType?: DocType } = {}) {
   const [prompt, setPrompt] = useState('')
   const [promptDone, setPromptDone] = useState(false)
   const [selected, setSelected] = useState<DocType | null>(null)
@@ -156,13 +156,24 @@ export default function CreatePage() {
   const [profile, setProfile] = useState<BizProfile>({ name: '', address: '', phone: '', email: '', license: '' })
   const [showProfile, setShowProfile] = useState(false)
   const [profileDirty, setProfileDirty] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [sendEmail, setSendEmail] = useState('')
+  const [sendingEmail, setSendingEmail] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
+  const editableRef = useRef<HTMLDivElement>(null)
 
-  // Load persisted data on mount (client-only)
+  // Load persisted data on mount, apply defaultType if provided
   useEffect(() => {
     setHistory(loadHistory())
     setProfile(loadProfile())
+    if (defaultType) {
+      setSelected(defaultType)
+      setTimeout(() => applyProfile(defaultType), 0)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const set = (key: string, val: string) => setFields(f => ({ ...f, [key]: val }))
@@ -255,6 +266,36 @@ export default function CreatePage() {
       setError(e instanceof Error ? e.message : 'Something went wrong')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const saveEdit = () => {
+    if (editableRef.current) {
+      setHtml(editableRef.current.innerHTML)
+    }
+    setEditMode(false)
+  }
+
+  const handleSendEmail = async () => {
+    if (!html || !sendEmail.trim()) return
+    setSendingEmail(true)
+    setEmailError(null)
+    setEmailSent(false)
+    try {
+      const label = DOC_TYPES.find(d => d.id === selected)?.label ?? 'Document'
+      const res = await fetch('/api/send-document', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: sendEmail.trim(), html, label }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Send failed')
+      setEmailSent(true)
+      setSendEmail('')
+    } catch (e) {
+      setEmailError(e instanceof Error ? e.message : 'Send failed')
+    } finally {
+      setSendingEmail(false)
     }
   }
 
@@ -474,6 +515,7 @@ export default function CreatePage() {
                     <Field label="Email" id="from_email" value={fields.from_email ?? ''} onChange={v => set('from_email', v)} placeholder="you@email.com" />
                     <Field label="Phone" id="from_phone" value={fields.from_phone ?? ''} onChange={v => set('from_phone', v)} placeholder="(555) 000-0000" />
                     <Field label="Address" id="from_address" value={fields.from_address ?? ''} onChange={v => set('from_address', v)} placeholder="123 Main St, City, ST 00000" />
+                    <Field label="Logo URL (optional)" id="logo_url" value={fields.logo_url ?? ''} onChange={v => set('logo_url', v)} placeholder="https://yourdomain.com/logo.png" />
                   </div>
                 </Section>
                 <Section title="Client (Bill To)">
@@ -505,6 +547,7 @@ export default function CreatePage() {
                     <Field label="License #" id="license_number" value={fields.license_number ?? ''} onChange={v => set('license_number', v)} placeholder="LIC-123456" />
                     <Field label="Phone" id="from_phone" value={fields.from_phone ?? ''} onChange={v => set('from_phone', v)} placeholder="(555) 000-0000" />
                     <Field label="Email" id="from_email" value={fields.from_email ?? ''} onChange={v => set('from_email', v)} placeholder="you@email.com" />
+                    <Field label="Logo URL (optional)" id="logo_url" value={fields.logo_url ?? ''} onChange={v => set('logo_url', v)} placeholder="https://yourdomain.com/logo.png" />
                   </div>
                 </Section>
                 <Section title="Prepared For">
@@ -802,50 +845,128 @@ export default function CreatePage() {
         {/* Preview */}
         {html && (
           <div ref={previewRef} className="space-y-4">
-            <div className="flex items-center justify-between">
+
+            {/* Toolbar */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-400" />
                 <span className="font-bold text-brand-text">Document Ready</span>
+                {editMode && <span className="text-xs text-yellow-400 border border-yellow-500/30 rounded px-2 py-0.5">Editing</span>}
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => { setHtml(null); setSelected(null) }}
-                  className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors"
-                >
+              <div className="flex flex-wrap items-center gap-2">
+                <button onClick={() => { setHtml(null); setSelected(null); setEditMode(false) }}
+                  className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
                   <RotateCcw className="w-3.5 h-3.5" /> Start Over
                 </button>
-                <button
-                  onClick={generate}
-                  className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" /> Regenerate
-                </button>
-                <button
-                  onClick={() => printDoc(html!)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand-red hover:bg-red-500 rounded-lg px-4 py-1.5 transition-colors"
-                >
-                  <Download className="w-3.5 h-3.5" /> Print / Save PDF
-                </button>
+                {!editMode ? (
+                  <>
+                    <button onClick={() => setEditMode(true)}
+                      className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
+                      ✏️ Edit
+                    </button>
+                    <button onClick={generate}
+                      className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
+                      <RotateCcw className="w-3.5 h-3.5" /> Regenerate
+                    </button>
+                    <button onClick={() => printDoc(html!)}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand-red hover:bg-red-500 rounded-lg px-4 py-1.5 transition-colors">
+                      <Download className="w-3.5 h-3.5" /> Print / Save PDF
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={saveEdit}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-white bg-green-600 hover:bg-green-500 rounded-lg px-4 py-1.5 transition-colors">
+                    <CheckCircle className="w-3.5 h-3.5" /> Done Editing
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* White paper preview on dark background */}
+            {/* White paper preview — editable or static */}
             <div className="rounded-2xl border border-brand-border overflow-hidden shadow-2xl">
+              {editMode && (
+                <div className="bg-yellow-500/10 border-b border-yellow-500/20 px-4 py-2 text-xs text-yellow-400">
+                  Click anywhere in the document to edit text. Click <strong>Done Editing</strong> when finished.
+                </div>
+              )}
               <div className="bg-[#f5f5f0] min-h-[500px] p-8">
-                <div
-                  dangerouslySetInnerHTML={{ __html: html }}
-                  className="max-w-[720px] mx-auto"
-                />
+                {editMode ? (
+                  <div
+                    ref={editableRef}
+                    contentEditable
+                    suppressContentEditableWarning
+                    dangerouslySetInnerHTML={{ __html: html }}
+                    className="max-w-[720px] mx-auto outline-none"
+                    style={{ cursor: 'text' }}
+                  />
+                ) : (
+                  <div dangerouslySetInnerHTML={{ __html: html }} className="max-w-[720px] mx-auto" />
+                )}
               </div>
             </div>
+
+            {/* Email delivery */}
+            {!editMode && (
+              <div className="rounded-xl border border-brand-border bg-brand-surface p-4 space-y-3">
+                <p className="text-xs font-bold text-brand-sub uppercase tracking-widest">Send via Email</p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={sendEmail}
+                    onChange={e => { setSendEmail(e.target.value); setEmailSent(false); setEmailError(null) }}
+                    onKeyDown={e => e.key === 'Enter' && handleSendEmail()}
+                    placeholder="recipient@email.com"
+                    className="flex-1 bg-brand-surface2 border border-brand-border rounded-lg px-3 py-2 text-sm text-brand-text placeholder:text-brand-sub focus:outline-none focus:border-brand-sub/60 transition-colors"
+                  />
+                  <button
+                    onClick={handleSendEmail}
+                    disabled={sendingEmail || !sendEmail.trim()}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg px-4 py-2 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {sendingEmail ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
+                    {sendingEmail ? 'Sending…' : 'Send'}
+                  </button>
+                </div>
+                {emailSent && <p className="text-xs text-green-400">✓ Document sent successfully.</p>}
+                {emailError && <p className="text-xs text-red-400">{emailError}</p>}
+              </div>
+            )}
 
             <p className="text-center text-xs text-brand-sub">
-              Click <strong className="text-brand-text">Print / Save PDF</strong> → choose &quot;Save as PDF&quot; in your print dialog.
-              Want to scan this document for issues?{' '}
+              <strong className="text-brand-text">Print / Save PDF</strong> → choose &quot;Save as PDF&quot; in your print dialog.{' '}
+              Want to check this document for issues?{' '}
               <a href="/" className="text-brand-red hover:underline">Run it through Screwed Score →</a>
             </p>
           </div>
         )}
+
+        {/* SEO internal links — crawlable quick links to all doc type pages */}
+        <div className="border-t border-brand-border/40 pt-8 pb-4">
+          <p className="text-xs font-bold text-brand-sub uppercase tracking-widest mb-4">Free Document Generators</p>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { slug: 'invoice',          label: 'Invoice Generator' },
+              { slug: 'estimate',         label: 'Job Estimate Generator' },
+              { slug: 'service-contract', label: 'Service Contract' },
+              { slug: 'lease-agreement',  label: 'Lease Agreement' },
+              { slug: 'rental-agreement', label: 'Rental Agreement' },
+              { slug: 'demand-letter',    label: 'Demand Letter' },
+              { slug: 'nda',              label: 'NDA Generator' },
+              { slug: 'court-paperwork',  label: 'Small Claims Form' },
+              { slug: 'bill-of-sale',     label: 'Bill of Sale' },
+              { slug: 'promissory-note',  label: 'Promissory Note' },
+              { slug: 'receipt',          label: 'Receipt Generator' },
+            ].map(({ slug, label }) => (
+              <a
+                key={slug}
+                href={`/create/${slug}`}
+                className="text-xs text-brand-sub hover:text-brand-text border border-brand-border hover:border-brand-sub/40 rounded-lg px-3 py-1.5 transition-colors hover:bg-brand-muted"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   )

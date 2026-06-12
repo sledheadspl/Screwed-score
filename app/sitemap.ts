@@ -10,6 +10,20 @@ const ANALYZE_TYPES = [
   'brand-deal',
 ]
 
+const CREATE_TYPES = [
+  'invoice',
+  'estimate',
+  'service-contract',
+  'lease-agreement',
+  'rental-agreement',
+  'demand-letter',
+  'nda',
+  'court-paperwork',
+  'bill-of-sale',
+  'promissory-note',
+  'receipt',
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://www.screwedscore.com'
 
@@ -19,6 +33,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.85,
   }))
+
+  const createPages: MetadataRoute.Sitemap = [
+    { url: `${base}/create`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
+    ...CREATE_TYPES.map(type => ({
+      url: `${base}/create/${type}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+    })),
+  ]
 
   const blogPosts: MetadataRoute.Sitemap = getAllPosts().map(post => ({
     url: `${base}/blog/${post.slug}`,
@@ -107,6 +131,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     ...analyzePages,
+    ...createPages,
     ...blogPosts,
   ]
 }
