@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import {
   FileText, Receipt, Home, Key, AlertCircle, Shield,
   Gavel, Plus, Trash2, Download, RotateCcw,
   Loader2, CheckCircle, DollarSign, Sparkles, ArrowRight,
-  Tag, HandCoins, ScrollText,
+  Tag, HandCoins, ScrollText, History, X, Building2, Save,
 } from 'lucide-react'
+import { saveToHistory, loadHistory, deleteFromHistory, type DocHistoryEntry } from '@/lib/docHistory'
+import { loadProfile, saveProfile, type BizProfile } from '@/lib/bizProfile'
 
 type DocType =
   | 'invoice'
@@ -149,10 +151,47 @@ export default function CreatePage() {
   const [loading, setLoading] = useState(false)
   const [html, setHtml] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [history, setHistory] = useState<DocHistoryEntry[]>([])
+  const [showHistory, setShowHistory] = useState(false)
+  const [profile, setProfile] = useState<BizProfile>({ name: '', address: '', phone: '', email: '', license: '' })
+  const [showProfile, setShowProfile] = useState(false)
+  const [profileDirty, setProfileDirty] = useState(false)
   const previewRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
 
+  // Load persisted data on mount (client-only)
+  useEffect(() => {
+    setHistory(loadHistory())
+    setProfile(loadProfile())
+  }, [])
+
   const set = (key: string, val: string) => setFields(f => ({ ...f, [key]: val }))
+
+  const updateProfile = (k: keyof BizProfile, v: string) => {
+    setProfile(p => ({ ...p, [k]: v }))
+    setProfileDirty(true)
+  }
+
+  const commitProfile = () => {
+    saveProfile(profile)
+    setProfileDirty(false)
+  }
+
+  // Auto-fill business fields from saved profile when a doc type is selected
+  const applyProfile = useCallback((id: DocType) => {
+    const p = loadProfile()
+    if (!p.name) return
+    const map: Partial<Record<DocType, Record<string, string>>> = {
+      invoice:          { from_name: p.name, from_address: p.address, from_phone: p.phone, from_email: p.email },
+      estimate:         { from_name: p.name, from_phone: p.phone, from_email: p.email, license_number: p.license },
+      service_contract: { provider_name: p.name, provider_address: p.address },
+      lease_agreement:  { landlord_name: p.name, landlord_address: p.address, landlord_phone: p.phone, landlord_email: p.email },
+      bill_of_sale:     { seller_name: p.name, seller_address: p.address, seller_contact: p.phone || p.email },
+      receipt:          { payee_name: p.name, payee_contact: p.phone || p.email },
+    }
+    const prefill = map[id]
+    if (prefill) setFields(f => ({ ...prefill, ...f }))
+  }, [])
 
   const handlePromptSubmit = useCallback(() => {
     if (!prompt.trim()) return
@@ -164,9 +203,9 @@ export default function CreatePage() {
       setHtml(null)
       setError(null)
       setLineItems([{ description: '', qty: '1', price: '' }])
-      setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150)
+      setTimeout(() => { applyProfile(detected); formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, 150)
     }
-  }, [prompt])
+  }, [prompt, applyProfile])
 
   const addLine = () => setLineItems(l => [...l, { description: '', qty: '1', price: '' }])
   const removeLine = (i: number) => setLineItems(l => l.filter((_, idx) => idx !== i))
@@ -179,6 +218,7 @@ export default function CreatePage() {
     setHtml(null)
     setError(null)
     setLineItems([{ description: '', qty: '1', price: '' }])
+    setTimeout(() => applyProfile(id), 0)
   }
 
   const buildFields = () => {
@@ -207,6 +247,9 @@ export default function CreatePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Generation failed')
       setHtml(data.html)
+      const label = DOC_TYPES.find(d => d.id === selected)?.label ?? selected
+      const entry = saveToHistory({ type: selected, label, html: data.html, createdAt: Date.now() })
+      setHistory(h => [entry, ...h].slice(0, 10))
       setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong')
@@ -215,28 +258,122 @@ export default function CreatePage() {
     }
   }
 
-  const handlePrint = () => {
+  const docMeta = DOC_TYPES.find(d => d.id === selected)
+  const accent = docMeta ? ACCENT_STYLES[docMeta.accent] : ACCENT_STYLES.cyan
+
+  const printDoc = (docHtml: string) => {
     const win = window.open('', '_blank')
     if (!win) return
     win.document.write(`<!DOCTYPE html><html><head><title>Document</title><style>
       body { margin: 0; padding: 0; font-family: Georgia, serif; }
       @media print { @page { margin: 0.75in; } }
-    </style></head><body>${html}</body></html>`)
+    </style></head><body>${docHtml}</body></html>`)
     win.document.close()
     win.focus()
     setTimeout(() => win.print(), 300)
   }
 
-  const docMeta = DOC_TYPES.find(d => d.id === selected)
-  const accent = docMeta ? ACCENT_STYLES[docMeta.accent] : ACCENT_STYLES.cyan
-
   return (
     <main className="min-h-screen bg-brand-bg">
+
+      {/* Business Profile drawer */}
+      {showProfile && (
+        <div className="fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 bg-black/60 backdrop-blur-sm" onClick={() => setShowProfile(false)}>
+          <div className="w-full max-w-sm bg-brand-surface border border-brand-border rounded-2xl shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border/60">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-cyan-400" />
+                <span className="font-black text-brand-text text-sm">My Business Profile</span>
+              </div>
+              <button onClick={() => setShowProfile(false)} className="p-1.5 text-brand-sub hover:text-brand-text rounded-lg hover:bg-brand-muted transition-colors"><X className="w-4 h-4" /></button>
+            </div>
+            <div className="p-5 space-y-3">
+              <p className="text-xs text-brand-sub">Save your info once — auto-fills invoices, estimates, and receipts.</p>
+              {(['name', 'address', 'phone', 'email', 'license'] as (keyof BizProfile)[]).map(k => (
+                <div key={k}>
+                  <label className="block text-xs font-semibold text-brand-sub uppercase tracking-wider mb-1">{k === 'license' ? 'License #' : k.charAt(0).toUpperCase() + k.slice(1)}</label>
+                  <input
+                    value={profile[k]}
+                    onChange={e => updateProfile(k, e.target.value)}
+                    placeholder={k === 'name' ? 'Ace Auto Repair' : k === 'address' ? '123 Main St, City, ST' : k === 'phone' ? '(555) 000-0000' : k === 'email' ? 'you@email.com' : 'LIC-123456'}
+                    className="w-full bg-brand-surface2 border border-brand-border rounded-lg px-3 py-2 text-sm text-brand-text placeholder:text-brand-sub focus:outline-none focus:border-brand-sub/60 transition-colors"
+                  />
+                </div>
+              ))}
+              <button
+                onClick={() => { commitProfile(); setShowProfile(false) }}
+                disabled={!profileDirty}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-bold text-sm text-white bg-cyan-600 hover:bg-cyan-500 transition-colors disabled:opacity-40"
+              >
+                <Save className="w-3.5 h-3.5" /> Save Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* History drawer */}
+      {showHistory && (
+        <div className="fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 bg-black/60 backdrop-blur-sm" onClick={() => setShowHistory(false)}>
+          <div className="w-full max-w-sm bg-brand-surface border border-brand-border rounded-2xl shadow-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border/60 shrink-0">
+              <div className="flex items-center gap-2">
+                <History className="w-4 h-4 text-yellow-400" />
+                <span className="font-black text-brand-text text-sm">Recent Documents</span>
+                {history.length > 0 && <span className="text-xs text-brand-sub">({history.length})</span>}
+              </div>
+              <button onClick={() => setShowHistory(false)} className="p-1.5 text-brand-sub hover:text-brand-text rounded-lg hover:bg-brand-muted transition-colors"><X className="w-4 h-4" /></button>
+            </div>
+            <div className="overflow-y-auto flex-1 p-3 space-y-2">
+              {history.length === 0 && (
+                <p className="text-xs text-brand-sub text-center py-8">No documents yet — generate one and it&apos;ll appear here.</p>
+              )}
+              {history.map(entry => (
+                <div key={entry.id} className="group flex items-start gap-3 p-3 rounded-xl border border-brand-border hover:border-brand-sub/40 hover:bg-brand-muted transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-brand-text truncate">{entry.label}</p>
+                    <p className="text-xs text-brand-sub truncate mt-0.5">{entry.preview}</p>
+                    <p className="text-[10px] text-brand-sub/60 mt-1">{new Date(entry.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => { setHtml(entry.html); setShowHistory(false); setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth' }), 100) }}
+                      className="p-1.5 text-brand-sub hover:text-brand-text rounded hover:bg-brand-surface2 transition-colors"
+                      title="View"
+                    ><FileText className="w-3.5 h-3.5" /></button>
+                    <button
+                      onClick={() => printDoc(entry.html)}
+                      className="p-1.5 text-brand-sub hover:text-brand-text rounded hover:bg-brand-surface2 transition-colors"
+                      title="Print"
+                    ><Download className="w-3.5 h-3.5" /></button>
+                    <button
+                      onClick={() => { deleteFromHistory(entry.id); setHistory(h => h.filter(e => e.id !== entry.id)) }}
+                      className="p-1.5 text-brand-sub hover:text-red-400 rounded hover:bg-brand-surface2 transition-colors"
+                      title="Delete"
+                    ><X className="w-3.5 h-3.5" /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero + Prompt */}
       <div className="border-b border-brand-border/40 bg-brand-surface/40">
         <div className="max-w-2xl mx-auto px-5 sm:px-8 py-14 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-sub uppercase tracking-widest border border-brand-border rounded-full px-3 py-1">
-            <FileText className="w-3 h-3" /> Document Creator
+          <div className="flex items-center justify-center gap-2">
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-sub uppercase tracking-widest border border-brand-border rounded-full px-3 py-1">
+              <FileText className="w-3 h-3" /> Document Creator
+            </div>
+            <button onClick={() => setShowProfile(true)} className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-sub uppercase tracking-widest border border-brand-border rounded-full px-3 py-1 hover:border-cyan-500/40 hover:text-cyan-400 transition-colors">
+              <Building2 className="w-3 h-3" /> My Biz
+            </button>
+            {history.length > 0 && (
+              <button onClick={() => setShowHistory(true)} className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-sub uppercase tracking-widest border border-brand-border rounded-full px-3 py-1 hover:border-yellow-500/40 hover:text-yellow-400 transition-colors">
+                <History className="w-3 h-3" /> History ({history.length})
+              </button>
+            )}
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
             What do you need to create?
@@ -684,7 +821,7 @@ export default function CreatePage() {
                   <RotateCcw className="w-3.5 h-3.5" /> Regenerate
                 </button>
                 <button
-                  onClick={handlePrint}
+                  onClick={() => printDoc(html!)}
                   className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand-red hover:bg-red-500 rounded-lg px-4 py-1.5 transition-colors"
                 >
                   <Download className="w-3.5 h-3.5" /> Print / Save PDF
