@@ -32,6 +32,7 @@ const BenchmarkCard      = dynamic(() => import('@/components/BenchmarkCard').th
 const OutcomeReport      = dynamic(() => import('@/components/OutcomeReport').then(m => m.OutcomeReport),           { ssr: false })
 const FightBackKit       = dynamic(() => import('@/components/FightBackKit').then(m => m.FightBackKit),             { ssr: false })
 const HumanAuditCard     = dynamic(() => import('@/components/HumanAuditCard').then(m => m.HumanAuditCard),         { ssr: false })
+const FixDocument        = dynamic(() => import('@/components/FixDocument').then(m => m.FixDocument),               { ssr: false })
 const ExitIntentPopup    = dynamic(() => import('@/components/ExitIntentPopup').then(m => m.ExitIntentPopup),       { ssr: false })
 const ScrewedScoreGame   = dynamic(() => import('@/components/ScrewedScoreGame').then(m => m.ScrewedScoreGame),     { ssr: false })
 
@@ -1027,6 +1028,7 @@ export default function HomePage() {
               </div>
             )}
 
+{!isSample && <FixDocument result={state.result} />}
 {!isSample && <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />}
 
             {!isSample && (

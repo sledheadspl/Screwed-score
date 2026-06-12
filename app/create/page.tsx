@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import {
   FileText, Receipt, Home, Key, AlertCircle, Shield,
   Gavel, Plus, Trash2, Download, RotateCcw,
-  Loader2, CheckCircle, DollarSign,
+  Loader2, CheckCircle, DollarSign, Sparkles, ArrowRight,
 } from 'lucide-react'
 
 type DocType =
@@ -110,7 +110,29 @@ function LineItemsEditor({ items, onAdd, onRemove, onUpdate }: {
   )
 }
 
+// Keyword rules to auto-detect doc type from a plain-English prompt
+const KEYWORD_MAP: [DocType, RegExp][] = [
+  ['invoice',          /\b(invoice|bill|billing|billing a client|charge|receipt for)\b/i],
+  ['estimate',         /\b(estimate|quote|quotation|bid|price for|cost for|how much|proposal)\b/i],
+  ['service_contract', /\b(contract|agreement|service agreement|freelance|hire|engagement|scope of work|consulting)\b/i],
+  ['lease_agreement',  /\b(lease|leasing|residential lease|apartment|rental property|landlord|tenant)\b/i],
+  ['rental_agreement', /\b(rent(ing|al)? (out|a )?(car|truck|vehicle|equipment|tool|item)|short.?term rental)\b/i],
+  ['demand_letter',    /\b(demand (letter|payment)|demand for|owe me|owes me|owed money|collect debt|threatening letter|haven.t paid)\b/i],
+  ['nda',              /\b(nda|non.?disclosure|confidential(ity)?|secret|proprietary|trade secret)\b/i],
+  ['court_paperwork',  /\b(court|sue|suing|small claims|lawsuit|complaint|plaintiff|defendant|legal action|file a claim)\b/i],
+]
+
+function detectDocType(text: string): DocType | null {
+  const lower = text.toLowerCase()
+  for (const [type, re] of KEYWORD_MAP) {
+    if (re.test(lower)) return type
+  }
+  return null
+}
+
 export default function CreatePage() {
+  const [prompt, setPrompt] = useState('')
+  const [promptDone, setPromptDone] = useState(false)
   const [selected, setSelected] = useState<DocType | null>(null)
   const [fields, setFields] = useState<Record<string, string>>({})
   const [lineItems, setLineItems] = useState<LineItem[]>([{ description: '', qty: '1', price: '' }])
@@ -118,8 +140,23 @@ export default function CreatePage() {
   const [html, setHtml] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const previewRef = useRef<HTMLDivElement>(null)
+  const formRef = useRef<HTMLDivElement>(null)
 
   const set = (key: string, val: string) => setFields(f => ({ ...f, [key]: val }))
+
+  const handlePromptSubmit = useCallback(() => {
+    if (!prompt.trim()) return
+    setPromptDone(true)
+    const detected = detectDocType(prompt)
+    if (detected) {
+      setSelected(detected)
+      setFields({})
+      setHtml(null)
+      setError(null)
+      setLineItems([{ description: '', qty: '1', price: '' }])
+      setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150)
+    }
+  }, [prompt])
 
   const addLine = () => setLineItems(l => [...l, { description: '', qty: '1', price: '' }])
   const removeLine = (i: number) => setLineItems(l => l.filter((_, idx) => idx !== i))
@@ -185,18 +222,48 @@ export default function CreatePage() {
 
   return (
     <main className="min-h-screen bg-brand-bg">
-      {/* Hero */}
+      {/* Hero + Prompt */}
       <div className="border-b border-brand-border/40 bg-brand-surface/40">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-12 text-center">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-sub uppercase tracking-widest border border-brand-border rounded-full px-3 py-1 mb-5">
+        <div className="max-w-2xl mx-auto px-5 sm:px-8 py-14 text-center space-y-6">
+          <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-sub uppercase tracking-widest border border-brand-border rounded-full px-3 py-1">
             <FileText className="w-3 h-3" /> Document Creator
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight mb-3">
-            Create Professional Documents
+          <h1 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+            What do you need to create?
           </h1>
-          <p className="text-brand-sub max-w-xl mx-auto text-sm leading-relaxed">
-            Invoices, contracts, leases, demand letters, NDAs, court paperwork — AI-generated, print-ready in seconds.
+          <p className="text-brand-sub text-sm">
+            Describe it in plain English — we&apos;ll figure out the rest.
           </p>
+
+          {/* Prompt input */}
+          <div className="relative">
+            <input
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handlePromptSubmit()}
+              placeholder="e.g. I need to invoice a client for auto repair work…"
+              className="w-full bg-brand-surface border border-brand-border rounded-xl px-5 py-4 pr-14 text-sm text-brand-text placeholder:text-brand-sub focus:outline-none focus:border-brand-sub/60 transition-colors"
+            />
+            <button
+              onClick={handlePromptSubmit}
+              disabled={!prompt.trim()}
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-lg bg-brand-red hover:bg-red-500 text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {promptDone && selected && (
+            <div className="flex items-center justify-center gap-2 text-xs text-green-400">
+              <Sparkles className="w-3.5 h-3.5" />
+              Got it — selected <strong>{DOC_TYPES.find(d => d.id === selected)?.label}</strong> for you. Scroll down or pick a different type below.
+            </div>
+          )}
+          {promptDone && !selected && (
+            <p className="text-xs text-brand-sub">
+              Not sure — pick a type below and we&apos;ll handle the rest.
+            </p>
+          )}
         </div>
       </div>
 
@@ -204,7 +271,9 @@ export default function CreatePage() {
 
         {/* Document type selector */}
         <div>
-          <p className="text-xs font-bold text-brand-sub uppercase tracking-widest mb-4">Choose Document Type</p>
+          <p className="text-xs font-bold text-brand-sub uppercase tracking-widest mb-4">
+            {promptDone ? 'Or choose a different type' : 'Choose Document Type'}
+          </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {DOC_TYPES.map(dt => {
               const a = ACCENT_STYLES[dt.accent]
@@ -230,7 +299,7 @@ export default function CreatePage() {
 
         {/* Form */}
         {selected && (
-          <div className={`rounded-2xl border ${accent.border} bg-brand-surface p-6 space-y-6`}>
+          <div ref={formRef} className={`rounded-2xl border ${accent.border} bg-brand-surface p-6 space-y-6`}>
             <div className="flex items-center gap-2">
               <span className={accent.text}>{docMeta?.icon}</span>
               <h2 className="font-black text-brand-text">{docMeta?.label}</h2>
