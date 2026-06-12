@@ -12,8 +12,9 @@ import { supabase } from '@/lib/supabase'
 // record of bad businesses, share-bait, SEO long-tail. Everything else
 // still works at its URL but is hidden from the nav.
 const NAV_LINKS = [
-  { label: 'Screwed Score',  href: '/',      exact: true,  accent: 'red' },
-  { label: 'Wall of Shame',  href: '/shame', exact: false, accent: 'red' },
+  { label: 'Screwed Score',  href: '/',       exact: true,  accent: 'red' },
+  { label: 'Create Docs',    href: '/create', exact: false, accent: 'cyan' },
+  { label: 'Wall of Shame',  href: '/shame',  exact: false, accent: 'red' },
 ] as const
 
 type Accent = 'red' | 'cyan' | 'gold' | 'green'
