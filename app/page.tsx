@@ -196,7 +196,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is my document kept private?',
-    a: 'Your document text is processed and then discarded. We do not store, sell, or use your documents to train AI models. Your result is saved under a private UUID link — only people you share it with can see it.',
+    a: 'Yes — completely. Your file is read once by AI and then permanently deleted from our servers. We never store, sell, share, or use your documents to train AI. Your result is saved under a private UUID link — only people you explicitly share it with can see it. No personal info is required to scan.',
   },
   {
     q: 'How accurate is the AI?',
@@ -398,22 +398,23 @@ export default function HomePage() {
             )}
 
             {/* ════ HERO ══════════════════════════════════════════════════ */}
-            {/* Hero shrunk on mobile so the upload zone is visible above the fold:
-                min-h reduced from 88vh, padding tightened, headline floor smaller. */}
-            <section className="relative flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[78vh] px-4 pt-10 sm:pt-16 pb-10 sm:pb-14 text-center overflow-hidden">
+            <section className="relative flex flex-col items-center justify-center min-h-screen sm:min-h-[90vh] px-4 pt-20 sm:pt-24 pb-16 text-center overflow-hidden">
 
-              {/* Overline */}
-              <p className="animate-fade-up text-[11px] font-bold text-brand-sub/45 uppercase tracking-[0.25em] mb-4 sm:mb-6">
-                Live AI · Free · No account required
-              </p>
+              {/* Pill badge overline */}
+              <div className="animate-fade-up mb-8 sm:mb-10">
+                <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-semibold" style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.18)', color: 'rgba(255,140,120,0.9)', letterSpacing: '0.02em' }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse shrink-0" />
+                  Free · No account required · AI-powered results in 20 seconds
+                </span>
+              </div>
 
               {/* Headline */}
               <div className="animate-fade-up delay-100 mb-4 sm:mb-6">
-                <p className="font-black text-brand-text/55 tracking-tight" style={{ fontSize: 'clamp(18px, 3vw, 32px)', lineHeight: 1.1 }}>
+                <p className="font-black text-brand-text/80 tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 36px)', lineHeight: 1.1 }}>
                   Are you being
                 </p>
-                <h1 className="font-black tracking-tighter" style={{
-                  fontSize: 'clamp(56px, 13vw, 128px)',
+                <h1 className="font-display font-black tracking-tighter" style={{
+                  fontSize: 'clamp(68px, 15vw, 148px)',
                   lineHeight: 0.88,
                   background: 'linear-gradient(135deg, #ff9080 0%, #ff3b30 45%, #bf1a0e 100%)',
                   WebkitBackgroundClip: 'text',
@@ -425,25 +426,12 @@ export default function HomePage() {
                 </h1>
               </div>
 
-              {/* Above-the-fold CTA — jumps to upload zone for visitors who land
-                  on mobile and don't immediately see the dropzone. */}
-              <a
-                href="#upload"
-                className="animate-fade-up delay-150 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-black text-white transition-all hover:opacity-90 active:scale-95 mb-5 sm:hidden"
-                style={{
-                  background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
-                  boxShadow: '0 0 30px rgba(255,59,48,0.4)',
-                }}
-              >
-                Scan a bill — free ↓
-              </a>
-
               {/* Subhead */}
-              <p className="animate-fade-up delay-200 text-base sm:text-xl text-brand-sub/75 max-w-lg mx-auto leading-relaxed mb-2">
-                The average American overpays <span className="text-brand-text font-bold">$1,300/year</span> on bills they never read.
+              <p className="animate-fade-up delay-200 text-lg sm:text-xl text-brand-text/90 max-w-lg mx-auto leading-relaxed mb-2">
+                The free AI checker for bills, contracts &amp; invoices.
               </p>
-              <p className="animate-fade-up delay-300 text-sm text-brand-sub/45 mb-6 sm:mb-8 max-w-md mx-auto">
-                Upload any document. AI flags overcharges, hidden fees, and red flags in 20 seconds.
+              <p className="animate-fade-up delay-200 text-base sm:text-lg text-brand-sub/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-7">
+                Upload one and AI flags overcharges, hidden fees, and shady clauses in about 20 seconds.
               </p>
 
               {/* Upload zone */}
@@ -478,16 +466,13 @@ export default function HomePage() {
                 </button>
               </div>
 
-              {/* Trust row */}
-              <div className="animate-fade-up delay-400 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-brand-sub/70 mb-6">
-                {['No account needed', 'No credit card', 'Results in ~20s', 'Files deleted after scan'].map(t => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3 h-3 text-green-500/60" /> {t}
-                  </span>
-                ))}
-                <span className="flex items-center gap-1.5 text-blue-400/60">
-                  <span>🌐</span> 12 languages
-                </span>
+              {/* Privacy inline disclosure */}
+              <div className="animate-fade-up delay-380 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-brand-sub/80 mt-1 mb-6">
+                <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-green-500/70" /> Your file is read once by AI, then deleted — never stored, sold, or used for training</span>
+                <span className="text-brand-sub/30 hidden sm:inline">·</span>
+                <span>No account · No credit card</span>
+                <span className="text-brand-sub/30 hidden sm:inline">·</span>
+                <a href="/privacy" className="underline underline-offset-2 hover:text-brand-text transition-colors">How we handle your data →</a>
               </div>
 
               {/* Social proof */}
@@ -513,7 +498,7 @@ export default function HomePage() {
             <LiveTicker />
 
             {/* ════ STATS BAND ════════════════════════════════════════════ */}
-            <section className="animate-fade-up border-t border-b border-brand-border/30 py-14">
+            <section className="animate-fade-up border-t border-b border-brand-border/30 py-16 sm:py-20">
               <div className="max-w-6xl mx-auto px-5 sm:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
@@ -524,10 +509,10 @@ export default function HomePage() {
                   ].map(({ value, label, color }, idx) => (
                     <div key={label} className={`px-4 sm:px-8 py-6 text-center ${idx > 0 ? 'stat-divider' : ''}`}>
                       <p className="font-black tracking-tighter leading-none mb-2.5"
-                        style={{ fontSize: 'clamp(40px, 6vw, 72px)', color }}>
+                        style={{ fontSize: 'clamp(44px, 7vw, 80px)', color }}>
                         {value}
                       </p>
-                      <p className="text-[11px] text-brand-sub/50 uppercase tracking-widest leading-tight">{label}</p>
+                      <p className="text-[12px] text-brand-sub/65 uppercase tracking-widest leading-tight">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -540,13 +525,13 @@ export default function HomePage() {
             </section>
 
             {/* ════ EDITORIAL STATEMENT ═══════════════════════════════════ */}
-            <section className="animate-fade-up max-w-4xl mx-auto px-5 sm:px-8 py-24 text-center">
-              <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em] mb-8">Why this exists</p>
-              <p className="font-black tracking-tighter text-brand-text leading-[1.05]" style={{ fontSize: 'clamp(28px, 5vw, 52px)' }}>
+            <section className="animate-fade-up max-w-4xl mx-auto px-5 sm:px-8 py-28 sm:py-36 text-center">
+              <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em] mb-8">Why this exists</p>
+              <p className="font-black tracking-tighter text-brand-text leading-[1.08]" style={{ fontSize: 'clamp(30px, 5.5vw, 56px)' }}>
                 Mechanics. Hospitals. Contractors.<br />
                 Phone companies.
               </p>
-              <p className="font-black tracking-tighter leading-[1.05] mt-2" style={{ fontSize: 'clamp(28px, 5vw, 52px)', color: 'rgba(242,242,242,0.25)' }}>
+              <p className="font-black tracking-tighter leading-[1.08] mt-2" style={{ fontSize: 'clamp(30px, 5.5vw, 56px)', color: 'rgba(242,242,242,0.5)' }}>
                 They all count on you never reading the bill.
               </p>
               <p className="text-brand-sub/60 text-lg mt-10 max-w-xl mx-auto leading-relaxed">
@@ -557,40 +542,41 @@ export default function HomePage() {
             {/* ════ HOW IT WORKS ══════════════════════════════════════════ */}
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-14">
               <div className="text-center space-y-2">
-                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">How it works</p>
+                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">How it works</p>
                 <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Three steps. Twenty seconds.</h2>
               </div>
 
-              <div className="grid sm:grid-cols-3 gap-0">
+              <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
                 {[
                   {
-                    n: '01', icon: FileText, color: '#60a5fa',
+                    n: '1', icon: FileText, color: '#60a5fa',
                     title: 'Upload your document',
                     desc: 'Drag & drop any bill, invoice, contract, or photo. PDF, Word, image — we handle it all.',
                   },
                   {
-                    n: '02', icon: Sparkles, color: '#f87171',
+                    n: '2', icon: Sparkles, color: '#f87171',
                     title: 'AI scans for red flags',
                     desc: 'Overcharges, hidden fees, duplicate billing, and suspicious clauses — flagged and explained in plain English.',
                   },
                   {
-                    n: '03', icon: TrendingUp, color: '#4ade80',
+                    n: '3', icon: TrendingUp, color: '#4ade80',
                     title: 'Know, dispute, fight back',
                     desc: 'SCREWED, MAYBE, or SAFE. Open a formal dispute, track your outcome, and get matched with better providers.',
                   },
-                ].map(({ n, icon: Icon, color, title, desc }, idx) => (
-                  <div key={n} className={`relative px-8 py-8 ${idx > 0 ? 'section-rule sm:section-rule-none border-t border-l-0 sm:border-t-0 sm:stat-divider' : ''}`}>
-                    {/* Ghost number */}
-                    <div className="step-ghost-num absolute top-4 right-6 select-none pointer-events-none">{n}</div>
-                    <div className="relative z-10 space-y-4">
-                      <div className="w-11 h-11 rounded-xl flex items-center justify-center"
-                        style={{ background: color + '12', border: `1px solid ${color}22` }}>
-                        <Icon className="w-5 h-5" style={{ color }} />
+                ].map(({ n, icon: Icon, color, title, desc }) => (
+                  <div key={n} className="flex flex-col items-start gap-5 px-6 py-7 rounded-2xl border border-brand-border/50 bg-brand-surface" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shrink-0" style={{ background: color + '14', border: `1px solid ${color}28`, color }}>
+                        {n}
                       </div>
-                      <div className="space-y-2">
-                        <p className="text-base font-bold text-brand-text">{title}</p>
-                        <p className="text-sm text-brand-sub/60 leading-relaxed">{desc}</p>
+                      <div className="h-px flex-1 max-w-[40px]" style={{ background: `linear-gradient(90deg, ${color}30, transparent)` }} />
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: color + '10', border: `1px solid ${color}20` }}>
+                        <Icon className="w-4 h-4" style={{ color }} />
                       </div>
+                    </div>
+                    <div>
+                      <p className="text-base font-bold text-brand-text mb-2">{title}</p>
+                      <p className="text-sm text-brand-sub/55 leading-relaxed">{desc}</p>
                     </div>
                   </div>
                 ))}
@@ -598,13 +584,13 @@ export default function HomePage() {
             </section>
 
             {/* ════ BENTO FEATURE GRID ════════════════════════════════════ */}
-            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-28 sm:pb-32 space-y-10">
               <div className="text-center space-y-2">
-                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">The full arsenal</p>
-                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Not just a scanner.</h2>
+                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">The full arsenal</p>
+                <h2 className="text-4xl sm:text-5xl font-black text-brand-text tracking-tight">Not just a scanner.</h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
                 {/* Wall of Shame — wide (2 cols) */}
                 <div className="bento-cell lg:col-span-2 rounded-2xl border border-brand-border group hover:border-red-500/20 transition-all duration-300"
@@ -692,7 +678,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Multilingual pill */}
-                <div className="rounded-2xl overflow-hidden flex items-center gap-5 px-6 py-5"
+                <div className="rounded-2xl overflow-hidden flex items-center gap-5 px-7 py-6"
                   style={{
                     background: 'linear-gradient(135deg, rgba(168,85,247,0.07) 0%, #0f0f0f 65%)',
                     border: '1px solid rgba(168,85,247,0.14)',
@@ -700,7 +686,7 @@ export default function HomePage() {
                   <div className="text-4xl shrink-0">🌐</div>
                   <div>
                     <p className="text-base font-black text-brand-text tracking-tight">12 languages</p>
-                    <p className="text-[11px] text-brand-sub/45 mt-1 leading-relaxed tracking-wide">EN ES FR DE PT ZH AR JA KO HI IT RU</p>
+                    <p className="text-[11px] text-brand-sub/65 mt-1 leading-relaxed tracking-wide">EN ES FR DE PT ZH AR JA KO HI IT RU</p>
                   </div>
                 </div>
 
@@ -710,12 +696,12 @@ export default function HomePage() {
             {/* ════ TESTIMONIALS ══════════════════════════════════════════ */}
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
               <div className="text-center space-y-2">
-                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">The evidence</p>
+                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">The evidence</p>
                 <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">They found out.</h2>
               </div>
 
               {/* Featured pull quote */}
-              <div className="relative rounded-3xl border border-brand-border bg-brand-surface overflow-hidden p-8 sm:p-14"
+              <div className="relative rounded-3xl border border-brand-border bg-brand-surface overflow-hidden p-10 sm:p-16"
                 style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 0 80px rgba(255,59,48,0.03)' }}>
                 {/* Giant decorative quote mark */}
                 <div className="absolute top-4 left-8 font-black leading-none select-none pointer-events-none"
@@ -726,7 +712,7 @@ export default function HomePage() {
                   }}>"</div>
                 <div className="relative z-10 max-w-2xl mx-auto text-center">
                   <p className="font-bold text-brand-text/85 leading-relaxed mb-10"
-                    style={{ fontSize: 'clamp(20px, 3vw, 28px)', lineHeight: 1.4 }}>
+                    style={{ fontSize: 'clamp(22px, 3.2vw, 30px)', lineHeight: 1.4 }}>
                     "{TESTIMONIALS[0].quote}"
                   </p>
                   <div className="flex items-center justify-center gap-4">
@@ -760,7 +746,7 @@ export default function HomePage() {
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-brand-text">{t.name}</p>
-                        <p className="text-[10px] text-brand-sub/45 mt-0.5">{t.location} · {t.doc}</p>
+                        <p className="text-[10px] text-brand-sub/65 mt-0.5">{t.location} · {t.doc}</p>
                       </div>
                     </div>
                   </div>
@@ -774,7 +760,7 @@ export default function HomePage() {
             {/* ════ EXAMPLE RESULTS — BENTO ═══════════════════════════════ */}
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
               <div className="text-center space-y-2">
-                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">What it looks like</p>
+                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">What it looks like</p>
                 <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Real results. Real money.</h2>
                 <p className="text-sm text-brand-sub/50 max-w-md mx-auto">Plain-English breakdown. Exact charges. What to do next.</p>
               </div>
@@ -846,7 +832,7 @@ export default function HomePage() {
             {/* ════ DOC TYPES — CHIP STRIP ════════════════════════════════ */}
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
               <div className="text-center space-y-2">
-                <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em]">Supported documents</p>
+                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">Supported documents</p>
                 <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Anything they bill you for.</h2>
               </div>
 
@@ -867,12 +853,12 @@ export default function HomePage() {
             </section>
 
             {/* ════ FAQ ═══════════════════════════════════════════════════ */}
-            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24">
+            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-28 sm:pb-32">
               <div className="lg:grid lg:grid-cols-[1fr_2fr] lg:gap-16 space-y-10 lg:space-y-0">
 
                 {/* Left: heading */}
                 <div className="lg:pt-2">
-                  <p className="text-[11px] font-bold text-brand-sub/35 uppercase tracking-[0.25em] mb-4">FAQ</p>
+                  <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em] mb-4">FAQ</p>
                   <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight leading-tight mb-4">
                     Questions people actually ask
                   </h2>
@@ -891,7 +877,7 @@ export default function HomePage() {
             </section>
 
             {/* ════ BOTTOM CTA — FULL BLEED ═══════════════════════════════ */}
-            <section className="relative overflow-hidden py-28 border-t border-brand-border/20">
+            <section className="relative overflow-hidden py-32 sm:py-40 border-t border-brand-border/20">
               <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full"
                   style={{ background: 'radial-gradient(ellipse 80% 120% at 50% 0%, rgba(255,59,48,0.14) 0%, transparent 60%)' }} />
@@ -901,8 +887,8 @@ export default function HomePage() {
               <div className="relative max-w-2xl mx-auto px-4 text-center space-y-8">
                 <div className="space-y-4">
                   <p className="text-[11px] font-bold text-red-400/60 uppercase tracking-[0.25em]">Start free right now</p>
-                  <h2 className="font-black text-brand-text tracking-tighter leading-[0.9]"
-                    style={{ fontSize: 'clamp(52px, 9vw, 108px)' }}>
+                  <h2 className="font-display font-black text-brand-text tracking-tighter leading-[0.9]"
+                    style={{ fontSize: 'clamp(56px, 10vw, 120px)' }}>
                     Stop wondering.<br />
                     <span style={{
                       background: 'linear-gradient(135deg, #ff8a80, #ff3b30)',
@@ -922,10 +908,15 @@ export default function HomePage() {
                   <UploadZone onUpload={handleUpload} isLoading={false} />
                 </div>
 
-                <p className="flex items-center justify-center gap-2 text-xs text-brand-sub/30">
-                  <ShieldCheck className="w-3.5 h-3.5 text-green-500/25" />
-                  Documents are never stored permanently or shared with third parties.
-                </p>
+                <div className="flex flex-col items-center gap-1.5">
+                  <p className="flex items-center justify-center gap-2 text-sm font-semibold text-green-400/70">
+                    <ShieldCheck className="w-4 h-4 text-green-400/60" />
+                    Your documents are never stored, sold, or shared.
+                  </p>
+                  <p className="text-xs text-brand-sub/55">
+                    File deleted immediately after scan · Results saved privately · No account required
+                  </p>
+                </div>
               </div>
             </section>
 
@@ -1145,8 +1136,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
       style={{ boxShadow: open ? '0 0 20px rgba(255,59,48,0.04)' : undefined }}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left gap-4 hover:bg-brand-muted/30 transition-colors">
-        <span className="text-sm font-semibold text-brand-text">{q}</span>
+        className="w-full flex items-center justify-between px-6 py-5 text-left gap-4 hover:bg-brand-muted/30 transition-colors">
+        <span className="text-sm font-bold text-brand-text">{q}</span>
         <ChevronDown className={`w-4 h-4 text-brand-sub shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (

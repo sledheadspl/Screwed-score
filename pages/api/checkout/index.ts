@@ -15,9 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // CSRF: reject requests from other origins
-  const requestOrigin = req.headers.origin as string | undefined
   const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
-  if (requestOrigin && requestOrigin !== allowedOrigin) {
+  const requestOrigin = req.headers.origin as string | undefined
+  const allowedOrigins = [
+    allowedOrigin,
+    allowedOrigin.replace('https://', 'https://www.'),
+    allowedOrigin.replace('https://www.', 'https://'),
+  ]
+  if (requestOrigin && !allowedOrigins.includes(requestOrigin)) {
     return res.status(403).json({ error: 'Forbidden' })
   }
 

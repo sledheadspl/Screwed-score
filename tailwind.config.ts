@@ -16,7 +16,7 @@ const config: Config = {
           border:  '#1c1c1c',
           muted:   '#242424',
           text:    '#f2f2f2',
-          sub:     '#777777',
+          sub:     '#9ca3af',
           red:     '#ff3b30',
           yellow:  '#ffd60a',
           green:   '#30d158',
@@ -25,7 +25,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

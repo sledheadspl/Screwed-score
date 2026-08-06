@@ -50,3 +50,4 @@ tools/seo-engine/.engine_state.json
 tools/seo-engine/.venv/
 tools/seo-engine/__pycache__/
 tools/seo-engine/articles/
+_quarantine/

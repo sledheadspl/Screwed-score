@@ -14,16 +14,19 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
+    // Marketing/landing pages: allow Netlify Edge to cache the prerendered HTML.
+    // Netlify-CDN-Cache-Control on the response is what triggers Netlify Edge storage
+    // (previously set from middleware/proxy.ts — moved here when middleware was removed).
+    // s-maxage=300 = Edge stores 5min; stale-while-revalidate=86400 = serves stale up to 24h while refreshing.
+    const edgeCacheable = ['/', '/clippilot', '/productivity', '/community', '/shame', '/for-businesses', '/jobs', '/weekly']
     return [
-      {
-        // Homepage: allow CDN/Edge to cache the prerendered HTML.
-        // s-maxage=300 = Edge stores 5min; stale-while-revalidate=86400 = serves stale up to 24h while refreshing.
-        // Browser still revalidates (max-age=0) so users always get fresh after edge expiry.
-        source: '/',
+      ...edgeCacheable.map(source => ({
+        source,
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400' },
+          { key: 'Netlify-CDN-Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=86400' },
         ],
-      },
+      })),
       {
         source: '/(.*)',
         headers: [
@@ -36,7 +39,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://connect.facebook.net",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.gstatic.com https://connect.facebook.net",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' data:",
@@ -44,6 +47,7 @@ const nextConfig: NextConfig = {
               "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
               "object-src 'none'",
               "base-uri 'self'",
+              "form-action 'self'",
             ].join('; '),
           },
         ],
