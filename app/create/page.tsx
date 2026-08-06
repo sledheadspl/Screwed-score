@@ -7,7 +7,11 @@ import {
   Loader2, CheckCircle, DollarSign, Sparkles, ArrowRight,
   Tag, HandCoins, ScrollText, History, X, Building2, Save,
 } from 'lucide-react'
-import { saveToHistory, loadHistory, deleteFromHistory, type DocHistoryEntry } from '@/lib/docHistory'
+import {
+  saveToRemote, loadFromRemote, deleteFromRemote,
+  saveToLocal, loadFromLocal, deleteFromLocal,
+  type DocHistoryEntry,
+} from '@/lib/docHistory'
 import { loadProfile, saveProfile, type BizProfile } from '@/lib/bizProfile'
 
 type DocType =
@@ -167,7 +171,7 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
 
   // Load persisted data on mount, apply defaultType if provided
   useEffect(() => {
-    setHistory(loadHistory())
+    loadFromRemote().then(remote => setHistory(remote.length ? remote : loadFromLocal()))
     setProfile(loadProfile())
     if (defaultType) {
       setSelected(defaultType)
@@ -259,8 +263,11 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
       if (!res.ok) throw new Error(data.error || 'Generation failed')
       setHtml(data.html)
       const label = DOC_TYPES.find(d => d.id === selected)?.label ?? selected
-      const entry = saveToHistory({ type: selected, label, html: data.html, createdAt: Date.now() })
-      setHistory(h => [entry, ...h].slice(0, 10))
+      const localEntry = saveToLocal({ type: selected, label, html: data.html, createdAt: Date.now() })
+      setHistory(h => [localEntry, ...h].slice(0, 20))
+      saveToRemote({ type: selected, label, html: data.html }).then(remote => {
+        if (remote) setHistory(h => h.map(e => e.id === localEntry.id ? { ...e, id: remote.id, shareSlug: remote.shareSlug } : e))
+      })
       setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong')
@@ -388,7 +395,7 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
                       title="Print"
                     ><Download className="w-3.5 h-3.5" /></button>
                     <button
-                      onClick={() => { deleteFromHistory(entry.id); setHistory(h => h.filter(e => e.id !== entry.id)) }}
+                      onClick={() => { deleteFromLocal(entry.id); deleteFromRemote(entry.id); setHistory(h => h.filter(e => e.id !== entry.id)) }}
                       className="p-1.5 text-brand-sub hover:text-red-400 rounded hover:bg-brand-surface2 transition-colors"
                       title="Delete"
                     ><X className="w-3.5 h-3.5" /></button>
