@@ -104,10 +104,16 @@ export default function Navbar() {
 
         {/* Desktop right side */}
         <div className="hidden lg:flex items-center gap-2.5 shrink-0">
-          {isPro && (
+          {isPro ? (
             <span className="flex items-center gap-1 text-[10px] font-bold text-red-400 border border-red-500/30 rounded-full px-2.5 py-1 uppercase tracking-wider">
               <Zap className="w-3 h-3" /> Pro
             </span>
+          ) : (
+            <Link href="/pro"
+              className="flex items-center gap-1.5 text-xs font-black text-white rounded-lg px-3.5 py-1.5 transition-all hover:opacity-90 active:scale-95"
+              style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
+              <Zap className="w-3 h-3" /> Go Pro
+            </Link>
           )}
           {userEmail ? (
             <div className="flex items-center gap-2">
@@ -156,6 +162,13 @@ export default function Navbar() {
                 </Link>
               )
             })}
+            {!isPro && (
+              <Link href="/pro" onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center gap-1.5 text-sm font-black text-white rounded-lg px-4 py-2.5 transition-all active:scale-95"
+                style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
+                <Zap className="w-3.5 h-3.5" /> Go Pro — unlimited scans
+              </Link>
+            )}
             <div className="pt-3 border-t border-brand-border/30">
               {userEmail ? (
                 <div className="flex items-center justify-between px-4 py-2">
