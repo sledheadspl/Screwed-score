@@ -188,7 +188,7 @@ const TESTIMONIALS = [
 const FAQ_ITEMS = [
   {
     q: 'Is this actually free?',
-    a: 'Yes — every scan is free, no account required. No paywall, no credit card, no subscription.',
+    a: 'Yes — you get 5 free scans every day, no account or credit card required. Scanning more than that? ScrewedScore Pro is $6.99/mo (or $49/yr) for unlimited scans, and there\'s a $2.99 one-time 30-day pass if you just have a big stack of bills to get through.',
   },
   {
     q: 'What file types can I upload?',
@@ -503,7 +503,7 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
                     { value: '20 sec',  label: 'average analysis time',      color: '#ff3b30' },
-                    { value: 'Free',    label: 'every scan, no account',     color: '#60a5fa' },
+                    { value: '5/day',   label: 'free scans, no account',     color: '#60a5fa' },
                     { value: '78%',     label: 'of scans flag something',    color: '#ffd60a' },
                     { value: '12',      label: 'languages supported',        color: '#30d158' },
                   ].map(({ value, label, color }, idx) => (
