@@ -3,11 +3,11 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'State of Screwing — Weekly Consumer Overcharge Report | GetScrewedScore',
   description: 'How many people got overcharged this week, which industries are worst, and how much money was flagged. Updated weekly from real document analysis.',
-  alternates: { canonical: 'https://screwedscore.com/weekly' },
+  alternates: { canonical: 'https://www.screwedscore.com/weekly' },
   openGraph: {
     title: 'State of Screwing — Weekly Consumer Overcharge Report',
     description: 'How many people got overcharged this week, which industries are worst, and how much money was flagged.',
-    url: 'https://screwedscore.com/weekly',
+    url: 'https://www.screwedscore.com/weekly',
     type: 'website',
   },
   twitter: {

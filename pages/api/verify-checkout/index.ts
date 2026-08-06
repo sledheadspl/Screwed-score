@@ -22,19 +22,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(402).json({ error: 'Payment not completed' })
     }
 
-    const customerId  = typeof session.customer       === 'string' ? session.customer       : null
-    const paymentId   = typeof session.payment_intent === 'string' ? session.payment_intent : null
+    const customerId = typeof session.customer === 'string' ? session.customer : null
+    // One-time passes carry a payment_intent; Pro subscriptions carry a
+    // subscription id instead (used to check revoked_subscriptions on scan).
+    const refId =
+      (typeof session.payment_intent === 'string' ? session.payment_intent : null) ??
+      (typeof session.subscription   === 'string' ? session.subscription   : null)
 
-    if (!customerId || !paymentId) {
+    if (!customerId || !refId) {
       return res.status(400).json({ error: 'Invalid session data' })
     }
 
-    // Token valid for 32 days — enough to cover one billing cycle
-    const token = issueToken(customerId, paymentId, 32)
+    // One-time pass / monthly: 32 days covers a billing cycle. Yearly: 370 days
+    // (cancellations are caught via revoked_subscriptions at scan time).
+    const ttlDays = session.metadata?.plan === 'yearly' ? 370 : 32
+    const token = issueToken(customerId, refId, ttlDays)
 
     res.setHeader(
       'Set-Cookie',
-      `gss_pro=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 32}`
+      `gss_pro=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * ttlDays}`
     )
 
     return res.status(200).json({ ok: true })

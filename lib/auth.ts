@@ -17,6 +17,23 @@ export function issueToken(
   return `${Buffer.from(payload).toString('base64url')}.${sig}`
 }
 
+/**
+ * Verifies signature + expiry and returns the token's parts, or null if invalid.
+ * `refId` is a payment_intent id (pi_...) for one-time passes, or a
+ * subscription id (sub_...) for Pro memberships — callers gating long-lived
+ * subscription tokens should check sub_ ids against `revoked_subscriptions`.
+ */
+export function parseToken(token: string): { customerId: string; refId: string; expiry: number } | null {
+  if (!verifyToken(token)) return null
+  try {
+    const payload = Buffer.from(token.split('.')[0], 'base64url').toString()
+    const [customerId, refId, expiry] = payload.split(':')
+    return { customerId, refId, expiry: parseInt(expiry, 10) }
+  } catch {
+    return null
+  }
+}
+
 /** Returns true if the token signature is valid and the token has not expired. */
 export function verifyToken(token: string): boolean {
   try {

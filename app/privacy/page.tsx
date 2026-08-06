@@ -45,7 +45,7 @@ export default function PrivacyPage() {
           <p className="text-sm text-brand-sub">Last updated: {updated}</p>
           <p className="text-sm text-brand-sub leading-relaxed">
             This Privacy Policy explains how <strong className="text-brand-text">GetScrewedScore</strong> (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), operated by REMbyDesign, collects, uses, and protects information when you use our service at{' '}
-            <a href="https://screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a>.
+            <a href="https://www.screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a>.
           </p>
         </div>
 
@@ -152,7 +152,7 @@ export default function PrivacyPage() {
           <div className="rounded-xl border border-brand-border bg-brand-surface p-4 space-y-1">
             <p><strong className="text-brand-text">REMbyDesign</strong></p>
             <p>Email: <a href="mailto:privacy@rembydesign.com" className="text-red-400 hover:underline">privacy@rembydesign.com</a></p>
-            <p>Website: <a href="https://screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a></p>
+            <p>Website: <a href="https://www.screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a></p>
           </div>
         </Section>
 

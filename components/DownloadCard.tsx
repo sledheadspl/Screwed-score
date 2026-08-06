@@ -26,7 +26,7 @@ function buildCardUrl(result: AnalysisResult): string {
 function buildCaption(result: AnalysisResult, analysisId: string): string {
   const amount = result.overcharge?.total_flagged_amount ?? 0
   const doc = DOCUMENT_TYPE_LABELS[result.document_type]
-  const url = `https://screwedscore.com/r/${analysisId}`
+  const url = `https://www.screwedscore.com/r/${analysisId}`
 
   if (result.screwed_score === 'SCREWED' && amount > 0) {
     return `🚨 Just ran my ${doc} through AI and it flagged $${amount.toLocaleString()} in charges I shouldn't have paid.\n\nGot a SCREWED score on GetScrewedScore. Check yours before you pay.\n\n${url}\n\n#ScrewedScore #DontGetScrewed #ConsumerRights`

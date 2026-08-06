@@ -212,7 +212,7 @@ function buildEmailHtml(opts: {
 
                   <p style="margin:0;font-size:12px;color:rgba(242,242,242,0.25);line-height:1.6;">
                     Questions? Reply to this email — we respond within 24 hours.<br />
-                    REMbyDesign · <a href="https://screwedscore.com" style="color:rgba(242,242,242,0.35);text-decoration:none;">screwedscore.com</a>
+                    REMbyDesign · <a href="https://www.screwedscore.com" style="color:rgba(242,242,242,0.35);text-decoration:none;">screwedscore.com</a>
                   </p>
 
                 </td>
@@ -296,7 +296,7 @@ export async function sendClipPilotLicenseEmail(opts: {
                   </table>
                   <p style="margin:0;font-size:12px;color:rgba(242,242,242,0.25);line-height:1.6;">
                     Questions? Reply to this email — we respond within 24 hours.<br/>
-                    REMbyDesign · <a href="https://screwedscore.com/clippilot" style="color:rgba(242,242,242,0.35);text-decoration:none;">screwedscore.com/clippilot</a>
+                    REMbyDesign · <a href="https://www.screwedscore.com/clippilot" style="color:rgba(242,242,242,0.35);text-decoration:none;">screwedscore.com/clippilot</a>
                   </p>
                 </td>
               </tr>

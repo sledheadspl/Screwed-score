@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   <div class="wrapper">
     ${html}
     <div class="footer">
-      Sent via <a href="https://screwedscore.com/create" style="color:#555;">GetScrewedScore.com Document Creator</a>
+      Sent via <a href="https://www.screwedscore.com/create" style="color:#555;">GetScrewedScore.com Document Creator</a>
     </div>
   </div>
 </body>

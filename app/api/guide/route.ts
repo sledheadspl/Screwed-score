@@ -68,7 +68,7 @@ const GUIDE_HTML = `
   <!-- CTA -->
   <div style="padding:0 40px 32px;text-align:center">
     <p style="margin:0 0 16px;font-size:14px;color:#555">Now scan your own bill — the AI finds these exact issues automatically.</p>
-    <a href="https://screwedscore.com" style="display:inline-block;background:#ff3b30;color:#fff;font-weight:800;font-size:15px;padding:14px 32px;border-radius:10px;text-decoration:none">Scan My Bill Free →</a>
+    <a href="https://www.screwedscore.com" style="display:inline-block;background:#ff3b30;color:#fff;font-weight:800;font-size:15px;padding:14px 32px;border-radius:10px;text-decoration:none">Scan My Bill Free →</a>
     <p style="margin:16px 0 0;font-size:12px;color:#aaa">Or upgrade to a Human Audit — a real expert reviews your bill within 48 hours for $9.99.</p>
   </div>
 

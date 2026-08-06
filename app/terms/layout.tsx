@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'GetScrewedScore terms of service. Review our terms before using the AI bill and contract analysis tool.',
-  alternates: { canonical: 'https://screwedscore.com/terms' },
+  alternates: { canonical: 'https://www.screwedscore.com/terms' },
   robots: { index: true, follow: false },
 }
 

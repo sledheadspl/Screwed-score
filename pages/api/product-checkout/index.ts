@@ -29,7 +29,7 @@ const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'
 
   const requestOrigin = req.headers.origin as string | undefined
   const allowedOrigins = [

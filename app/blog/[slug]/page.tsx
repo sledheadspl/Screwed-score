@@ -48,7 +48,7 @@ function CtaBox() {
         🚨 Scan your bill free in 20 seconds — no account needed
       </p>
       <Link
-        href="https://screwedscore.com/#upload"
+        href="https://www.screwedscore.com/#upload"
         className="mt-3 inline-block rounded-md bg-emerald-600 px-5 py-2 font-semibold text-white hover:bg-emerald-700"
       >
         Scan my bill →

@@ -9,19 +9,32 @@ interface Props {
 }
 
 const PERKS = [
-  'Unlimited scans for 30 days',
-  'All document types — bills, contracts, invoices',
-  'Full AI analysis + Fight Back Kit access',
+  'Unlimited scans — bills, contracts, invoices',
+  'Full AI analysis on every document type',
+  'Fight Back Kit access',
   'Shareable result links forever',
+]
+
+type Plan = 'monthly' | 'yearly' | 'pass'
+
+const PLANS: { id: Plan; label: string; price: string; note: string; badge?: string }[] = [
+  { id: 'yearly',  label: 'Yearly',      price: '$49/yr',   note: '≈ $4.08/mo', badge: 'Save 41%' },
+  { id: 'monthly', label: 'Monthly',     price: '$6.99/mo', note: 'Cancel anytime' },
+  { id: 'pass',    label: '30-day pass', price: '$2.99',    note: 'One-time, no subscription' },
 ]
 
 export function PaywallModal({ onClose, onGoogleLogin }: Props) {
   const [loading, setLoading] = useState(false)
+  const [plan, setPlan] = useState<Plan>('yearly')
 
   const handlePro = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/checkout', { method: 'POST' })
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(plan === 'pass' ? {} : { plan }),
+      })
       const { url } = await res.json()
       if (url) window.location.href = url
     } catch {
@@ -48,9 +61,38 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
             <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Free scans used up</span>
           </div>
           <h2 className="text-xl font-black text-brand-text leading-tight">
-            Unlock 30 days of<br />unlimited scans — <span style={{ color: '#ff6b60' }}>$2.99</span>
+            Go <span style={{ color: '#ff6b60' }}>Pro</span> — unlimited scans
           </h2>
-          <p className="text-xs text-brand-sub">One-time payment. No subscription. No hidden fees.</p>
+        </div>
+
+        {/* Plan picker */}
+        <div className="space-y-2">
+          {PLANS.map(p => (
+            <button key={p.id} onClick={() => setPlan(p.id)}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl border text-left transition-all"
+              style={{
+                borderColor: plan === p.id ? 'rgba(255,59,48,0.6)' : 'rgba(255,255,255,0.08)',
+                background:  plan === p.id ? 'rgba(255,59,48,0.08)' : 'rgba(255,255,255,0.02)',
+              }}>
+              <span className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 rounded-full border-2 shrink-0"
+                  style={{
+                    borderColor: plan === p.id ? '#ff3b30' : 'rgba(255,255,255,0.25)',
+                    background:  plan === p.id ? '#ff3b30' : 'transparent',
+                  }} />
+                <span>
+                  <span className="text-sm font-bold text-brand-text">{p.label}</span>
+                  {p.badge && (
+                    <span className="ml-2 text-[10px] font-black px-1.5 py-0.5 rounded bg-green-500/15 text-green-400 border border-green-500/25">
+                      {p.badge}
+                    </span>
+                  )}
+                  <span className="block text-[11px] text-brand-sub">{p.note}</span>
+                </span>
+              </span>
+              <span className="text-sm font-black text-brand-text">{p.price}</span>
+            </button>
+          ))}
         </div>
 
         {/* Perks */}
@@ -71,11 +113,11 @@ export function PaywallModal({ onClose, onGoogleLogin }: Props) {
             <span className="flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" /> Redirecting…
             </span>
-          ) : 'Unlock Now — $2.99'}
+          ) : plan === 'pass' ? 'Unlock 30 days — $2.99' : plan === 'monthly' ? 'Go Pro — $6.99/mo' : 'Go Pro — $49/yr'}
         </button>
 
-        <p className="text-center text-[10px] text-brand-sub/50">
-          Secure checkout via Stripe · Instant access · No subscription
+        <p className="text-center text-[10px] text-brand-sub/60">
+          Secure checkout via Stripe · Instant access · Cancel anytime
         </p>
       </div>
     </div>

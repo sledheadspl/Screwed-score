@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **screwedscore.com** — AI-powered consumer protection tool. Users upload bills, invoices, or contracts; the app runs two Claude AI passes (contract analysis + overcharge detection) and returns a SCREWED / MAYBE / SAFE rating with specific findings.
 
-Deployed on **Netlify** via `@netlify/plugin-nextjs`. The `fix-netlify-handler.js` script runs after `next build` to patch Windows-generated backslash paths in the Netlify server handler (required for successful Netlify deployment from this Windows machine).
+Deployed on **Netlify** via `@netlify/plugin-nextjs`. The production Netlify site is **`getscrewedscore`** (id `5e2b2f50-1c96-453d-94e1-55badd24ac09`) — verify `.netlify/state.json` points there before deploying; a second site `resonant-panda-b682ce` exists but serves no domain. Cloudflare fronts the domain: apex `screwedscore.com` 301s to canonical `https://www.screwedscore.com`. Pushing to `main` on GitHub (sledheadspl/Screwed-score) triggers a CI deploy; `netlify deploy --prod` also works. `fix-netlify-handler.js` is a legacy no-op kept in the build script (plugin v5 no longer produces the file it patched).
 
 ## Commands
 
@@ -37,7 +37,9 @@ Required in `.env.local` (copy from `getscrewedscore.env` on Desktop):
 
 ### Routing
 
-Mixed Next.js App Router (`app/`) and Pages Router (`pages/`). API routes live in `app/api/` only — never in `pages/api/`.
+Mixed Next.js App Router (`app/`) and Pages Router (`pages/`). API routes are split: newer routes live in `app/api/`, but checkout/payment routes (`checkout`, `kit-checkout`, `product-checkout`, `verify-checkout`, `kit-generate`), `analyze`, and `upload` live in `pages/api/`. Prefer `app/api/` for new routes.
+
+No middleware/proxy file — Next middleware broke Netlify edge bundling on Windows. Security headers, CSP, and `Netlify-CDN-Cache-Control` edge caching all live in `next.config.ts` `headers()`.
 
 Key routes:
 - `/` — main upload + analysis UI (`app/page.tsx`)

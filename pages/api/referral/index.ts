@@ -66,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: 'Could not create referral link' })
     }
 
-    const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
+    const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'
     return res.status(201).json({ token, url: `${base}/?ref=${token}` })
   }
 

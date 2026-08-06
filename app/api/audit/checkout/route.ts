@@ -13,7 +13,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { analysis_id, document_type, score_percent, email } = body as Record<string, string>
     if (!analysis_id) return NextResponse.json({ error: 'analysis_id required' }, { status: 400 })
 
-    const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
+    const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',

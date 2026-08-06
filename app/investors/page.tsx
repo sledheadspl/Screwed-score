@@ -516,8 +516,8 @@ export default function InvestorsPage() {
               </a>
 
               <p className="text-xs mt-5" style={{ color: 'rgba(242,242,242,0.25)' }}>
-                Or visit <a href="https://screwedscore.com" className="underline underline-offset-2 hover:text-white/60 transition-colors">screwedscore.com</a> and{' '}
-                <a href="https://screwedscore.com/clippilot" className="underline underline-offset-2 hover:text-white/60 transition-colors">screwedscore.com/clippilot</a>{' '}
+                Or visit <a href="https://www.screwedscore.com" className="underline underline-offset-2 hover:text-white/60 transition-colors">screwedscore.com</a> and{' '}
+                <a href="https://www.screwedscore.com/clippilot" className="underline underline-offset-2 hover:text-white/60 transition-colors">screwedscore.com/clippilot</a>{' '}
                 to see both products live before reaching out.
               </p>
             </div>

@@ -14,7 +14,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://screwedscore.com'),
+  metadataBase: new URL('https://www.screwedscore.com'),
   title: {
     default: 'GetScrewedScore — AI That Detects Overcharges on Bills & Contracts',
     template: '%s | GetScrewedScore',
@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     'contractor estimate too high',
   ],
   alternates: {
-    canonical: 'https://screwedscore.com',
+    canonical: 'https://www.screwedscore.com',
   },
   openGraph: {
     title: 'GetScrewedScore — Find Out If You\'re Being Overcharged',
     description: 'Upload any bill, invoice, or contract. Free AI tells you if you\'re getting screwed — and exactly what to do about it.',
-    url: 'https://screwedscore.com',
+    url: 'https://www.screwedscore.com',
     siteName: 'GetScrewedScore',
     type: 'website',
     locale: 'en_US',
@@ -79,7 +79,7 @@ const jsonLd = {
   name: 'GetScrewedScore',
   applicationCategory: 'FinanceApplication',
   operatingSystem: 'Web',
-  url: 'https://screwedscore.com',
+  url: 'https://www.screwedscore.com',
   description: 'AI-powered consumer protection tool that detects overcharges, hidden fees, and risky clauses in bills, invoices, and contracts.',
   offers: {
     '@type': 'Offer',

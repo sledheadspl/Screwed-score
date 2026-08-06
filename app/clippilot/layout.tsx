@@ -3,11 +3,11 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'ClipPilot — AI Auto-Clip Desktop App for Streamers',
   description: 'ClipPilot automatically detects viral moments from your live streams, generates vertical short-form clips with AI captions, and publishes to TikTok, YouTube Shorts & Twitter/X. Ships as a Windows .exe.',
-  alternates: { canonical: 'https://screwedscore.com/clippilot' },
+  alternates: { canonical: 'https://www.screwedscore.com/clippilot' },
   openGraph: {
     title: 'ClipPilot — AI Auto-Clip App for Streamers',
     description: 'Auto-detect viral stream moments, generate vertical clips with AI captions, publish everywhere. Windows desktop app.',
-    url: 'https://screwedscore.com/clippilot',
+    url: 'https://www.screwedscore.com/clippilot',
     type: 'website',
   },
 }
@@ -18,7 +18,7 @@ const jsonLd = {
   name: 'ClipPilot',
   applicationCategory: 'MultimediaApplication',
   operatingSystem: 'Windows',
-  url: 'https://screwedscore.com/clippilot',
+  url: 'https://www.screwedscore.com/clippilot',
   description: 'AI-powered desktop app that detects viral moments from live streams, crops them vertical, adds AI captions, and auto-publishes to TikTok, YouTube Shorts, and Twitter/X.',
   offers: [
     { '@type': 'Offer', price: '0', priceCurrency: 'USD', name: 'Free' },

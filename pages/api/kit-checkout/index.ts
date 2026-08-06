@@ -15,7 +15,7 @@ const KIT_PRICE_CENTS = parseInt(process.env.KIT_PRICE_CENTS ?? '1499', 10)
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'
 
   const requestOrigin = req.headers.origin as string | undefined
   const allowedOrigins = [

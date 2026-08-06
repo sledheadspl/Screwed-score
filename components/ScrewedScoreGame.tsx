@@ -112,7 +112,7 @@ export function ScrewedScoreGame() {
 
   const shareResult = useCallback(async () => {
     if (!result) return
-    const msg = `My ScrewedScore is ${result.score}/100 — ${result.tier.letter} Tier (${result.archetype}). I'm more screwed than ${result.percentile}% of people. Can you beat that? https://screwedscore.com/score`
+    const msg = `My ScrewedScore is ${result.score}/100 — ${result.tier.letter} Tier (${result.archetype}). I'm more screwed than ${result.percentile}% of people. Can you beat that? https://www.screwedscore.com/score`
     try {
       await navigator.clipboard.writeText(msg)
       setCopied(true)

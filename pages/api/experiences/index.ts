@@ -103,7 +103,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (error) return res.status(500).json({ error: 'Database error' })
 
     // Update business reputation score asynchronously (non-fatal)
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'}/api/business-scores`, {
+    fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'}/api/business-scores`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

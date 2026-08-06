@@ -90,9 +90,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           ? `ClipPilot ${clipPilotTier}`
           : productId && productId in PRODUCT_CATALOG
             ? PRODUCT_CATALOG[productId].name
-            : session.metadata?.analysis_id
-              ? 'Fight Back Kit'
-              : 'Scan Token Pack'
+            : session.metadata?.plan
+              ? `Pro Membership (${session.metadata.plan})`
+              : session.metadata?.analysis_id
+                ? 'Fight Back Kit'
+                : 'Scan Token Pack'
         await sendGAEvent('purchase', {
           transaction_id: session.id,
           value:          (session.amount_total ?? 0) / 100,

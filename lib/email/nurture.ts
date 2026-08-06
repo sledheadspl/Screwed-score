@@ -29,8 +29,8 @@ ${body}
 </td></tr></table>
 <tr><td style="padding:20px 0 0;text-align:center;">
 <p style="margin:0;font-size:11px;color:rgba(242,242,242,0.25);">
-ScrewedScore · <a href="https://screwedscore.com" style="color:rgba(242,242,242,0.4);text-decoration:none;">screwedscore.com</a><br/>
-You're receiving this because you opted in. <a href="https://screwedscore.com" style="color:rgba(242,242,242,0.4);">Visit the site</a> to manage preferences.
+ScrewedScore · <a href="https://www.screwedscore.com" style="color:rgba(242,242,242,0.4);text-decoration:none;">screwedscore.com</a><br/>
+You're receiving this because you opted in. <a href="https://www.screwedscore.com" style="color:rgba(242,242,242,0.4);">Visit the site</a> to manage preferences.
 </p></td></tr>
 </table></td></tr></table></body></html>`
 
@@ -48,7 +48,7 @@ function buildStep1(): { subject: string; html: string } {
 <h1 style="margin:0 0 14px;font-size:24px;font-weight:900;color:#f2f2f2;letter-spacing:-0.02em;line-height:1.15;">Did you actually look at your last bill?</h1>
 <p style="margin:0 0 14px;">Most people don't. The average American overpays $1,300/year on bills they never read — mechanic invoices, medical bills, phone bills, contractor estimates. Every single one.</p>
 <p style="margin:0 0 14px;">If you've got one sitting in your inbox or glove box right now, this is your nudge. It takes 20 seconds.</p>
-${CTA('Scan a bill now (free)', 'https://screwedscore.com', accent)}
+${CTA('Scan a bill now (free)', 'https://www.screwedscore.com', accent)}
 <p style="margin:0;font-size:13px;color:rgba(242,242,242,0.5);">No account. No credit card. We delete the file after we read it.</p>`
   return { subject: 'Quick gut check on that last bill', html: SHELL('Day 1', accent, body) }
 }
@@ -86,7 +86,7 @@ function buildStep2(): { subject: string; html: string } {
   <p style="margin:0;font-size:14px;color:rgba(242,242,242,0.7);">Phone "device protection," cable "premium support," gym "towel service." Things you may have agreed to once, billed forever. Audit every line of every recurring bill annually.</p>
 </div>
 
-${CTA('Scan a bill — find your own', 'https://screwedscore.com', accent)}`
+${CTA('Scan a bill — find your own', 'https://www.screwedscore.com', accent)}`
   return { subject: '5 charges businesses bury (and how to find them)', html: SHELL('Day 3', accent, body) }
 }
 
@@ -99,7 +99,7 @@ function buildStep3(): { subject: string; html: string } {
 <p style="margin:0 0 14px;">This is the last email in this sequence. After this, we only message you if there's something genuinely useful — a new product, a public Wall of Shame update, or something we built specifically for what you signed up for.</p>
 <p style="margin:0 0 14px;">If you came here because you suspected you were being overcharged on something, that suspicion was probably right. <strong>78% of the bills our AI scans flag at least one suspicious charge.</strong></p>
 <p style="margin:0 0 14px;">If you found this useful, the single most helpful thing you can do is share one scan with a friend. Their first one is free.</p>
-${CTA('Scan a bill', 'https://screwedscore.com', accent)}
+${CTA('Scan a bill', 'https://www.screwedscore.com', accent)}
 <p style="margin:0;font-size:13px;color:rgba(242,242,242,0.5);">Thanks for being here. — Ryan, REMbyDesign</p>`
   return { subject: 'One last nudge', html: SHELL('Day 7', accent, body) }
 }

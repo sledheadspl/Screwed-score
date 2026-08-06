@@ -308,11 +308,11 @@ export async function generateMetadata(
   return {
     title:       c.metaTitle,
     description: c.metaDescription,
-    alternates:  { canonical: `https://screwedscore.com/analyze/${type}` },
+    alternates:  { canonical: `https://www.screwedscore.com/analyze/${type}` },
     openGraph: {
       title:       c.metaTitle,
       description: c.metaDescription,
-      url:         `https://screwedscore.com/analyze/${type}`,
+      url:         `https://www.screwedscore.com/analyze/${type}`,
       siteName:    'ScrewedScore',
     },
   }

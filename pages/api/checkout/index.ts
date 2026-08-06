@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // CSRF: reject requests from other origins
-  const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://screwedscore.com'
+  const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'
   const requestOrigin = req.headers.origin as string | undefined
   const allowedOrigins = [
     allowedOrigin,
@@ -65,16 +65,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const origin =
       process.env.NEXT_PUBLIC_SITE_URL ??
       (req.headers.origin as string | undefined) ??
-      'https://screwedscore.com'
+      'https://www.screwedscore.com'
 
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      line_items: [{ price: process.env.GSS_STRIPE_PRICE_ID!, quantity: 1 }],
-      success_url: `${origin}/paid?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${origin}/`,
-      allow_promotion_codes: true,
-      customer_creation:     'always',
-    })
+    // plan: 'monthly' | 'yearly' → Pro subscription; absent → one-time 30-day pass
+    const plan = req.body?.plan === 'monthly' || req.body?.plan === 'yearly' ? req.body.plan : null
+    const subscriptionPrice = plan === 'monthly'
+      ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY
+      : process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_YEARLY
+
+    const session = plan
+      ? await stripe.checkout.sessions.create({
+          mode: 'subscription',
+          line_items: [{ price: subscriptionPrice!, quantity: 1 }],
+          metadata: { plan },
+          success_url: `${origin}/paid?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url:  `${origin}/`,
+          allow_promotion_codes: true,
+        })
+      : await stripe.checkout.sessions.create({
+          mode: 'payment',
+          line_items: [{ price: process.env.GSS_STRIPE_PRICE_ID!, quantity: 1 }],
+          success_url: `${origin}/paid?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url:  `${origin}/`,
+          allow_promotion_codes: true,
+          customer_creation:     'always',
+        })
 
     return res.status(200).json({ url: session.url })
   } catch (err) {

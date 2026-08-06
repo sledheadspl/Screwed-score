@@ -97,11 +97,11 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
     title: meta.title,
     description: meta.description,
     keywords: meta.keywords,
-    alternates: { canonical: `https://screwedscore.com/create/${type}` },
+    alternates: { canonical: `https://www.screwedscore.com/create/${type}` },
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `https://screwedscore.com/create/${type}`,
+      url: `https://www.screwedscore.com/create/${type}`,
       siteName: 'GetScrewedScore',
       type: 'website',
     },

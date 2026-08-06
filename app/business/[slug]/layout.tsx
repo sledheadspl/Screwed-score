@@ -6,11 +6,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${name} — Screwed Score & Reviews`,
     description: `See the community-reported overcharge rating for ${name}. Check their SCREWED score, read real customer experiences, and find out if they're overcharging.`,
-    alternates: { canonical: `https://screwedscore.com/business/${slug}` },
+    alternates: { canonical: `https://www.screwedscore.com/business/${slug}` },
     openGraph: {
       title: `${name} — Screwed Score`,
       description: `Is ${name} overcharging customers? See their community-reported rating on GetScrewedScore.`,
-      url: `https://screwedscore.com/business/${slug}`,
+      url: `https://www.screwedscore.com/business/${slug}`,
     },
   }
 }

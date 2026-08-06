@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Free Document Creator — Invoices, Contracts, Leases & More',
   description: 'Create professional invoices, job estimates, lease agreements, contracts, demand letters, NDAs, bills of sale, and court paperwork in seconds. Free AI document generator — no account needed.',
-  alternates: { canonical: 'https://screwedscore.com/create' },
+  alternates: { canonical: 'https://www.screwedscore.com/create' },
   keywords: [
     'free invoice generator',
     'free invoice maker',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Free Document Creator — Invoices, Contracts, Leases & More',
     description: 'AI generates professional invoices, contracts, leases, demand letters, NDAs, and court paperwork in seconds. Free, no account needed.',
-    url: 'https://screwedscore.com/create',
+    url: 'https://www.screwedscore.com/create',
     siteName: 'GetScrewedScore',
     type: 'website',
   },

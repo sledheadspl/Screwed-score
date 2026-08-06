@@ -45,7 +45,7 @@ export default function TermsPage() {
           <p className="text-sm text-brand-sub">Last updated: {updated}</p>
           <p className="text-sm text-brand-sub leading-relaxed">
             By accessing or using <strong className="text-brand-text">GetScrewedScore</strong> at{' '}
-            <a href="https://screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a>
+            <a href="https://www.screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a>
             , you agree to be bound by these Terms of Service. If you do not agree, do not use the service.
           </p>
         </div>
@@ -117,7 +117,7 @@ export default function TermsPage() {
           <div className="rounded-xl border border-brand-border bg-brand-surface p-4 space-y-1">
             <p><strong className="text-brand-text">REMbyDesign</strong></p>
             <p>Email: <a href="mailto:support@rembydesign.com" className="text-red-400 hover:underline">support@rembydesign.com</a></p>
-            <p>Website: <a href="https://screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a></p>
+            <p>Website: <a href="https://www.screwedscore.com" className="text-red-400 hover:underline">screwedscore.com</a></p>
           </div>
         </Section>
 

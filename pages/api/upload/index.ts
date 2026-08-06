@@ -5,7 +5,7 @@ import { randomUUID, createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { detectDocumentType } from '@/lib/detect'
-import { verifyToken } from '@/lib/auth'
+import { parseToken } from '@/lib/auth'
 import type { UploadResponse } from '@/lib/types'
 
 // Disable Next.js body parser — formidable reads the raw stream directly
@@ -23,10 +23,10 @@ const ALLOWED_MIME_TYPES = new Set([
   'text/plain',
 ])
 
-/** Anonymous users: 3 analyses per IP per 24 hours. */
-const ANON_LIMIT = 25
-/** Authenticated (signed-in) users: 5 analyses per user per 24 hours. */
-const AUTH_LIMIT = 50
+/** Anonymous users: 5 analyses per IP per 24 hours. */
+const ANON_LIMIT = 5
+/** Authenticated (signed-in) users: 10 analyses per user per 24 hours. */
+const AUTH_LIMIT = 10
 const WINDOW_MS  = 24 * 60 * 60 * 1000
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -54,7 +54,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // ── 2. Pro check — cookie token OR active profile subscription ────────────
     const proToken = req.cookies['gss_pro']
-    let isPro = proToken ? verifyToken(proToken) : false
+    const parsed = proToken ? parseToken(proToken) : null
+    let isPro = !!parsed
+
+    // Subscription tokens (sub_...) are long-lived — deny if the subscription
+    // was cancelled or its payment failed (webhook fills revoked_subscriptions).
+    if (isPro && parsed!.refId.startsWith('sub_')) {
+      try {
+        const { data: revoked } = await supabase
+          .from('revoked_subscriptions')
+          .select('subscription_id')
+          .eq('subscription_id', parsed!.refId)
+          .maybeSingle()
+        if (revoked) isPro = false
+      } catch { /* non-fatal — favor access on DB error */ }
+    }
 
     if (!isPro && userId) {
       try {
