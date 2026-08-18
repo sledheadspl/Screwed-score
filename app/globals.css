@@ -251,3 +251,40 @@ html, body {
 .blog-article table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
 .blog-article th, .blog-article td { border: 1px solid #e5e7eb; padding: 0.5rem 0.75rem; text-align: left; }
 .blog-article th { background: #f9fafb; font-weight: 600; }
+
+/* ── Upload control: pre-hydration touch/pointer split ─────────────────────── */
+/* The camera UI and the drag-and-drop UI are both in the server HTML; CSS picks
+   one. This replaced a `navigator.maxTouchPoints` check in a useEffect, which
+   kept the camera button out of the HTML entirely and made it wait on hydration
+   of the whole page bundle before it could paint. */
+.upload-touch   { display: none; }
+.upload-pointer { display: block; }
+@media (pointer: coarse) {
+  .upload-touch   { display: block; }
+  .upload-pointer { display: none; }
+}
+
+/* File inputs driven by <label for> — hidden but still focusable/clickable by
+   the label, unlike `display: none`. */
+.sr-only-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── FAQ: native <details> accordion, no JS ────────────────────────────────── */
+.faq-item > summary::-webkit-details-marker { display: none; }
+.faq-item[open] { box-shadow: 0 0 20px rgba(255, 59, 48, 0.04); }
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+
+/* ── "See a live example" CTA hover (was inline onMouseOver handlers) ──────── */
+.sample-cta:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(240, 244, 255, 0.8) !important;
+}

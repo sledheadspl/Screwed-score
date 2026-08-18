@@ -2,6 +2,11 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['mammoth'],
+  // Import only the icon modules actually referenced, instead of the whole
+  // lucide-react barrel file, and keep the Supabase SDK in its own lazy chunk.
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
+  },
   // Force webpack (disables Turbopack default in Next.js 16) — required for Netlify edge bundler compatibility
   webpack: (config) => config,
   images: {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Zap, Menu, X } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { getBrowserSupabase, hasProCookie } from '@/lib/supabase-browser'
 
 // Stripped to two-item nav. Empty community pages are conversion killers
 // (signals "abandoned site"), single-purpose landing pages convert 2-3x
@@ -41,25 +41,52 @@ export default function Navbar() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [menuOpen, setMenuOpen]   = useState(false)
 
+  // The Navbar sits in the root layout, so a static import of supabase-js put
+  // ~213 KB of auth SDK on the critical path of every page for a check that only
+  // swaps a nav label. The cookie read is synchronous; the SDK loads once the
+  // browser is idle.
   useEffect(() => {
-    const checkPro = () => setIsPro(
-      typeof document !== 'undefined' &&
-      document.cookie.split(';').some(c => c.trim().split('=')[0] === 'gss_pro')
-    )
-    checkPro()
-    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUserEmail(session?.user?.email ?? null)
-      checkPro()
-    })
-    return () => subscription.unsubscribe()
+    setIsPro(hasProCookie())
+
+    let unsubscribe: (() => void) | undefined
+    let cancelled = false
+
+    const idle = () => {
+      getBrowserSupabase().then(client => {
+        if (cancelled) return
+        client.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null))
+        const { data: { subscription } } = client.auth.onAuthStateChange((_e, session) => {
+          setUserEmail(session?.user?.email ?? null)
+          setIsPro(hasProCookie())
+        })
+        unsubscribe = () => subscription.unsubscribe()
+      })
+    }
+
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }
+    const handle = w.requestIdleCallback
+      ? w.requestIdleCallback(idle, { timeout: 3000 })
+      : window.setTimeout(idle, 1500)
+
+    return () => {
+      cancelled = true
+      unsubscribe?.()
+      if (!w.requestIdleCallback) window.clearTimeout(handle)
+    }
   }, [])
 
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
+    const client = await getBrowserSupabase()
+    await client.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/api/auth/callback` },
     })
+  }
+
+  const handleSignOut = async () => {
+    const client = await getBrowserSupabase()
+    await client.auth.signOut()
+    setUserEmail(null)
   }
 
   const isActive = (href: string, exact: boolean) =>
@@ -119,7 +146,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <span className="text-xs text-green-400 font-semibold">✓ {userEmail.split('@')[0]}</span>
               <button
-                onClick={() => supabase.auth.signOut().then(() => setUserEmail(null))}
+                onClick={handleSignOut}
                 className="text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
                 Sign out
               </button>
@@ -174,7 +201,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-between px-4 py-2">
                   <span className="text-xs text-green-400">✓ {userEmail.split('@')[0]}</span>
                   <button
-                    onClick={() => { supabase.auth.signOut().then(() => setUserEmail(null)); setMenuOpen(false) }}
+                    onClick={() => { handleSignOut(); setMenuOpen(false) }}
                     className="text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
                     Sign out
                   </button>
