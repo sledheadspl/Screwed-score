@@ -1,119 +1,21 @@
-'use client'
-
-import { useState, useCallback, useEffect } from 'react'
-import dynamic from 'next/dynamic'
-import { UploadZone } from '@/components/UploadZone'
-import { ProgressBar } from '@/components/ProgressBar'
+// Server component. Every section below renders to HTML at build time and ships
+// zero client JavaScript; the interactive parts are small client islands
+// (AnalysisShell, UploadSlot, the Deferred* widgets) mounted inside it.
+//
+// This file used to be `'use client'` in its entirety, which meant the hero and
+// the upload control could not be used until ~900 KB of JS had downloaded,
+// parsed and hydrated on the visitor's phone.
 import {
-  RotateCcw, AlertCircle, Receipt, FileText, DollarSign,
-  Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
-  Star, ChevronDown, Users, Flame, MessageSquare, Building2,
+  FileText, Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
+  Star, ChevronDown, Flame, MessageSquare, Building2,
 } from 'lucide-react'
-import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '@/lib/types'
-import { formatDollar } from '@/lib/utils'
-import { LiveTicker } from '@/components/LiveTicker'
-import { VictoryBanner } from '@/components/VictoryBanner'
-import { supabase } from '@/lib/supabase'
-
-// Done-state and modal components — lazy-loaded to keep initial bundle small.
-// These only render after upload completes (or on user action), so they don't
-// need to ship in the landing-page chunk.
-const ScoreCard          = dynamic(() => import('@/components/ScoreCard').then(m => m.ScoreCard),                   { ssr: false })
-const FindingsList       = dynamic(() => import('@/components/FindingsList').then(m => m.FindingsList),             { ssr: false })
-const EmailCapture       = dynamic(() => import('@/components/EmailCapture').then(m => m.EmailCapture),             { ssr: false })
-const ShareButton        = dynamic(() => import('@/components/ShareButton').then(m => m.ShareButton),               { ssr: false })
-const PaywallModal       = dynamic(() => import('@/components/PaywallModal').then(m => m.PaywallModal),             { ssr: false })
-const ContentGenerator   = dynamic(() => import('@/components/ContentGenerator').then(m => m.ContentGenerator),     { ssr: false })
-const TrustedProviders   = dynamic(() => import('@/components/TrustedProviders').then(m => m.TrustedProviders),     { ssr: false })
-const RecommendedProviders = dynamic(() => import('@/components/RecommendedProviders').then(m => m.RecommendedProviders), { ssr: false })
-const ShareExperience    = dynamic(() => import('@/components/ShareExperience').then(m => m.ShareExperience),       { ssr: false })
-const ReferralCard       = dynamic(() => import('@/components/ReferralCard').then(m => m.ReferralCard),             { ssr: false })
-const BenchmarkCard      = dynamic(() => import('@/components/BenchmarkCard').then(m => m.BenchmarkCard),           { ssr: false })
-const OutcomeReport      = dynamic(() => import('@/components/OutcomeReport').then(m => m.OutcomeReport),           { ssr: false })
-const FightBackKit       = dynamic(() => import('@/components/FightBackKit').then(m => m.FightBackKit),             { ssr: false })
-const HumanAuditCard     = dynamic(() => import('@/components/HumanAuditCard').then(m => m.HumanAuditCard),         { ssr: false })
-const FixDocument        = dynamic(() => import('@/components/FixDocument').then(m => m.FixDocument),               { ssr: false })
-const ExitIntentPopup    = dynamic(() => import('@/components/ExitIntentPopup').then(m => m.ExitIntentPopup),       { ssr: false })
-const ScrewedScoreGame   = dynamic(() => import('@/components/ScrewedScoreGame').then(m => m.ScrewedScoreGame),     { ssr: false })
-
-const INITIAL_STATE: AppState = {
-  phase: 'idle', progress: 0, progressLabel: '',
-  analysisId: null, result: null, error: null, documentType: null,
-}
-
-const SAMPLE_RESULT: AnalysisResult = {
-  id: 'sample',
-  document_type: 'mechanic_invoice',
-  language: 'en',
-  screwed_score: 'SCREWED',
-  screwed_score_reason: 'This invoice has 2 critical overcharges, 3 high-severity red flags, and $847 in suspicious charges.',
-  screwed_score_percent: 82,
-  plain_summary: 'This mechanic invoice bills labor at roughly 3× the standard book rate, marks up parts by 180%, and charges a "diagnostic fee" that appears twice. The total amount is significantly higher than industry norms for the services listed.',
-  what_they_tried: [
-    'Labor billed at $210/hr — industry average for this region is $65–$95/hr',
-    'OEM brake pads listed at $340 — same part retails for $55–$90 at any auto parts store',
-    '"Diagnostic fee" of $89 charged twice under different line items',
-  ],
-  what_to_do_next: [
-    'Ask for an itemized breakdown of the $847 in flagged charges before paying',
-    'Request the shop\'s posted labor rate — they\'re required to display it',
-    'Do not pay until the duplicate diagnostic fee is removed in writing',
-    'Get a second opinion from another shop on the parts pricing',
-  ],
-  top_findings: [
-    { severity: 'high', category: 'overcharge', title: 'Suspicious charge: Labor — Engine diagnostic & repair', description: 'Labor billed at $210/hr — industry average for this region is $65–$95/hr', original_text: 'Charged: $420', suggested_fix: 'Typical labor for this job runs $130–$190 total at standard rates', dollar_impact: 420 },
-    { severity: 'high', category: 'overcharge', title: 'Suspicious charge: OEM Brake Pads (set of 4)', description: 'Parts marked up 180% over retail — same SKU available for $55–$90', original_text: 'Charged: $340', suggested_fix: 'Industry markup on parts is typically 20–40% over cost', dollar_impact: 340 },
-    { severity: 'high', category: 'duplicate_charge', title: 'Duplicate: Diagnostic fee charged twice', description: '"Diagnostic fee" appears as both a line item ($89) and embedded in the labor total — same service billed under two names', original_text: 'Charged: $89', dollar_impact: 89 },
-    { severity: 'medium', category: 'risky_clause', title: 'No written estimate authorization', description: 'Invoice lacks a signed authorization line — work was performed without documented customer approval of this cost', suggested_fix: 'Any repair over a threshold (usually $100) requires written authorization under most state consumer protection laws' },
-    { severity: 'medium', category: 'missing_protection', title: 'Missing: Parts return policy', description: 'Invoice does not state whether removed parts were returned or are available for inspection — standard practice is to return old parts on request' },
-  ],
-  overcharge: {
-    document_type: 'mechanic_invoice',
-    line_items: [
-      { description: 'Labor — Engine diagnostic & repair (2.0 hrs)', charged_amount: 420, flagged: true, flag_reason: 'Billed at $210/hr — regional average is $65–$95/hr', industry_context: 'Typical labor for this repair: $130–$190', severity: 'high' },
-      { description: 'OEM Brake Pads (set of 4)', charged_amount: 340, flagged: true, flag_reason: 'Parts marked up 180% over retail price', industry_context: 'Same part available for $55–$90', severity: 'high' },
-      { description: 'Diagnostic Fee', charged_amount: 89, flagged: true, flag_reason: 'Duplicate — also embedded in labor total', industry_context: 'Standard diagnostic fee: $50–$80, billed once', severity: 'high' },
-      { description: 'Shop Supplies & Disposal', charged_amount: 45, flagged: false, flag_reason: null, industry_context: null, severity: null },
-      { description: 'Oil & Filter Change', charged_amount: 79, flagged: false, flag_reason: null, industry_context: null, severity: null },
-    ],
-    total_flagged_amount: 847,
-    total_charged_amount: 973,
-    industry_range_note: 'Total invoice is $847 above what this repair should reasonably cost at a licensed shop in most US markets.',
-    top_concerns: [
-      'Labor rate is 2–3× above market rate for this region',
-      'Parts marked up significantly above retail — shop may be sourcing at cost and billing at MSRP+',
-      'Duplicate diagnostic fee inflates the total by $89',
-    ],
-    summary: 'This invoice has $847 in flagged charges across three line items. The labor rate and parts markup are both significantly above industry norms, and the diagnostic fee appears to be charged twice.',
-  },
-  contract_guard: {
-    contract_type: 'mechanic_invoice',
-    detected_language: 'en',
-    plain_english_summary: 'This mechanic invoice bills labor at roughly 3× the standard book rate, marks up parts by 180%, and charges a diagnostic fee twice.',
-    key_terms: [],
-    red_flags: [
-      { title: 'No written estimate authorization', clause_text: 'Invoice lacks customer signature line for estimate approval', severity: 'high', issue: 'Work was performed without documented customer approval — this may violate your state\'s auto repair consumer protection laws', alternative_language: 'Customer authorizes repairs not to exceed $____. Additional work requires written approval.' },
-      { title: 'No parts inspection clause', clause_text: 'Replaced parts not mentioned as available for return', severity: 'medium', issue: 'You have a right to inspect removed parts in most states. Not offering this is a red flag.', alternative_language: 'All replaced parts will be returned to customer upon request.' },
-      { title: 'Vague labor description', clause_text: 'Labor — Engine diagnostic & repair (2.0 hrs)', severity: 'medium', issue: 'Labor line does not specify what was actually repaired — leaves room for billing disputes' },
-    ],
-    green_flags: [],
-    missing_protections: [
-      { protection_name: 'Written estimate authorization', why_important: 'Most states require shops to get written approval before exceeding an estimate', risk_without_it: 'You may have limited recourse if the final bill is higher than verbally quoted', suggested_language: 'All repairs require written authorization. No work will exceed the authorized amount without customer approval.' },
-    ],
-    overall_grade: 'D',
-    questions_to_ask: [
-      'Can you show me your posted labor rate? (Shops are required to display this.)',
-      'Why does the diagnostic fee appear twice on this invoice?',
-      'Can I see the old parts that were replaced?',
-    ],
-    pro_tips: [
-      'Always get a written estimate before authorizing any repair over $100',
-      'You can dispute inflated charges with your state\'s Bureau of Automotive Repair',
-    ],
-  },
-  is_public: false,
-  created_at: new Date().toISOString(),
-}
+import { AnalysisShell } from '@/components/home/AnalysisShell'
+import { UploadSlot, SampleButton } from '@/components/home/UploadSlot'
+import {
+  DeferredLiveTicker,
+  DeferredVictoryBanner,
+  DeferredScrewedScoreGame,
+} from '@/components/home/Deferred'
 
 // ── Document types ──────────────────────────────────────────────────────────
 const DOC_TYPES = [
@@ -213,158 +115,8 @@ const FAQ_ITEMS = [
 ]
 
 export default function HomePage() {
-  const [state, setState]           = useState<AppState>(INITIAL_STATE)
-  const [showPaywall, setShowPaywall] = useState(false)
-  const [limitReached, setLimitReached] = useState(false)
-  const [isSample, setIsSample]     = useState(false)
-  const [isPro, setIsPro]           = useState(false)
-  const [userEmail, setUserEmail]   = useState<string | null>(null)
-  const [refToken, setRefToken]     = useState<string | null>(null)
-  const [refBanner, setRefBanner]   = useState(false)
-  const [authError, setAuthError]   = useState(false)
-
-  useEffect(() => {
-    const checkPro = () => setIsPro(
-      typeof document !== 'undefined' &&
-      document.cookie.split(';').some(c => c.trim().split('=')[0] === 'gss_pro')
-    )
-    checkPro()
-    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUserEmail(session?.user?.email ?? null)
-      checkPro()
-    })
-
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('auth_error') === '1') {
-      setAuthError(true)
-      window.history.replaceState({}, '', window.location.pathname)
-    }
-
-    const ref = params.get('ref')
-    if (ref) {
-      fetch(`/api/referral?token=${encodeURIComponent(ref)}`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.valid) {
-            setRefToken(ref)
-            setRefBanner(true)
-            window.history.replaceState({}, '', '/')
-          }
-        })
-        .catch(() => {})
-    }
-
-    return () => subscription.unsubscribe()
-  }, [])
-
-  const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
-    })
-  }
-
-  const setPhase = (phase: AppState['phase'], progress: number, label: string) =>
-    setState(s => ({ ...s, phase, progress, progressLabel: label }))
-
-  const handleUpload = useCallback(async (file: File) => {
-    setState({ ...INITIAL_STATE, phase: 'uploading', progress: 10, progressLabel: 'Uploading file...' })
-    try {
-      const form = new FormData()
-      form.append('file', file)
-      setPhase('uploading', 25, 'Uploading file...')
-
-      const { data: sessionData } = await supabase.auth.getSession()
-      const authToken = sessionData?.session?.access_token
-      const uploadHeaders: Record<string, string> = {}
-      if (authToken) uploadHeaders['x-supabase-token'] = authToken
-      if (refToken)  uploadHeaders['x-ref-token'] = refToken
-
-      const uploadRes  = await fetch('/api/upload', { method: 'POST', body: form, headers: uploadHeaders })
-      const uploadData = await uploadRes.json()
-
-      if (!uploadRes.ok) {
-        if (uploadRes.status === 429 || uploadData.error === 'LIMIT_REACHED') {
-          setState(INITIAL_STATE)
-          setShowPaywall(true)
-          return
-        }
-        setState(s => ({ ...s, phase: 'error', error: uploadData.error ?? 'Upload failed' }))
-        return
-      }
-
-      const { document_id, document_type, limit_reached } = uploadData as UploadResponse
-      if (limit_reached) setLimitReached(true)
-      if (refToken) { setRefToken(null); setRefBanner(false) }
-      setPhase('parsing', 45, 'Reading your document...')
-      await delay(400)
-      setPhase('analyzing', 65, 'Running AI analysis...')
-
-      const analyzeRes = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/analyze`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
-          },
-          body: JSON.stringify({ document_id }),
-        }
-      )
-      setPhase('analyzing', 88, 'Computing your Screwed Score...')
-
-      const analyzeText = await analyzeRes.text()
-      let analyzeData: { error?: string; analysis_id?: string; result?: AnalyzeResponse['result'] } = {}
-      try { analyzeData = JSON.parse(analyzeText) } catch { /* non-JSON response */ }
-      if (!analyzeRes.ok) {
-        setState(s => ({ ...s, phase: 'error', error: analyzeData.error ?? 'Analysis timed out — please try again.' }))
-        return
-      }
-
-      const { analysis_id, result } = analyzeData as unknown as AnalyzeResponse
-      ;(window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.(
-        'event', 'scan_complete',
-        { score: result.screwed_score, document_type, screwed_score_percent: result.screwed_score_percent }
-      )
-      setState(s => ({
-        ...s, phase: 'done', progress: 100, progressLabel: 'Done',
-        analysisId: analysis_id, documentType: document_type,
-        result: { ...result, created_at: new Date().toISOString() },
-      }))
-    } catch (err) {
-      setState(s => ({
-        ...s, phase: 'error',
-        error: err instanceof Error ? err.message : 'Something went wrong. Please try again.',
-      }))
-    }
-  }, [refToken])
-
-  const handleReset = () => { setState(INITIAL_STATE); setLimitReached(false); setIsSample(false) }
-
-  const handleSample = () => {
-    setIsSample(true)
-    setLimitReached(false)
-    setState({ ...INITIAL_STATE, phase: 'done', progress: 100, progressLabel: 'Done', analysisId: 'sample', documentType: 'mechanic_invoice', result: SAMPLE_RESULT })
-  }
-  const isLoading   = state.phase === 'uploading' || state.phase === 'parsing' || state.phase === 'analyzing'
-
   return (
     <div className="min-h-screen bg-brand-bg overflow-x-hidden">
-
-      {state.phase === 'idle' && <ExitIntentPopup />}
-
-      {showPaywall && (
-        <PaywallModal onClose={() => setShowPaywall(false)} onGoogleLogin={handleGoogleLogin} />
-      )}
-
-      {authError && (
-        <div className="fixed top-0 inset-x-0 z-50 flex items-center justify-between gap-4 px-4 py-3 bg-red-950/90 border-b border-red-500/30 text-sm text-red-300 backdrop-blur-sm">
-          <span>Sign-in failed — please try again.</span>
-          <button onClick={() => setAuthError(false)} className="text-red-400 hover:text-red-200 transition-colors text-xs font-bold">Dismiss</button>
-        </div>
-      )}
 
       {/* ── Atmospheric background ───────────────────────────────────────── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -377,26 +129,8 @@ export default function HomePage() {
       </div>
 
       <main className="relative">
-
-        {/* ════════════════════════════════════════════════════════════════════
-            IDLE STATE — landing page
-        ════════════════════════════════════════════════════════════════════ */}
-        {state.phase === 'idle' && (
+        <AnalysisShell>
           <>
-
-            {/* ── Referral banner ─────────────────────────────────────────── */}
-            {refBanner && (
-              <div className="max-w-2xl mx-auto px-4 pt-6">
-                <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-500/25 text-sm">
-                  <span className="text-lg">🎁</span>
-                  <div>
-                    <span className="font-bold text-purple-300">A friend gave you a free scan!</span>
-                    <span className="text-brand-sub ml-2">Upload any bill or contract below — no paywall.</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* ════ HERO ══════════════════════════════════════════════════ */}
             <section className="relative flex flex-col items-center justify-center min-h-screen sm:min-h-[90vh] px-4 pt-20 sm:pt-24 pb-16 text-center overflow-hidden">
 
@@ -435,35 +169,17 @@ export default function HomePage() {
               </p>
 
               {/* Upload zone */}
-              <div id="upload" className="animate-fade-up delay-300 w-full max-w-xl mx-auto relative mb-7 scroll-mt-20">
+              <div id="upload" className="animate-fade-up delay-200 w-full max-w-xl mx-auto relative mb-7 scroll-mt-20">
                 <div className="absolute -inset-6 rounded-3xl -z-10" style={{
                   background: 'radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255,59,48,0.16) 0%, transparent 70%)',
                   filter: 'blur(24px)',
                 }} />
-                <UploadZone onUpload={handleUpload} isLoading={false} />
+                <UploadSlot idPrefix="hero" />
               </div>
 
               {/* Try sample CTA */}
               <div className="animate-fade-up delay-350 w-full max-w-xl mx-auto -mt-2 mb-2">
-                <button
-                  onClick={handleSample}
-                  className="w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-95 hover:border-brand-border"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: 'rgba(240,244,255,0.55)',
-                  }}
-                  onMouseOver={e => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
-                    e.currentTarget.style.color = 'rgba(240,244,255,0.8)'
-                  }}
-                  onMouseOut={e => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
-                    e.currentTarget.style.color = 'rgba(240,244,255,0.55)'
-                  }}
-                >
-                  See a live example first →
-                </button>
+                <SampleButton />
               </div>
 
               {/* Privacy inline disclosure */}
@@ -495,7 +211,7 @@ export default function HomePage() {
             </section>
 
             {/* ════ LIVE TICKER ═══════════════════════════════════════════ */}
-            <LiveTicker />
+            <DeferredLiveTicker />
 
             {/* ════ STATS BAND ════════════════════════════════════════════ */}
             <section className="animate-fade-up border-t border-b border-brand-border/30 py-16 sm:py-20">
@@ -519,7 +235,7 @@ export default function HomePage() {
 
                 {/* Victory banner sits flush inside the stats band */}
                 <div className="mt-6 pt-6 border-t border-brand-border/20">
-                  <VictoryBanner />
+                  <DeferredVictoryBanner />
                 </div>
               </div>
             </section>
@@ -755,7 +471,7 @@ export default function HomePage() {
             </section>
 
             {/* ════ SCREWED SCORE GAME ════════════════════════════════════ */}
-            <ScrewedScoreGame />
+            <DeferredScrewedScoreGame />
 
             {/* ════ EXAMPLE RESULTS — BENTO ═══════════════════════════════ */}
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
@@ -905,7 +621,7 @@ export default function HomePage() {
                     background: 'radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255,59,48,0.15) 0%, transparent 70%)',
                     filter: 'blur(24px)',
                   }} />
-                  <UploadZone onUpload={handleUpload} isLoading={false} />
+                  <UploadSlot idPrefix="cta" />
                 </div>
 
                 <div className="flex flex-col items-center gap-1.5">
@@ -919,188 +635,9 @@ export default function HomePage() {
                 </div>
               </div>
             </section>
-
           </>
-        )}
-
-        {/* ════════════════════════════════════════════════════════════════════
-            LOADING STATE
-        ════════════════════════════════════════════════════════════════════ */}
-        {isLoading && (
-          <div className="max-w-2xl mx-auto px-4 py-10 space-y-4">
-            <UploadZone onUpload={handleUpload} isLoading />
-            <ProgressBar phase={state.phase} progress={state.progress} label={state.progressLabel} />
-          </div>
-        )}
-
-        {/* ════════════════════════════════════════════════════════════════════
-            ERROR STATE
-        ════════════════════════════════════════════════════════════════════ */}
-        {state.phase === 'error' && (
-          <div className="max-w-2xl mx-auto px-4 py-10">
-            <div className="rounded-2xl border border-red-500/25 bg-red-950/15 p-6 space-y-4 animate-fade-up"
-              style={{ boxShadow: '0 0 40px rgba(255,59,48,0.1)' }}>
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-bold text-red-400">Analysis failed</p>
-                  <p className="text-sm text-brand-sub mt-1">{state.error}</p>
-                </div>
-              </div>
-              <button onClick={handleReset}
-                className="flex items-center gap-2 text-sm text-brand-sub hover:text-brand-text transition-colors">
-                <RotateCcw className="w-4 h-4" /> Try again
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ════════════════════════════════════════════════════════════════════
-            RESULTS STATE
-        ════════════════════════════════════════════════════════════════════ */}
-        {state.phase === 'done' && state.result && state.analysisId && (
-          <div className="max-w-2xl mx-auto px-4 py-10 space-y-4 animate-fade-up">
-
-            {isSample && (
-              <div className="flex items-center justify-between gap-4 rounded-xl border border-yellow-500/25 bg-yellow-500/5 px-4 py-3">
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-yellow-300">This is a sample result</p>
-                  <p className="text-xs text-brand-sub">Upload your own bill or contract to get your real Screwed Score — free, no account needed.</p>
-                </div>
-                <button onClick={handleReset}
-                  className="shrink-0 px-4 py-2 rounded-lg text-sm font-black text-white transition-all hover:opacity-90"
-                  style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-                  Scan mine
-                </button>
-              </div>
-            )}
-
-            <div className="flex justify-end">
-              <button onClick={handleReset} className="flex items-center gap-1.5 text-sm text-brand-sub hover:text-brand-text transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-muted/50">
-                <RotateCcw className="w-3.5 h-3.5" /> New scan
-              </button>
-            </div>
-
-            <ScoreCard result={state.result} analysisId={state.analysisId} />
-            <FindingsList findings={state.result.top_findings} />
-
-            <div className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-2"
-              style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-              <p className="text-[10px] font-semibold text-brand-sub uppercase tracking-widest">Plain English Summary</p>
-              <p className="text-sm text-brand-text/75 leading-relaxed">{state.result.plain_summary}</p>
-            </div>
-
-            {state.result.overcharge?.line_items?.filter(i => i.flagged).length > 0 && (
-              <div className="rounded-2xl border border-brand-border bg-brand-surface overflow-hidden"
-                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                <div className="px-5 py-3 border-b border-brand-border flex items-center gap-2">
-                  <Receipt className="w-3.5 h-3.5 text-red-400" />
-                  <span className="text-xs font-semibold text-brand-sub uppercase tracking-widest">Flagged charges</span>
-                  {state.result.overcharge.total_flagged_amount > 0 && (
-                    <span className="ml-auto text-sm font-black text-red-400">
-                      {formatDollar(state.result.overcharge.total_flagged_amount)} flagged
-                    </span>
-                  )}
-                </div>
-                <div className="p-5">
-                  {state.result.overcharge.line_items.filter(i => i.flagged).map((item, i) => (
-                    <div key={i} className="receipt-item">
-                      <div className="min-w-0 flex-1 pr-4">
-                        <p className="text-sm font-medium text-brand-text truncate">{item.description}</p>
-                        {item.flag_reason && <p className="text-xs text-brand-sub mt-0.5">{item.flag_reason}</p>}
-                        {item.industry_context && <p className="text-xs text-green-400 mt-0.5">{item.industry_context}</p>}
-                      </div>
-                      {item.charged_amount != null && (
-                        <span className="font-black text-red-400 tabular-nums shrink-0">${item.charged_amount.toFixed(0)}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-{!isSample && <FixDocument result={state.result} />}
-{!isSample && <FightBackKit analysisId={state.analysisId} score={state.result.screwed_score} />}
-
-            {!isSample && (
-              <HumanAuditCard
-                analysisId={state.analysisId}
-                documentType={state.result.document_type}
-                scorePercent={state.result.screwed_score_percent}
-                userEmail={userEmail}
-              />
-            )}
-
-            <BenchmarkCard
-              documentType={state.result.document_type}
-              scorePercent={state.result.screwed_score_percent}
-              score={state.result.screwed_score}
-            />
-
-            {!isSample && <OutcomeReport analysisId={state.analysisId} score={state.result.screwed_score} />}
-
-            <TrustedProviders documentType={state.documentType} score={state.result.screwed_score} />
-
-            <RecommendedProviders
-              documentType={state.documentType ?? 'unknown'}
-              score={state.result.screwed_score}
-            />
-
-            {!isSample && (
-              <ShareExperience
-                defaultScore={state.result.screwed_score}
-                defaultCategory={state.documentType ?? 'unknown'}
-                analysisId={state.analysisId}
-              />
-            )}
-
-            {!isSample && <ReferralCard result={state.result} analysisId={state.analysisId!} />}
-
-            {!isSample && <ContentGenerator analysisId={state.analysisId} isPro={isPro} onUpgrade={() => setShowPaywall(true)} />}
-
-            {!isSample && (
-              <div className="rounded-2xl border border-brand-border bg-brand-surface p-5 space-y-3"
-                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                <p className="text-sm font-bold text-brand-text">Share your results</p>
-                <p className="text-xs text-brand-sub">Your result page is public at a shareable link. No personal info included.</p>
-                <ShareButton analysisId={state.analysisId} score={state.result.screwed_score} variant="full" result={state.result} />
-              </div>
-            )}
-
-            {!isSample && <EmailCapture analysisId={state.analysisId} />}
-
-            <div className="text-center pt-2">
-              <button onClick={handleReset}
-                className="text-sm text-brand-sub hover:text-brand-text transition-colors flex items-center gap-2 mx-auto">
-                <RotateCcw className="w-3.5 h-3.5" /> {isSample ? 'Scan my document' : 'Analyze another document'}
-              </button>
-            </div>
-          </div>
-        )}
+        </AnalysisShell>
       </main>
-
-      {/* ── Sticky sample CTA ───────────────────────────────────────────────── */}
-      {isSample && (
-        <div className="fixed bottom-0 inset-x-0 z-50 p-3 sm:p-4"
-          style={{ background: 'linear-gradient(to top, rgba(2,3,8,0.98) 60%, transparent)' }}>
-          <div className="max-w-lg mx-auto">
-            <button
-              onClick={handleReset}
-              className="w-full py-4 rounded-2xl font-black text-base tracking-tight transition-all duration-200 active:scale-95"
-              style={{
-                background: 'linear-gradient(135deg, #ff6b60, #ff3b30)',
-                boxShadow: '0 0 40px rgba(255,59,48,0.35)',
-                color: '#fff',
-              }}
-            >
-              Scan my own bill — it's free →
-            </button>
-            <p className="text-center text-[11px] mt-2" style={{ color: 'rgba(107,122,153,0.5)' }}>
-              No account · No credit card · Files deleted after scan
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer className="border-t border-brand-border mt-10 py-8">
@@ -1124,27 +661,19 @@ export default function HomePage() {
   )
 }
 
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 // ── FAQ accordion item ───────────────────────────────────────────────────────
+// A native <details>/<summary> pair: same open/close behaviour as the old
+// useState accordion, but it works in the server HTML with no client JS.
 function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false)
   return (
-    <div className="rounded-2xl border border-brand-border bg-brand-surface overflow-hidden transition-all"
-      style={{ boxShadow: open ? '0 0 20px rgba(255,59,48,0.04)' : undefined }}>
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-6 py-5 text-left gap-4 hover:bg-brand-muted/30 transition-colors">
+    <details className="faq-item rounded-2xl border border-brand-border bg-brand-surface overflow-hidden transition-all">
+      <summary className="w-full flex items-center justify-between px-6 py-5 text-left gap-4 hover:bg-brand-muted/30 transition-colors cursor-pointer list-none">
         <span className="text-sm font-bold text-brand-text">{q}</span>
-        <ChevronDown className={`w-4 h-4 text-brand-sub shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="px-5 pb-5">
-          <p className="text-sm text-brand-sub leading-relaxed border-t border-brand-border/50 pt-4">{a}</p>
-        </div>
-      )}
-    </div>
+        <ChevronDown className="faq-chevron w-4 h-4 text-brand-sub shrink-0 transition-transform duration-200" />
+      </summary>
+      <div className="px-5 pb-5">
+        <p className="text-sm text-brand-sub leading-relaxed border-t border-brand-border/50 pt-4">{a}</p>
+      </div>
+    </details>
   )
 }
