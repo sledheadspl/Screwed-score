@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { MessageSquare, ThumbsUp, CheckCircle } from 'lucide-react'
+import {useState} from 'react'
+import {MessageSquare, CheckCircle} from 'lucide-react'
 
 const SCORE_LABELS = {
   SCREWED: { label: '🚨 SCREWED', color: 'text-red-400', border: 'border-red-500/30', bg: 'bg-red-500/10' },

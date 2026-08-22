@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { formatDollar } from '@/lib/utils'
-import type { AnalysisResult, ScrewedScore } from '@/lib/types'
-import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
-import { ShareButton } from './ShareButton'
-import { DownloadCard } from './DownloadCard'
-import { TrendingUp, AlertTriangle, CheckCircle, Shield } from 'lucide-react'
+import {useEffect, useState} from 'react'
+import {formatDollar} from '@/lib/utils'
+import type {AnalysisResult} from '@/lib/types'
+import {DOCUMENT_TYPE_LABELS} from '@/lib/types'
+import {ShareButton} from './ShareButton'
+import {DownloadCard} from './DownloadCard'
+import {TrendingUp, AlertTriangle, CheckCircle, Shield} from 'lucide-react'
 
 interface ScoreCardProps {
   result: AnalysisResult
@@ -240,7 +240,7 @@ export function ScoreCard({ result, analysisId, isPublic = false }: ScoreCardPro
   )
 }
 
-function StatPill({ value, label, highlight, color }: {
+function StatPill({ value, label, highlight, color: _color }: {
   value: string; label: string; highlight: boolean; color: string
 }) {
   return (

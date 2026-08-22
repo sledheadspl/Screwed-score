@@ -12,16 +12,16 @@ export interface DocHistoryEntry {
   shareSlug?: string
 }
 
+/**
+ * @deprecated Session identity now lives in an HttpOnly `gss_sid` cookie that
+ * the server mints — the browser neither reads nor sends it explicitly, so no
+ * caller can name someone else's session. Kept only so older imports compile.
+ */
 export function getOrCreateSessionId(): string {
   try {
-    let id = localStorage.getItem(SESSION_KEY)
-    if (!id) {
-      id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
-      localStorage.setItem(SESSION_KEY, id)
-    }
-    return id
+    return localStorage.getItem(SESSION_KEY) ?? ''
   } catch {
-    return 'anon'
+    return ''
   }
 }
 
@@ -31,10 +31,10 @@ export async function saveToRemote(
   entry: { type: string; label: string; html: string }
 ): Promise<{ id: string; shareSlug: string } | null> {
   try {
-    const sessionId = getOrCreateSessionId()
     const res = await fetch('/api/documents', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-session-id': sessionId },
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ doc_type: entry.type, doc_label: entry.label, html: entry.html }),
     })
     if (!res.ok) return null
@@ -47,10 +47,7 @@ export async function saveToRemote(
 
 export async function loadFromRemote(): Promise<DocHistoryEntry[]> {
   try {
-    const sessionId = getOrCreateSessionId()
-    const res = await fetch(`/api/documents?session_id=${encodeURIComponent(sessionId)}`, {
-      headers: { 'x-session-id': sessionId },
-    })
+    const res = await fetch('/api/documents', { credentials: 'same-origin' })
     if (!res.ok) return []
     const data = await res.json()
     return (data.documents ?? []).map((d: {
@@ -72,10 +69,9 @@ export async function loadFromRemote(): Promise<DocHistoryEntry[]> {
 
 export async function deleteFromRemote(id: string): Promise<void> {
   try {
-    const sessionId = getOrCreateSessionId()
     await fetch(`/api/documents?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
-      headers: { 'x-session-id': sessionId },
+      credentials: 'same-origin',
     })
   } catch { /* ignore */ }
 }
@@ -89,7 +85,7 @@ function stripHtml(html: string): string {
 export function saveToLocal(entry: Omit<DocHistoryEntry, 'id' | 'preview'>): DocHistoryEntry {
   const full: DocHistoryEntry = {
     ...entry,
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    id: crypto.randomUUID(),
     preview: stripHtml(entry.html),
   }
   const existing = loadFromLocal()

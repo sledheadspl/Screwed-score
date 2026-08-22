@@ -9,8 +9,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03
 const LIMIT     = 10
 const WINDOW_MS = 60 * 60 * 1000
 
-// Price in cents — override with KIT_PRICE_CENTS env var if needed
-const KIT_PRICE_CENTS = parseInt(process.env.KIT_PRICE_CENTS ?? '1499', 10)
+// NOTE: this override is currently inert — the Stripe session below charges a
+// hardcoded price ID, so KIT_PRICE_CENTS never reaches checkout. Either wire it
+// in via price_data, or delete it and treat the Stripe price as the source of
+// truth. Left here deliberately so the mismatch stays visible.
+const _KIT_PRICE_CENTS = parseInt(process.env.KIT_PRICE_CENTS ?? '1499', 10)
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })

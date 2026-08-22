@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import {
   FileText, Receipt, Home, Key, AlertCircle, Shield,
@@ -942,7 +943,7 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
             <p className="text-center text-xs text-brand-sub">
               <strong className="text-brand-text">Print / Save PDF</strong> → choose &quot;Save as PDF&quot; in your print dialog.{' '}
               Want to check this document for issues?{' '}
-              <a href="/" className="text-brand-red hover:underline">Run it through Screwed Score →</a>
+              <Link href="/" className="text-brand-red hover:underline">Run it through Screwed Score →</Link>
             </p>
           </div>
         )}

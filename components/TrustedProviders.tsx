@@ -1,6 +1,6 @@
 'use client'
 
-import { ExternalLink, ShieldCheck, ChevronRight } from 'lucide-react'
+import {ExternalLink, ShieldCheck} from 'lucide-react'
 import type { DocumentType, ScrewedScore } from '@/lib/types'
 
 interface Resource {

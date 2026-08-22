@@ -5,7 +5,6 @@ import { X, Zap, CheckCircle, Loader2 } from 'lucide-react'
 
 interface Props {
   onClose: () => void
-  onGoogleLogin?: () => void
 }
 
 const PERKS = [
@@ -23,7 +22,7 @@ const PLANS: { id: Plan; label: string; price: string; note: string; badge?: str
   { id: 'pass',    label: '30-day pass', price: '$2.99',    note: 'One-time, no subscription' },
 ]
 
-export function PaywallModal({ onClose, onGoogleLogin }: Props) {
+export function PaywallModal({ onClose }: Props) {
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<Plan>('yearly')
 

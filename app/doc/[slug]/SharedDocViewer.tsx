@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Download, FileText } from 'lucide-react'
 
 interface Props {
@@ -29,14 +30,14 @@ export default function SharedDocViewer({ doc }: Props) {
               <h1 className="font-black text-brand-text truncate">{doc.doc_label}</h1>
               <p className="text-xs text-brand-sub">
                 Created {new Date(doc.created_at).toLocaleDateString()} · via{' '}
-                <a href="/create" className="text-brand-red hover:underline">GetScrewedScore</a>
+                <Link href="/create" className="text-brand-red hover:underline">GetScrewedScore</Link>
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <a href="/create" className="text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
+            <Link href="/create" className="text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
               Create your own →
-            </a>
+            </Link>
             <button
               onClick={handlePrint}
               className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand-red hover:bg-red-500 rounded-lg px-4 py-2 transition-colors"

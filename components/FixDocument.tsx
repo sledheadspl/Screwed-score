@@ -12,27 +12,58 @@ export function FixDocument({ result }: FixDocumentProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [html, setHtml] = useState<string | null>(null)
+  const [streaming, setStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const flagCount = result.top_findings.filter(f => f.severity === 'high' || f.severity === 'medium').length
   if (flagCount === 0 || result.screwed_score === 'SAFE') return null
 
+  // The route streams the document as plain text so the first bytes arrive
+  // well inside Netlify's 26s function cap. Read it incrementally and paint as
+  // it comes in, rather than waiting on one JSON payload that used to time out.
   const generate = async () => {
     setLoading(true)
+    setStreaming(true)
     setError(null)
+    setHtml(null)
     try {
       const res = await fetch('/api/fix-document', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ result }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Fix failed')
-      setHtml(data.html)
+
+      if (!res.ok) {
+        // Errors before streaming starts are still JSON; anything else (an
+        // HTML gateway page, say) shouldn't crash the parse.
+        const msg = await res.json().then(d => d.error).catch(() => null)
+        throw new Error(msg ?? `Request failed (${res.status})`)
+      }
+      if (!res.body) throw new Error('No response from the server')
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let acc = ''
+
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        acc += decoder.decode(value, { stream: true })
+
+        const failed = acc.match(/<!--GSS_ERROR:(.*?)-->/)
+        if (failed) throw new Error(failed[1])
+
+        setHtml(acc)
+        setLoading(false)   // content is on screen — drop the spinner
+      }
+
+      if (!acc.trim()) throw new Error('The document came back empty — try again.')
     } catch (e) {
+      setHtml(null)
       setError(e instanceof Error ? e.message : 'Something went wrong')
     } finally {
       setLoading(false)
+      setStreaming(false)
     }
   }
 
@@ -96,14 +127,14 @@ export function FixDocument({ result }: FixDocumentProps) {
               <div className="flex items-center gap-2">
                 <Wrench className="w-4 h-4 text-green-400" />
                 <span className="font-black text-brand-text text-sm">Fixed Document</span>
-                {html && (
+                {html && !streaming && (
                   <span className="flex items-center gap-1 text-xs text-green-400">
                     <CheckCircle className="w-3 h-3" /> Ready
                   </span>
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {html && (
+                {html && !streaming && (
                   <>
                     <button
                       onClick={generate}
@@ -131,7 +162,7 @@ export function FixDocument({ result }: FixDocumentProps) {
 
             {/* Modal body */}
             <div className="p-6">
-              {loading && (
+              {loading && !html && (
                 <div className="flex flex-col items-center justify-center py-16 gap-4">
                   <Loader2 className="w-8 h-8 text-green-400 animate-spin" />
                   <div className="text-center space-y-1">
@@ -148,7 +179,7 @@ export function FixDocument({ result }: FixDocumentProps) {
                 </div>
               )}
 
-              {html && !loading && (
+              {html && (
                 <>
                   <div className="rounded-xl border border-brand-border overflow-hidden mb-4">
                     <div className="bg-[#f5f5f0] min-h-[400px] p-8">
