@@ -4,7 +4,14 @@ import Anthropic from '@anthropic-ai/sdk'
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export const runtime = 'nodejs'
-export const maxDuration = 60
+
+// netlify.toml caps every function at 26s. This route used to declare
+// maxDuration = 60, which the platform simply ignored — a 4096-token document
+// generation regularly ran past 26s and Netlify killed the invocation, so the
+// browser got a dead connection instead of a document. Streaming the response
+// keeps bytes flowing from the first token, which both holds the connection
+// open and puts the document on screen while it is still being written.
+export const maxDuration = 26
 
 type DocType =
   | 'invoice'
@@ -212,14 +219,43 @@ ${fieldsText || '(none — rely on the description above, or use placeholder val
 
 Generate the complete document HTML now.`
 
-  const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: userMessage }],
+  const encoder = new TextEncoder()
+
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      try {
+        const ai = client.messages.stream({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 4096,
+          system: SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: userMessage }],
+        })
+
+        for await (const event of ai) {
+          if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+            controller.enqueue(encoder.encode(event.delta.text))
+          }
+        }
+        controller.close()
+      } catch (err) {
+        // The client can't read a status code once streaming has begun, so
+        // failures are surfaced as a sentinel it can detect in the body.
+        const msg =
+          err instanceof Anthropic.RateLimitError ? 'Rate limited — try again in a moment.'
+          : err instanceof Anthropic.APIError     ? `AI service error (${err.status}).`
+          : 'Could not generate the document.'
+        console.error('[create-document] generation failed:', err)
+        controller.enqueue(encoder.encode(`\n<!--GSS_ERROR:${msg}-->`))
+        controller.close()
+      }
+    },
   })
 
-  const html = message.content[0].type === 'text' ? message.content[0].text : ''
-
-  return NextResponse.json({ html })
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Accel-Buffering': 'no',
+    },
+  })
 }

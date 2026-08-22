@@ -154,6 +154,7 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
   const [fields, setFields] = useState<Record<string, string>>({})
   const [lineItems, setLineItems] = useState<LineItem[]>([{ description: '', qty: '1', price: '' }])
   const [loading, setLoading] = useState(false)
+  const [streaming, setStreaming] = useState(false)
   const [html, setHtml] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [history, setHistory] = useState<DocHistoryEntry[]>([])
@@ -249,31 +250,66 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
     return all
   }
 
+  // The route streams the document as it is written, so the preview fills in as
+  // it arrives rather than waiting on one JSON payload that used to time out.
   const generate = async () => {
     if (!selected) return
     setLoading(true)
+    setStreaming(true)
     setError(null)
     setHtml(null)
+    setEditMode(false)
     try {
       const res = await fetch('/api/create-document', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: selected, fields: buildFields(), userPrompt: prompt }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Generation failed')
-      setHtml(data.html)
+
+      if (!res.ok) {
+        // Validation errors land before streaming starts and are still JSON;
+        // anything else (a gateway error page, say) shouldn't crash the parse.
+        const msg = await res.json().then(d => d.error).catch(() => null)
+        throw new Error(msg ?? `Request failed (${res.status})`)
+      }
+      if (!res.body) throw new Error('No response from the server')
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let acc = ''
+      let scrolled = false
+
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        acc += decoder.decode(value, { stream: true })
+
+        const failed = acc.match(/<!--GSS_ERROR:(.*?)-->/)
+        if (failed) throw new Error(failed[1])
+
+        setHtml(acc)
+        setLoading(false)   // content is on screen — drop the spinner
+        if (!scrolled) {
+          scrolled = true
+          setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
+        }
+      }
+
+      if (!acc.trim()) throw new Error('The document came back empty — try again.')
+
+      // Only a finished document is worth saving to history.
       const label = DOC_TYPES.find(d => d.id === selected)?.label ?? selected
-      const localEntry = saveToLocal({ type: selected, label, html: data.html, createdAt: Date.now() })
+      const localEntry = saveToLocal({ type: selected, label, html: acc, createdAt: Date.now() })
       setHistory(h => [localEntry, ...h].slice(0, 20))
-      saveToRemote({ type: selected, label, html: data.html }).then(remote => {
+      saveToRemote({ type: selected, label, html: acc }).then(remote => {
         if (remote) setHistory(h => h.map(e => e.id === localEntry.id ? { ...e, id: remote.id, shareSlug: remote.shareSlug } : e))
       })
-      setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
     } catch (e) {
+      setHtml(null)
       setError(e instanceof Error ? e.message : 'Something went wrong')
     } finally {
       setLoading(false)
+      setStreaming(false)
     }
   }
 
@@ -857,11 +893,22 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
             {/* Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
-                <span className="font-bold text-brand-text">Document Ready</span>
+                {streaming ? (
+                  <>
+                    <Loader2 className="w-4 h-4 text-cyan-400 animate-spin" />
+                    <span className="font-bold text-brand-text">Writing your document…</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="font-bold text-brand-text">Document Ready</span>
+                  </>
+                )}
                 {editMode && <span className="text-xs text-yellow-400 border border-yellow-500/30 rounded px-2 py-0.5">Editing</span>}
               </div>
-              <div className="flex flex-wrap items-center gap-2">
+              {/* Editing, regenerating or printing a half-written document all
+                  produce something broken, so the controls wait for the last token. */}
+              <div className="flex flex-wrap items-center gap-2">{!streaming && (<>
                 <button onClick={() => { setHtml(null); setSelected(null); setEditMode(false) }}
                   className="flex items-center gap-1.5 text-xs text-brand-sub hover:text-brand-text border border-brand-border rounded-lg px-3 py-1.5 hover:bg-brand-muted transition-colors">
                   <RotateCcw className="w-3.5 h-3.5" /> Start Over
@@ -887,7 +934,7 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
                     <CheckCircle className="w-3.5 h-3.5" /> Done Editing
                   </button>
                 )}
-              </div>
+              </>)}</div>
             </div>
 
             {/* White paper preview — editable or static */}
@@ -914,7 +961,7 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
             </div>
 
             {/* Email delivery */}
-            {!editMode && (
+            {!editMode && !streaming && (
               <div className="rounded-xl border border-brand-border bg-brand-surface p-4 space-y-3">
                 <p className="text-xs font-bold text-brand-sub uppercase tracking-widest">Send via Email</p>
                 <div className="flex gap-2">
@@ -940,11 +987,14 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
               </div>
             )}
 
-            <p className="text-center text-xs text-brand-sub">
-              <strong className="text-brand-text">Print / Save PDF</strong> → choose &quot;Save as PDF&quot; in your print dialog.{' '}
-              Want to check this document for issues?{' '}
-              <Link href="/" className="text-brand-red hover:underline">Run it through Screwed Score →</Link>
-            </p>
+            {/* Points at the Print button, which is itself hidden mid-stream. */}
+            {!streaming && (
+              <p className="text-center text-xs text-brand-sub">
+                <strong className="text-brand-text">Print / Save PDF</strong> → choose &quot;Save as PDF&quot; in your print dialog.{' '}
+                Want to check this document for issues?{' '}
+                <Link href="/" className="text-brand-red hover:underline">Run it through Screwed Score →</Link>
+              </p>
+            )}
           </div>
         )}
 
