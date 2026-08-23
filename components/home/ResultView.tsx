@@ -88,7 +88,18 @@ export function ResultView({
                 <div className="min-w-0 flex-1 pr-4">
                   <p className="text-sm font-medium text-brand-text truncate">{item.description}</p>
                   {item.flag_reason && <p className="text-xs text-brand-sub mt-0.5">{item.flag_reason}</p>}
-                  {item.industry_context && <p className="text-xs text-green-400 mt-0.5">{item.industry_context}</p>}
+                  {/* A real industry benchmark and an unbenchmarked hunch must not
+                      look alike. Green reads as verified, so only a benchmarked
+                      comparison gets it; everything else is muted and labelled. */}
+                  {item.industry_context && (
+                    item.benchmark_confidence === 'benchmarked' ? (
+                      <p className="text-xs text-green-400 mt-0.5">{item.industry_context}</p>
+                    ) : (
+                      <p className="text-xs text-brand-sub/80 mt-0.5 italic">
+                        No confirmed baseline — {item.industry_context}
+                      </p>
+                    )
+                  )}
                 </div>
                 {item.charged_amount != null && (
                   <span className="font-black text-red-400 tabular-nums shrink-0">${item.charged_amount.toFixed(0)}</span>

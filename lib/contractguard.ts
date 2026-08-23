@@ -4,7 +4,8 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk'
-import type { ContractGuardOutput } from './types'
+import { CORE_ANALYST_DOCTRINE, industryPatternsFor } from './analysis-doctrine'
+import type { ContractGuardOutput, DocumentType } from './types'
 
 // Module-level singleton — avoids re-instantiation on every call in serverless warm invocations
 const anthropic = new Anthropic({
@@ -12,8 +13,16 @@ const anthropic = new Anthropic({
   timeout: 45_000,
 })
 
-const DIRECT_SYSTEM_PROMPT = `You are an expert contract analyst and consumer protection specialist.
-Analyze the provided document and return a detailed JSON analysis.
+// The clause pass. The doctrine sets the stance and the honesty rules; what
+// follows adds only what is specific to reading terms and obligations.
+const DIRECT_SYSTEM_PROMPT = `${CORE_ANALYST_DOCTRINE}
+
+THIS PASS
+You are reading the terms: what the document obligates this person to do, what it lets the other side do, and what protections are missing. Quote the actual clause text you are reacting to in clause_text — a red flag with no quoted source is not usable.
+
+negotiation_script must be something the reader can say out loud, in their own voice. alternative_language must be clause text they could actually propose. "Consult an attorney" is not a negotiation script; if the right move genuinely is to get a lawyer, say specifically what to bring and what to ask.
+
+Apply the same honesty rule to statutes as to prices: if a clause may be unenforceable in some jurisdictions, say that it may be, and say it depends on where they are. Do not cite a statute you are not sure of.
 
 Return ONLY valid JSON matching this exact structure — no markdown, no commentary:
 {
@@ -100,7 +109,7 @@ async function runDirectAnalysis(
     messages: [
       {
         role: 'user',
-        content: `Document type: ${documentType}\n\nDocument text:\n${truncatedText}`,
+        content: `Document type: ${documentType}\n\n${industryPatternsFor(documentType as DocumentType)}\n\nDocument text:\n${truncatedText}`,
       },
     ],
   })

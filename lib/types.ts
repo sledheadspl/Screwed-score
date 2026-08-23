@@ -91,6 +91,16 @@ export interface LineItemAnalysis {
   flag_reason?: string | null
   industry_context?: string | null
   severity: 'high' | 'medium' | 'low' | null
+  /**
+   * How much weight `industry_context` actually carries.
+   *
+   * 'benchmarked' means the comparison rests on a real industry norm;
+   * 'unbenchmarked' means the charge looks wrong from the shape of the document
+   * alone, with no confirmed baseline behind it. The distinction is displayed to
+   * the reader — presenting an unbenchmarked hunch in the same voice as a real
+   * comparison is the one failure the product cannot afford.
+   */
+  benchmark_confidence?: 'benchmarked' | 'unbenchmarked' | null
 }
 
 export interface OverchargeOutput {

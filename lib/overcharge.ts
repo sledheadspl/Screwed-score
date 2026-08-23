@@ -4,6 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk'
+import { CORE_ANALYST_DOCTRINE, industryPatternsFor } from './analysis-doctrine'
 import type { ContractGuardOutput, DocumentType, OverchargeOutput } from './types'
 
 const client = new Anthropic({
@@ -11,18 +12,22 @@ const client = new Anthropic({
   timeout: 45_000,
 })
 
-const SYSTEM_PROMPT = `You are a consumer protection analyst specializing in detecting overcharges,
-hidden fees, and deceptive pricing in everyday documents.
+// The line-item pass. The doctrine sets the stance and the honesty rules; what
+// follows adds only what is specific to auditing pricing.
+const SYSTEM_PROMPT = `${CORE_ANALYST_DOCTRINE}
 
-RULES:
-- Never name specific companies as bad actors — use "the service provider" or "they"
-- State price context as general approximations only: "typically runs $X–$Y"
-- Be direct and plain-spoken — write like you're explaining to a friend
-- Focus on concrete dollar amounts and specific line items when visible
-- Flag vague line items that could hide padding (e.g., "miscellaneous fees", "processing charge")
-- Detect duplicates: same service billed twice under different names
-- You are NOT giving legal or medical advice
-- Return ONLY valid JSON — no markdown fences, no commentary outside the JSON`
+THIS PASS
+You are auditing pricing: every charge, fee, and line item. Extract them all before judging any of them, including the small repeated ones.
+
+For each line item, decide whether it is flagged, and if so:
+- flag_reason: what is wrong with it, in plain English
+- industry_context: the benchmark you are measuring against, stated as a range ("typically runs $40–$80 for this")
+- benchmark_confidence: "benchmarked" when industry_context reflects a real industry norm you are confident in; "unbenchmarked" when the charge looks wrong from the document alone and you have no confirmed baseline. If you set "unbenchmarked", write industry_context to match — say that you have no confirmed baseline rather than offering a number. Never invent a range to avoid this admission.
+- severity: high, medium, or low, per the confidence rules above
+
+total_flagged_amount must be the sum of the charged amounts you actually flagged — not an estimate, and not the document total. If a charge has no legible amount, leave charged_amount null and keep the flag.
+
+Return ONLY valid JSON — no markdown fences, no commentary outside the JSON.`
 
 const RESPONSE_SCHEMA = `{
   "document_type": "mechanic_invoice|contractor_estimate|insurance_quote|medical_bill|dental_bill|phone_bill|internet_bill|lease_agreement|brand_deal|employment_contract|service_agreement|unknown",
@@ -32,7 +37,8 @@ const RESPONSE_SCHEMA = `{
       "charged_amount": number or null,
       "flagged": boolean,
       "flag_reason": "string or null",
-      "industry_context": "e.g. 'typically $40-$80 for this service' or null",
+      "industry_context": "e.g. 'typically $40-$80 for this service', or a plain statement that you have no confirmed baseline, or null",
+      "benchmark_confidence": "benchmarked|unbenchmarked|null",
       "severity": "high|medium|low|null"
     }
   ],
@@ -60,6 +66,8 @@ export async function detectOvercharges(
   const truncatedText = text.length > 12_000 ? text.slice(0, 12_000) + '\n[text truncated]' : text
 
   const prompt = `Analyze this ${docLabel} for overcharges and suspicious pricing.
+
+${industryPatternsFor(documentType)}
 
 ContractGuard red flags already identified (use as additional context):
 ${cgContext || '(none)'}
@@ -102,7 +110,13 @@ ${RESPONSE_SCHEMA}`
 }
 
 function normalizeOverchargeOutput(raw: OverchargeOutput): OverchargeOutput {
-  const lineItems = Array.isArray(raw.line_items) ? raw.line_items : []
+  // An absent or unrecognized confidence is treated as unbenchmarked: the UI
+  // must never present a claim as verified because a field was missing.
+  const lineItems = (Array.isArray(raw.line_items) ? raw.line_items : []).map(item => ({
+    ...item,
+    benchmark_confidence:
+      item.benchmark_confidence === 'benchmarked' ? 'benchmarked' as const : 'unbenchmarked' as const,
+  }))
   const topConcerns = Array.isArray(raw.top_concerns) ? raw.top_concerns : []
 
   // Pad to 3 concerns minimum
