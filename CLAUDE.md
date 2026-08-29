@@ -86,3 +86,13 @@ Key routes:
 - `fix-netlify-handler.js` must run after every build before deploying. It's part of `npm run build` but verify `netlify.toml` still has `command = "npm run build"` after any config changes.
 - API routes in `app/api/` have a 26-second Netlify function timeout (`netlify.toml`). Keep AI calls within ~45s with abort controllers.
 - Never nest route files inside `pages/api/` — all API routes use App Router.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
