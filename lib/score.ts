@@ -147,7 +147,11 @@ export function buildFindings(
       title: `Suspicious charge: ${item.description}`,
       description: item.flag_reason ?? 'This charge appears higher than expected',
       original_text: item.charged_amount != null ? `Charged: $${item.charged_amount}` : undefined,
-      suggested_fix: item.industry_context ?? undefined,
+      // industry_context doubles as the suggested fix only when it is a real
+      // benchmark. An "I have no baseline for this" note is an admission, not
+      // a remedy, and must not be presented to the reader as one.
+      suggested_fix:
+        item.benchmark_confidence === 'benchmarked' ? (item.industry_context ?? undefined) : undefined,
       dollar_impact: item.charged_amount ?? undefined,
     })
   }

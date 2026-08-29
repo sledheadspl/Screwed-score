@@ -99,13 +99,6 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const handleGoogleLogin = useCallback(async () => {
-    const client = await getBrowserSupabase()
-    await client.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
-    })
-  }, [])
 
   const setPhase = (phase: AppState['phase'], progress: number, label: string) =>
     setState(s => ({ ...s, phase, progress, progressLabel: label }))
@@ -212,7 +205,7 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
       {state.phase === 'idle' && mountExtras && <ExitIntentPopup />}
 
       {showPaywall && (
-        <PaywallModal onClose={() => setShowPaywall(false)} onGoogleLogin={handleGoogleLogin} />
+        <PaywallModal onClose={() => setShowPaywall(false)} />
       )}
 
       {authError && (

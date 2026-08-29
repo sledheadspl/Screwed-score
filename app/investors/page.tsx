@@ -1,11 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import {
-  ArrowRight, TrendingUp, DollarSign, Users, Zap, Shield,
-  BarChart3, Globe, Cpu, Video, ChevronDown, Mail, CheckCircle,
-  Target, Layers, Rocket,
-} from 'lucide-react'
+import {useState} from 'react'
+import {ArrowRight, TrendingUp, DollarSign, Users, Zap, Shield, Globe, Cpu, Video, ChevronDown, Mail, CheckCircle, Target, Layers, Rocket} from 'lucide-react'
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 

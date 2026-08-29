@@ -32,9 +32,9 @@ export const SAMPLE_RESULT: AnalysisResult = {
   overcharge: {
     document_type: 'mechanic_invoice',
     line_items: [
-      { description: 'Labor — Engine diagnostic & repair (2.0 hrs)', charged_amount: 420, flagged: true, flag_reason: 'Billed at $210/hr — regional average is $65–$95/hr', industry_context: 'Typical labor for this repair: $130–$190', severity: 'high' },
-      { description: 'OEM Brake Pads (set of 4)', charged_amount: 340, flagged: true, flag_reason: 'Parts marked up 180% over retail price', industry_context: 'Same part available for $55–$90', severity: 'high' },
-      { description: 'Diagnostic Fee', charged_amount: 89, flagged: true, flag_reason: 'Duplicate — also embedded in labor total', industry_context: 'Standard diagnostic fee: $50–$80, billed once', severity: 'high' },
+      { description: 'Labor — Engine diagnostic & repair (2.0 hrs)', charged_amount: 420, flagged: true, flag_reason: 'Billed at $210/hr — regional average is $65–$95/hr', industry_context: 'Typical labor for this repair: $130–$190', benchmark_confidence: 'benchmarked', severity: 'high' },
+      { description: 'OEM Brake Pads (set of 4)', charged_amount: 340, flagged: true, flag_reason: 'Parts marked up 180% over retail price', industry_context: 'Same part available for $55–$90', benchmark_confidence: 'benchmarked', severity: 'high' },
+      { description: 'Diagnostic Fee', charged_amount: 89, flagged: true, flag_reason: 'Duplicate — also embedded in labor total', industry_context: 'Standard diagnostic fee: $50–$80, billed once', benchmark_confidence: 'benchmarked', severity: 'high' },
       { description: 'Shop Supplies & Disposal', charged_amount: 45, flagged: false, flag_reason: null, industry_context: null, severity: null },
       { description: 'Oil & Filter Change', charged_amount: 79, flagged: false, flag_reason: null, industry_context: null, severity: null },
     ],

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 export default function AuditSuccessPage() {
   return (
     <main className="min-h-screen flex items-center justify-center px-4" style={{ background: '#020308' }}>
@@ -28,12 +29,12 @@ export default function AuditSuccessPage() {
             </div>
           ))}
         </div>
-        <a
+        <Link
           href="/"
           className="inline-block text-sm text-brand-sub underline underline-offset-2 opacity-60 hover:opacity-100 transition-opacity"
         >
           ← Back to ScrewedScore
-        </a>
+        </Link>
       </div>
     </main>
   )

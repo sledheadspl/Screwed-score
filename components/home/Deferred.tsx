@@ -24,7 +24,6 @@ function WhenNear({ children, minHeight }: { children: ReactNode; minHeight: num
     if (!el) return
     if (typeof IntersectionObserver === 'undefined') { setShow(true); return }
 
-    let io: IntersectionObserver | undefined
     let frame = 0
 
     // True once the placeholder has reached the load line — including when the
@@ -33,7 +32,7 @@ function WhenNear({ children, minHeight }: { children: ReactNode; minHeight: num
 
     const reveal = () => {
       setShow(true)
-      io?.disconnect()
+      io.disconnect()
       window.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(frame)
     }
@@ -46,7 +45,7 @@ function WhenNear({ children, minHeight }: { children: ReactNode; minHeight: num
       frame = requestAnimationFrame(() => { if (near()) reveal() })
     }
 
-    io = new IntersectionObserver(
+    const io = new IntersectionObserver(
       entries => { if (entries.some(e => e.isIntersecting)) reveal() },
       { rootMargin: '400px' }
     )
@@ -54,7 +53,7 @@ function WhenNear({ children, minHeight }: { children: ReactNode; minHeight: num
     window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
-      io?.disconnect()
+      io.disconnect()
       window.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(frame)
     }

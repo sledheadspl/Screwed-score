@@ -16,7 +16,8 @@ const STEPS = [
   { phase: 'done' as AppPhase,      label: 'Done' },
 ]
 
-const MESSAGES: Partial<Record<AppPhase, string[]>> = {
+// Orphaned: written for a rotating progress message that was never wired up.
+const _MESSAGES: Partial<Record<AppPhase, string[]>> = {
   uploading: ['Sending your file...'],
   parsing:   ['Reading the document...', 'Extracting text...'],
   analyzing: [

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Sparkles, Loader2 } from 'lucide-react'
@@ -50,7 +51,7 @@ function PaidInner() {
       {status === 'error' && (
         <>
           <p className="text-red-400 font-semibold">Something went wrong verifying your payment.</p>
-          <p className="text-brand-sub text-sm">Your card was not charged. <a href="/" className="underline">Go back</a>.</p>
+          <p className="text-brand-sub text-sm">Your card was not charged. <Link href="/" className="underline">Go back</Link>.</p>
         </>
       )}
     </div>

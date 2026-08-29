@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { use } from 'react'
-import { Flame, ShieldCheck, AlertTriangle, Users, TrendingUp, Share2 } from 'lucide-react'
+import {useState, useEffect} from 'react'
+import {use} from 'react'
+import {Users, TrendingUp, Share2} from 'lucide-react'
 import Link from 'next/link'
 
 interface BusinessScore {

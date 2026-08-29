@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { ChevronDown, DollarSign, FileWarning, AlertTriangle, Info } from 'lucide-react'
-import { cn, formatDollar } from '@/lib/utils'
+import {useState} from 'react'
+import {ChevronDown, DollarSign, FileWarning, AlertTriangle, Info} from 'lucide-react'
+import {cn} from '@/lib/utils'
 import type { Finding } from '@/lib/types'
 
 interface FindingsListProps {
@@ -91,7 +91,6 @@ export function FindingsList({ findings, maxVisible = 6 }: FindingsListProps) {
 
       {visible.map((finding, i) => {
         const cfg = SEVERITY_CONFIG[finding.severity]
-        const Icon = cfg.icon
         const isOpen = expanded === i
 
         return (

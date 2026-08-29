@@ -1,10 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import {
-  ArrowRight, Zap, Radio, Scissors, Subtitles, Share2,
-  CheckCircle, BarChart3, Monitor, Crown, Cpu, Clapperboard, ChevronDown,
-} from 'lucide-react'
+import {useState} from 'react'
+import {ArrowRight, Radio, Scissors, Subtitles, Share2, CheckCircle, BarChart3, Monitor, Cpu, Clapperboard, ChevronDown} from 'lucide-react'
 import CheckoutButton from './CheckoutButton'
 
 // ── Feature data ─────────────────────────────────────────────────────────────
