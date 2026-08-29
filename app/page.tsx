@@ -240,6 +240,34 @@ export default function HomePage() {
               </div>
             </section>
 
+            {/* ════ FIGHT BACK KIT — PROMO BANNER ═══════════════════════════ */}
+            <section id="fight-back-kit" className="animate-fade-up scroll-mt-20 relative overflow-hidden py-16 sm:py-20 border-t border-b border-yellow-500/10">
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full"
+                  style={{ background: 'radial-gradient(ellipse 70% 100% at 50% 0%, rgba(245,158,11,0.1) 0%, transparent 60%)' }} />
+              </div>
+              <div className="relative max-w-4xl mx-auto px-5 sm:px-8 text-center space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest"
+                  style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#fbbf24' }}>
+                  <Zap className="w-3 h-3" /> The Fight Back Kit
+                </div>
+                <h2 className="font-black tracking-tighter text-brand-text leading-[1.05]" style={{ fontSize: 'clamp(30px, 5vw, 54px)' }}>
+                  Found something wrong?<br />Here&apos;s your 5-piece kit to get paid back.
+                </h2>
+                <p className="text-brand-sub/60 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                  A demand letter, a word-for-word phone script, a chargeback guide, an escalation path, and a 3-email follow-up sequence — all written for your exact charges, the moment your scan comes back SCREWED or MAYBE.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                  <a href="#upload"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-black text-white transition-all hover:opacity-90 active:scale-95"
+                    style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', boxShadow: '0 0 30px rgba(245,158,11,0.35)' }}>
+                    Scan a bill to unlock it <ChevronRight className="w-4 h-4" />
+                  </a>
+                  <span className="text-xs font-black" style={{ color: 'rgba(245,158,11,0.7)' }}>$14.99 · One-time · Avg. recovery $400+</span>
+                </div>
+              </div>
+            </section>
+
             {/* ════ EDITORIAL STATEMENT ═══════════════════════════════════ */}
             <section className="animate-fade-up max-w-4xl mx-auto px-5 sm:px-8 py-28 sm:py-36 text-center">
               <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em] mb-8">Why this exists</p>
@@ -389,6 +417,27 @@ export default function HomePage() {
                     <h3 className="text-lg font-black text-brand-text tracking-tight mb-3 leading-tight">AI reputation scores on every business.</h3>
                     <p className="text-sm text-brand-sub/55 leading-relaxed">
                       Every vendor that appears in a scan gets a public profile. Screwed rate, total flagged dollars, community reviews.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Lost Assets — coming soon */}
+                <div className="bento-cell rounded-2xl border border-dashed border-brand-border/70 group transition-all duration-300"
+                  style={{ minHeight: '200px' }}>
+                  <div className="p-7">
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                        style={{ background: 'rgba(96,165,250,0.06)', border: '1px solid rgba(96,165,250,0.14)' }}>
+                        <Sparkles className="w-5 h-5 text-blue-300/70" />
+                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full text-brand-sub/60 border border-brand-border">
+                        Coming soon
+                      </span>
+                    </div>
+                    <p className="text-[10px] font-bold text-blue-300/60 uppercase tracking-widest mb-1.5">Lost Assets Finder</p>
+                    <h3 className="text-lg font-black text-brand-text/80 tracking-tight mb-3 leading-tight">Find money owed to you, not taken from you.</h3>
+                    <p className="text-sm text-brand-sub/50 leading-relaxed">
+                      A companion search for unclaimed property and dissolved-business assets sitting in your name. In development — starting with a handful of states.
                     </p>
                   </div>
                 </div>

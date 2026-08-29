@@ -51,3 +51,9 @@ tools/seo-engine/.venv/
 tools/seo-engine/__pycache__/
 tools/seo-engine/articles/
 _quarantine/
+
+# Lost Assets module (Phase 1, standalone FastAPI service — see lost-assets/README.md)
+lost-assets/**/__pycache__/
+lost-assets/.venv/
+lost-assets/venv/
+lost-assets/app/lost_assets.db

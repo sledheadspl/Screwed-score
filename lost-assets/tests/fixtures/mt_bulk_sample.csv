@@ -1,0 +1,8 @@
+BE-LLC,MT0123456,Chen Digital Solutions LLC,Limited Liability Company,Domestic LLC,2018-03-01,Domestic,Perpetual,,Inactive Withdrawn,Annual Report Delinquency,2021-06-04,,Member-Managed,No,2900 Grand Ave,,Billings,MT,59102,,USA,General business,MT,,,2020-03-01,
+AGENT,MT0123456,David Chen,2900 Grand Ave,,Billings,MT,59102,,USA,2900 Grand Ave,,Billings,MT,59102,,USA
+PRINCIPAL,MT0123456,David Chen,Manager,2900 Grand Ave,,Billings,MT,59102,,USA,
+PRINCIPAL,MT0123456,Lisa Chen,Member,2900 Grand Ave,,Billings,MT,59102,,USA,
+BE-LLC,MT0999999,Bright Future LLC,Limited Liability Company,Domestic LLC,2020-01-10,Domestic,Perpetual,,Active Good Standing,,,,Member-Managed,No,500 1st Ave N,,Great Falls,MT,59401,,USA,General business,MT,,,2026-02-01,
+AGENT,MT0999999,Priya Natarajan,500 1st Ave N,,Great Falls,MT,59401,,USA,500 1st Ave N,,Great Falls,MT,59401,,USA
+PRINCIPAL,MT0999999,Priya Natarajan,Manager,500 1st Ave N,,Great Falls,MT,59401,,USA,
+BE-CORP,MT0555555,Some Corp Inc,Corporation,Domestic,2015-05-05,Domestic,Perpetual,,Active Good Standing

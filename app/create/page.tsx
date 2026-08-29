@@ -259,8 +259,15 @@ export default function CreatePage({ defaultType }: { defaultType?: DocType } = 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: selected, fields: buildFields(), userPrompt: prompt }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Generation failed')
+      const raw = await res.text()
+      let data: { html?: string; error?: string } = {}
+      try { data = JSON.parse(raw) } catch { /* non-JSON error page (e.g. gateway timeout) */ }
+      if (!res.ok || !data.html) {
+        throw new Error(
+          data.error ||
+          (res.status === 504 ? 'Generation took too long — please try again.' : 'Generation failed — please try again.')
+        )
+      }
       setHtml(data.html)
       const label = DOC_TYPES.find(d => d.id === selected)?.label ?? selected
       const localEntry = saveToLocal({ type: selected, label, html: data.html, createdAt: Date.now() })

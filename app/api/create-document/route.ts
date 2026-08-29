@@ -22,7 +22,7 @@ type DocType =
 const SYSTEM_PROMPT = `You are a professional legal document and business form generator. You create clean, complete, legally-sound documents in HTML format.
 
 Rules:
-- Output ONLY the inner body HTML — no <html>, <head>, or <body> tags
+- Output ONLY the inner body HTML — no <html>, <head>, or <body> tags, and no markdown code fences (no \`\`\`) wrapping the output
 - Use inline styles only — no external CSS or class-based styling
 - Typography: font-family: Georgia, serif; color: #111; line-height: 1.6
 - Max width: 720px, margin: auto, padding: 40px
@@ -213,13 +213,14 @@ ${fieldsText || '(none — rely on the description above, or use placeholder val
 Generate the complete document HTML now.`
 
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage }],
   })
 
-  const html = message.content[0].type === 'text' ? message.content[0].text : ''
+  const raw = message.content[0].type === 'text' ? message.content[0].text : ''
+  const html = raw.trim().replace(/^```(?:html)?\n?/, '').replace(/\n?```$/, '')
 
   return NextResponse.json({ html })
 }
