@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:local": "NEXT_PUBLIC_APP_URL=http://10.0.0.228:3000 next dev --hostname 0.0.0.0",
+    "dev": "next dev --webpack",
+    "dev:local": "NEXT_PUBLIC_APP_URL=http://10.0.0.228:3000 next dev --webpack --hostname 0.0.0.0",
     "build": "next build --webpack && node fix-netlify-handler.js",
     "start": "next start",
     "lint": "eslint .",
