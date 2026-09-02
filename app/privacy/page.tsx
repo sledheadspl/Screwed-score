@@ -77,7 +77,7 @@ export default function PrivacyPage() {
             <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">Anthropic&apos;s Privacy Policy</a>.
             Anthropic does not train models on API inputs.
           </p>
-          <p>You may request deletion of your data at any time by emailing us (see Section 7).</p>
+          <p>You may request deletion of your data at any time by emailing us (see Section 8).</p>
         </Section>
 
         <Section title="4. Third-Party Services">
@@ -98,6 +98,7 @@ export default function PrivacyPage() {
                   ['Stripe', 'Payment processing', 'stripe.com/privacy'],
                   ['Google OAuth', 'Sign-in (optional)', 'policies.google.com/privacy'],
                   ['Google Analytics', 'Usage analytics (anonymized)', 'policies.google.com/privacy'],
+                  ['Google AdSense', 'Advertising', 'policies.google.com/technologies/ads'],
                   ['Netlify', 'Website hosting', 'netlify.com/privacy'],
                 ].map(([svc, purpose, url]) => (
                   <tr key={svc} className="text-brand-sub">
@@ -120,14 +121,21 @@ export default function PrivacyPage() {
             <li><strong className="text-brand-text">gss_pro</strong> — an HTTP-only, secure, signed token that identifies you as a Pro subscriber. Set when you complete checkout. Expires after 7 days (renewed automatically for active subscribers).</li>
             <li><strong className="text-brand-text">Supabase auth cookies</strong> — set when you sign in with Google. Used to maintain your session.</li>
             <li><strong className="text-brand-text">Google Analytics cookies</strong> — used by GA4 for anonymized usage tracking. You can opt out via your browser&apos;s cookie settings or a GA opt-out browser add-on.</li>
+            <li><strong className="text-brand-text">Google AdSense cookies</strong> — Google and its partners use cookies (including the DoubleClick cookie) to serve ads based on your prior visits to this and other websites. You can opt out of personalized advertising at <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">google.com/settings/ads</a>, or opt out of third-party vendor cookies at <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">aboutads.info/choices</a>.</li>
           </ul>
         </Section>
 
-        <Section title="6. Children's Privacy">
+        <Section title="6. Advertising">
+          <p>We display ads served by Google AdSense. Google is a third-party vendor that uses cookies to serve ads based on your prior visits to this and other websites. Google&apos;s use of advertising cookies enables it and its partners to serve ads to you based on your visit to our site and/or other sites on the internet.</p>
+          <p>Third-party vendors and ad networks may also serve ads on our site and use cookies or web beacons to collect information about your visits. We do not share the documents you upload, their extracted text, or your analysis results with advertisers or ad networks.</p>
+          <p>You can opt out of personalized advertising in <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">Google Ads Settings</a>, or opt out of third-party vendor cookies at <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">aboutads.info/choices</a>. For more information, see <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">Google&apos;s advertising policies</a>.</p>
+        </Section>
+
+        <Section title="7. Children's Privacy">
           <p>GetScrewedScore is not directed to children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us and we will delete it.</p>
         </Section>
 
-        <Section title="7. Your Rights">
+        <Section title="8. Your Rights">
           <p>Depending on your location, you may have the right to:</p>
           <ul className="list-disc list-inside space-y-2">
             <li>Access the personal data we hold about you</li>
@@ -138,16 +146,16 @@ export default function PrivacyPage() {
           <p>To exercise any of these rights, email us at <a href="mailto:privacy@rembydesign.com" className="text-red-400 hover:underline">privacy@rembydesign.com</a>. We will respond within 30 days.</p>
         </Section>
 
-        <Section title="8. Security">
+        <Section title="9. Security">
           <p>We take security seriously. All data is transmitted over HTTPS. Sensitive tokens are signed with HMAC-SHA256. Database access requires server-side authentication via service role keys that are never exposed to the client. IP addresses are stored only as one-way SHA-256 hashes.</p>
           <p>No method of transmission or storage is 100% secure. If you discover a security vulnerability, please disclose it responsibly to <a href="mailto:security@rembydesign.com" className="text-red-400 hover:underline">security@rembydesign.com</a>.</p>
         </Section>
 
-        <Section title="9. Changes to This Policy">
+        <Section title="10. Changes to This Policy">
           <p>We may update this Privacy Policy from time to time. When we do, we will update the &ldquo;Last updated&rdquo; date at the top of this page. Continued use of the service after changes constitutes acceptance of the updated policy.</p>
         </Section>
 
-        <Section title="10. Contact">
+        <Section title="11. Contact">
           <p>Questions about this Privacy Policy? Contact us:</p>
           <div className="rounded-xl border border-brand-border bg-brand-surface p-4 space-y-1">
             <p><strong className="text-brand-text">REMbyDesign</strong></p>
