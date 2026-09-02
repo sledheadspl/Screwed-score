@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/navigation/Navbar'
+import { ADSENSE_CLIENT_ID } from '@/lib/adsense'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' })
 const jakarta = Plus_Jakarta_Sans({
@@ -119,6 +120,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           gtag('config', 'G-23L7FKP8VQ');
           gtag('config', 'AW-18056991193');
         `}</Script>
+        {/* Google AdSense — site verification + Auto ads. Rendered only when
+            NEXT_PUBLIC_ADSENSE_CLIENT_ID is set, so preview deploys and local
+            dev never load ads. afterInteractive (not lazyOnload) keeps the tag
+            in the served HTML, which is what the AdSense crawler looks for. */}
+        {ADSENSE_CLIENT_ID && (
+          <Script
+            id="adsbygoogle-init"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+          />
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
