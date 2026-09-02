@@ -32,7 +32,7 @@ Required in `.env.local` (copy from `getscrewedscore.env` on Desktop):
 | `CONTRACTGUARD_FUNCTION_URL` | Supabase edge function URL (optional — falls back to direct Anthropic) |
 | `CONTRACTGUARD_FUNCTION_KEY` | Bearer token for edge function |
 | `GSS_TOKEN_SECRET` | HMAC secret for `gss_pro` Stripe cookies |
-| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | Google AdSense publisher ID, `ca-pub-…` (optional — unset disables the ad script, ad slots, and `/ads.txt`) |
+| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | Optional AdSense override. The live publisher ID is hardcoded in `lib/adsense.ts`; set this to another `ca-pub-…` ID to override, or to `off` to disable ads and `/ads.txt`. AdSense is off automatically outside production builds. |
 
 ## Architecture
 
