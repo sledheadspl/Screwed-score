@@ -18,6 +18,19 @@ on YouTube's DOM, and a YouTube redesign can break it. Nothing here touches your
 password or exports a credential — it clicks buttons in a tab you are already
 signed into.
 
+## Two ways to run it
+
+| | This extension | [`headless/`](headless/README.md) |
+|---|---|---|
+| Runs in | A browser tab you keep open | Node, on a server or Pi |
+| Needs a computer on | Yes | No |
+| Credentials | Your signed-in tab | Session cookies in `.env` |
+| Good for | Streaming from a desktop | Streaming from a phone, or unattended |
+
+Both share one matching engine — `src/content.js` and
+`headless/src/moderation.js` are kept behaviourally identical, and
+`headless/npm run selftest` covers both.
+
 ## Requirements
 
 - Chrome, Edge, or another Chromium browser (Firefox needs a manifest tweak).
@@ -46,10 +59,14 @@ careless regex here removes real viewers' messages.
 
 ## How matching works
 
-Banned words are matched on whole words after normalizing the message — case,
-accents, zero-width padding, leetspeak (`sh1t`, `f@ck`) and stretched letters
-(`shiiiit`) all fold down to the same form. Regex patterns run against the raw
-text, so use those for links, handles, and anything case-sensitive.
+Obfuscation is handled in the pattern rather than by rewriting the message,
+because folding symbols to letters cannot work in general: `@` usually stands
+for `a`, but in `f@ck` it stands for `u`. Each banned word expands into a
+character class per letter, so `fuck` also catches `f@ck`, `f*ck` and `fuuck`,
+while accents, zero-width padding and stretched letters (`shiiiit`) are
+normalized away. Letter-adjacency lookarounds keep `Scunthorpe`, `class` and
+`shitake` safe. Regex patterns run against the raw text, so use those for links,
+handles, and anything case-sensitive.
 
 Anything in the allow list makes a message immune, which is the escape hatch for
 the Scunthorpe problem.
@@ -75,6 +92,7 @@ That reduces prompt injection from chat; it does not eliminate it. Read the log.
 | `src/content.js` | Runs in the chat frame: observes, deletes, replies |
 | `options.html` / `options.js` | Full settings page |
 | `popup.html` / `popup.js` | On/off switch, counters, recent activity |
+| `headless/` | Browserless Node version of the same bot |
 
 The API key lives in `chrome.storage.local` and is used only from the service
 worker, so it never enters the YouTube page context.

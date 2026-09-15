@@ -33,18 +33,50 @@ function escapeRegExp (s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-const LEET = { 4: 'a', '@': 'a', 3: 'e', 1: 'i', '!': 'i', '|': 'i', 0: 'o', 5: 's', $: 's', 7: 't', '+': 't' }
+function escapeClass (s) {
+  return s.replace(/[\]\\^-]/g, '\\$&')
+}
 
-// Fold the usual filter-dodging tricks: accents, zero-width padding, leetspeak,
-// and stretched letters ("shiiiit").
+// Obfuscation is handled in the pattern, not by rewriting the message. Folding
+// symbols to letters up front cannot work: "@" usually stands for "a", but in
+// "f@ck" it stands for "u". Expanding each letter into the set of characters
+// that can spell it catches both without guessing.
+const LEET_CLASS = {
+  a: 'a@4*', b: 'b8', c: 'c(', e: 'e3@*', g: 'g9', i: 'i1!|@*',
+  l: 'l1|', o: 'o0@*', s: 's5$', t: 't7+', u: 'u@*#', z: 'z2',
+}
+
+// Strip accents and zero-width padding, lowercase, and collapse runs of 3+ so
+// "shiiiit" reads as "shit". Symbols are left alone for the pattern to handle.
 function normalize (text) {
   return text
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[​-‏⁠﻿]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u200b-\u200f\u2060\ufeff]/g, '')
     .toLowerCase()
-    .replace(/[4@31!|05$7+]/g, ch => LEET[ch] ?? ch)
     .replace(/(.)\1{2,}/g, '$1')
+}
+
+// Accents off and lowercased, but no repeat-collapsing: a banned word is a
+// literal to expand, not a message to clean up.
+function normalizeWord (word) {
+  return word
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u200b-\u200f\u2060\ufeff]/g, '')
+    .toLowerCase()
+    .trim()
+}
+
+// "fuck" becomes [f]+[u@*#]+[c(]+[k]+ — tolerant of leetspeak and of doubled
+// letters that survived collapsing ("fuuck").
+function wordToPattern (word) {
+  let out = ''
+  for (const ch of word) {
+    const cls = LEET_CLASS[ch]
+    out += cls ? `[${escapeClass(cls)}]+` : `${escapeRegExp(ch)}+`
+  }
+  return out
 }
 
 // ── matching ───────────────────────────────────────────────────────────────
@@ -53,9 +85,9 @@ let matcher = { words: null, patterns: [], allow: [] }
 
 function buildMatcher (moderation) {
   const words = (moderation.bannedWords ?? [])
-    .map(w => normalize(String(w).trim()))
+    .map(w => normalizeWord(String(w)))
     .filter(Boolean)
-    .map(escapeRegExp)
+    .map(wordToPattern)
 
   const patterns = []
   for (const raw of moderation.bannedPatterns ?? []) {
@@ -68,7 +100,10 @@ function buildMatcher (moderation) {
   }
 
   matcher = {
-    words: words.length ? new RegExp(`\\b(${words.join('|')})\\b`, 'i') : null,
+    // Letter-adjacency lookarounds rather than \b: a word spelled with a
+    // leading symbol ("$hit", "@ss") has no word boundary in front of it, so
+    // \b would let exactly the obfuscated cases through.
+    words: words.length ? new RegExp(`(?<![a-z0-9_])(?:${words.join('|')})(?![a-z0-9_])`, 'i') : null,
     patterns,
     allow: (moderation.allowList ?? []).map(w => normalize(String(w).trim())).filter(Boolean),
   }
@@ -79,7 +114,7 @@ function findViolation (text) {
   if (matcher.allow.some(term => normalized.includes(term))) return null
 
   const wordHit = matcher.words?.exec(normalized)
-  if (wordHit) return { term: wordHit[1], source: 'word' }
+  if (wordHit) return { term: wordHit[0], source: 'word' }
 
   for (const pattern of matcher.patterns) {
     if (pattern.test(text)) return { term: pattern.source, source: 'pattern' }

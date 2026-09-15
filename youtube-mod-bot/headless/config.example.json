@@ -1,0 +1,27 @@
+{
+  "channel": "@yourhandle",
+  "pollSeconds": 60,
+  "model": "claude-sonnet-5",
+
+  "moderation": {
+    "enabled": true,
+    "dryRun": true,
+    "bannedWords": ["fuck", "shit", "bitch", "asshole", "cunt", "whore"],
+    "bannedPatterns": ["https?://(?!(www\\.)?youtube\\.com)"],
+    "allowList": [],
+    "exemptOwner": true,
+    "exemptModerators": true,
+    "exemptMembers": false
+  },
+
+  "qa": {
+    "enabled": true,
+    "trigger": "prefix",
+    "prefix": "!ask",
+    "cooldownSeconds": 20,
+    "maxRepliesPerHour": 60,
+    "mentionAsker": true,
+    "skipOwnerMessages": true,
+    "maxReplyChars": 190
+  }
+}

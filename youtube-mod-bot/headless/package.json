@@ -1,0 +1,16 @@
+{
+  "name": "youtube-mod-bot-headless",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Always-on YouTube live chat moderation and Q&A bot. No browser required.",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js",
+    "selftest": "node src/selftest.js"
+  },
+  "dependencies": {
+    "@stu43005/masterchat": "^2.1.0"
+  }
+}
