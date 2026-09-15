@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Live Chat Mod Bot — Settings</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0 auto; padding: 24px 20px 64px; max-width: 760px;
+      font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    h2 { font-size: 15px; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #8884; }
+    p.hint { margin: 4px 0 14px; opacity: .7; font-size: 12.5px; }
+    label { display: block; margin: 12px 0 4px; font-weight: 600; font-size: 13px; }
+    input[type=text], input[type=password], input[type=number], select, textarea {
+      width: 100%; box-sizing: border-box; padding: 7px 9px; font: inherit;
+      border: 1px solid #8886; border-radius: 6px; background: #8881;
+    }
+    textarea { min-height: 88px; resize: vertical; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .row > div { flex: 1 1 200px; }
+    .check { display: flex; align-items: center; gap: 8px; margin: 9px 0; font-weight: 400; }
+    .check input { width: auto; margin: 0; }
+    .warn {
+      margin: 14px 0; padding: 10px 12px; border-radius: 6px;
+      background: #f5a62322; border: 1px solid #f5a62366; font-size: 13px;
+    }
+    footer {
+      position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px;
+      margin-top: 28px; padding: 14px 0; background: Canvas; border-top: 1px solid #8884;
+    }
+    button { padding: 8px 18px; font: inherit; font-weight: 600; border-radius: 6px; cursor: pointer; border: 1px solid #8886; }
+    button.primary { background: #065fd4; border-color: #065fd4; color: #fff; }
+    #status { font-size: 13px; opacity: .8; }
+  </style>
+</head>
+<body>
+  <h1>YouTube Live Chat Mod Bot</h1>
+  <p class="hint">Acts through your signed-in YouTube session. Deleting messages requires this account to be the broadcast owner or a moderator of the chat.</p>
+
+  <div class="warn" id="dry-warning" hidden>
+    <strong>Dry run is on.</strong> Matches are logged but nothing is deleted. Watch the activity log for a stream, then turn this off.
+  </div>
+
+  <h2>Claude</h2>
+  <label for="apiKey">Anthropic API key</label>
+  <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+  <p class="hint">Stored in this browser profile only, and used from the extension's background worker so it never enters the YouTube page.</p>
+
+  <label for="model">Model</label>
+  <select id="model">
+    <option value="claude-sonnet-5">Sonnet 5 — balanced (default)</option>
+    <option value="claude-opus-5">Opus 5 — most capable</option>
+    <option value="claude-haiku-4-5-20251001">Haiku 4.5 — fastest</option>
+  </select>
+
+  <h2>Moderation</h2>
+  <div class="check"><input type="checkbox" id="mod-enabled"><label for="mod-enabled" style="margin:0">Delete messages that match</label></div>
+  <div class="check"><input type="checkbox" id="mod-dryRun"><label for="mod-dryRun" style="margin:0">Dry run — log matches without deleting</label></div>
+
+  <label for="bannedWords">Banned words (one per line)</label>
+  <textarea id="bannedWords" spellcheck="false"></textarea>
+  <p class="hint">Matched on whole words, ignoring case, accents, zero-width padding, leetspeak (<code>sh1t</code>) and stretched letters (<code>shiiiit</code>).</p>
+
+  <label for="bannedPatterns">Banned regex patterns (one per line)</label>
+  <textarea id="bannedPatterns" spellcheck="false" placeholder="https?://(?!www\.youtube\.com)"></textarea>
+  <p class="hint">Applied to the raw message text. Invalid patterns are skipped with a console warning.</p>
+
+  <label for="allowList">Never delete messages containing (one per line)</label>
+  <textarea id="allowList" spellcheck="false"></textarea>
+
+  <div class="check"><input type="checkbox" id="mod-exemptOwner"><label for="mod-exemptOwner" style="margin:0">Never moderate the channel owner</label></div>
+  <div class="check"><input type="checkbox" id="mod-exemptModerators"><label for="mod-exemptModerators" style="margin:0">Never moderate other moderators</label></div>
+  <div class="check"><input type="checkbox" id="mod-exemptMembers"><label for="mod-exemptMembers" style="margin:0">Never moderate channel members</label></div>
+
+  <label for="removeLabels">"Remove" menu labels (one per line)</label>
+  <textarea id="removeLabels" spellcheck="false"></textarea>
+  <p class="hint">The bot finds the delete entry by its trash icon first; these labels are the fallback. Add your language's wording if deletes fail.</p>
+
+  <h2>Answering questions</h2>
+  <div class="check"><input type="checkbox" id="qa-enabled"><label for="qa-enabled" style="margin:0">Answer viewer questions with Claude</label></div>
+
+  <div class="row">
+    <div>
+      <label for="qa-trigger">Trigger on</label>
+      <select id="qa-trigger">
+        <option value="prefix">Prefix only (recommended)</option>
+        <option value="questionMark">Any message ending in "?"</option>
+        <option value="both">Either</option>
+      </select>
+    </div>
+    <div>
+      <label for="qa-prefix">Prefix</label>
+      <input type="text" id="qa-prefix" placeholder="!ask">
+    </div>
+  </div>
+  <p class="hint">Answering every "?" in a busy chat gets noisy fast — and costs a token call per message.</p>
+
+  <label for="qa-systemPrompt">System prompt</label>
+  <textarea id="qa-systemPrompt" spellcheck="false"></textarea>
+
+  <div class="row">
+    <div>
+      <label for="qa-cooldownSeconds">Cooldown between replies (seconds)</label>
+      <input type="number" id="qa-cooldownSeconds" min="0" max="600">
+    </div>
+    <div>
+      <label for="qa-maxRepliesPerHour">Max replies per hour</label>
+      <input type="number" id="qa-maxRepliesPerHour" min="1" max="1000">
+    </div>
+    <div>
+      <label for="qa-maxReplyChars">Max reply length</label>
+      <input type="number" id="qa-maxReplyChars" min="20" max="200">
+    </div>
+  </div>
+  <p class="hint">YouTube caps a chat message at 200 characters.</p>
+
+  <div class="check"><input type="checkbox" id="qa-mentionAsker"><label for="qa-mentionAsker" style="margin:0">Start the reply with @their-name</label></div>
+  <div class="check"><input type="checkbox" id="qa-skipOwnerMessages"><label for="qa-skipOwnerMessages" style="margin:0">Ignore questions from the channel owner (stops self-reply loops)</label></div>
+
+  <footer>
+    <button class="primary" id="save">Save</button>
+    <button id="reset">Reset to defaults</button>
+    <span id="status"></span>
+  </footer>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

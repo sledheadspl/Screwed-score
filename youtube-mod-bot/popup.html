@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mod Bot</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { width: 340px; margin: 0; padding: 14px; font: 13px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    h1 { font-size: 14px; margin: 0; }
+    .switch { display: flex; align-items: center; gap: 7px; font-size: 12.5px; }
+    .banner { margin: 11px 0 0; padding: 7px 9px; border-radius: 5px; font-size: 12px; background: #f5a62322; border: 1px solid #f5a62366; }
+    .stats { display: flex; gap: 8px; margin: 12px 0 10px; text-align: center; }
+    .stat { flex: 1; padding: 7px 4px; border: 1px solid #8886; border-radius: 6px; }
+    .stat b { display: block; font-size: 17px; }
+    .stat span { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; opacity: .65; }
+    h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; opacity: .65; margin: 12px 0 6px; }
+    ul { list-style: none; margin: 0; padding: 0; max-height: 210px; overflow-y: auto; }
+    li { padding: 6px 0; border-top: 1px solid #8883; font-size: 12px; }
+    li .who { font-weight: 600; }
+    li .what { opacity: .75; word-break: break-word; }
+    li .kind { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; padding: 1px 5px; border-radius: 3px; background: #8883; }
+    .kind.deleted { background: #e5484d33; }
+    .kind.wouldDelete { background: #f5a62333; }
+    .kind.answered { background: #30a46c33; }
+    .kind.error { background: #e5484d55; }
+    .empty { opacity: .6; padding: 10px 0; font-size: 12px; }
+    footer { margin-top: 12px; display: flex; gap: 10px; }
+    a { color: #3b82f6; font-size: 12px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>YouTube Live Chat Mod Bot</h1>
+    <label class="switch"><input type="checkbox" id="enabled"> On</label>
+  </header>
+
+  <div class="banner" id="dry" hidden><strong>Dry run</strong> — matches are logged, nothing is deleted.</div>
+  <div class="banner" id="nokey" hidden><strong>No API key</strong> — questions can't be answered yet.</div>
+
+  <div class="stats">
+    <div class="stat"><b id="s-deleted">0</b><span>Deleted</span></div>
+    <div class="stat"><b id="s-wouldDelete">0</b><span>Would</span></div>
+    <div class="stat"><b id="s-answered">0</b><span>Answered</span></div>
+    <div class="stat"><b id="s-errors">0</b><span>Errors</span></div>
+  </div>
+
+  <h2>Recent activity</h2>
+  <ul id="log"></ul>
+  <p class="empty" id="empty" hidden>Nothing yet. Open a live chat you moderate.</p>
+
+  <footer>
+    <a id="options">Settings</a>
+    <a id="clear">Clear log</a>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

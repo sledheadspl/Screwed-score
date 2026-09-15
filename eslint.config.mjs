@@ -9,6 +9,7 @@ export default [
     ignores: [
       '.next/**', 'node_modules/**', 'out/**', 'build/**',
       'clippilot/**', 'tools/**', 'supabase/functions/**', // Tauri / Python / Deno — other toolchains
+      'youtube-mod-bot/**', // browser extension — MV3 globals, no Next/React rules apply
       'next-env.d.ts', 'fix-netlify-handler.js', 'seed-*.js',
     ],
   },
