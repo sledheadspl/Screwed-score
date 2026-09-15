@@ -50,14 +50,68 @@ own moderator account if you can, and sign that account out to revoke them.
 Without cookies the bot still starts and logs what it *would* do, but cannot
 delete or reply.
 
-## Dry run comes first
+## Three modes, not a boolean
 
-`dryRun` is `true` in the example config, and nothing is deleted and no replies
-are sent until you set it to `false`. Run a stream that way, read the log, fix
-the false positives, then go live with it.
+`moderation.mode` decides how much rope the bot gets. You can change it live
+from the dashboard mid-stream.
 
-This matters more here than in the extension. A server-side bot keeps running
-unattended — which also means a bad filter keeps deleting unattended.
+| Mode | What happens on a match |
+|---|---|
+| `dry` | Logged only. Nothing deleted, no replies sent. **The default.** |
+| `hold` | Queued for your approval in the dashboard. Nothing happens until you tap, or `holdSeconds` runs out. |
+| `auto` | Deleted immediately. |
+
+`hold` is the one to run your first real stream in: you see every call the bot
+wants to make and approve it, so you learn where the filter is wrong without
+it having already taken anything down.
+
+If a held match times out, `holdDefault` decides. It ships as `skip` — leaving
+a bad message up for 25 seconds is recoverable; deleting a good one because you
+looked away is not.
+
+(Older configs used `dryRun: true`/`false`. Those still load and map to `dry`
+and `auto`.)
+
+## The dashboard
+
+Open it on your phone and watch the bot work. It shows **every message it
+sees**, not just the ones it acted on, so you can tell the difference between
+"the filter is working" and "the filter is asleep".
+
+```
+DASHBOARD_TOKEN=$(openssl rand -hex 24) npm start
+```
+
+The startup log prints the URL with the token in it. Add it to your home
+screen and it behaves like an app.
+
+What you can do from it:
+
+- **Approve or reject each held match** — Delete / Keep, with a countdown bar.
+- **"Wrong — allow that word"** on anything it deleted or would have deleted.
+  One tap, added to the allow list, saved to `config.json`, never flagged again.
+- **"Delete this"** on anything that slipped past.
+- **Switch modes and pause** without touching the server.
+- **The input bar**: type plain text to post it to chat as the bot, or use
+  `/ban word`, `/allow word`, `/unban word`, `/mode dry|hold|auto`, `/pause`,
+  `/resume`, `/ask <question>`.
+
+Word-list and mode changes are written back to `config.json`, so a correction
+you make mid-stream survives a restart.
+
+### Dashboard security
+
+That URL can delete messages and post to your chat as you. Treat it like a
+password:
+
+- **With no `DASHBOARD_TOKEN`, the server binds to `127.0.0.1` only** and
+  refuses to listen publicly. That is deliberate — it cannot be accidentally
+  exposed.
+- Setting a token makes it bind `0.0.0.0`. It is plain HTTP, so put it behind
+  Tailscale, an SSH tunnel, or an HTTPS reverse proxy rather than on a bare
+  public IP. `DASHBOARD_HOST` overrides the binding if you want something else.
+- Tokens are compared in constant time, and the page strips the token out of
+  the URL bar after first load.
 
 ## Finding your stream
 
@@ -74,7 +128,8 @@ Everything in `config.json` mirrors the extension's options page:
 
 | Key | Meaning |
 |---|---|
-| `moderation.dryRun` | Log matches without acting |
+| `moderation.mode` | `dry`, `hold`, or `auto` |
+| `moderation.holdSeconds` / `holdDefault` | How long a held match waits, and what happens if you miss it |
 | `moderation.bannedWords` | Whole-word matches, leet-tolerant |
 | `moderation.bannedPatterns` | Regex against the raw message |
 | `moderation.allowList` | Messages containing these are never touched |
@@ -85,7 +140,8 @@ Everything in `config.json` mirrors the extension's options page:
 | `qa.maxReplyChars` | YouTube caps a chat message at 200 |
 
 Environment overrides: `MOD_BOT_CHANNEL`, `MOD_BOT_VIDEO_ID`,
-`MOD_BOT_DRY_RUN=false`, `MOD_BOT_CONFIG=/path/to/config.json`.
+`MOD_BOT_MODE=hold`, `MOD_BOT_PORT`, `MOD_BOT_CONFIG=/path/to/config.json`,
+`DASHBOARD_TOKEN`, `DASHBOARD_HOST`.
 
 ## Matching
 
@@ -127,5 +183,10 @@ covers the process dying outright.
 - Deleting is the only moderation action wired up. `masterchat` also exposes
   `timeout()` and `hide()` if you want to extend it.
 - One channel per process. Run more instances for more channels.
-- Not runtime-tested against a live broadcast — the filter engine is covered by
-  the self-test, but the YouTube calls need a real stream. Start in dry run.
+- **A deletion cannot be undone.** YouTube has no un-delete for chat, so the
+  dashboard's correction for a wrong call is "stop doing that" (allow the term),
+  not "put it back". That asymmetry is why `hold` exists and why `holdDefault`
+  is `skip`.
+- Not runtime-tested against a live broadcast — the filter engine and the whole
+  dashboard surface are covered by `npm run selftest`, but the YouTube calls
+  need a real stream. Start in `dry`, then `hold`.

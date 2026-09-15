@@ -8,6 +8,8 @@ import { loadConfig } from './config.js'
 import { buildMatcher } from './moderation.js'
 import { findLiveVideoId } from './live.js'
 import { runStream } from './bot.js'
+import { startDashboard } from './dashboard.js'
+import { runtime, emit, patch } from './hub.js'
 import { log, info } from './log.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -15,11 +17,10 @@ const MAX_BACKOFF_MS = 5 * 60_000
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const stats = { deleted: 0, wouldDelete: 0, answered: 0, errors: 0 }
-
 async function main () {
   const config = await loadConfig(ROOT)
-  const matcher = buildMatcher(config.moderation, message => log('warn', message))
+  runtime.config = config
+  runtime.matcher = buildMatcher(config.moderation, message => log('warn', message))
 
   const controller = new AbortController()
   let stopping = false
@@ -32,14 +33,16 @@ async function main () {
     })
   }
 
-  info(`moderation ${config.moderation.enabled ? 'on' : 'off'}, Q&A ${config.qa.enabled ? `on (${config.qa.trigger})` : 'off'}`)
+  info(`moderation ${config.moderation.enabled ? config.moderation.mode : 'off'}, Q&A ${config.qa.enabled ? `on (${config.qa.trigger})` : 'off'}`)
 
-  if (config.moderation.dryRun) {
+  if (config.moderation.mode === 'dry') {
     log('warn', 'DRY RUN - matches are logged, nothing is deleted and no replies are sent')
   }
   if (!config.credentials) {
     log('warn', `read-only: missing cookies ${config.missingCredentials.join(', ')} - it will log matches but cannot act`)
   }
+
+  if (config.dashboard.enabled) startDashboard(config)
 
   let backoff = 10_000
 
@@ -60,17 +63,20 @@ async function main () {
     }
 
     try {
-      await runStream({ videoId, config, matcher, stats, signal: controller.signal })
+      await runStream({ videoId, signal: controller.signal })
       backoff = 10_000
     } catch (err) {
-      stats.errors += 1
-      log('error', `${videoId}: ${err?.message ?? err}`)
+      runtime.stats.errors += 1
+      const message = String(err?.message ?? err)
+      log('error', `${videoId}: ${message}`)
+      emit({ kind: 'error', detail: message })
       await sleep(backoff)
       backoff = Math.min(backoff * 2, MAX_BACKOFF_MS)
       continue
     }
 
-    info(`session totals - deleted ${stats.deleted}, would-delete ${stats.wouldDelete}, answered ${stats.answered}, errors ${stats.errors}`)
+    const s = runtime.stats
+    info(`session totals - deleted ${s.deleted}, held ${s.held}, would-delete ${s.wouldDelete}, answered ${s.answered}, errors ${s.errors}`)
 
     // A fixed videoId means one broadcast and then we are done.
     if (config.videoId) break
@@ -78,6 +84,7 @@ async function main () {
   }
 
   info('stopped')
+  process.exit(0)
 }
 
 main().catch(err => {

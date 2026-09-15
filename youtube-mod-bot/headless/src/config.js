@@ -1,7 +1,7 @@
 // Settings come from config.json; secrets come from the environment only, so a
 // committed config file can never carry credentials.
 
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 
@@ -26,7 +26,15 @@ const DEFAULTS = {
 
   moderation: {
     enabled: true,
-    dryRun: true,
+    // 'dry'  - log matches, touch nothing (default)
+    // 'hold' - queue matches for your approval in the dashboard
+    // 'auto' - delete immediately
+    mode: 'dry',
+    // How long a held match waits for you before holdDefault applies.
+    holdSeconds: 25,
+    // What happens to a held match you never answered. 'skip' leaves the
+    // message up, which is the recoverable mistake; 'delete' is not.
+    holdDefault: 'skip',
     bannedWords: ['fuck', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'whore'],
     bannedPatterns: [],
     allowList: [],
@@ -45,6 +53,11 @@ const DEFAULTS = {
     mentionAsker: true,
     skipOwnerMessages: true,
     maxReplyChars: 190,
+  },
+
+  dashboard: {
+    enabled: true,
+    port: 8787,
   },
 }
 
@@ -65,8 +78,18 @@ async function loadDotEnv (dir) {
 
 function merge (stored) {
   const merged = { ...DEFAULTS, ...stored }
-  for (const group of ['moderation', 'qa']) {
+  for (const group of ['moderation', 'qa', 'dashboard']) {
     merged[group] = { ...DEFAULTS[group], ...(stored[group] ?? {}) }
+  }
+
+  // Back-compat: earlier configs used a dryRun boolean.
+  if (stored.moderation?.mode === undefined && stored.moderation?.dryRun !== undefined) {
+    merged.moderation.mode = stored.moderation.dryRun ? 'dry' : 'auto'
+  }
+  delete merged.moderation.dryRun
+
+  if (!['dry', 'hold', 'auto'].includes(merged.moderation.mode)) {
+    merged.moderation.mode = 'dry'
   }
   return merged
 }
@@ -87,9 +110,16 @@ export async function loadConfig (rootDir) {
   // Env overrides, for containers where editing a file is awkward.
   if (process.env.MOD_BOT_CHANNEL) config.channel = process.env.MOD_BOT_CHANNEL
   if (process.env.MOD_BOT_VIDEO_ID) config.videoId = process.env.MOD_BOT_VIDEO_ID
-  if (process.env.MOD_BOT_DRY_RUN) config.moderation.dryRun = process.env.MOD_BOT_DRY_RUN !== 'false'
+  if (process.env.MOD_BOT_MODE) config.moderation.mode = process.env.MOD_BOT_MODE
+  if (process.env.MOD_BOT_PORT) config.dashboard.port = Number(process.env.MOD_BOT_PORT)
+
+  // A dashboard that can delete messages and post as you must not be open to
+  // the internet unauthenticated. With no token it stays on loopback.
+  config.dashboardToken = process.env.DASHBOARD_TOKEN ?? ''
+  config.dashboardHost = process.env.DASHBOARD_HOST ?? (config.dashboardToken ? '0.0.0.0' : '127.0.0.1')
 
   config.anthropicApiKey = process.env.ANTHROPIC_API_KEY ?? ''
+  config.configPath = file
 
   const missing = CREDENTIAL_KEYS.filter(key => !process.env[key])
   config.credentials = missing.length
@@ -105,4 +135,16 @@ export async function loadConfig (rootDir) {
   }
 
   return config
+}
+
+// Persists word-list and mode changes made from the dashboard, so a correction
+// you make mid-stream survives a restart. Secrets live in the environment and
+// are never written here.
+export async function saveConfig (config) {
+  const { moderation, qa, dashboard, channel, videoId, pollSeconds, model } = config
+  const body = { channel, videoId, pollSeconds, model, moderation, qa, dashboard }
+  for (const key of Object.keys(body)) {
+    if (body[key] === '' || body[key] === undefined) delete body[key]
+  }
+  await writeFile(config.configPath, `${JSON.stringify(body, null, 2)}\n`, 'utf8')
 }

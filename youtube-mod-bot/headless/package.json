@@ -5,10 +5,12 @@
   "type": "module",
   "description": "Always-on YouTube live chat moderation and Q&A bot. No browser required.",
   "license": "MIT",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node src/index.js",
-    "selftest": "node src/selftest.js"
+    "selftest": "node src/selftest.js && node src/dashboard.selftest.js"
   },
   "dependencies": {
     "@stu43005/masterchat": "^2.1.0"

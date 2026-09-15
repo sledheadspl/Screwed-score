@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Mod Bot</title>
+<style>
+  :root {
+    --bg:#0f1115; --panel:#171a21; --line:#272c37; --text:#e7e9ee; --dim:#9aa2b4;
+    --red:#e5484d; --amber:#f5a623; --green:#30a46c; --blue:#4c8dff;
+    --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font:14px/1.45 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+    padding-bottom:calc(74px + var(--safe-b));
+  }
+  header {
+    position:sticky; top:0; z-index:5; background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:calc(10px + var(--safe-t)) 12px 10px;
+  }
+  .row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .dot { width:9px; height:9px; border-radius:50%; background:var(--dim); flex:none; }
+  .dot.live { background:var(--green); box-shadow:0 0 0 3px rgba(48,163,108,.2); }
+  .title { font-weight:650; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
+  .modes { display:flex; gap:4px; margin-top:9px; }
+  .modes button {
+    flex:1; padding:7px 4px; font:inherit; font-size:12px; font-weight:600;
+    background:#0d0f14; color:var(--dim); border:1px solid var(--line); border-radius:7px;
+  }
+  .modes button[aria-pressed="true"] { color:#fff; }
+  .modes button[data-mode="dry"][aria-pressed="true"]  { background:#3a3320; border-color:var(--amber); color:var(--amber); }
+  .modes button[data-mode="hold"][aria-pressed="true"] { background:#1d2e46; border-color:var(--blue); color:var(--blue); }
+  .modes button[data-mode="auto"][aria-pressed="true"] { background:#3d1f22; border-color:var(--red); color:var(--red); }
+  .stats { display:flex; gap:10px; margin-top:9px; font-size:11px; color:var(--dim); }
+  .stats b { color:var(--text); font-size:13px; }
+  .banner { margin:9px 0 0; padding:7px 9px; border-radius:7px; font-size:12px; }
+  .banner.dry { background:rgba(245,166,35,.13); border:1px solid rgba(245,166,35,.4); color:#f7c46c; }
+  .banner.paused { background:rgba(76,141,255,.13); border:1px solid rgba(76,141,255,.4); color:#9dbcff; }
+
+  #pending:not(:empty) { padding:10px 12px 2px; }
+  .hold {
+    background:#1d2231; border:1px solid var(--blue); border-radius:10px;
+    padding:10px; margin-bottom:8px;
+  }
+  .hold .who { font-weight:650; }
+  .hold .msg { margin:4px 0 8px; word-break:break-word; }
+  .hold .why { font-size:11px; color:var(--dim); }
+  .hold .acts { display:flex; gap:8px; margin-top:8px; }
+  .hold .acts button { flex:1; padding:10px; border-radius:8px; font:inherit; font-weight:650; border:none; }
+  .del { background:var(--red); color:#fff; }
+  .keep { background:#2b3242; color:var(--text); }
+  .bar { height:3px; background:#2b3242; border-radius:2px; overflow:hidden; margin-top:8px; }
+  .bar i { display:block; height:100%; background:var(--blue); transition:width .25s linear; }
+
+  ul { list-style:none; margin:0; padding:0 12px; }
+  li { padding:9px 0; border-bottom:1px solid var(--line); }
+  .tag {
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    padding:2px 6px; border-radius:4px; background:#2b3242; color:var(--dim);
+  }
+  .tag.deleted, .tag.error { background:rgba(229,72,77,.2); color:#ff8b8f; }
+  .tag.wouldDelete, .tag.pending { background:rgba(245,166,35,.2); color:#f7c46c; }
+  .tag.answered, .tag.said { background:rgba(48,163,108,.2); color:#66d19e; }
+  .tag.kept, .tag.config, .tag.system { background:rgba(76,141,255,.18); color:#9dbcff; }
+  li .who { font-weight:650; margin:0 6px; }
+  li .when { font-size:11px; color:var(--dim); }
+  li .msg { margin-top:3px; word-break:break-word; }
+  li .why { font-size:11px; color:var(--dim); margin-top:2px; }
+  li .fix { margin-top:6px; display:flex; gap:6px; flex-wrap:wrap; }
+  li .fix button {
+    font:inherit; font-size:11px; font-weight:600; padding:5px 9px; border-radius:6px;
+    background:#222838; color:var(--text); border:1px solid var(--line);
+  }
+  .empty { color:var(--dim); padding:18px 12px; }
+
+  form {
+    position:fixed; left:0; right:0; bottom:0; z-index:6;
+    display:flex; gap:8px; padding:10px 12px calc(10px + var(--safe-b));
+    background:var(--panel); border-top:1px solid var(--line);
+  }
+  input {
+    flex:1; min-width:0; padding:11px 12px; font:inherit; color:var(--text);
+    background:#0d0f14; border:1px solid var(--line); border-radius:9px;
+  }
+  form button { padding:0 16px; border-radius:9px; border:none; background:var(--blue); color:#fff; font:inherit; font-weight:650; }
+  #toast {
+    position:fixed; left:12px; right:12px; bottom:calc(76px + var(--safe-b)); z-index:7;
+    padding:9px 12px; border-radius:8px; font-size:12.5px; background:#2b3242; border:1px solid var(--line);
+  }
+  #toast.err { background:#3d1f22; border-color:var(--red); color:#ff8b8f; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="row">
+    <span class="dot" id="dot"></span>
+    <span class="title" id="title">connecting…</span>
+    <button id="pause" class="tag" style="border:none;padding:5px 9px;font-size:11px">Pause</button>
+  </div>
+  <div class="modes">
+    <button data-mode="dry">Dry run</button>
+    <button data-mode="hold">Ask me</button>
+    <button data-mode="auto">Auto</button>
+  </div>
+  <div class="stats">
+    <span><b id="s-deleted">0</b> deleted</span>
+    <span><b id="s-wouldDelete">0</b> would</span>
+    <span><b id="s-answered">0</b> answered</span>
+    <span><b id="s-passed">0</b> passed</span>
+    <span><b id="s-errors">0</b> errors</span>
+  </div>
+  <div class="banner dry" id="dry-banner" hidden><b>Dry run</b> — matches are logged, nothing is deleted or sent.</div>
+  <div class="banner paused" id="paused-banner" hidden><b>Paused</b> — every message passes untouched.</div>
+</header>
+
+<div id="pending"></div>
+<ul id="feed"></ul>
+<p class="empty" id="empty">Waiting for chat…</p>
+
+<form id="bar" autocomplete="off">
+  <input id="input" placeholder="Say something, or /ban word · /allow word · /ask …" enterkeyhint="send">
+  <button type="submit">Send</button>
+</form>
+<div id="toast" hidden></div>
+
+<script>
+const $ = id => document.getElementById(id)
+
+// The token arrives in the URL once, then lives in storage so a reload or an
+// added-to-home-screen shortcut keeps working without it sitting in history.
+const params = new URLSearchParams(location.search)
+let token = params.get('token') || ''
+try {
+  if (token) { localStorage.setItem('modToken', token); history.replaceState(null, '', location.pathname) }
+  else { token = localStorage.getItem('modToken') || '' }
+} catch {}
+
+let state = { mode: 'dry', paused: false, stats: {} }
+
+function toast (message, isError) {
+  $('toast').textContent = message
+  $('toast').className = isError ? 'err' : ''
+  $('toast').hidden = false
+  clearTimeout(toast.timer)
+  toast.timer = setTimeout(() => { $('toast').hidden = true }, 3200)
+}
+
+async function send (body) {
+  try {
+    const res = await fetch('/api/command', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-mod-token': token },
+      body: JSON.stringify(body),
+    })
+    const data = await res.json()
+    if (!data.ok) throw new Error(data.error || 'failed')
+    return data
+  } catch (err) {
+    toast(err.message, true)
+    throw err
+  }
+}
+
+function ago (at) {
+  const s = Math.round((Date.now() - at) / 1000)
+  if (s < 60) return s + 's'
+  if (s < 3600) return Math.round(s / 60) + 'm'
+  return Math.round(s / 3600) + 'h'
+}
+
+function applyState (next) {
+  Object.assign(state, next)
+  if ('attached' in next || 'title' in next || 'videoId' in next) {
+    $('dot').className = 'dot' + (state.attached ? ' live' : '')
+    $('title').textContent = state.attached
+      ? (state.title || state.videoId || 'live')
+      : 'waiting for a live stream…'
+  }
+  for (const b of document.querySelectorAll('.modes button')) {
+    b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode))
+  }
+  $('dry-banner').hidden = state.mode !== 'dry'
+  $('paused-banner').hidden = !state.paused
+  $('pause').textContent = state.paused ? 'Resume' : 'Pause'
+  for (const k of ['deleted', 'wouldDelete', 'answered', 'passed', 'errors']) {
+    $('s-' + k).textContent = state.stats?.[k] ?? 0
+  }
+  if (next.pending) renderPending(next.pending)
+}
+
+function renderPending (items) {
+  $('pending').replaceChildren(...items.map(p => {
+    const box = document.createElement('div')
+    box.className = 'hold'
+    box.dataset.id = p.id
+
+    const head = document.createElement('div')
+    head.innerHTML = '<span class="who"></span><span class="why"></span>'
+    head.querySelector('.who').textContent = p.author
+    head.querySelector('.why').textContent = ' — matched "' + p.term + '"'
+
+    const msg = document.createElement('div')
+    msg.className = 'msg'
+    msg.textContent = p.text
+
+    const acts = document.createElement('div')
+    acts.className = 'acts'
+    const del = document.createElement('button')
+    del.className = 'del'; del.textContent = 'Delete'
+    del.onclick = () => send({ type: 'approve', pendingId: p.id })
+    const keep = document.createElement('button')
+    keep.className = 'keep'; keep.textContent = 'Keep'
+    keep.onclick = () => send({ type: 'keep', pendingId: p.id })
+    acts.append(del, keep)
+
+    const bar = document.createElement('div')
+    bar.className = 'bar'
+    const fill = document.createElement('i')
+    bar.append(fill)
+    box.expiresAt = p.expiresAt
+    box.fill = fill
+
+    box.append(head, msg, acts, bar)
+    return box
+  }))
+}
+
+setInterval(() => {
+  for (const box of $('pending').children) {
+    const left = Math.max(0, box.expiresAt - Date.now())
+    box.fill.style.width = Math.min(100, (left / 25000) * 100) + '%'
+  }
+  for (const el of document.querySelectorAll('[data-at]')) {
+    el.textContent = ago(Number(el.dataset.at))
+  }
+}, 1000)
+
+function row (e) {
+  const li = document.createElement('li')
+  li.dataset.kind = e.kind
+
+  const head = document.createElement('div')
+  const tag = document.createElement('span')
+  tag.className = 'tag ' + e.kind
+  tag.textContent = e.kind === 'wouldDelete' ? 'would delete' : e.kind
+  const who = document.createElement('span')
+  who.className = 'who'
+  who.textContent = e.author || ''
+  const when = document.createElement('span')
+  when.className = 'when'
+  when.dataset.at = e.at
+  when.textContent = ago(e.at)
+  head.append(tag, who, when)
+  li.append(head)
+
+  if (e.text) {
+    const msg = document.createElement('div')
+    msg.className = 'msg'
+    msg.textContent = e.text
+    li.append(msg)
+  }
+  if (e.detail) {
+    const why = document.createElement('div')
+    why.className = 'why'
+    why.textContent = e.detail
+    li.append(why)
+  }
+
+  const fix = document.createElement('div')
+  fix.className = 'fix'
+
+  // The correction that matters: the bot took down something it shouldn't have.
+  if ((e.kind === 'deleted' || e.kind === 'wouldDelete') && e.term) {
+    const b = document.createElement('button')
+    b.textContent = 'Wrong — allow "' + e.term + '"'
+    b.onclick = () => send({ type: 'allow', term: e.term }).then(() => toast('"' + e.term + '" will not be flagged again'))
+    fix.append(b)
+  }
+  // The opposite: something slipped past that shouldn't have.
+  if (e.kind === 'pass' && e.chatId) {
+    const b = document.createElement('button')
+    b.textContent = 'Delete this'
+    b.onclick = () => send({ type: 'delete', chatId: e.chatId, author: e.author, text: e.text }).then(() => toast('deleted'))
+    fix.append(b)
+  }
+  if (fix.children.length) li.append(fix)
+
+  return li
+}
+
+function addRow (e) {
+  $('empty').hidden = true
+  $('feed').prepend(row(e))
+  while ($('feed').children.length > 300) $('feed').lastElementChild.remove()
+}
+
+$('bar').onsubmit = async ev => {
+  ev.preventDefault()
+  const text = $('input').value.trim()
+  if (!text) return
+  $('input').value = ''
+
+  const [cmd, ...rest] = text.split(' ')
+  const arg = rest.join(' ').trim()
+  try {
+    if (cmd === '/ban')        { await send({ type: 'ban', term: arg });   toast('banned "' + arg + '"') }
+    else if (cmd === '/allow') { await send({ type: 'allow', term: arg }); toast('allowed "' + arg + '"') }
+    else if (cmd === '/unban') { await send({ type: 'unban', term: arg }); toast('unbanned "' + arg + '"') }
+    else if (cmd === '/mode')  { await send({ type: 'mode', mode: arg }) }
+    else if (cmd === '/pause') { await send({ type: 'pause', paused: true }) }
+    else if (cmd === '/resume'){ await send({ type: 'pause', paused: false }) }
+    else if (cmd === '/ask')   { await send({ type: 'ask', question: arg }) }
+    else                       { await send({ type: 'say', text }); toast('sent') }
+  } catch {
+    $('input').value = text
+  }
+}
+
+$('pause').onclick = () => send({ type: 'pause', paused: !state.paused })
+for (const b of document.querySelectorAll('.modes button')) {
+  b.onclick = () => send({ type: 'mode', mode: b.dataset.mode })
+}
+
+function connect () {
+  const source = new EventSource('/events' + (token ? '?token=' + encodeURIComponent(token) : ''))
+
+  source.addEventListener('snapshot', ev => {
+    const snap = JSON.parse(ev.data)
+    applyState(snap)
+    renderPending(snap.pending || [])
+    $('feed').replaceChildren(...(snap.feed || []).map(row))
+    $('empty').hidden = (snap.feed || []).length > 0
+  })
+  source.addEventListener('feed', ev => {
+    const e = JSON.parse(ev.data)
+    if (e.kind === 'pending') return  // shown in its own panel instead
+    addRow(e)
+  })
+  source.addEventListener('state', ev => applyState(JSON.parse(ev.data)))
+  source.onerror = () => { $('dot').className = 'dot'; $('title').textContent = 'reconnecting…' }
+}
+connect()
+</script>
+</body>
+</html>

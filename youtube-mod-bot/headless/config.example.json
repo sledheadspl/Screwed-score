@@ -2,18 +2,27 @@
   "channel": "@yourhandle",
   "pollSeconds": 60,
   "model": "claude-sonnet-5",
-
   "moderation": {
     "enabled": true,
-    "dryRun": true,
-    "bannedWords": ["fuck", "shit", "bitch", "asshole", "cunt", "whore"],
-    "bannedPatterns": ["https?://(?!(www\\.)?youtube\\.com)"],
+    "mode": "dry",
+    "holdSeconds": 25,
+    "holdDefault": "skip",
+    "bannedWords": [
+      "fuck",
+      "shit",
+      "bitch",
+      "asshole",
+      "cunt",
+      "whore"
+    ],
+    "bannedPatterns": [
+      "https?://(?!(www\\.)?youtube\\.com)"
+    ],
     "allowList": [],
     "exemptOwner": true,
     "exemptModerators": true,
     "exemptMembers": false
   },
-
   "qa": {
     "enabled": true,
     "trigger": "prefix",
@@ -23,5 +32,9 @@
     "mentionAsker": true,
     "skipOwnerMessages": true,
     "maxReplyChars": 190
+  },
+  "dashboard": {
+    "enabled": true,
+    "port": 8787
   }
 }
