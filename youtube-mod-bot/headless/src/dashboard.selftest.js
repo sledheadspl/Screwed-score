@@ -4,7 +4,7 @@
 
 import assert from 'node:assert/strict'
 import { runtime, emit } from './hub.js'
-import { buildMatcher } from './moderation.js'
+import { buildRules } from './rules.js'
 import { startDashboard } from './dashboard.js'
 import { holdViolation } from './actions.js'
 
@@ -18,15 +18,18 @@ runtime.config = {
   configPath: '/tmp/mod-bot-selftest-config.json',
   moderation: {
     enabled: true, mode: 'hold', holdSeconds: 25, holdDefault: 'skip',
-    bannedWords: ['shit'], bannedPatterns: [], allowList: [],
-    exemptOwner: true, exemptModerators: true, exemptMembers: false,
+    standing: { categories: {} },
+    judgment: { words: ['shit'], patterns: [], onMatch: 'act', lenientForMembers: true },
+    allowList: [],
+    strikes: { enabled: true, timeoutAt: 2, banAt: 3 },
+    respectHumanMods: true,
   },
   qa: { enabled: true, trigger: 'prefix', prefix: '!ask', systemPrompt: 'x', cooldownSeconds: 20, maxRepliesPerHour: 60, mentionAsker: true, skipOwnerMessages: true, maxReplyChars: 190 },
   dashboard: { enabled: true, port: PORT },
   dashboardToken: TOKEN,
   dashboardHost: '127.0.0.1',
 }
-runtime.matcher = buildMatcher(runtime.config.moderation)
+runtime.rules = buildRules(runtime.config.moderation)
 
 const server = startDashboard(runtime.config)
 await new Promise(r => setTimeout(r, 250))
@@ -84,12 +87,12 @@ await check('/allow adds a term and rebuilds the matcher', async () => {
 await check('/ban adds a banned word', async () => {
   const res = await post({ type: 'ban', term: 'BadWord' })
   assert.ok((await res.json()).ok)
-  assert.ok(runtime.config.moderation.bannedWords.includes('badword'))
+  assert.ok(runtime.config.moderation.judgment.words.includes('badword'))
 })
 await check('/unban removes it again', async () => {
   const res = await post({ type: 'unban', term: 'badword' })
   assert.ok((await res.json()).ok)
-  assert.ok(!runtime.config.moderation.bannedWords.includes('badword'))
+  assert.ok(!runtime.config.moderation.judgment.words.includes('badword'))
 })
 await check('mode change sticks', async () => {
   const res = await post({ type: 'mode', mode: 'auto' })

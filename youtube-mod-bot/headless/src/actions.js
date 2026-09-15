@@ -3,7 +3,7 @@
 
 import { randomUUID } from 'node:crypto'
 import { runtime, emit, patch } from './hub.js'
-import { buildMatcher } from './moderation.js'
+import { buildRules } from './rules.js'
 import { saveConfig } from './config.js'
 import { log } from './log.js'
 
@@ -38,7 +38,7 @@ export async function removeMessage (chatId, { author, text, reason } = {}) {
 // Queue a match for a human decision. Resolves itself after holdSeconds using
 // holdDefault, which defaults to leaving the message alone — an unnoticed
 // deletion is the mistake you cannot take back.
-export function holdViolation (chat, text, hit) {
+export function holdViolation (chat, text, hit, verdict = null) {
   const id = randomUUID()
   const seconds = runtime.config.moderation.holdSeconds ?? 25
   const expiresAt = Date.now() + seconds * 1000
@@ -49,7 +49,7 @@ export function holdViolation (chat, text, hit) {
   }, seconds * 1000)
   timer.unref?.()
 
-  runtime.pending.set(id, { chat, text, hit, expiresAt, timer })
+  runtime.pending.set(id, { chat, text, hit, verdict, expiresAt, timer })
   runtime.stats.held += 1
   emit({
     kind: 'pending',
@@ -73,7 +73,8 @@ export async function resolvePending (id, decision, why = 'by you') {
 
   if (decision === 'delete') {
     try {
-      await removeMessage(item.chat.id, { author, text: item.text, reason: `held match, ${why}` })
+      if (item.verdict) await enforce(item.chat, item.text, item.verdict)
+      else await removeMessage(item.chat.id, { author, text: item.text, reason: `held match, ${why}` })
     } catch (err) {
       runtime.stats.errors += 1
       emit({ kind: 'error', author, text: item.text, detail: String(err?.message ?? err) })
@@ -87,14 +88,20 @@ export async function resolvePending (id, decision, why = 'by you') {
 }
 
 function rebuild () {
-  runtime.matcher = buildMatcher(runtime.config.moderation, message => log('warn', message))
+  runtime.rules = buildRules(runtime.config.moderation, message => log('warn', message))
+}
+
+function listRef (list) {
+  const mod = runtime.config.moderation
+  if (list === 'allowList') return mod.allowList
+  if (list === 'bannedWords' || list === 'judgment') return mod.judgment.words
+  throw new Error(`unknown list: ${list}`)
 }
 
 export async function addTerm (list, term) {
   const clean = String(term).trim().toLowerCase()
   if (!clean) throw new Error('empty term')
-  const target = runtime.config.moderation[list]
-  if (!target) throw new Error(`unknown list: ${list}`)
+  const target = listRef(list)
   if (!target.includes(clean)) target.push(clean)
   rebuild()
   await saveConfig(runtime.config)
@@ -104,8 +111,7 @@ export async function addTerm (list, term) {
 
 export async function removeTerm (list, term) {
   const clean = String(term).trim().toLowerCase()
-  const target = runtime.config.moderation[list]
-  if (!target) throw new Error(`unknown list: ${list}`)
+  const target = listRef(list)
   const index = target.indexOf(clean)
   if (index >= 0) target.splice(index, 1)
   rebuild()
@@ -128,4 +134,79 @@ export function setPaused (paused) {
   emit({ kind: 'config', detail: runtime.paused ? 'paused' : 'resumed' })
   patch({ paused: runtime.paused })
   return runtime.paused
+}
+
+// ── enforcement (guide sections 2, 5 and 6) ────────────────────────────────
+
+// Section 5: never contradict a call a human mod already made. If a human has
+// already removed this message or swept this author, the bot stands down.
+export function markHumanHandled (id) {
+  if (!id) return
+  runtime.humanHandled.add(id)
+  if (runtime.humanHandled.size > 5000) runtime.humanHandled.clear()
+
+  // Anything queued for approval on that message is moot now.
+  for (const [pendingId, item] of runtime.pending) {
+    if (item.chat.id === id || item.chat.authorChannelId === id) {
+      clearTimeout(item.timer)
+      runtime.pending.delete(pendingId)
+      emit({ kind: 'kept', author: item.chat.authorName, text: item.text, detail: 'a human mod already handled this' })
+    }
+  }
+  patch({ pending: runtime.pending.size > 0 })
+}
+
+export function alreadyHandled (chat) {
+  return runtime.humanHandled.has(chat.id) || runtime.humanHandled.has(chat.authorChannelId)
+}
+
+export async function timeoutUser (channelId, { author, reason } = {}) {
+  const mc = requireLive()
+  await mc.timeout(channelId)
+  runtime.stats.timeouts += 1
+  emit({ kind: 'timeout', author, detail: reason ?? 'timed out' })
+}
+
+export async function banUser (channelId, { author, reason } = {}) {
+  const mc = requireLive()
+  await mc.hide(channelId)
+  runtime.stats.bans += 1
+  emit({ kind: 'ban', author, detail: reason ?? 'hidden from chat' })
+}
+
+// Section 6 escalation: delete, then timeout, then ban on repeat standing hits.
+function nextAction (channelId, baseAction) {
+  const cfg = runtime.config.moderation.strikes ?? {}
+  if (!cfg.enabled) return baseAction
+
+  const record = runtime.strikes.get(channelId) ?? { count: 0, author: null }
+  record.count += 1
+  runtime.strikes.set(channelId, record)
+
+  if (record.count >= (cfg.banAt ?? 3)) return 'ban'
+  if (record.count >= (cfg.timeoutAt ?? 2)) return 'timeout'
+  return baseAction
+}
+
+// Carries out one verdict from rules.evaluate(). Deleting always happens first:
+// timeouts and bans stop future messages but do not remove the one in hand.
+export async function enforce (chat, text, verdict) {
+  const author = chat.authorName ?? 'someone'
+  const why = `${verdict.tier}/${verdict.category} "${verdict.term}"`
+
+  let action = verdict.action
+  if (verdict.tier === 'standing') {
+    const escalated = nextAction(chat.authorChannelId, verdict.action)
+    const record = runtime.strikes.get(chat.authorChannelId)
+    if (record) record.author = author
+    action = escalated
+  }
+
+  await removeMessage(chat.id, { author, text, reason: why })
+
+  if (action === 'timeout') {
+    await timeoutUser(chat.authorChannelId, { author, reason: `repeat ${verdict.category}` })
+  } else if (action === 'ban') {
+    await banUser(chat.authorChannelId, { author, reason: `repeat ${verdict.category}` })
+  }
 }

@@ -18,7 +18,9 @@ export const runtime = {
   matcher: null,
   paused: false,
   startedAt: Date.now(),
-  stats: { deleted: 0, held: 0, wouldDelete: 0, answered: 0, passed: 0, errors: 0 },
+  stats: { deleted: 0, timeouts: 0, bans: 0, held: 0, wouldDelete: 0, answered: 0, passed: 0, errors: 0 },
+  strikes: new Map(),      // channelId -> standing-rule hits this session
+  humanHandled: new Set(), // message and author ids a human mod already acted on
   feed: [],            // newest first, capped
   pending: new Map(),  // id -> { chat, text, hit, timer }
 }
@@ -46,6 +48,7 @@ export function snapshot () {
     bannedWords: runtime.config?.moderation?.bannedWords ?? [],
     allowList: runtime.config?.moderation?.allowList ?? [],
     stats: runtime.stats,
+    strikes: [...runtime.strikes.entries()].map(([id, s]) => ({ id, ...s })),
     pending: [...runtime.pending.entries()].map(([id, p]) => ({
       id, author: p.chat.authorName ?? 'someone', text: p.text, term: p.hit.term, expiresAt: p.expiresAt,
     })),

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "selftest": "node src/selftest.js && node src/dashboard.selftest.js"
+    "selftest": "node src/selftest.js && node src/rules.selftest.js && node src/enforcement.selftest.js && node src/dashboard.selftest.js"
   },
   "dependencies": {
     "@stu43005/masterchat": "^2.1.0"

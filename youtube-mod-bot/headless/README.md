@@ -31,11 +31,14 @@ cp .env.example .env                 # add cookies + Anthropic key
 npm start
 ```
 
-Run the offline checks on the filter any time you change a word list:
+Run the offline checks any time you change a word list or a rule:
 
 ```bash
 npm run selftest
 ```
+
+Four suites: the matching engine, the guide's rules section by section,
+enforcement and escalation against a stub, and the dashboard's HTTP surface.
 
 ### Getting the cookies
 
@@ -49,6 +52,48 @@ own moderator account if you can, and sign that account out to revoke them.
 
 Without cookies the bot still starts and logs what it *would* do, but cannot
 delete or reply.
+
+## It follows the Pokebank Moderation Guide
+
+`src/rules.js` encodes the guide, and `src/rules.selftest.js` asserts it
+section by section. If the guide changes, change those two together.
+
+**Section 2, Standing Rules** — hate speech, harassment/creeping, doxxing, and
+spam/scam links. The guide says "act first, explain after… no approval needed",
+so these fire immediately for everyone, in every mode except `dry`. They are
+checked *before* the allow list: a slur is a slur even in an otherwise fine
+message.
+
+**Section 3, Judgment Calls** — mild swearing and the like. These respect the
+review mode, and carry Section 3's leniency: a **known member's** slip is held
+for a human call, while an **unknown account** is enforced normally, because
+there is no history to extend trust on. Channel membership is the closest
+signal YouTube gives for "regular" — a proxy, not a perfect one.
+
+**Section 5, Don't undermine a mod.** Staff are never auto-moderated, and when
+a human mod deletes a message or sweeps an author, the bot marks that author
+handled and stands down — including dropping any hold it had queued on them.
+The bot also never posts about its own moderation in chat.
+
+**Section 6, Escalation.** A repeat standing-rule offender goes delete →
+timeout → ban across a session (`strikes.timeoutAt` / `banAt`). Judgment calls
+never escalate.
+
+### Two deliberate departures
+
+1. **Section 1 ranks Hype above Safety.** For a human that means "don't kill
+   the vibe over nothing". For an automatic filter it would mean leaving
+   ambiguous messages up. This ships **safety-first** instead, at the
+   operator's direction: an ambiguous judgment call is acted on and reviewed
+   after. Set `judgment.onMatch` to `"hold"` to restore the guide's ordering.
+2. **Hate speech ships with an empty word list.** A public repo is the wrong
+   place for a slur list, and Section 6 already points at YouTube's native
+   blocked-words list as the first line of defense. Add your terms under
+   `standing.categories.hate.words`, or leave that to YouTube and let the bot
+   cover the rest.
+
+Sections 4 (escalation path) and the human half of 5 are about people talking
+to each other. No bot implements those; they still need the mod chat.
 
 ## Three modes, not a boolean
 
@@ -130,10 +175,13 @@ Everything in `config.json` mirrors the extension's options page:
 |---|---|
 | `moderation.mode` | `dry`, `hold`, or `auto` |
 | `moderation.holdSeconds` / `holdDefault` | How long a held match waits, and what happens if you miss it |
-| `moderation.bannedWords` | Whole-word matches, leet-tolerant |
-| `moderation.bannedPatterns` | Regex against the raw message |
-| `moderation.allowList` | Messages containing these are never touched |
-| `moderation.exempt*` | Skip owner / moderators / members |
+| `moderation.standing.categories` | Per-category words, patterns and action (`delete`/`timeout`/`ban`) |
+| `moderation.judgment.words` | Whole-word matches, leet-tolerant |
+| `moderation.judgment.onMatch` | `act` (safety-first) or `hold` (the guide's ordering) |
+| `moderation.judgment.lenientForMembers` | Section 3 leniency for known members |
+| `moderation.allowList` | Messages containing these are never touched — judgment tier only |
+| `moderation.strikes` | Repeat-offender escalation thresholds |
+| `moderation.respectHumanMods` | Stand down on anything a human mod handled |
 | `qa.trigger` | `prefix`, `questionMark`, or `both` |
 | `qa.prefix` | Default `!ask` |
 | `qa.cooldownSeconds` / `qa.maxRepliesPerHour` | Reply rate limits |
@@ -152,8 +200,9 @@ character class per letter, so `fuck` also catches `f@ck`, `f*ck`, `fuuck` and
 `fvck`, while letter-adjacency lookarounds keep `Scunthorpe`, `class` and
 `shitake` safe. `src/selftest.js` pins all of that down.
 
-`src/moderation.js` is kept byte-identical in behaviour to the extension's
-`src/content.js`. Change one, change the other, and run the self-test.
+`src/moderation.js` shares its matching primitives with the extension's
+`src/content.js`. The tiering above is headless-only — the extension still runs
+a single flat word list, so the two are no longer feature-equivalent.
 
 ## Running it for real
 

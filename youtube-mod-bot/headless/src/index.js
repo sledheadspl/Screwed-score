@@ -5,7 +5,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { loadConfig } from './config.js'
-import { buildMatcher } from './moderation.js'
+import { buildRules } from './rules.js'
 import { findLiveVideoId } from './live.js'
 import { runStream } from './bot.js'
 import { startDashboard } from './dashboard.js'
@@ -20,7 +20,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 async function main () {
   const config = await loadConfig(ROOT)
   runtime.config = config
-  runtime.matcher = buildMatcher(config.moderation, message => log('warn', message))
+  runtime.rules = buildRules(config.moderation, message => log('warn', message))
 
   const controller = new AbortController()
   let stopping = false

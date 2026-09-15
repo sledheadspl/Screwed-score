@@ -66,6 +66,10 @@
   .tag.wouldDelete, .tag.pending { background:rgba(245,166,35,.2); color:#f7c46c; }
   .tag.answered, .tag.said { background:rgba(48,163,108,.2); color:#66d19e; }
   .tag.kept, .tag.config, .tag.system { background:rgba(76,141,255,.18); color:#9dbcff; }
+  .tag.timeout, .tag.ban { background:rgba(229,72,77,.32); color:#ffb3b6; }
+  .tier { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-left:6px;
+          padding:2px 6px; border-radius:4px; background:#2b3242; color:var(--dim); }
+  .tier.standing { background:rgba(229,72,77,.22); color:#ff8b8f; }
   li .who { font-weight:650; margin:0 6px; }
   li .when { font-size:11px; color:var(--dim); }
   li .msg { margin-top:3px; word-break:break-word; }
@@ -256,6 +260,15 @@ function row (e) {
   when.dataset.at = e.at
   when.textContent = ago(e.at)
   head.append(tag, who, when)
+
+  // Standing-rule hits are the ones a mod would have acted on without asking;
+  // label them so the feed reads the way the guide does.
+  if (e.tier) {
+    const tier = document.createElement('span')
+    tier.className = 'tier ' + e.tier
+    tier.textContent = e.tier === 'standing' ? 'standing · ' + e.category : 'judgment'
+    head.append(tier)
+  }
   li.append(head)
 
   if (e.text) {

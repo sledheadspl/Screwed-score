@@ -4,10 +4,10 @@
 // bot saw, not just what it acted on.
 
 import { Masterchat, stringify } from '@stu43005/masterchat'
-import { findViolation, isExempt } from './moderation.js'
+import { evaluate } from './rules.js'
 import { askClaude } from './claude.js'
 import { runtime, emit, patch } from './hub.js'
-import { ourMessages, holdViolation, removeMessage, say } from './actions.js'
+import { ourMessages, holdViolation, enforce, alreadyHandled, markHumanHandled, say } from './actions.js'
 import { log, info } from './log.js'
 
 function isQuestion (text, qa) {
@@ -108,19 +108,32 @@ export async function runStream ({ videoId, signal }) {
       return
     }
 
-    if (config.moderation.enabled && !isExempt(chat, config.moderation)) {
-      const hit = runtime.matcher ? findViolation(runtime.matcher, text) : null
-      if (hit) {
-        const why = `matched ${hit.source} "${hit.term}"`
+    // Section 5: if a human mod already acted on this message or this author,
+    // the bot stays out of it.
+    if (config.moderation.respectHumanMods && alreadyHandled(chat)) {
+      runtime.stats.passed += 1
+      emit({ ...base, kind: 'pass', detail: 'a human mod already handled this author' })
+      return
+    }
+
+    if (config.moderation.enabled && runtime.rules) {
+      const verdict = evaluate(runtime.rules, chat, text)
+      if (verdict) {
+        const why = `${verdict.tier}/${verdict.category} "${verdict.term}"`
         const mode = config.moderation.mode
+        const detail = verdict.reason ? `${why} - ${verdict.reason}` : why
 
         if (mode === 'dry') {
           runtime.stats.wouldDelete += 1
-          emit({ ...base, kind: 'wouldDelete', detail: why, term: hit.term })
-        } else if (mode === 'hold') {
-          holdViolation(chat, text, hit)
+          emit({ ...base, kind: 'wouldDelete', detail, term: verdict.term, tier: verdict.tier, category: verdict.category })
+        } else if (verdict.immediate) {
+          // Section 2/4: standing rules act first and explain after, in every
+          // mode but dry. No approval, no waiting.
+          enqueue(() => enforce(chat, text, verdict))
+        } else if (mode === 'hold' || verdict.hold) {
+          holdViolation(chat, text, { term: verdict.term, source: verdict.source }, verdict)
         } else {
-          enqueue(() => removeMessage(chat.id, { author, text, reason: why }))
+          enqueue(() => enforce(chat, text, verdict))
         }
         // A message being removed is not a question worth answering.
         return
@@ -140,6 +153,19 @@ export async function runStream ({ videoId, signal }) {
 
     runtime.stats.passed += 1
     emit({ ...base, kind: 'pass' })
+  })
+
+  // Human mod activity arrives as deletion actions; record it so the bot can
+  // defer to calls that have already been made.
+  mc.on('actions', list => {
+    if (!config.moderation.respectHumanMods) return
+    for (const action of list) {
+      if (action.type === 'markChatItemAsDeletedAction' && action.targetId) {
+        markHumanHandled(action.targetId)
+      } else if (action.type === 'markChatItemsByAuthorAsDeletedAction' && action.channelId) {
+        markHumanHandled(action.channelId)
+      }
+    }
   })
 
   mc.on('error', err => {

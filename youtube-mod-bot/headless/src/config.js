@@ -26,21 +26,38 @@ const DEFAULTS = {
 
   moderation: {
     enabled: true,
-    // 'dry'  - log matches, touch nothing (default)
-    // 'hold' - queue matches for your approval in the dashboard
-    // 'auto' - delete immediately
+    // 'dry'  - log matches, touch nothing (default until you trust the lists)
+    // 'hold' - queue judgment calls for approval; standing rules still act
+    // 'auto' - act on everything the rules decide
     mode: 'dry',
-    // How long a held match waits for you before holdDefault applies.
     holdSeconds: 25,
     // What happens to a held match you never answered. 'skip' leaves the
     // message up, which is the recoverable mistake; 'delete' is not.
     holdDefault: 'skip',
-    bannedWords: ['fuck', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'whore'],
-    bannedPatterns: [],
+
+    // Guide Section 2. Per-category words/patterns and actions live in
+    // src/rules.js; override any of them here. Hate ships with an empty word
+    // list - add your own, or lean on YouTube's native blocked-words list.
+    standing: { categories: {} },
+
+    // Guide Section 3. Mild stuff where tone and context matter.
+    judgment: {
+      words: ['fuck', 'shit', 'bitch', 'asshole'],
+      patterns: [],
+      // 'act' removes and logs for review (safety-first, the operator's call).
+      // 'hold' asks first, which is the guide's own Hype-over-Safety ordering.
+      onMatch: 'act',
+      // Section 3: known members get a human call, not an automatic removal.
+      lenientForMembers: true,
+    },
+
     allowList: [],
-    exemptOwner: true,
-    exemptModerators: true,
-    exemptMembers: false,
+
+    // Section 6: "reserved for standing-rule violations or repeat offenders".
+    strikes: { enabled: true, timeoutAt: 2, banAt: 3 },
+
+    // Section 5: never contradict a call a human mod already made.
+    respectHumanMods: true,
   },
 
   qa: {
@@ -82,11 +99,20 @@ function merge (stored) {
     merged[group] = { ...DEFAULTS[group], ...(stored[group] ?? {}) }
   }
 
-  // Back-compat: earlier configs used a dryRun boolean.
+  // Back-compat: earlier configs used a dryRun boolean and a flat word list.
   if (stored.moderation?.mode === undefined && stored.moderation?.dryRun !== undefined) {
     merged.moderation.mode = stored.moderation.dryRun ? 'dry' : 'auto'
   }
   delete merged.moderation.dryRun
+
+  merged.moderation.judgment = { ...DEFAULTS.moderation.judgment, ...(stored.moderation?.judgment ?? {}) }
+  if (stored.moderation?.bannedWords) merged.moderation.judgment.words = stored.moderation.bannedWords
+  if (stored.moderation?.bannedPatterns) merged.moderation.judgment.patterns = stored.moderation.bannedPatterns
+  delete merged.moderation.bannedWords
+  delete merged.moderation.bannedPatterns
+
+  merged.moderation.standing = { categories: { ...(stored.moderation?.standing?.categories ?? {}) } }
+  merged.moderation.strikes = { ...DEFAULTS.moderation.strikes, ...(stored.moderation?.strikes ?? {}) }
 
   if (!['dry', 'hold', 'auto'].includes(merged.moderation.mode)) {
     merged.moderation.mode = 'dry'

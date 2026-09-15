@@ -53,17 +53,20 @@ function wordToPattern (word) {
   return out
 }
 
-export function buildMatcher (moderation, onWarn = () => {}) {
-  const words = (moderation.bannedWords ?? [])
+// Compiles one {words, patterns} rule set. Used for the judgment tier and for
+// each standing-rule category separately, so a hit knows which list it came
+// from and therefore how urgent it is.
+export function compile ({ words = [], patterns = [] } = {}, onWarn = () => {}) {
+  const expanded = words
     .map(w => normalizeWord(String(w)))
     .filter(Boolean)
     .map(wordToPattern)
 
-  const patterns = []
-  for (const raw of moderation.bannedPatterns ?? []) {
+  const compiledPatterns = []
+  for (const raw of patterns) {
     if (!String(raw).trim()) continue
     try {
-      patterns.push(new RegExp(raw, 'i'))
+      compiledPatterns.push(new RegExp(raw, 'i'))
     } catch {
       onWarn(`ignoring invalid pattern: ${raw}`)
     }
@@ -73,23 +76,52 @@ export function buildMatcher (moderation, onWarn = () => {}) {
     // Letter-adjacency lookarounds rather than \b: a word spelled with a
     // leading symbol ("$hit", "@ss") has no word boundary in front of it, so
     // \b would let exactly the obfuscated cases through.
-    words: words.length ? new RegExp(`(?<![a-z0-9_])(?:${words.join('|')})(?![a-z0-9_])`, 'i') : null,
-    patterns,
-    allow: (moderation.allowList ?? []).map(w => normalize(String(w).trim())).filter(Boolean),
+    words: expanded.length ? new RegExp(`(?<![a-z0-9_])(?:${expanded.join('|')})(?![a-z0-9_])`, 'i') : null,
+    patterns: compiledPatterns,
   }
+}
+
+export function matchAgainst (compiled, text, normalized = normalize(text)) {
+  const wordHit = compiled.words?.exec(normalized)
+  if (wordHit) return { term: wordHit[0], source: 'word' }
+
+  for (const pattern of compiled.patterns) {
+    if (pattern.test(text)) return { term: pattern.source, source: 'pattern' }
+  }
+  return null
+}
+
+export function compileAllowList (terms = []) {
+  return terms.map(w => normalize(String(w).trim())).filter(Boolean)
+}
+
+export function isAllowed (allowTerms, normalized) {
+  return allowTerms.some(term => normalized.includes(term))
+}
+
+// Section 3 of the guide turns on whether an account is known to the community.
+// Membership is the closest signal YouTube actually gives us; it is a proxy for
+// "regular", not a perfect one.
+export function trustOf (chat) {
+  if (chat.isOwner || chat.isModerator) return 'staff'
+  if (chat.membership) return 'member'
+  return 'unknown'
+}
+
+// Back-compat wrappers over the flat single-list shape, kept so the extension's
+// copy of this engine and the word-level self-tests stay comparable.
+export function buildMatcher (moderation, onWarn = () => {}) {
+  const compiled = compile(
+    { words: moderation.bannedWords ?? [], patterns: moderation.bannedPatterns ?? [] },
+    onWarn
+  )
+  return { ...compiled, allow: compileAllowList(moderation.allowList ?? []) }
 }
 
 export function findViolation (matcher, text) {
   const normalized = normalize(text)
-  if (matcher.allow.some(term => normalized.includes(term))) return null
-
-  const wordHit = matcher.words?.exec(normalized)
-  if (wordHit) return { term: wordHit[0], source: 'word' }
-
-  for (const pattern of matcher.patterns) {
-    if (pattern.test(text)) return { term: pattern.source, source: 'pattern' }
-  }
-  return null
+  if (isAllowed(matcher.allow, normalized)) return null
+  return matchAgainst(matcher, text, normalized)
 }
 
 export function isExempt (chat, moderation) {

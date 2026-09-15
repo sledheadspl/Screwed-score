@@ -2,27 +2,34 @@
   "channel": "@yourhandle",
   "pollSeconds": 60,
   "model": "claude-sonnet-5",
+
   "moderation": {
     "enabled": true,
     "mode": "dry",
     "holdSeconds": 25,
     "holdDefault": "skip",
-    "bannedWords": [
-      "fuck",
-      "shit",
-      "bitch",
-      "asshole",
-      "cunt",
-      "whore"
-    ],
-    "bannedPatterns": [
-      "https?://(?!(www\\.)?youtube\\.com)"
-    ],
+
+    "standing": {
+      "categories": {
+        "hate":       { "enabled": true, "action": "ban",     "words": [] },
+        "harassment": { "enabled": true, "action": "timeout" },
+        "doxxing":    { "enabled": true, "action": "ban" },
+        "spamLinks":  { "enabled": true, "action": "timeout" }
+      }
+    },
+
+    "judgment": {
+      "words": ["fuck", "shit", "bitch", "asshole"],
+      "patterns": [],
+      "onMatch": "act",
+      "lenientForMembers": true
+    },
+
     "allowList": [],
-    "exemptOwner": true,
-    "exemptModerators": true,
-    "exemptMembers": false
+    "strikes": { "enabled": true, "timeoutAt": 2, "banAt": 3 },
+    "respectHumanMods": true
   },
+
   "qa": {
     "enabled": true,
     "trigger": "prefix",
@@ -33,8 +40,6 @@
     "skipOwnerMessages": true,
     "maxReplyChars": 190
   },
-  "dashboard": {
-    "enabled": true,
-    "port": 8787
-  }
+
+  "dashboard": { "enabled": true, "port": 8787 }
 }
