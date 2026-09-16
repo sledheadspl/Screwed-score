@@ -149,12 +149,34 @@ you make mid-stream survives a restart.
 That URL can delete messages and post to your chat as you. Treat it like a
 password:
 
-- **With no `DASHBOARD_TOKEN`, the server binds to `127.0.0.1` only** and
-  refuses to listen publicly. That is deliberate — it cannot be accidentally
-  exposed.
-- Setting a token makes it bind `0.0.0.0`. It is plain HTTP, so put it behind
-  Tailscale, an SSH tunnel, or an HTTPS reverse proxy rather than on a bare
-  public IP. `DASHBOARD_HOST` overrides the binding if you want something else.
+- **With no `DASHBOARD_TOKEN`, the server binds to `127.0.0.1` only.** Setting
+  `DASHBOARD_HOST` to anything that is not loopback without also setting a
+  token makes the bot **refuse to start**, rather than serving the world
+  unauthenticated.
+- Setting a token makes it bind `0.0.0.0`; `DASHBOARD_HOST` narrows that to one
+  interface. It is plain HTTP, so put it behind Tailscale, an SSH tunnel, or an
+  HTTPS reverse proxy rather than on a bare public IP.
+
+### Reaching it from your phone
+
+Running the bot on a PC at home and want the dashboard on the road? Use
+[Tailscale](https://tailscale.com) rather than port forwarding — it is free for
+personal use, needs no open ports, and never puts the dashboard on the public
+internet.
+
+1. Install Tailscale on the PC and on the phone, signed into the same account.
+2. Note the PC's tailnet address (`tailscale ip -4`, a `100.x.y.z`).
+3. Start the bot bound to just that interface:
+
+   ```bash
+   DASHBOARD_TOKEN=$(openssl rand -hex 24) DASHBOARD_HOST=100.x.y.z npm start
+   ```
+
+4. Open the printed URL on the phone and add it to the home screen.
+
+Binding to the tailnet address means the dashboard is not reachable from the
+café wifi your laptop is on, only from your own devices. On the same LAN you
+can skip Tailscale and use the PC's local IP, but the token is still required.
 - Tokens are compared in constant time, and the page strips the token out of
   the URL bar after first load.
 

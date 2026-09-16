@@ -23,8 +23,8 @@ function safeEqual (a, b) {
 }
 
 function authorized (req, url, token) {
-  // With no token the server is bound to loopback only, so there is nothing
-  // to authorize against; any other binding requires one.
+  // No token means loopback-only, enforced in config.js - a non-loopback bind
+  // without one refuses to start rather than serving the world unauthenticated.
   if (!token) return true
   const given = req.headers['x-mod-token'] ?? url.searchParams.get('token') ?? ''
   return given.length > 0 && safeEqual(given, token)

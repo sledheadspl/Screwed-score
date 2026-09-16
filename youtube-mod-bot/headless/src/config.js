@@ -78,6 +78,13 @@ const DEFAULTS = {
   },
 }
 
+// 0.0.0.0 and :: are "every interface", so they are emphatically not loopback.
+const LOOPBACK = new Set(['127.0.0.1', '::1', 'localhost'])
+
+function isLoopback (host) {
+  return LOOPBACK.has(String(host).trim().toLowerCase())
+}
+
 const CREDENTIAL_KEYS = ['SAPISID', 'APISID', 'HSID', 'SID', 'SSID']
 
 // Minimal .env reader — avoids a dependency for five cookie values.
@@ -143,6 +150,16 @@ export async function loadConfig (rootDir) {
   // the internet unauthenticated. With no token it stays on loopback.
   config.dashboardToken = process.env.DASHBOARD_TOKEN ?? ''
   config.dashboardHost = process.env.DASHBOARD_HOST ?? (config.dashboardToken ? '0.0.0.0' : '127.0.0.1')
+
+  // The dashboard can delete messages and post as you. Reaching it from
+  // anywhere but this machine therefore requires a token - including when
+  // DASHBOARD_HOST is set by hand, which is the case that used to slip past.
+  if (config.dashboard.enabled && !config.dashboardToken && !isLoopback(config.dashboardHost)) {
+    throw new Error(
+      `Refusing to serve the dashboard on ${config.dashboardHost} without DASHBOARD_TOKEN. ` +
+      'Set one (openssl rand -hex 24), or drop DASHBOARD_HOST to stay on 127.0.0.1.'
+    )
+  }
 
   config.anthropicApiKey = process.env.ANTHROPIC_API_KEY ?? ''
   config.configPath = file
