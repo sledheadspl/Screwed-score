@@ -7,9 +7,10 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { timingSafeEqual } from 'node:crypto'
-import { runtime, hub, snapshot } from './hub.js'
+import { runtime, hub, snapshot, emit, patch } from './hub.js'
 import * as actions from './actions.js'
 import { askClaude } from './claude.js'
+import { addPack, undoPack, setContext, resetPacks, streamFacts, stream } from './stream.js'
 import { log, info } from './log.js'
 
 const PUBLIC_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'public')
@@ -84,6 +85,33 @@ async function runCommand (body) {
     case 'pause':
       return { paused: actions.setPaused(body.paused) }
 
+    case 'pack': {
+      const added = await addPack(body.name, body.qty)
+      emit({ kind: 'pack', detail: `+${added.qty} ${added.name} (total ${added.total})` })
+      patch({ packs: true })
+      return added
+    }
+
+    case 'unpack': {
+      const undone = await undoPack()
+      emit({ kind: 'pack', detail: undone ? `undid ${undone.qty} ${undone.name} (total ${stream.total})` : 'nothing to undo' })
+      patch({ packs: true })
+      return { undone }
+    }
+
+    case 'resetPacks':
+      await resetPacks()
+      emit({ kind: 'pack', detail: 'tally reset' })
+      patch({ packs: true })
+      return { total: 0 }
+
+    case 'context': {
+      const context = await setContext(body.text)
+      emit({ kind: 'config', detail: context ? `stream notes updated (${context.length} chars)` : 'stream notes cleared' })
+      patch({ packs: true })
+      return { context }
+    }
+
     case 'ask': {
       const answer = await askClaude({
         apiKey: runtime.config.anthropicApiKey,
@@ -92,6 +120,7 @@ async function runCommand (body) {
         question: body.question,
         author: 'the host',
         maxReplyChars: runtime.config.qa.maxReplyChars,
+        facts: streamFacts(),
       })
       return { said: await actions.say(answer) }
     }

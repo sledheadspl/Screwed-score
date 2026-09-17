@@ -4,7 +4,7 @@
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages'
 const TIMEOUT_MS = 20_000
 
-export async function askClaude ({ apiKey, model, systemPrompt, question, author, maxReplyChars }) {
+export async function askClaude ({ apiKey, model, systemPrompt, question, author, maxReplyChars, facts }) {
   const abort = new AbortController()
   const timer = setTimeout(() => abort.abort(), TIMEOUT_MS)
 
@@ -20,7 +20,9 @@ export async function askClaude ({ apiKey, model, systemPrompt, question, author
       body: JSON.stringify({
         model,
         max_tokens: 150,
-        system: systemPrompt,
+        // Live stream facts ride along so the bot answers "how many packs so
+        // far?" from the real tally instead of inventing a number.
+        system: facts ? `${systemPrompt}\n\n${facts}` : systemPrompt,
         messages: [{
           role: 'user',
           // Fenced and labelled so the model treats it as a quoted question

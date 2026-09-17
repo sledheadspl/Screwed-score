@@ -173,6 +173,27 @@ What you can do from it:
 Word-list and mode changes are written back to `config.json`, so a correction
 you make mid-stream survives a restart.
 
+### Tracking packs
+
+The panel at the top of the dashboard counts what you open. Type a pack name,
+tap **+1**, and the running tally and per-pack breakdown update everywhere. Tap
+**Undo last** when you mis-tap, which you will, live.
+
+Below it is a free-text notes box — what you're opening today, the goal, house
+rules, anything viewers keep asking about. It saves as you type.
+
+**Both feed the bot's answers.** "How many packs so far?" is the most asked
+question in a pack-opening stream, and a model with no tally will invent a
+number rather than say it doesn't know. The current count, the breakdown and
+your notes ride along with every question, so the answer comes from the real
+figure.
+
+From the input bar: `/pack <name>`, `/undo`, `/notes <text>`.
+
+The tally persists in `stream-state.json` (gitignored) and is restored on
+restart, so a crash mid-stream doesn't lose your count. Reset it between
+streams with **Reset tally**.
+
 ### Dashboard security
 
 That URL can delete messages and post to your chat as you. Treat it like a
@@ -237,6 +258,10 @@ Everything in `config.json` mirrors the extension's options page:
 | `qa.prefix` | Default `!ask` |
 | `qa.cooldownSeconds` / `qa.maxRepliesPerHour` | Reply rate limits |
 | `qa.maxReplyChars` | YouTube caps a chat message at 200 |
+
+Pack counts and stream notes are not settings — they live in
+`stream-state.json` and are edited from the dashboard, not the config file.
+`MOD_BOT_STATE` overrides where that file lives.
 
 Environment overrides: `MOD_BOT_CHANNEL`, `MOD_BOT_VIDEO_ID`,
 `MOD_BOT_MODE=hold`, `MOD_BOT_PORT`, `MOD_BOT_CONFIG=/path/to/config.json`,

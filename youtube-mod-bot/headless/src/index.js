@@ -10,6 +10,7 @@ import { findLiveVideoId } from './live.js'
 import { runStream } from './bot.js'
 import { startDashboard } from './dashboard.js'
 import { runtime, emit, patch } from './hub.js'
+import { loadStream, stream } from './stream.js'
 import { log, info } from './log.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -21,6 +22,8 @@ async function main () {
   const config = await loadConfig(ROOT)
   runtime.config = config
   runtime.rules = buildRules(config.moderation, message => log('warn', message))
+  await loadStream(ROOT)
+  if (stream.total) info(`resumed pack tally: ${stream.total} opened`)
 
   const controller = new AbortController()
   let stopping = false

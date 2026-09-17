@@ -3,6 +3,7 @@
 
 import { EventEmitter } from 'node:events'
 import { randomUUID } from 'node:crypto'
+import { stream, packBreakdown } from './stream.js'
 
 const FEED_LIMIT = 200
 
@@ -49,6 +50,7 @@ export function snapshot () {
     bannedWords: runtime.config?.moderation?.bannedWords ?? [],
     allowList: runtime.config?.moderation?.allowList ?? [],
     stats: runtime.stats,
+    packs: { total: stream.total, byName: packBreakdown(), context: stream.context },
     strikes: [...runtime.strikes.entries()].map(([id, s]) => ({ id, ...s })),
     pending: [...runtime.pending.entries()].map(([id, p]) => ({
       id, author: p.chat.authorName ?? 'someone', text: p.text, term: p.hit.term, expiresAt: p.expiresAt,

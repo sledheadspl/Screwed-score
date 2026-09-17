@@ -145,6 +145,33 @@ await check('state exposes pending items', async () => {
   assert.equal(state.pending[0].author, 'Viewer2')
 })
 
+console.log('\npack tracking')
+await check('a pack can be added over HTTP', async () => {
+  const res = await post({ type: 'pack', name: 'Prismatic Evolutions' })
+  const data = await res.json()
+  assert.ok(data.ok, data.error)
+  assert.equal(data.total, 1)
+})
+await check('the tally shows up in state', async () => {
+  const state = await (await fetch(`${BASE}/api/state?token=${TOKEN}`)).json()
+  assert.equal(state.packs.total, 1)
+  assert.deepEqual(state.packs.byName, [['Prismatic Evolutions', 1]])
+})
+await check('undo works over HTTP', async () => {
+  await post({ type: 'unpack' })
+  const state = await (await fetch(`${BASE}/api/state?token=${TOKEN}`)).json()
+  assert.equal(state.packs.total, 0)
+})
+await check('host notes round-trip', async () => {
+  await post({ type: 'context', text: 'Going for the Umbreon alt art.' })
+  const state = await (await fetch(`${BASE}/api/state?token=${TOKEN}`)).json()
+  assert.match(state.packs.context, /Umbreon/)
+})
+await check('pack commands need the token too', async () => {
+  const res = await post({ type: 'pack', name: 'sneaky' }, 'wrong-token-value')
+  assert.equal(res.status, 401)
+})
+
 console.log('\nlive feed (SSE)')
 await check('streams a snapshot then live events', async () => {
   const res = await fetch(`${BASE}/events?token=${TOKEN}`)

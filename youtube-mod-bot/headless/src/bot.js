@@ -8,6 +8,7 @@ import { evaluate } from './rules.js'
 import { askClaude } from './claude.js'
 import { runtime, emit, patch } from './hub.js'
 import { ourMessages, holdViolation, enforce, alreadyHandled, markHumanHandled, say, isSelf } from './actions.js'
+import { streamFacts } from './stream.js'
 import { log, info } from './log.js'
 
 function isQuestion (text, qa) {
@@ -71,6 +72,7 @@ export async function runStream ({ videoId, signal }) {
       question,
       author,
       maxReplyChars: config.qa.maxReplyChars,
+      facts: streamFacts(),
     })
 
     const mention = config.qa.mentionAsker ? `@${author} ` : ''
