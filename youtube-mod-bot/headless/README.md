@@ -31,14 +31,43 @@ cp .env.example .env                 # add cookies + Anthropic key
 npm start
 ```
 
+### On Windows
+
+Same steps, PowerShell flavoured:
+
+```powershell
+cd youtube-mod-bot\headless
+npm install
+copy config.example.json config.json
+copy .env.example .env
+npm start
+```
+
+Environment variables for one run go in front as `$env:NAME="value";`. There is
+no systemd — keep the window open, or use `pm2` or Task Scheduler to have it
+survive a reboot.
+
+### Check it before you go live
+
+```bash
+npm run doctor
+```
+
+Verifies the config loads, the rules are actually armed, the YouTube cookies
+authenticate, the Anthropic key and model work, and whether the channel is live
+right now — then tells you the one thing it cannot check: whether the account
+really holds moderator powers. Nothing read-only proves that; the first removal
+is the test. Exits non-zero if anything is broken, so it drops into a script.
+
 Run the offline checks any time you change a word list or a rule:
 
 ```bash
 npm run selftest
 ```
 
-Four suites: the matching engine, the guide's rules section by section,
-enforcement and escalation against a stub, and the dashboard's HTTP surface.
+Six suites: the matching engine, the guide's rules section by section,
+enforcement and escalation against a stub, the dashboard binding rule, live
+stream resolution, and the dashboard's HTTP surface.
 
 ### Getting the cookies
 

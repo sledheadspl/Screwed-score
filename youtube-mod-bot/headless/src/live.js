@@ -14,10 +14,19 @@ export function liveUrlFor (channel) {
 }
 
 export async function findLiveVideoId (channel) {
-  const res = await fetch(liveUrlFor(channel), {
+  const url = liveUrlFor(channel)
+  const res = await fetch(url, {
     headers: { 'user-agent': UA, 'accept-language': 'en-US,en;q=0.9' },
   })
-  if (!res.ok) return null
+
+  // A failed request must not read as "not live". Returning null for both
+  // would let the bot poll in silence through an entire broadcast.
+  if (res.status === 404) {
+    throw new Error(`channel not found: ${url} returned 404 - check the "channel" setting`)
+  }
+  if (!res.ok) {
+    throw new Error(`${url} returned ${res.status} - could not tell whether the channel is live`)
+  }
 
   const html = await res.text()
 
