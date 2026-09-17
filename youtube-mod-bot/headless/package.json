@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "selftest": "node src/selftest.js && node src/rules.selftest.js && node src/enforcement.selftest.js && node src/binding.selftest.js && node src/live.selftest.js && node src/dashboard.selftest.js",
+    "selftest": "node src/selftest.js && node src/rules.selftest.js && node src/enforcement.selftest.js && node src/selfreply.selftest.js && node src/binding.selftest.js && node src/live.selftest.js && node src/dashboard.selftest.js",
     "doctor": "node src/doctor.js"
   },
   "dependencies": {

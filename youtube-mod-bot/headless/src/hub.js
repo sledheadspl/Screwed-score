@@ -21,6 +21,7 @@ export const runtime = {
   stats: { deleted: 0, timeouts: 0, bans: 0, held: 0, wouldDelete: 0, answered: 0, passed: 0, errors: 0 },
   strikes: new Map(),      // channelId -> standing-rule hits this session
   humanHandled: new Set(), // message and author ids a human mod already acted on
+  selfChannelId: null,     // learned from our first sent message; see actions.say
   feed: [],            // newest first, capped
   pending: new Map(),  // id -> { chat, text, hit, timer }
 }

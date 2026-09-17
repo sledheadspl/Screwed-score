@@ -16,16 +16,32 @@ function requireLive () {
   return runtime.mc
 }
 
-export async function say (text) {
+export async function say (text, { detail = 'sent by you' } = {}) {
   const trimmed = String(text).trim().slice(0, 200)
   if (!trimmed) throw new Error('empty message')
   const mc = requireLive()
 
-  ourMessages.add(trimmed)
-  await mc.sendMessage(trimmed)
-  runtime.stats.answered += 1
-  emit({ kind: 'said', text: trimmed, detail: 'sent by you' })
+  // Match what the chat stream will hand back: it collapses whitespace, so
+  // storing the raw form here would miss our own message and let the bot
+  // treat its reply as a viewer's.
+  ourMessages.add(trimmed.replace(/\s+/g, ' '))
+
+  const sent = await mc.sendMessage(trimmed)
+
+  // The response carries our own channel id. Learning it once turns
+  // self-recognition from fragile text matching into an identity check -
+  // which matters because the bot usually runs as a moderator account, where
+  // isOwner is false and the owner-only guard does not apply.
+  if (sent?.authorExternalChannelId && !runtime.selfChannelId) {
+    runtime.selfChannelId = sent.authorExternalChannelId
+  }
+
+  emit({ kind: 'said', text: trimmed, detail })
   return trimmed
+}
+
+export function isSelf (chat) {
+  return Boolean(runtime.selfChannelId) && chat.authorChannelId === runtime.selfChannelId
 }
 
 export async function removeMessage (chatId, { author, text, reason } = {}) {

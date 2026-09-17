@@ -7,7 +7,7 @@ import { Masterchat, stringify } from '@stu43005/masterchat'
 import { evaluate } from './rules.js'
 import { askClaude } from './claude.js'
 import { runtime, emit, patch } from './hub.js'
-import { ourMessages, holdViolation, enforce, alreadyHandled, markHumanHandled, say } from './actions.js'
+import { ourMessages, holdViolation, enforce, alreadyHandled, markHumanHandled, say, isSelf } from './actions.js'
 import { log, info } from './log.js'
 
 function isQuestion (text, qa) {
@@ -82,9 +82,10 @@ export async function runStream ({ videoId, signal }) {
       return
     }
 
-    await say(outgoing)
+    await say(outgoing, { detail: `answering ${author}` })
     lastReplyAt = Date.now()
     replyTimes.push(lastReplyAt)
+    runtime.stats.answered += 1
     emit({ kind: 'answered', author, text, detail: outgoing })
   }
 
@@ -94,6 +95,9 @@ export async function runStream ({ videoId, signal }) {
     seen.add(chat.id)
     if (seen.size > 5000) seen.clear()
 
+    // Never act on our own messages. The channel-id check is the reliable one;
+    // the text match covers the first reply, before we have learned our id.
+    if (isSelf(chat)) return
     if (ourMessages.has(text)) {
       ourMessages.delete(text)
       return

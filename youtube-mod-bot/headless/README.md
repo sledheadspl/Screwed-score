@@ -283,6 +283,10 @@ covers the process dying outright.
 - Deleting is the only moderation action wired up. `masterchat` also exposes
   `timeout()` and `hide()` if you want to extend it.
 - One channel per process. Run more instances for more channels.
+- **Run it as a dedicated moderator account, not the channel owner.** The bot
+  recognises its own messages by channel id, learned from the first message it
+  sends, so it will not moderate or answer itself either way. Before that first
+  message it falls back to matching the text.
 - **A deletion cannot be undone.** YouTube has no un-delete for chat, so the
   dashboard's correction for a wrong call is "stop doing that" (allow the term),
   not "put it back". That asymmetry is why `hold` exists and why `holdDefault`
