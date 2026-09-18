@@ -7,7 +7,7 @@
 // know. Feeding it the real count is the difference between a useful bot and a
 // confidently wrong one.
 
-import { readFile, writeFile } from 'node:fs/promises'
+import { readFile, writeFile, rename } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 
@@ -23,7 +23,7 @@ export const stream = {
   log: [],           // newest first: { at, name, qty }
 }
 
-export async function loadStream (root) {
+export async function loadStream (root, onLoadWarning = () => {}) {
   stream.file = process.env.MOD_BOT_STATE ?? path.join(root, 'stream-state.json')
   if (!existsSync(stream.file)) return stream
 
@@ -33,16 +33,33 @@ export async function loadStream (root) {
     stream.total = saved.total ?? 0
     stream.byName = saved.byName ?? {}
     stream.log = saved.log ?? []
-  } catch {
-    // A corrupt state file must not stop the bot from moderating.
+  } catch (err) {
+    // A corrupt state file must not stop the bot from moderating - but losing
+    // the tally in silence is how someone finds out at the end of a stream.
+    onLoadWarning(`could not read ${stream.file} (${err?.message ?? err}); pack tally starts from zero`)
   }
   return stream
 }
 
-export async function saveStream () {
+// Writes are chained and atomic. Both matter: tapping +1 repeatedly during an
+// opening fires overlapping saves, and a plain writeFile of a large state lands
+// in several syscalls, so a short write can finish inside a longer one and
+// leave trailing garbage. Writing to a temp file and renaming means a partial
+// write never replaces a good one, including when the process is killed.
+let writeChain = Promise.resolve()
+
+async function writeOnce () {
   if (!stream.file) return
   const { context, total, byName, log } = stream
-  await writeFile(stream.file, `${JSON.stringify({ context, total, byName, log }, null, 2)}\n`, 'utf8')
+  const body = `${JSON.stringify({ context, total, byName, log }, null, 2)}\n`
+  const tmp = `${stream.file}.tmp`
+  await writeFile(tmp, body, 'utf8')
+  await rename(tmp, stream.file)
+}
+
+export function saveStream () {
+  writeChain = writeChain.then(writeOnce, writeOnce)
+  return writeChain
 }
 
 export async function addPack (name, qty = 1) {

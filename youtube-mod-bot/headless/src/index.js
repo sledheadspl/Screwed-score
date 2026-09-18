@@ -22,7 +22,7 @@ async function main () {
   const config = await loadConfig(ROOT)
   runtime.config = config
   runtime.rules = buildRules(config.moderation, message => log('warn', message))
-  await loadStream(ROOT)
+  await loadStream(ROOT, message => log('warn', message))
   if (stream.total) info(`resumed pack tally: ${stream.total} opened`)
 
   const controller = new AbortController()

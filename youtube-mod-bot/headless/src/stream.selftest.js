@@ -6,6 +6,7 @@ import assert from 'node:assert/strict'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { readFileSync, existsSync, writeFileSync } from 'node:fs'
 import { loadStream, addPack, undoPack, setContext, resetPacks, streamFacts, packBreakdown, stream } from './stream.js'
 
 let failures = 0
@@ -83,8 +84,31 @@ await check('notes are length-capped', async () => {
   await setContext('Opening a sealed booster box.')
 })
 
+console.log('\nrapid taps must not corrupt the file')
+await check('a concurrent burst on a large state stays valid JSON', async () => {
+  // A long stream fills the log, which pushes a single write past one syscall.
+  // Overlapping saves used to let a short write land inside a longer one.
+  const big = mkdtempSync(path.join(tmpdir(), 'modbot-burst-'))
+  await loadStream(big)
+  for (let i = 0; i < 400; i++) await addPack(`Pack-${i}-${'x'.repeat(120)}`)
+  assert.ok(readFileSync(stream.file, 'utf8').length > 100_000, 'state should be large enough to matter')
+
+  // No awaiting between taps - this is what holding +1 does.
+  await Promise.all(Array.from({ length: 30 }, () => addPack('short')))
+
+  const onDisk = JSON.parse(readFileSync(stream.file, 'utf8'))
+  assert.equal(onDisk.total, stream.total, 'disk must agree with memory')
+  assert.equal(onDisk.log.length, stream.log.length)
+})
+await check('no temp file is left behind', () => {
+  assert.equal(existsSync(`${stream.file}.tmp`), false)
+})
+
 console.log('\npersistence across a restart')
 await check('the tally survives a reload', async () => {
+  await loadStream(root)
+  await addPack('Prismatic Evolutions', 3)
+  await setContext('Opening a sealed booster box.')
   const before = { total: stream.total, context: stream.context }
   stream.total = 0
   stream.byName = {}
@@ -93,11 +117,12 @@ await check('the tally survives a reload', async () => {
   assert.equal(stream.total, before.total)
   assert.equal(stream.context, before.context)
 })
-await check('a corrupt state file does not stop the bot', async () => {
-  const { writeFileSync } = await import('node:fs')
+await check('a corrupt state file does not stop the bot, and says so', async () => {
   writeFileSync(path.join(root, 'stream-state.json'), '{ not json')
-  await loadStream(root)
-  assert.ok(true, 'loadStream returned instead of throwing')
+  const warnings = []
+  await loadStream(root, w => warnings.push(w))
+  assert.equal(warnings.length, 1, 'losing the tally in silence is the real failure')
+  assert.match(warnings[0], /pack tally starts from zero/)
 })
 
 console.log(failures ? `\n${failures} failing` : '\nall passing')
