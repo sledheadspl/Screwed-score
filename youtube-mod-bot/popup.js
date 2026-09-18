@@ -2,7 +2,28 @@ import { withDefaults } from './src/defaults.js'
 
 const $ = id => document.getElementById(id)
 
-const LABELS = { deleted: 'deleted', wouldDelete: 'would delete', answered: 'answered', error: 'error' }
+const LABELS = {
+  deleted: 'deleted', wouldDelete: 'would delete', answered: 'answered', error: 'error',
+  timeout: 'timeout', ban: 'ban', kept: 'kept', pack: 'pack', pass: 'pass', pending: 'held',
+}
+
+const send = msg => chrome.runtime.sendMessage(msg).catch(() => ({ ok: false }))
+
+// Held matches live in the content script, which is where the message element
+// is; the popup asks the active chat tab for them.
+async function chatTabs () {
+  return chrome.tabs.query({ url: 'https://www.youtube.com/live_chat*' })
+}
+
+async function askChat (message) {
+  for (const tab of await chatTabs()) {
+    try {
+      const res = await chrome.tabs.sendMessage(tab.id, message)
+      if (res) return res
+    } catch { /* no content script in that tab */ }
+  }
+  return null
+}
 
 function timeAgo (at) {
   const seconds = Math.round((Date.now() - at) / 1000)
@@ -16,12 +37,30 @@ async function render () {
   const config = withDefaults(stored)
 
   $('enabled').checked = config.enabled
-  $('dry').hidden = !config.moderation.dryRun
+  $('dry').hidden = config.moderation.mode !== 'dry'
+  for (const b of document.querySelectorAll('.modes button')) {
+    b.setAttribute('aria-pressed', String(b.dataset.mode === config.moderation.mode))
+  }
   $('nokey').hidden = Boolean(config.apiKey) || !config.qa.enabled
 
-  for (const key of ['deleted', 'wouldDelete', 'answered', 'errors']) {
+  for (const key of ['deleted', 'wouldDelete', 'answered', 'timeouts', 'errors']) {
     $(`s-${key}`).textContent = config.stats[key] ?? 0
   }
+
+  const packs = { total: 0, byName: {}, context: '', ...(stored.packs ?? {}) }
+  $('pack-total').textContent = packs.total
+  $('pack-bars').replaceChildren(...Object.entries(packs.byName).sort((a, b) => b[1] - a[1]).map(([name, n]) => {
+    const row = document.createElement('div')
+    row.className = 'bar'
+    const left = document.createElement('span'); left.textContent = name
+    const right = document.createElement('b'); right.textContent = n
+    row.append(left, right)
+    return row
+  }))
+  // Do not yank text out from under the host mid sentence.
+  if (document.activeElement !== $('pack-context')) $('pack-context').value = packs.context
+
+  renderHolds()
 
   const log = stored.log ?? []
   $('empty').hidden = log.length > 0
@@ -62,3 +101,64 @@ $('clear').addEventListener('click', async () => {
 
 chrome.storage.onChanged.addListener(render)
 render()
+
+// ── modes, packs and held matches ─────────────────────────────────────────
+
+for (const b of document.querySelectorAll('.modes button')) {
+  b.addEventListener('click', async () => {
+    const stored = await chrome.storage.local.get('moderation')
+    const moderation = { ...(stored.moderation ?? {}), mode: b.dataset.mode }
+    await chrome.storage.local.set({ moderation })
+  })
+}
+
+async function addPack () {
+  const name = $('pack-name').value.trim()
+  if (!name) return $('pack-name').focus()
+  await send({ type: 'PACK_ADD', name })
+  render()
+}
+
+$('pack-add').addEventListener('click', addPack)
+$('pack-name').addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); addPack() } })
+$('pack-undo').addEventListener('click', async () => { await send({ type: 'PACK_UNDO' }); render() })
+$('pack-reset').addEventListener('click', async () => {
+  if (!confirm('Reset the pack tally to zero? Notes are kept.')) return
+  await send({ type: 'PACK_RESET' })
+  render()
+})
+
+let contextTimer
+$('pack-context').addEventListener('input', () => {
+  clearTimeout(contextTimer)
+  contextTimer = setTimeout(() => send({ type: 'PACK_CONTEXT', text: $('pack-context').value }), 600)
+})
+
+async function renderHolds () {
+  const res = await askChat({ type: 'LIST_HOLDS' })
+  const holds = res?.holds ?? []
+  $('holds').replaceChildren(...holds.map(h => {
+    const box = document.createElement('div')
+    box.className = 'hold'
+
+    const head = document.createElement('div')
+    const who = document.createElement('b'); who.textContent = h.author
+    const why = document.createElement('span'); why.style.opacity = '.7'; why.textContent = ` — matched "${h.term}"`
+    head.append(who, why)
+
+    const msg = document.createElement('div'); msg.className = 'msg'; msg.textContent = h.text
+
+    const acts = document.createElement('div'); acts.className = 'acts'
+    const del = document.createElement('button'); del.className = 'del'; del.textContent = 'Delete'
+    del.onclick = async () => { await askChat({ type: 'RESOLVE_HOLD', pendingId: h.id, decision: 'delete' }); render() }
+    const keep = document.createElement('button'); keep.className = 'keep'; keep.textContent = 'Keep'
+    keep.onclick = async () => { await askChat({ type: 'RESOLVE_HOLD', pendingId: h.id, decision: 'keep' }); render() }
+    acts.append(del, keep)
+
+    box.append(head, msg, acts)
+    return box
+  }))
+}
+
+// Held matches expire on their own, so keep the panel fresh while it is open.
+setInterval(renderHolds, 2000)

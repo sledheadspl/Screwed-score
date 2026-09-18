@@ -29,6 +29,56 @@ async function appendLog (entry) {
   await chrome.storage.local.set({ log: next })
 }
 
+// Packs opened and the host's notes. Stored alongside settings but edited from
+// the popup, never the options form - it is a running tally, not a setting.
+async function getPacks () {
+  const { packs } = await chrome.storage.local.get('packs')
+  return { total: 0, byName: {}, log: [], context: '', ...(packs ?? {}) }
+}
+
+async function addPack (name, qty = 1) {
+  const packs = await getPacks()
+  const clean = String(name ?? '').trim().replace(/\s+/g, ' ') || 'unnamed'
+  const count = Math.max(1, Math.min(100, Number(qty) || 1))
+
+  packs.byName[clean] = (packs.byName[clean] ?? 0) + count
+  packs.total += count
+  packs.log = [{ at: Date.now(), name: clean, qty: count }, ...packs.log].slice(0, 500)
+
+  await chrome.storage.local.set({ packs })
+  return { name: clean, qty: count, total: packs.total }
+}
+
+async function undoPack () {
+  const packs = await getPacks()
+  const last = packs.log.shift()
+  if (!last) return null
+
+  packs.total = Math.max(0, packs.total - last.qty)
+  packs.byName[last.name] = Math.max(0, (packs.byName[last.name] ?? 0) - last.qty)
+  if (!packs.byName[last.name]) delete packs.byName[last.name]
+
+  await chrome.storage.local.set({ packs })
+  return last
+}
+
+// What Claude is told. "How many packs so far?" is the most asked question in a
+// pack-opening stream, and a model with no tally will produce a confident
+// number rather than admit it has none.
+async function streamFacts () {
+  const packs = await getPacks()
+  const parts = []
+  if (packs.context) parts.push(`Stream notes from the host: ${packs.context}`)
+
+  const breakdown = Object.entries(packs.byName).sort((a, b) => b[1] - a[1])
+  if (packs.total > 0) {
+    parts.push(`Packs opened so far this stream: ${packs.total} (${breakdown.map(([n, c]) => `${n} x${c}`).join(', ')}).`)
+  } else {
+    parts.push('No packs have been opened yet this stream.')
+  }
+  return parts.join(' ')
+}
+
 async function askClaude (question, author) {
   const config = await getConfig()
   if (!config.apiKey) throw new Error('No API key set — open the extension options.')
@@ -45,7 +95,8 @@ async function askClaude (question, author) {
     body: JSON.stringify({
       model: config.model || DEFAULTS.model,
       max_tokens: 150,
-      system: config.qa.systemPrompt || DEFAULTS.qa.systemPrompt,
+      // Live facts ride along with every question.
+      system: `${config.qa.systemPrompt || DEFAULTS.qa.systemPrompt}\n\n${await streamFacts()}`,
       messages: [{
         role: 'user',
         // Fenced and labelled so the model treats it as a quoted question
@@ -90,6 +141,29 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
           await appendLog({ kind: 'error', author: msg.author, detail: String(err.message ?? err) })
           sendResponse({ ok: false, error: String(err.message ?? err) })
         })
+      return true
+
+    case 'PACK_ADD':
+      addPack(msg.name, msg.qty).then(added => sendResponse({ ok: true, ...added }))
+        .catch(err => sendResponse({ ok: false, error: String(err?.message ?? err) }))
+      return true
+
+    case 'PACK_UNDO':
+      undoPack().then(undone => sendResponse({ ok: true, undone }))
+        .catch(err => sendResponse({ ok: false, error: String(err?.message ?? err) }))
+      return true
+
+    case 'PACK_RESET':
+      // Resetting the tally between streams should not wipe the notes.
+      getPacks()
+        .then(packs => chrome.storage.local.set({ packs: { ...packs, total: 0, byName: {}, log: [] } }))
+        .then(() => sendResponse({ ok: true }))
+      return true
+
+    case 'PACK_CONTEXT':
+      getPacks().then(packs => chrome.storage.local.set({
+        packs: { ...packs, context: String(msg.text ?? '').trim().slice(0, 2000) },
+      })).then(() => sendResponse({ ok: true }))
       return true
 
     case 'LOG_ACTION':

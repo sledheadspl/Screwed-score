@@ -27,9 +27,37 @@ signed into.
 | Credentials | Your signed-in tab | Session cookies in `.env` |
 | Good for | Streaming from a desktop | Streaming from a phone, or unattended |
 
-Both share one matching engine — `src/content.js` and
-`headless/src/moderation.js` are kept behaviourally identical, and
-`headless/npm run selftest` covers both.
+Both now run the **same moderation engine and the same rules**. An MV3 content
+script cannot import ES modules and this project has no bundler, so the engine
+exists twice: `src/engine/engine.js` (classic script, for the extension) and
+`headless/src/{moderation,rules}.js` (ESM). Two copies drift, so
+`headless/src/engine.parity.selftest.js` runs one corpus of messages and actors
+through both and fails if they ever disagree. Run `npm run selftest` in
+`headless/` after touching either.
+
+## What the extension does
+
+- **The guide's two tiers.** Standing rules (hate, harassment, doxxing, spam
+  links) act immediately in every mode but dry run; judgment calls respect the
+  mode and give channel members a human call.
+- **Three modes** — dry run, ask me, auto — switchable from the popup.
+- **Escalation** — a repeat standing offender goes delete → timeout → ban, all
+  through the same native menu a moderator uses.
+- **Stands down** on anything a human mod already removed, and never moderates
+  owner or moderator messages.
+- **Pack tracking** — a counter and a notes box in the popup, both fed into
+  Claude's answers so "how many packs so far?" gets the real number.
+- **Held matches** appear in the popup with Delete / Keep.
+
+Two places it is weaker than the headless bot, and worth knowing:
+
+1. **Self-recognition.** The headless bot learns its own channel id and compares
+   on that. A content script cannot read the page's own JS state, so the
+   extension matches on message text and additionally never answers owner or
+   moderator messages — which is what stops it answering itself.
+2. **Strike keys.** Escalation counts per display name, not per channel id,
+   because the DOM does not hand the content script a channel id. Names can
+   change or collide, so strikes are session-scoped and conservative.
 
 ## Requirements
 
@@ -58,6 +86,8 @@ read the log, and fix the false positives before letting it delete anything. A
 careless regex here removes real viewers' messages.
 
 ## How matching works
+
+### Matching
 
 Obfuscation is handled in the pattern rather than by rewriting the message,
 because folding symbols to letters cannot work in general: `@` usually stands

@@ -40,7 +40,7 @@
   <p class="hint">Acts through your signed-in YouTube session. Deleting messages requires this account to be the broadcast owner or a moderator of the chat.</p>
 
   <div class="warn" id="dry-warning" hidden>
-    <strong>Dry run is on.</strong> Matches are logged but nothing is deleted. Watch the activity log for a stream, then turn this off.
+    <strong>Dry run is on.</strong> Matches are logged but nothing is deleted or sent. Watch the popup's activity log for a stream, then move to <em>Ask me</em>.
   </div>
 
   <h2>Claude</h2>
@@ -56,27 +56,52 @@
   </select>
 
   <h2>Moderation</h2>
-  <div class="check"><input type="checkbox" id="mod-enabled"><label for="mod-enabled" style="margin:0">Delete messages that match</label></div>
-  <div class="check"><input type="checkbox" id="mod-dryRun"><label for="mod-dryRun" style="margin:0">Dry run — log matches without deleting</label></div>
+  <div class="check"><input type="checkbox" id="mod-enabled"><label for="mod-enabled" style="margin:0">Moderate chat</label></div>
+  <div class="check"><input type="checkbox" id="mod-respectHumanMods"><label for="mod-respectHumanMods" style="margin:0">Stand down on anything a human mod already handled</label></div>
 
-  <label for="bannedWords">Banned words (one per line)</label>
-  <textarea id="bannedWords" spellcheck="false"></textarea>
-  <p class="hint">Matched on whole words, ignoring case, accents, zero-width padding, leetspeak (<code>sh1t</code>) and stretched letters (<code>shiiiit</code>).</p>
+  <label for="mod-mode">Mode</label>
+  <select id="mod-mode">
+    <option value="dry">Dry run — log matches, touch nothing</option>
+    <option value="hold">Ask me — queue judgment calls for approval</option>
+    <option value="auto">Auto — act immediately</option>
+  </select>
+  <p class="hint">Standing rules (below) act immediately in every mode except dry run — the guide's "act first, explain after".</p>
 
-  <label for="bannedPatterns">Banned regex patterns (one per line)</label>
-  <textarea id="bannedPatterns" spellcheck="false" placeholder="https?://(?!www\.youtube\.com)"></textarea>
-  <p class="hint">Applied to the raw message text. Invalid patterns are skipped with a console warning.</p>
+  <h2>Standing rules — Section 2</h2>
+  <p class="hint">Hate speech, harassment, doxxing and spam links. These fire for everyone, no approval, and are checked <em>before</em> the allow list. Patterns for harassment, doxxing and spam ship built in; hate speech ships empty on purpose — add your terms below, or leave that to YouTube's own blocked-words list.</p>
+  <label for="hate-words">Hate-speech terms (one per line)</label>
+  <textarea id="hate-words" spellcheck="false"></textarea>
 
-  <label for="allowList">Never delete messages containing (one per line)</label>
+  <h2>Judgment calls — Section 3</h2>
+  <label for="judgment-words">Words (one per line)</label>
+  <textarea id="judgment-words" spellcheck="false"></textarea>
+  <p class="hint">Matched on whole words, tolerant of leetspeak (<code>sh1t</code>, <code>f@ck</code>), stretched letters and leading symbols (<code>$hit</code>).</p>
+
+  <label for="judgment-patterns">Regex patterns (one per line)</label>
+  <textarea id="judgment-patterns" spellcheck="false"></textarea>
+
+  <div class="check"><input type="checkbox" id="mod-lenient"><label for="mod-lenient" style="margin:0">Channel members get a human call, not an automatic removal</label></div>
+
+  <label for="allowList">Never touch messages containing (one per line)</label>
   <textarea id="allowList" spellcheck="false"></textarea>
+  <p class="hint">Covers judgment calls only — a standing-rule violation is still removed.</p>
 
-  <div class="check"><input type="checkbox" id="mod-exemptOwner"><label for="mod-exemptOwner" style="margin:0">Never moderate the channel owner</label></div>
-  <div class="check"><input type="checkbox" id="mod-exemptModerators"><label for="mod-exemptModerators" style="margin:0">Never moderate other moderators</label></div>
-  <div class="check"><input type="checkbox" id="mod-exemptMembers"><label for="mod-exemptMembers" style="margin:0">Never moderate channel members</label></div>
+  <h2>Escalation — Section 6</h2>
+  <div class="check"><input type="checkbox" id="strikes-enabled"><label for="strikes-enabled" style="margin:0">Escalate repeat standing-rule offenders</label></div>
+  <div class="row">
+    <div><label for="strikes-timeoutAt">Timeout at</label><input type="number" id="strikes-timeoutAt" min="2" max="20"></div>
+    <div><label for="strikes-banAt">Ban at</label><input type="number" id="strikes-banAt" min="2" max="20"></div>
+  </div>
+  <p class="hint">Counted per display name, per session. Judgment calls never escalate.</p>
 
-  <label for="removeLabels">"Remove" menu labels (one per line)</label>
-  <textarea id="removeLabels" spellcheck="false"></textarea>
-  <p class="hint">The bot finds the delete entry by its trash icon first; these labels are the fallback. Add your language's wording if deletes fail.</p>
+  <h2>Menu labels</h2>
+  <p class="hint">Actions are found by icon first, with these as the fallback. Add your language's wording if an action fails.</p>
+  <label for="removeLabels">Remove</label>
+  <textarea id="removeLabels" spellcheck="false" style="min-height:52px"></textarea>
+  <label for="timeoutLabels">Timeout</label>
+  <textarea id="timeoutLabels" spellcheck="false" style="min-height:52px"></textarea>
+  <label for="banLabels">Hide / ban</label>
+  <textarea id="banLabels" spellcheck="false" style="min-height:52px"></textarea>
 
   <h2>Answering questions</h2>
   <div class="check"><input type="checkbox" id="qa-enabled"><label for="qa-enabled" style="margin:0">Answer viewer questions with Claude</label></div>

@@ -1,9 +1,12 @@
 {
   "manifest_version": 3,
   "name": "YouTube Live Chat Mod Bot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Auto-moderates your YouTube live chat and answers viewer questions with Claude. Runs on your own logged-in account.",
-  "permissions": ["storage"],
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
   "host_permissions": [
     "https://www.youtube.com/*",
     "https://api.anthropic.com/*"
@@ -14,8 +17,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/live_chat*"],
-      "js": ["src/content.js"],
+      "matches": [
+        "https://www.youtube.com/live_chat*"
+      ],
+      "js": [
+        "src/engine/engine.js",
+        "src/content.js"
+      ],
       "run_at": "document_idle",
       "all_frames": true
     }

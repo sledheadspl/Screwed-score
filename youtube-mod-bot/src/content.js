@@ -12,6 +12,7 @@ const MESSAGE_TAG = 'YT-LIVE-CHAT-TEXT-MESSAGE-RENDERER'
 let config = null
 const seenIds = new Set()
 const ourOwnMessages = new Set()
+const pending = new Map()   // held matches awaiting a decision
 let lastReplyAt = 0
 const replyTimes = []
 
@@ -29,97 +30,14 @@ async function waitFor (fn, timeout = 2000, interval = 50) {
   }
 }
 
-function escapeRegExp (s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
+// ── rules (shared engine, see src/engine/engine.js) ───────────────────────
 
-function escapeClass (s) {
-  return s.replace(/[\]\\^-]/g, '\\$&')
-}
+let rules = null
+const strikes = new Map()        // author channel key -> standing hits this session
+const humanHandled = new Set()   // ids a human mod already acted on
 
-// Obfuscation is handled in the pattern, not by rewriting the message. Folding
-// symbols to letters up front cannot work: "@" usually stands for "a", but in
-// "f@ck" it stands for "u". Expanding each letter into the set of characters
-// that can spell it catches both without guessing.
-const LEET_CLASS = {
-  a: 'a@4*', b: 'b8', c: 'c(', e: 'e3@*', g: 'g9', i: 'i1!|@*',
-  l: 'l1|', o: 'o0@*', s: 's5$', t: 't7+', u: 'u@*#', z: 'z2',
-}
-
-// Strip accents and zero-width padding, lowercase, and collapse runs of 3+ so
-// "shiiiit" reads as "shit". Symbols are left alone for the pattern to handle.
-function normalize (text) {
-  return text
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\u200b-\u200f\u2060\ufeff]/g, '')
-    .toLowerCase()
-    .replace(/(.)\1{2,}/g, '$1')
-}
-
-// Accents off and lowercased, but no repeat-collapsing: a banned word is a
-// literal to expand, not a message to clean up.
-function normalizeWord (word) {
-  return word
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\u200b-\u200f\u2060\ufeff]/g, '')
-    .toLowerCase()
-    .trim()
-}
-
-// "fuck" becomes [f]+[u@*#]+[c(]+[k]+ — tolerant of leetspeak and of doubled
-// letters that survived collapsing ("fuuck").
-function wordToPattern (word) {
-  let out = ''
-  for (const ch of word) {
-    const cls = LEET_CLASS[ch]
-    out += cls ? `[${escapeClass(cls)}]+` : `${escapeRegExp(ch)}+`
-  }
-  return out
-}
-
-// ── matching ───────────────────────────────────────────────────────────────
-
-let matcher = { words: null, patterns: [], allow: [] }
-
-function buildMatcher (moderation) {
-  const words = (moderation.bannedWords ?? [])
-    .map(w => normalizeWord(String(w)))
-    .filter(Boolean)
-    .map(wordToPattern)
-
-  const patterns = []
-  for (const raw of moderation.bannedPatterns ?? []) {
-    if (!String(raw).trim()) continue
-    try {
-      patterns.push(new RegExp(raw, 'i'))
-    } catch {
-      console.warn(TAG, 'ignoring invalid pattern:', raw)
-    }
-  }
-
-  matcher = {
-    // Letter-adjacency lookarounds rather than \b: a word spelled with a
-    // leading symbol ("$hit", "@ss") has no word boundary in front of it, so
-    // \b would let exactly the obfuscated cases through.
-    words: words.length ? new RegExp(`(?<![a-z0-9_])(?:${words.join('|')})(?![a-z0-9_])`, 'i') : null,
-    patterns,
-    allow: (moderation.allowList ?? []).map(w => normalize(String(w).trim())).filter(Boolean),
-  }
-}
-
-function findViolation (text) {
-  const normalized = normalize(text)
-  if (matcher.allow.some(term => normalized.includes(term))) return null
-
-  const wordHit = matcher.words?.exec(normalized)
-  if (wordHit) return { term: wordHit[0], source: 'word' }
-
-  for (const pattern of matcher.patterns) {
-    if (pattern.test(text)) return { term: pattern.source, source: 'pattern' }
-  }
-  return null
+function buildRules (moderation) {
+  rules = ModBot.buildRules(moderation, message => console.warn(TAG, message))
 }
 
 // ── reading messages ───────────────────────────────────────────────────────
@@ -146,12 +64,15 @@ function readMessage (el) {
   }
 }
 
-function isExempt (msg, moderation) {
+// The DOM gives one author-type string; the engine wants flags, so both halves
+// of this project decide trust the same way.
+function actorOf (msg) {
   const type = msg.authorType
-  if (moderation.exemptOwner && type.includes('owner')) return true
-  if (moderation.exemptModerators && type.includes('moderator')) return true
-  if (moderation.exemptMembers && type.includes('member')) return true
-  return false
+  return {
+    isOwner: type.includes('owner'),
+    isModerator: type.includes('moderator'),
+    isMember: type.includes('member'),
+  }
 }
 
 // ── native menu actions (serialized: only one menu can be open at a time) ───
@@ -169,13 +90,13 @@ function openDropdowns () {
     .filter(d => d.getAttribute('aria-hidden') !== 'true' && d.offsetParent !== null)
 }
 
-function findRemoveItem (labels) {
+function findMenuItem (labels, icons) {
   for (const dropdown of openDropdowns()) {
     const items = dropdown.querySelectorAll('ytd-menu-service-item-renderer, tp-yt-paper-item')
     for (const item of items) {
-      // Icon first — it survives YouTube being in any language.
+      // Icon first - it survives YouTube being in any language.
       const icon = (item.querySelector('yt-icon')?.getAttribute('icon') ?? '').toLowerCase()
-      if (icon.includes('delete') || icon.includes('trash')) return item
+      if (icons.some(name => icon.includes(name))) return item
 
       const label = (item.textContent ?? '').trim().toLowerCase()
       if (label && labels.some(l => label === l || label.startsWith(l))) return item
@@ -188,23 +109,44 @@ function closeMenu () {
   document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }))
 }
 
-async function deleteMessage (el, labels) {
-  const button = el.querySelector('#menu-button button, #menu #menu-button button')
-  if (!button) return { ok: false, reason: 'no message menu — is this account a moderator of the chat?' }
+const ACTION_MENU = {
+  delete: { icons: ['delete', 'trash'], labels: m => m.removeLabels ?? [] },
+  timeout: { icons: ['timer', 'hourglass'], labels: m => m.timeoutLabels ?? [] },
+  ban: { icons: ['visibility_off', 'remove_circle'], labels: m => m.banLabels ?? [] },
+}
 
-  // The menu button is only painted on hover; the click lands either way, but
-  // hovering first matches what YouTube expects.
+// Every moderation action is the same gesture: open the message's own menu and
+// click an entry. Only the entry differs, which is why they share one path.
+async function actOnMessage (el, action, moderation) {
+  const spec = ACTION_MENU[action]
+  if (!spec) return { ok: false, reason: `unknown action: ${action}` }
+
+  const button = el.querySelector('#menu-button button, #menu #menu-button button')
+  if (!button) return { ok: false, reason: 'no message menu - is this account a moderator of the chat?' }
+
   el.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
   button.click()
 
-  const item = await waitFor(() => findRemoveItem(labels), 2500)
+  const item = await waitFor(() => findMenuItem(spec.labels(moderation), spec.icons), 2500)
   if (!item) {
     closeMenu()
-    return { ok: false, reason: 'menu opened but had no Remove entry (check Remove labels in options)' }
+    return { ok: false, reason: `menu opened but had no ${action} entry (check the labels in options)` }
   }
 
   item.click()
   await sleep(150)
+
+  // Timeout and ban raise a confirmation in some layouts; take it if present.
+  const confirm = await waitFor(() => {
+    for (const dialog of document.querySelectorAll('tp-yt-paper-dialog, yt-confirm-dialog-renderer')) {
+      if (dialog.offsetParent === null) continue
+      const yes = dialog.querySelector('#confirm-button button, yt-button-renderer#confirm-button button')
+      if (yes) return yes
+    }
+    return null
+  }, 600)
+  if (confirm) { confirm.click(); await sleep(120) }
+
   return { ok: true }
 }
 
@@ -293,6 +235,52 @@ async function answerQuestion (msg, qa) {
 
 // ── main ───────────────────────────────────────────────────────────────────
 
+// Section 6 escalation carries out one verdict: remove the message first, then
+// timeout or ban the author if they have been here before.
+async function enforce (el, msg, verdict) {
+  const moderation = config.moderation
+  let action = verdict.action
+
+  if (verdict.tier === 'standing') {
+    // Display name is the only author handle the DOM reliably gives us. It is a
+    // weaker key than a channel id - names can change or collide - so strikes
+    // are session-scoped and deliberately conservative.
+    const step = ModBot.escalate(strikes, msg.author, verdict.action, moderation.strikes)
+    action = step.action
+  }
+
+  const why = `${verdict.tier}/${verdict.category} "${verdict.term}"`
+  const removed = await actOnMessage(el, 'delete', moderation)
+  if (!removed.ok) {
+    log({ kind: 'error', author: msg.author, text: msg.text, detail: removed.reason })
+    return
+  }
+  log({ kind: 'deleted', author: msg.author, text: msg.text, detail: why })
+
+  if (action === 'timeout' || action === 'ban') {
+    const extra = await actOnMessage(el, action, moderation)
+    log(extra.ok
+      ? { kind: action, author: msg.author, detail: `repeat ${verdict.category}` }
+      : { kind: 'error', author: msg.author, detail: extra.reason })
+  }
+}
+
+// Section 5: a message a human mod already removed shows up struck through, so
+// the bot can see the call was made and stay out of it.
+function watchForHumanActions (items) {
+  new MutationObserver(records => {
+    if (!config?.moderation?.respectHumanMods) return
+    for (const record of records) {
+      const el = record.target
+      if (el?.hasAttribute?.('is-deleted')) {
+        const id = el.getAttribute('id')
+        if (id) humanHandled.add(id)
+      }
+    }
+    if (humanHandled.size > 3000) humanHandled.clear()
+  }).observe(items, { attributes: true, attributeFilter: ['is-deleted'], subtree: true })
+}
+
 async function handleMessage (el) {
   if (!config?.enabled) return
 
@@ -301,42 +289,84 @@ async function handleMessage (el) {
   if (msg.id) seenIds.add(msg.id)
   if (seenIds.size > 2000) seenIds.clear()
 
-  // Never react to our own replies.
+  // Never react to our own replies. The extension has no channel id to compare
+  // (a content script cannot read the page's own JS state), so this is text
+  // matching plus the staff rule below - weaker than the headless bot's
+  // identity check, and the reason staff are never answered here.
   if (ourOwnMessages.has(msg.text)) {
     ourOwnMessages.delete(msg.text)
     return
   }
 
-  if (config.moderation.enabled && !isExempt(msg, config.moderation)) {
-    const hit = findViolation(msg.text)
-    if (hit) {
-      if (config.moderation.dryRun) {
-        log({ kind: 'wouldDelete', author: msg.author, text: msg.text, detail: `matched ${hit.source} "${hit.term}"` })
+  if (config.moderation.respectHumanMods && (humanHandled.has(msg.id) || el.hasAttribute('is-deleted'))) {
+    log({ kind: 'pass', author: msg.author, text: msg.text, detail: 'a human mod already handled this' })
+    return
+  }
+
+  const actor = actorOf(msg)
+
+  if (config.moderation.enabled && rules) {
+    const verdict = ModBot.evaluate(rules, actor, msg.text)
+    if (verdict) {
+      const why = `${verdict.tier}/${verdict.category} "${verdict.term}"`
+      const detail = verdict.reason ? `${why} - ${verdict.reason}` : why
+      const mode = config.moderation.mode
+
+      if (mode === 'dry') {
+        log({ kind: 'wouldDelete', author: msg.author, text: msg.text, detail, term: verdict.term, tier: verdict.tier })
+      } else if (verdict.immediate) {
+        // Standing rules act first and explain after, in every mode but dry.
+        enqueue(() => enforce(el, msg, verdict))
+      } else if (mode === 'hold' || verdict.hold) {
+        holdForApproval(el, msg, verdict)
       } else {
-        enqueue(async () => {
-          const res = await deleteMessage(el, config.moderation.removeLabels ?? [])
-          log(res.ok
-            ? { kind: 'deleted', author: msg.author, text: msg.text, detail: `matched ${hit.source} "${hit.term}"` }
-            : { kind: 'error', author: msg.author, text: msg.text, detail: res.reason })
-        })
+        enqueue(() => enforce(el, msg, verdict))
       }
-      // A message being removed is not a question worth answering.
       return
     }
   }
 
   if (config.qa.enabled && isQuestion(msg.text, config.qa)) {
-    if (config.qa.skipOwnerMessages && msg.authorType.includes('owner')) return
+    // Staff are never answered: without an identity check, that is what stops
+    // the bot answering its own replies when it runs as owner or moderator.
+    if (actor.isOwner || actor.isModerator) return
     if (!canReply(config.qa)) return
     enqueue(() => answerQuestion(msg, config.qa))
   }
+}
+
+// A held match waits for a decision in the popup. holdDefault decides if the
+// wait runs out - 'skip' by default, because an unnoticed deletion is the
+// mistake you cannot take back.
+function holdForApproval (el, msg, verdict) {
+  const id = `${msg.id || msg.author}-${Date.now()}`
+  const seconds = config.moderation.holdSeconds ?? 25
+  const expiresAt = Date.now() + seconds * 1000
+
+  pending.set(id, { el, msg, verdict, expiresAt })
+  log({ kind: 'pending', pendingId: id, author: msg.author, text: msg.text, detail: `matched ${verdict.term}`, expiresAt })
+
+  setTimeout(() => {
+    if (!pending.has(id)) return
+    resolveHold(id, config.moderation.holdDefault === 'delete' ? 'delete' : 'keep', 'timed out')
+  }, seconds * 1000)
+}
+
+function resolveHold (id, decision, why = 'by you') {
+  const item = pending.get(id)
+  if (!item) return false
+  pending.delete(id)
+
+  if (decision === 'delete') enqueue(() => enforce(item.el, item.msg, item.verdict))
+  else log({ kind: 'kept', author: item.msg.author, text: item.msg.text, detail: `left up, ${why}` })
+  return true
 }
 
 async function loadConfig () {
   const res = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' })
   if (!res?.ok) return
   config = res.config
-  buildMatcher(config.moderation)
+  buildRules(config.moderation)
 }
 
 async function attach () {
@@ -367,8 +397,28 @@ async function attach () {
     }
   }).observe(items, { childList: true })
 
+  watchForHumanActions(items)
+
   console.info(TAG, 'watching live chat')
 }
+
+// The popup resolves held matches through the worker, which relays to here.
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg?.type === 'RESOLVE_HOLD') {
+    sendResponse({ ok: resolveHold(msg.pendingId, msg.decision) })
+    return true
+  }
+  if (msg?.type === 'LIST_HOLDS') {
+    sendResponse({
+      ok: true,
+      holds: [...pending.entries()].map(([id, p]) => ({
+        id, author: p.msg.author, text: p.msg.text, term: p.verdict.term, expiresAt: p.expiresAt,
+      })),
+    })
+    return true
+  }
+  return false
+})
 
 chrome.storage.onChanged.addListener(() => { loadConfig() })
 
