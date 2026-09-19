@@ -6,17 +6,31 @@ Removes bad messages. Mutes whoever keeps sending them. Says nothing.
 
 START HERE
 ----------
-Double-click:   Pokebank Mod Bot.cmd
+Double-click:   Pokebank Mod Bot.exe
 
-The first time, it spends about 20 seconds setting itself up, and offers
-to put an icon on your Desktop.
+It puts a copy of itself on your Desktop straight away - that is your
+icon. Then it spends about 20 seconds on one-time setup.
 
 Every time after that: double-click the Desktop icon, paste your stream
 link, press Enter. That is the whole job.
 
+Windows may warn that it does not recognise the program - it is not
+signed, because signing costs money and needs a certificate in your name.
+Click "More info" then "Run anyway" if you are happy to. Nothing in it
+phones home: it opens Chrome at your chat, and that is all.
+
+If you want to check it before trusting it:
+
+    "Pokebank Mod Bot.exe" -selftest
+
+prints its link-parsing tests. The source is in launcher/ in the repo.
+
 
 WHAT THE FIRST RUN ASKS OF YOU
 ------------------------------
+Run it once from the folder you unzipped, so it can find the extension.
+After that the Desktop copy works from anywhere.
+
 Chrome has no way to be told "install this" from a script, so this one
 step is yours. The launcher opens both windows you need, side by side:
 

@@ -26,12 +26,24 @@ const FILES = [
   'src/content.js', 'src/background.js', 'src/defaults.js',
   'src/engine/engine.js',
   'LOAD-ME.txt',
-  // The desktop-icon launcher. Chrome ignores files it does not know about,
-  // so these sit happily beside the extension it loads.
-  'Pokebank Mod Bot.cmd',
-  'launcher.ps1',
-  'icon.ico',
+  // The launcher: one Windows executable, statically linked, with the icon
+  // compiled in. Chrome ignores files it does not know about, so it sits
+  // happily beside the extension it loads.
+  'Pokebank Mod Bot.exe',
 ]
+
+// Rebuild the launcher from source when Go is available, so the shipped
+// executable cannot drift from launcher/*.go. Without Go, the committed one is
+// used as-is and said so, rather than silently shipping something stale.
+const goBuild = spawnSync('go', [
+  'build', '-ldflags=-s -w', '-o', join(HERE, 'Pokebank Mod Bot.exe'), '.',
+], {
+  cwd: join(HERE, 'launcher'),
+  env: { ...process.env, GOOS: 'windows', GOARCH: 'amd64', CGO_ENABLED: '0' },
+  encoding: 'utf8',
+})
+if (goBuild.status === 0) console.log('Rebuilt the launcher from launcher/*.go')
+else console.log('Go not available — shipping the committed Pokebank Mod Bot.exe')
 
 await rm(join(HERE, 'dist'), { recursive: true, force: true })
 for (const file of FILES) {
