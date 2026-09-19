@@ -23,6 +23,7 @@ function render (config) {
   $('strikes-enabled').checked = Boolean(config.moderation.strikes.enabled)
   $('strikes-timeoutAt').value = config.moderation.strikes.timeoutAt
   $('strikes-banAt').value = config.moderation.strikes.banAt
+  $('mod-maxAction').value = config.moderation.maxAction
   $('hate-words').value = toLines(config.moderation.standing?.categories?.hate?.words ?? [])
 
   for (const key of QA_CHECKS) $(`qa-${key}`).checked = Boolean(config.qa[key])
@@ -39,6 +40,7 @@ function collect (current) {
   for (const key of MOD_CHECKS) moderation[key] = $(`mod-${key}`).checked
   for (const key of LINES) moderation[key] = fromLines($(key).value)
   moderation.mode = $('mod-mode').value
+  moderation.maxAction = $('mod-maxAction').value
   moderation.judgment = { ...current.moderation.judgment, lenientForMembers: $('mod-lenient').checked }
   for (const key of JUDGMENT_LINES) moderation.judgment[key] = fromLines($(`judgment-${key}`).value)
   moderation.strikes = {

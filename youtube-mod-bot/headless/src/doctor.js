@@ -108,7 +108,10 @@ function checkRules (config) {
   else warn('Judgment rules', 'no words configured')
 
   const strikes = config.moderation.strikes
-  ok('Escalation', strikes.enabled ? `timeout at ${strikes.timeoutAt}, ban at ${strikes.banAt}` : 'disabled')
+  const ceiling = config.moderation.maxAction
+  ok('Escalation', strikes.enabled
+    ? `timeout at ${strikes.timeoutAt}, ban at ${strikes.banAt}, never above ${ceiling}`
+    : `disabled (every action capped at ${ceiling})`)
 }
 
 function checkMode (config) {

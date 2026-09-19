@@ -37,17 +37,37 @@ through both and fails if they ever disagree. Run `npm run selftest` in
 
 ## What the extension does
 
+Out of the box it does one thing: remove the bad message, and mute whoever
+keeps sending them. It posts nothing, so viewers see messages disappear and
+nothing else.
+
 - **The guide's two tiers.** Standing rules (hate, harassment, doxxing, spam
   links) act immediately in every mode but dry run; judgment calls respect the
-  mode and give channel members a human call.
+  mode.
 - **Three modes** — dry run, ask me, auto — switchable from the popup.
-- **Escalation** — a repeat standing offender goes delete → timeout → ban, all
-  through the same native menu a moderator uses.
+- **Escalation** — a repeat offender goes delete → timeout, through the same
+  native menu a moderator uses. Repeats of *anything* count, not just standing
+  violations: deleting every message from the same person for ever is a
+  treadmill, not moderation.
+- **A ceiling on every action**, set in the options page. It ships at
+  **timeout**, so nothing bans anyone until you say so — a mute expires on its
+  own and a ban does not.
 - **Stands down** on anything a human mod already removed, and never moderates
   owner or moderator messages.
-- **Pack tracking** — a counter and a notes box in the popup, both fed into
-  Claude's answers so "how many packs so far?" gets the real number.
-- **Held matches** appear in the popup with Delete / Keep.
+- **Held matches** appear in the popup with Delete / Keep, for *ask me* mode.
+
+Two things are **off by default**, because neither is part of moderating
+quietly. Both are one switch away:
+
+- **Answering questions** posts messages in the chat under your name, needs an
+  API key, and bills a model call per question.
+- **Member leniency** holds a member's match for a human decision instead of
+  acting on it — which in auto mode means it waits `holdSeconds` and is then
+  quietly left up. Useful if someone is watching the popup; a silent free pass
+  if not.
+
+**Pack tracking** (a counter and a notes box in the popup) stays available and
+feeds Claude's answers, but it only matters if you turn answering on.
 
 Two places it is weaker than the headless bot, and worth knowing:
 
@@ -140,7 +160,11 @@ a banned one, such as `dicker`.
 
 ## Answering questions
 
-By default the bot only answers messages starting with `!ask`, because replying
+**Off by default** — turn it on in the options page. It posts in your chat under
+your name, which is the opposite of moderating quietly, and it is the only part
+that needs an API key or costs anything to run.
+
+Once on, the bot only answers messages starting with `!ask`, because replying
 to every message ending in `?` gets noisy and bills a model call per message.
 Replies are rate limited two ways (a cooldown between replies and an hourly cap)
 and truncated to fit YouTube's 200-character limit.

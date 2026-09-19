@@ -271,15 +271,14 @@ async function answerQuestion (msg, qa) {
 // timeout or ban the author if they have been here before.
 async function enforce (el, msg, verdict) {
   const moderation = config.moderation
-  let action = verdict.action
 
-  if (verdict.tier === 'standing') {
-    // Display name is the only author handle the DOM reliably gives us. It is a
-    // weaker key than a channel id - names can change or collide - so strikes
-    // are session-scoped and deliberately conservative.
-    const step = ModBot.escalate(strikes, msg.author, verdict.action, moderation.strikes)
-    action = step.action
-  }
+  // Repeats of anything count, not just standing violations: someone swearing
+  // in every message is the person causing the problem, and deleting each one
+  // for ever is not moderation. Display name is the only author handle the DOM
+  // reliably gives us - a weaker key than a channel id, since names can change
+  // or collide - so strikes are session-scoped and deliberately conservative.
+  const step = ModBot.escalate(strikes, msg.author, verdict.action, moderation.strikes)
+  const action = ModBot.capAction(step.action, moderation.maxAction)
 
   const why = `${verdict.tier}/${verdict.category} "${verdict.term}"`
   const removed = await actOnMessage(el, 'delete', moderation)

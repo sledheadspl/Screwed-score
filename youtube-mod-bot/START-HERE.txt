@@ -87,17 +87,27 @@ Dashboard: http://127.0.0.1:8787
 wrong. Run it first.
 
 
-WHAT IT DOES
-------------
+WHAT IT DOES OUT OF THE BOX
+---------------------------
+Removes the message. Mutes whoever keeps sending them. Says nothing.
+
+Nothing bans anyone unless you change the ceiling in Settings: a mute
+expires on its own, a ban does not. Answering questions is OFF, so no
+API key is needed and the bot never posts in your chat.
+
+DETAIL
+------
 Standing rules  - hate speech, harassment, doxxing, spam/scam links. Acts
                   immediately, for everyone, in every mode but dry run.
-                  Repeat offenders go delete -> timeout -> ban.
-Judgment calls  - mild swearing. Respects your mode; channel members get a
-                  human call instead of an automatic removal.
+                  Repeat offenders go delete -> timeout, and stop there
+                  unless you raise the ceiling in Settings.
+Judgment calls  - mild swearing. Respects your mode. Repeats escalate the
+                  same way - the second or third one mutes them.
 Never touches   - owner or moderator messages, or anything a human mod has
                   already handled.
-Answers questions - viewers type "!ask ..." and Claude replies, using your
-                  real pack count and notes so it does not invent numbers.
+Answers questions - OFF by default. Turn it on in Settings and viewers can
+                  type "!ask ..." for a reply that uses your real pack count
+                  and notes. This is the only part that needs an API key.
 
 Evasion is handled: leetspeak (f@ck), stretched letters (shiiit),
 lookalike characters from other alphabets (Cyrillic c in "fuck"), and

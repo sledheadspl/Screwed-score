@@ -87,12 +87,21 @@
   <p class="hint">Covers judgment calls only — a standing-rule violation is still removed.</p>
 
   <h2>Escalation — Section 6</h2>
-  <div class="check"><input type="checkbox" id="strikes-enabled"><label for="strikes-enabled" style="margin:0">Escalate repeat standing-rule offenders</label></div>
+  <div><label for="mod-maxAction">Never go further than</label>
+    <select id="mod-maxAction">
+      <option value="delete">Remove the message only</option>
+      <option value="timeout">Mute the person (timeout)</option>
+      <option value="ban">Hide them from the channel (ban)</option>
+    </select>
+  </div>
+  <p class="hint">A ceiling on every rule, whatever it asks for. A mute expires on its own; a ban does not, which is why it is not the default.</p>
+
+  <div class="check"><input type="checkbox" id="strikes-enabled"><label for="strikes-enabled" style="margin:0">Escalate repeat offenders</label></div>
   <div class="row">
     <div><label for="strikes-timeoutAt">Timeout at</label><input type="number" id="strikes-timeoutAt" min="2" max="20"></div>
     <div><label for="strikes-banAt">Ban at</label><input type="number" id="strikes-banAt" min="2" max="20"></div>
   </div>
-  <p class="hint">Counted per display name, per session. Judgment calls never escalate.</p>
+  <p class="hint">Counted per display name, per session, across every rule — not just standing violations. Both numbers stay under the ceiling above.</p>
 
   <h2>Menu labels</h2>
   <p class="hint">Actions are found by icon first, with these as the fallback. Add your language's wording if an action fails.</p>

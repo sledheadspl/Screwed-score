@@ -128,6 +128,9 @@ const base = {
     standing: { categories: {} },
     allowList: [],
     strikes: { enabled: true, timeoutAt: 2, banAt: 3 },
+    // Explicit, because the shipped ceiling is a timeout: the escalation ladder
+    // below is testing that a ban happens when it is allowed to.
+    maxAction: 'ban',
     respectHumanMods: true,
   },
   qa: { enabled: false },
@@ -395,6 +398,50 @@ try {
     check('but the apostrophe case stays up', actsFor(acted, 'e4').length === 0, JSON.stringify(acted))
     acted = await send(page, 'e5', 'Fan', 'i s o a charizard if anyone has one')
     check('and single letters in chat stay up', actsFor(acted, 'e5').length === 0, JSON.stringify(acted))
+    await page.close()
+  }
+
+  // 8f. the action ceiling --------------------------------------------------
+  // The stated goal is a quiet chat: remove the words, mute the person. A ban
+  // is the one action that does not expire, so it is off unless asked for.
+  console.log('\naction ceiling')
+  await writeConfig(context, id, { ...base, moderation: { ...base.moderation, maxAction: 'timeout' } })
+  {
+    const { page } = await openChat(context, fixture, '')
+    let acted = []
+    for (const [i, text] of ['bit.ly/a', 'discord.gg/b', 'cash.app/c', 'bit.ly/d'].entries()) {
+      acted = await send(page, `t${i}`, 'Persistent', text)
+    }
+    const all = acted.filter(a => a.author === 'Persistent').map(a => a.act)
+    check('never banned under a timeout ceiling', !all.includes('ban'), JSON.stringify(all))
+    check('but did mute them', all.includes('timeout'), JSON.stringify(all))
+    await page.close()
+  }
+
+  // The shipped default, with nothing configured at all.
+  await writeConfig(context, id, {
+    enabled: true,
+    moderation: { enabled: true, mode: 'auto' },
+    qa: { enabled: false },
+  })
+  {
+    const { page } = await openChat(context, fixture, '')
+    let acted = []
+    for (const [i, text] of ['bit.ly/a', 'discord.gg/b', 'cash.app/c', 'bit.ly/d'].entries()) {
+      acted = await send(page, `u${i}`, 'Persistent', text)
+    }
+    const all = acted.filter(a => a.author === 'Persistent').map(a => a.act)
+    check('the shipped default never bans', !all.includes('ban'), JSON.stringify(all))
+    check('the shipped default does mute', all.includes('timeout'), JSON.stringify(all))
+
+    // A repeat swearer is the person causing the problem, not just a stream of
+    // messages to delete.
+    acted = await send(page, 'r1', 'Swearer', 'this is shit')
+    let mine = actsFor(acted, 'r1')
+    check('a first judgment call only removes', String(mine) === 'delete', JSON.stringify(mine))
+    acted = await send(page, 'r2', 'Swearer', 'still shit')
+    mine = actsFor(acted, 'r2')
+    check('a repeat judgment call mutes them', String(mine) === 'delete,timeout', JSON.stringify(mine))
     await page.close()
   }
 

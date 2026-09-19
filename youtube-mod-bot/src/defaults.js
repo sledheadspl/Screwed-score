@@ -79,13 +79,25 @@ export const DEFAULTS = {
       words: DEFAULT_BANNED_WORDS,
       patterns: [],
       onMatch: 'act',
-      lenientForMembers: true,
+      // Off by default. When on, a member's match is held for a human decision
+      // instead of acted on - which in auto mode means it sits for holdSeconds
+      // and is then quietly left up, so a member can swear freely and nothing
+      // says so. Turn it on only if someone is actually watching the popup.
+      lenientForMembers: false,
     },
 
     allowList: [],
 
-    // Guide Section 6: reserved for standing violations or repeat offenders.
+    // Guide Section 6. Repeats of anything escalate, not just standing
+    // violations - deleting every message from the same person for ever is not
+    // moderation, it is a treadmill.
     strikes: { enabled: true, timeoutAt: 2, banAt: 3 },
+
+    // The ceiling on every action, whatever a rule asks for. 'timeout' is the
+    // default because a mute expires and a ban does not: the goal is a quiet
+    // chat, and a ban is a decision worth making by hand. Set to 'ban' to let
+    // the rules escalate the whole way.
+    maxAction: 'timeout',
 
     // Guide Section 5: never contradict a call a human mod already made.
     respectHumanMods: true,
@@ -96,7 +108,10 @@ export const DEFAULTS = {
   },
 
   qa: {
-    enabled: true,
+    // Off by default: answering posts messages in the chat under your name,
+    // which is the opposite of moderating quietly. It also needs an API key and
+    // bills a model call per question. Turn it on deliberately.
+    enabled: false,
     // 'questionMark' | 'prefix' | 'both'
     trigger: 'prefix',
     prefix: '!ask',
@@ -134,5 +149,9 @@ export function withDefaults (stored = {}) {
   merged.moderation.strikes = { ...DEFAULTS.moderation.strikes, ...(stored.moderation?.strikes ?? {}) }
 
   if (!['dry', 'hold', 'auto'].includes(merged.moderation.mode)) merged.moderation.mode = 'dry'
+  // An unrecognised ceiling must not read as "no ceiling".
+  if (!['delete', 'timeout', 'ban'].includes(merged.moderation.maxAction)) {
+    merged.moderation.maxAction = DEFAULTS.moderation.maxAction
+  }
   return merged
 }

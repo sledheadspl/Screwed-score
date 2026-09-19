@@ -241,7 +241,19 @@
     }
   }
 
-  // Section 6: delete, then timeout, then ban on repeat standing hits.
+  const ACTION_RANK = { delete: 0, timeout: 1, ban: 2 }
+
+  // "Never ban, only mute" as one ceiling rather than an edit to every rule.
+  // Applied after the rules have decided, so a rule that asks for a ban still
+  // escalates as far as the ceiling allows and no further. A ban is the action
+  // you cannot quietly take back, so the ceiling is a timeout unless a caller
+  // names a higher one - an absent setting must not read as "no ceiling".
+  function capAction (action, maxAction) {
+    const ceiling = ACTION_RANK[maxAction] === undefined ? ACTION_RANK.timeout : ACTION_RANK[maxAction]
+    return (ACTION_RANK[action] ?? 0) > ceiling ? maxAction : action
+  }
+
+  // Section 6: delete, then timeout, then ban on repeat hits.
   function escalate (strikes, key, baseAction, cfg) {
     const settings = cfg || {}
     if (!settings.enabled) return { action: baseAction, count: 0 }
@@ -291,6 +303,6 @@
 
   root.ModBot = {
     waitFor,
-    normalize, compile, matchAgainst, buildRules, evaluate, trustOf, escalate, STANDING_DEFAULTS,
+    normalize, compile, matchAgainst, buildRules, evaluate, trustOf, escalate, capAction, STANDING_DEFAULTS,
   }
 })(typeof self !== 'undefined' ? self : globalThis)

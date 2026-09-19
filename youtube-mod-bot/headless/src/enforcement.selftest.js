@@ -28,6 +28,9 @@ runtime.config = {
     judgment: { words: ['shit'], onMatch: 'act', lenientForMembers: true },
     allowList: [],
     strikes: { enabled: true, timeoutAt: 2, banAt: 3 },
+    // Explicit, because the ceiling defaults to a timeout: the ladder below is
+    // testing that escalation reaches a ban when it is allowed to.
+    maxAction: 'ban',
     respectHumanMods: true,
   },
 }
@@ -57,11 +60,43 @@ await check('a different person starts clean', async () => {
   await enforce(chatFor(4, 'other-channel'), 'slur1', standing)
   assert.deepEqual(calls.map(c => c[0]), ['remove'])
 })
-await check('a judgment call never escalates', async () => {
+const judgment = { tier: 'judgment', category: 'judgment', action: 'delete', term: 'shit', source: 'word' }
+
+await check('a repeat judgment offender escalates too', async () => {
   calls.length = 0
-  const judgment = { tier: 'judgment', category: 'judgment', action: 'delete', term: 'shit', source: 'word' }
-  for (let i = 0; i < 4; i++) await enforce(chatFor(10 + i, 'chatty'), 'oh shit', judgment)
-  assert.deepEqual([...new Set(calls.map(c => c[0]))], ['remove'], 'judgment calls should only ever delete')
+  // Deleting every message from the same person for ever is a treadmill, not
+  // moderation: the person is the problem by the second or third one.
+  await enforce(chatFor(10, 'chatty'), 'oh shit', judgment)
+  assert.deepEqual(calls.map(c => c[0]), ['remove'], 'first one is just removed')
+  calls.length = 0
+  await enforce(chatFor(11, 'chatty'), 'oh shit', judgment)
+  assert.deepEqual(calls.map(c => c[0]), ['remove', 'timeout'], 'second one mutes them')
+})
+
+await check('the ceiling holds even when the ladder asks for a ban', async () => {
+  runtime.config.moderation.maxAction = 'timeout'
+  calls.length = 0
+  for (let i = 0; i < 4; i++) await enforce(chatFor(30 + i, 'capped'), 'slur1', standing)
+  const used = [...new Set(calls.map(c => c[0]))]
+  assert.ok(!used.includes('hide'), `expected no ban, got ${used.join(', ')}`)
+  assert.ok(used.includes('timeout'), 'should still have muted them')
+  runtime.config.moderation.maxAction = 'ban'
+})
+
+await check('a ceiling of delete never mutes anyone', async () => {
+  runtime.config.moderation.maxAction = 'delete'
+  calls.length = 0
+  for (let i = 0; i < 4; i++) await enforce(chatFor(40 + i, 'deleteonly'), 'slur1', standing)
+  assert.deepEqual([...new Set(calls.map(c => c[0]))], ['remove'])
+  runtime.config.moderation.maxAction = 'ban'
+})
+
+await check('an absent ceiling does not read as no ceiling', async () => {
+  delete runtime.config.moderation.maxAction
+  calls.length = 0
+  for (let i = 0; i < 4; i++) await enforce(chatFor(50 + i, 'unset'), 'slur1', standing)
+  assert.ok(!calls.map(c => c[0]).includes('hide'), 'an unset ceiling must not permit a ban')
+  runtime.config.moderation.maxAction = 'ban'
 })
 await check('escalation can be switched off', async () => {
   runtime.config.moderation.strikes.enabled = false

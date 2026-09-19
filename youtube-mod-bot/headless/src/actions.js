@@ -190,7 +190,19 @@ export async function banUser (channelId, { author, reason } = {}) {
   emit({ kind: 'ban', author, detail: reason ?? 'hidden from chat' })
 }
 
-// Section 6 escalation: delete, then timeout, then ban on repeat standing hits.
+const ACTION_RANK = { delete: 0, timeout: 1, ban: 2 }
+
+// "Never ban, only mute" as one ceiling rather than an edit to every rule.
+// Applied after the rules have decided, so a rule that asks for a ban still
+// escalates as far as the ceiling allows and no further. A ban is the action
+// you cannot quietly take back, so the ceiling is a timeout unless a caller
+// names a higher one - an absent setting must not read as "no ceiling".
+function capAction (action, maxAction) {
+  const ceiling = ACTION_RANK[maxAction] === undefined ? ACTION_RANK.timeout : ACTION_RANK[maxAction]
+  return (ACTION_RANK[action] ?? 0) > ceiling ? maxAction : action
+}
+
+// Section 6 escalation: delete, then timeout, then ban on repeat hits.
 function nextAction (channelId, baseAction) {
   const cfg = runtime.config.moderation.strikes ?? {}
   if (!cfg.enabled) return baseAction
@@ -210,13 +222,13 @@ export async function enforce (chat, text, verdict) {
   const author = chat.authorName ?? 'someone'
   const why = `${verdict.tier}/${verdict.category} "${verdict.term}"`
 
-  let action = verdict.action
-  if (verdict.tier === 'standing') {
-    const escalated = nextAction(chat.authorChannelId, verdict.action)
-    const record = runtime.strikes.get(chat.authorChannelId)
-    if (record) record.author = author
-    action = escalated
-  }
+  // Repeats of anything count, not just standing violations: someone swearing
+  // in every message is the person causing the problem, and deleting each one
+  // for ever is not moderation.
+  const escalated = nextAction(chat.authorChannelId, verdict.action)
+  const record = runtime.strikes.get(chat.authorChannelId)
+  if (record) record.author = author
+  const action = capAction(escalated, runtime.config.moderation.maxAction)
 
   await removeMessage(chat.id, { author, text, reason: why })
 

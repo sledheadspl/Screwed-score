@@ -55,6 +55,9 @@ const DEFAULTS = {
 
     // Section 6: "reserved for standing-rule violations or repeat offenders".
     strikes: { enabled: true, timeoutAt: 2, banAt: 3 },
+    // Ceiling on every action, whatever a rule asks for. A mute expires; a ban
+    // does not, so that one is a decision worth making by hand.
+    maxAction: 'timeout',
 
     // Section 5: never contradict a call a human mod already made.
     respectHumanMods: true,
@@ -123,6 +126,10 @@ function merge (stored) {
 
   if (!['dry', 'hold', 'auto'].includes(merged.moderation.mode)) {
     merged.moderation.mode = 'dry'
+  }
+  // An unrecognised ceiling must not read as "no ceiling".
+  if (!['delete', 'timeout', 'ban'].includes(merged.moderation.maxAction)) {
+    merged.moderation.maxAction = DEFAULTS.moderation.maxAction
   }
   return merged
 }
