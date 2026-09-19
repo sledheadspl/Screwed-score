@@ -150,8 +150,26 @@ if (wantBrowser) {
     console.log('  installing Playwright (once, a few hundred MB)...\n')
     if (!run('npm', ['install'], extestDir)) bad('npm install', 'see the output above')
   }
-  if (!failed && !run('npx', ['playwright', 'install', 'chromium'], extestDir)) {
-    bad('playwright install', 'could not fetch Chromium')
+
+  // Look for a browser before insisting on a download, using the same
+  // resolution the harness uses. An earlier version always ran "playwright
+  // install" and treated a failed download as fatal, so a machine that already
+  // had a perfectly good Chromium was told the whole setup had failed.
+  const probe = quiet('node', [
+    '-e',
+    'Promise.all([import("playwright"),import("./resolve-chrome.mjs")])' +
+    '.then(([p,r])=>process.stdout.write(r.findChrome(p.chromium)||"")).catch(()=>{})',
+  ], extestDir)
+  let browser = probe.out.trim()
+
+  if (!failed && browser) {
+    ok('Chromium', browser)
+  } else if (!failed) {
+    // Not fatal on its own: the suite below is the judge of whether a browser
+    // can actually be launched, and it explains what to do if not.
+    if (!run('npx', ['playwright', 'install', 'chromium'], extestDir)) {
+      warn('playwright install', 'could not fetch Chromium — trying the suite anyway')
+    }
   }
   if (!failed) {
     const res = quiet('npm', ['test'], extestDir)

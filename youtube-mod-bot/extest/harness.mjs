@@ -13,13 +13,20 @@ import { mkdtemp, rm, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { findChrome, describeSearch } from './resolve-chrome.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-// The extension is the directory above this one; the browser has to be pointed
-// at, because an MV3 extension will not load in a headless one and Playwright's
-// bundled path differs per machine. See README.md.
+// The extension is the directory above this one.
 const EXT = process.env.EXT_PATH || join(HERE, '..')
-const CHROME = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+
+// Resolution lives in resolve-chrome.mjs so setup.mjs agrees with this file.
+const CHROME = findChrome(chromium)
+if (!CHROME) {
+  console.error(
+    `No Chromium found. Run "npx playwright install chromium", or set CHROME_PATH to a Chrome or Chromium binary.\nLooked in:\n  ${describeSearch(chromium)}`
+  )
+  process.exit(1)
+}
 const chatUrl = (variant = '') => `https://www.youtube.com/live_chat?v=harness${variant ? `&${variant}` : ''}`
 
 let passed = 0

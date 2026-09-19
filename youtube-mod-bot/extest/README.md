@@ -37,10 +37,15 @@ Two environment variables override the defaults:
 | Variable | Default |
 |---|---|
 | `EXT_PATH` | the directory above this one (the extension itself) |
-| `CHROME_PATH` | `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` |
+| `CHROME_PATH` | whichever browser `resolve-chrome.mjs` finds |
 
-Set `CHROME_PATH` to whatever `npx playwright install chromium` put on disk, or
-to your own Chrome binary.
+`resolve-chrome.mjs` tries `CHROME_PATH`, then Playwright's own copy, then the
+path used by the container this was developed in, and says what it looked at if
+none of them exist. `setup.mjs` imports the same module, so the two cannot
+disagree about whether a browser is present — they did once, and setup reported
+a failed install on a machine whose harness ran perfectly.
+
+Set `CHROME_PATH` to use your own Chrome or Chromium instead.
 
 ## What the fixture covers
 
