@@ -10,6 +10,20 @@ const TAG = '[yt-mod-bot]'
 const MESSAGE_TAG = 'YT-LIVE-CHAT-TEXT-MESSAGE-RENDERER'
 
 let config = null
+
+// What the popup shows instead of making someone open devtools. The three
+// things that actually go wrong are: the content script never attached, the
+// chat tab is hidden, and the account cannot moderate this chat. None of them
+// were visible anywhere before; the first sign was an action failing.
+const status = {
+  attached: false,
+  messagesSeen: 0,
+  lastMessageAt: 0,
+  // null until a message with a menu has been seen either way, because
+  // "no menu yet" and "no menu ever" are different answers.
+  canModerate: null,
+}
+
 const seenIds = new Set()
 const ourOwnMessages = new Set()
 const pending = new Map()   // held matches awaiting a decision
@@ -48,6 +62,15 @@ function extractText (node) {
     else out += extractText(child)
   }
   return out
+}
+
+// The per-message menu is the whole moderation capability: no menu means this
+// account is a viewer here, whatever it is on the channel.
+function noteModerationAbility (el) {
+  if (status.canModerate === true) return
+  const hasMenu = Boolean(el.querySelector('#menu-button button, #menu #menu-button button'))
+  if (hasMenu) status.canModerate = true
+  else if (status.canModerate === null) status.canModerate = false
 }
 
 function readMessage (el) {
@@ -316,6 +339,10 @@ async function handleMessage (el) {
   if (!config?.enabled) return
 
   const msg = readMessage(el)
+  status.messagesSeen += 1
+  status.lastMessageAt = Date.now()
+  noteModerationAbility(el)
+
   if (!msg.text || (msg.id && seenIds.has(msg.id))) return
   if (msg.id) seenIds.add(msg.id)
   if (seenIds.size > 2000) seenIds.clear()
@@ -430,6 +457,7 @@ async function attach () {
 
   watchForHumanActions(items)
 
+  status.attached = true
   console.info(TAG, 'watching live chat')
 
   // Moderation actions need the tab visible; warn when it is not, once per
@@ -448,6 +476,18 @@ async function attach () {
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg?.type === 'RESOLVE_HOLD') {
     sendResponse({ ok: resolveHold(msg.pendingId, msg.decision) })
+    return true
+  }
+  if (msg?.type === 'STATUS') {
+    sendResponse({
+      ok: true,
+      status: {
+        ...status,
+        hidden: document.hidden,
+        pending: pending.size,
+        mode: config?.moderation?.mode ?? null,
+      },
+    })
     return true
   }
   if (msg?.type === 'LIST_HOLDS') {

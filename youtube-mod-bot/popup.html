@@ -9,6 +9,13 @@
     header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     h1 { font-size: 14px; margin: 0; }
     .switch { display: flex; align-items: center; gap: 7px; font-size: 12.5px; }
+    .status {
+      margin: 12px 0 2px; padding: 9px 11px; border-radius: 6px; font-size: 12.5px;
+      line-height: 1.4; border: 1px solid #8884; background: #8881;
+    }
+    .status.ok   { background: #16a34a1a; border-color: #16a34a66; }
+    .status.warn { background: #f5a62322; border-color: #f5a62366; }
+    .status.bad  { background: #dc262622; border-color: #dc262666; }
     .banner { margin: 11px 0 0; padding: 7px 9px; border-radius: 5px; font-size: 12px; background: #f5a62322; border: 1px solid #f5a62366; }
     .stats { display: flex; gap: 6px; margin: 12px 0 10px; text-align: center; }
     .stat { flex: 1; padding: 7px 4px; border: 1px solid #8886; border-radius: 6px; }
@@ -63,6 +70,8 @@
     <button data-mode="hold">Ask me</button>
     <button data-mode="auto">Auto</button>
   </div>
+
+  <div class="status" id="status">Checking…</div>
 
   <div class="banner" id="dry" hidden><strong>Dry run</strong> — matches are logged, nothing is deleted.</div>
   <div class="banner" id="nokey" hidden><strong>No API key</strong> — questions can't be answered yet.</div>

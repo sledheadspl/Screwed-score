@@ -29,7 +29,32 @@ POINT IT AT YOUR CHAT
 
    The account you are signed in as must be the channel owner or a
    moderator of that chat, or there is no menu to click and nothing can be
-   removed. The bot says so in the log if that is the case.
+   removed. The extension icon tells you if that is the case - see below.
+
+
+IS IT WORKING?
+--------------
+Click the extension icon. The line at the top tells you, in words:
+
+  "Watching this chat - 12 messages seen."
+        Working. Nothing else to do.
+
+  "No live chat open."
+        The chat window is not open, or not a YouTube chat.
+
+  "Found a YouTube tab, but the extension is not running in it."
+        Reload that tab. Chrome does not inject into tabs that were
+        already open when you loaded the extension.
+
+  "This account cannot moderate this chat."
+        The account you are signed in as is a viewer here. YouTube shows
+        it no moderation menu, so nothing can be removed. Sign in as the
+        channel owner, or have this account made a moderator.
+
+  "Chat window is hidden."
+        Bring it back on screen. Chrome slows hidden windows down.
+
+If it says something else, or nothing, send me that line.
 
 
 TURN IT ON

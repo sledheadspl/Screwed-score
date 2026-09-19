@@ -10,9 +10,17 @@ const LABELS = {
 const send = msg => chrome.runtime.sendMessage(msg).catch(() => ({ ok: false }))
 
 // Held matches live in the content script, which is where the message element
-// is; the popup asks the active chat tab for them.
+// is; the popup asks the chat tab for them.
+//
+// Both URL shapes matter. A popped-out chat is a tab whose own URL is
+// /live_chat, but chat left embedded in the watch page is an iframe inside a
+// /watch tab - the content script runs there too (all_frames), and querying
+// only /live_chat meant the popup could not reach it at all. Delete and Keep
+// did nothing, silently, for anyone who had not popped the chat out.
 async function chatTabs () {
-  return chrome.tabs.query({ url: 'https://www.youtube.com/live_chat*' })
+  return chrome.tabs.query({
+    url: ['https://www.youtube.com/live_chat*', 'https://www.youtube.com/watch*'],
+  })
 }
 
 async function askChat (message) {
@@ -23,6 +31,47 @@ async function askChat (message) {
     } catch { /* no content script in that tab */ }
   }
   return null
+}
+
+// Plain words for the three things that actually go wrong, so nobody has to
+// open devtools to find out why nothing is happening.
+async function renderStatus () {
+  const el = $('status')
+  const set = (kind, text) => { el.className = `status ${kind}`; el.textContent = text }
+
+  const tabs = await chatTabs()
+  if (!tabs.length) {
+    set('warn', 'No live chat open. Open your stream\u2019s chat, then pop it out into its own window.')
+    return
+  }
+
+  const res = await askChat({ type: 'STATUS' })
+  if (!res?.ok) {
+    set('warn', 'Found a YouTube tab, but the extension is not running in it. Reload that tab.')
+    return
+  }
+
+  const s = res.status
+  if (!s.attached) {
+    set('warn', 'Chat tab open, but the chat list has not loaded yet. Give it a moment, or reload the chat.')
+    return
+  }
+  if (s.canModerate === false) {
+    set('bad', 'This account cannot moderate this chat \u2014 YouTube shows no moderation menu on messages. Sign in as the channel owner, or have that account made a moderator.')
+    return
+  }
+  if (s.hidden) {
+    set('warn', 'Chat window is hidden. Chrome slows hidden windows down and removals can fail \u2014 bring it back on screen.')
+    return
+  }
+  if (!s.messagesSeen) {
+    set('ok', 'Watching this chat. No messages yet.')
+    return
+  }
+  const seen = `${s.messagesSeen} message${s.messagesSeen === 1 ? '' : 's'} seen`
+  set('ok', s.canModerate
+    ? `Watching this chat \u2014 ${seen}.`
+    : `Watching this chat \u2014 ${seen}. No moderation menu seen yet.`)
 }
 
 function timeAgo (at) {
@@ -46,6 +95,8 @@ async function render () {
   for (const key of ['deleted', 'wouldDelete', 'timeouts', 'bans', 'answered', 'errors']) {
     $(`s-${key}`).textContent = config.stats[key] ?? 0
   }
+
+  renderStatus().catch(() => {})
 
   const packs = { total: 0, byName: {}, context: '', ...(stored.packs ?? {}) }
   $('pack-total').textContent = packs.total

@@ -452,6 +452,52 @@ try {
     await page.close()
   }
 
+  // 8g. the popup says what is wrong, in words ------------------------------
+  // The three things that actually go wrong were invisible until an action
+  // failed, and diagnosing them meant opening devtools on the chat frame.
+  console.log('\nstatus line')
+  await writeConfig(context, id, base)
+
+  async function statusText () {
+    const popup = await context.newPage()
+    await popup.goto(`chrome-extension://${id}/popup.html`)
+    let text = ''
+    for (let i = 0; i < 40; i++) {
+      text = (await popup.textContent('#status')) ?? ''
+      if (text && !text.startsWith('Checking')) break
+      await sleep(150)
+    }
+    await popup.close()
+    return text
+  }
+
+  {
+    // No chat open at all.
+    const text = await statusText()
+    check('says when no chat is open', /No live chat open/i.test(text), JSON.stringify(text))
+  }
+
+  {
+    const { page } = await openChat(context, fixture, '')
+    let text = await statusText()
+    check('says it is watching once attached', /Watching this chat/i.test(text), JSON.stringify(text))
+
+    await send(page, 'st1', 'Fan', 'great pull')
+    text = await statusText()
+    check('counts the messages it has seen', /1 message seen/.test(text), JSON.stringify(text))
+    await page.close()
+  }
+
+  {
+    // The likeliest real failure: signed in as someone who cannot moderate.
+    const { page } = await openChat(context, fixture, 'noMenu=1')
+    await send(page, 'st2', 'Fan', 'hello there')
+    const text = await statusText()
+    check('names a non-moderator account as the problem', /cannot moderate this chat/i.test(text), JSON.stringify(text))
+    check('and says what to do about it', /channel owner|made a moderator/i.test(text), JSON.stringify(text))
+    await page.close()
+  }
+
   // 9. hold mode and the override round trip -------------------------------
   // What the popup does, through the same messages the popup sends.
   console.log('\nhold mode and the override')
