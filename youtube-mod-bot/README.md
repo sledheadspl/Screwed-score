@@ -131,17 +131,47 @@ That reduces prompt injection from chat; it does not eliminate it. Read the log.
 | `options.html` / `options.js` | Full settings page |
 | `popup.html` / `popup.js` | On/off switch, counters, recent activity |
 | `headless/` | Browserless Node version of the same bot |
+| `src/engine/engine.js` | The moderation engine, shared verbatim with `headless/` |
+| `extest/` | Loads this extension into Chromium and tests what it clicks |
 
 The API key lives in `chrome.storage.local` and is used only from the service
 worker, so it never enters the YouTube page context.
 
+## Tests
+
+Two suites, because there are two separable things to get wrong.
+
+```bash
+cd headless && npm run selftest   # the engine: what it decides
+cd extest   && npm test           # the extension: what it clicks
+```
+
+`headless/` covers the rules, escalation, the dashboard and the self-reply
+guard, and includes a parity suite that runs the same corpus through both copies
+of the engine — the only thing keeping them honest, since there is no bundler and
+`src/engine/engine.js` is duplicated by design.
+
+`extest/` loads this extension into a real Chromium and drives it against a
+replica of the live chat DOM. It needs a headful browser, so on a headless
+machine run it under `xvfb-run -a`. See `extest/README.md`; it is the only test
+that executes the removal path, and it is worth running before you trust a change
+to `src/content.js`.
+
 ## Known limits
 
-- **Localization.** The delete entry is found by its trash icon first, falling
-  back to a label list. If deletes fail on a non-English YouTube, add your
-  wording under *Remove menu labels*.
+- **Localization.** Menu entries are matched by icon across the whole menu
+  first, then by exact label, then by label prefix. If actions fail on a
+  non-English YouTube, add your wording under the menu label settings. The
+  ranking matters: a bare prefix pass alone will pick `Remove user from this
+  channel` when it was asked for `Remove`.
 - **Backlog is ignored.** Only messages arriving after the tab loads are acted
   on, by design.
-- **The tab must stay open.** Close the chat and the bot stops.
-- **No timeout or ban.** Deleting a message is the only moderation action
-  wired up, though `src/content.js` reaches the same menu those live in.
+- **The tab must stay open, and visible.** Chrome throttles timers in background
+  tabs, which starves the menu waits; the bot says so in the activity log rather
+  than failing quietly. Pop the chat into its own window and leave it on screen.
+- **Strikes are keyed on display name.** The DOM gives no channel id, so
+  escalation is session-scoped and deliberately conservative. The headless bot
+  keys on channel id and does not share this weakness.
+- **Actions are serialized.** One menu can be open at a time, so an enforced
+  message takes roughly a second and a half. That is ample for violations, but
+  it is a queue, not a thread pool.

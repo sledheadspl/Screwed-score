@@ -86,17 +86,40 @@ function openDropdowns () {
     .filter(d => d.getAttribute('aria-hidden') !== 'true' && d.offsetParent !== null)
 }
 
-function findMenuItem (labels, icons) {
+// Three passes over the whole menu, weakest evidence last. Doing this per item
+// instead - icon then label, item by item - lets a loose label match on an
+// earlier entry beat the exact icon on a later one: YouTube has shipped a
+// "Remove user from this channel" entry above "Remove", and matching
+// removeLabels by prefix there bans a viewer for a word that deserved a
+// deleted message. Ranking is the only thing standing between those two.
+function menuItems () {
+  const out = []
   for (const dropdown of openDropdowns()) {
-    const items = dropdown.querySelectorAll('ytd-menu-service-item-renderer, tp-yt-paper-item')
-    for (const item of items) {
-      // Icon first - it survives YouTube being in any language.
-      const icon = (item.querySelector('yt-icon')?.getAttribute('icon') ?? '').toLowerCase()
-      if (icons.some(name => icon.includes(name))) return item
-
-      const label = (item.textContent ?? '').trim().toLowerCase()
-      if (label && labels.some(l => label === l || label.startsWith(l))) return item
+    for (const item of dropdown.querySelectorAll('ytd-menu-service-item-renderer, tp-yt-paper-item')) {
+      out.push({
+        item,
+        icon: (item.querySelector('yt-icon')?.getAttribute('icon') ?? '').toLowerCase(),
+        label: (item.textContent ?? '').trim().toLowerCase(),
+      })
     }
+  }
+  return out
+}
+
+function findMenuItem (labels, icons) {
+  const entries = menuItems()
+
+  // 1. Icon: language-independent, and the only unambiguous signal.
+  for (const entry of entries) {
+    if (entry.icon && icons.some(name => entry.icon.includes(name))) return entry.item
+  }
+  // 2. Exact label: "remove" matches "Remove", never "Remove user...".
+  for (const entry of entries) {
+    if (entry.label && labels.some(l => entry.label === l)) return entry.item
+  }
+  // 3. Prefix label: last resort, for wordings we have not seen.
+  for (const entry of entries) {
+    if (entry.label && labels.some(l => entry.label.startsWith(l))) return entry.item
   }
   return null
 }
@@ -146,6 +169,15 @@ async function actOnMessage (el, action, moderation) {
     return null
   }, 600)
   if (confirm) { confirm.click(); await sleep(120) }
+
+  // A removal is the one action whose outcome is visible, so check it instead
+  // of trusting the click: YouTube marks the renderer is-deleted, or drops the
+  // node. Reporting success for a menu entry that turned out to be something
+  // else is how a wrong click becomes a wrong log entry nobody questions.
+  if (action === 'delete') {
+    const gone = await waitFor(() => (!el.isConnected || el.hasAttribute('is-deleted')) || null, 1500)
+    if (!gone) return { ok: false, reason: 'clicked remove but the message never showed as deleted - the menu entry may not be the remove entry (check the labels in options)' }
+  }
 
   return { ok: true }
 }

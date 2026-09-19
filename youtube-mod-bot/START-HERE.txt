@@ -1,0 +1,122 @@
+YouTube Live Chat Mod Bot
+=========================
+
+Two ways to run this. Pick one.
+
+
+A) BROWSER EXTENSION  - simplest, no terminal, no cookies
+----------------------------------------------------------
+1. Open chrome://extensions  (Edge: edge://extensions)
+2. Turn on "Developer mode" (top right)
+3. Click "Load unpacked" and select THIS FOLDER
+   (the one containing manifest.json - not the headless folder)
+4. Click the extension icon -> Settings -> paste your Anthropic API key
+5. Open your stream's chat
+
+The popup has the mode switch (Dry run / Ask me / Auto), the pack counter,
+the notes box, and Delete/Keep buttons for held messages.
+
+Requires: the signed-in account must be the channel owner or a moderator of
+that chat, or it cannot remove anything.
+
+
+KEEP THE CHAT WINDOW VISIBLE
+----------------------------
+Chrome throttles timers in hidden tabs, and finding the menu entry to click
+depends on polling. A briefly-backgrounded tab is fine; a minimised or
+long-buried one will fail to remove things.
+
+So: in the chat panel use the three-dot menu -> "Pop out chat", and park that
+little window somewhere visible (second monitor, or a strip beside your
+stream). Do not minimise it.
+
+If an action fails because the tab was hidden, the log says exactly that
+instead of blaming your menu labels.
+
+
+START IN DRY RUN
+----------------
+Both default to dry run: it logs what it WOULD delete and touches nothing.
+Watch one stream that way and read the log before letting it act.
+
+Note what dry run does NOT prove: it never opens a message menu, so on YOUR
+setup the actual removal - the fragile, DOM-dependent part - stays untested.
+Once the log looks right, switch to "Ask me", post a test message from a
+second account that trips a word, and tap Delete. That exercises the real
+removal once, on a message nobody cares about.
+
+The removal path itself is no longer untested in general: the extension now
+gets loaded into a real browser and driven against a replica of the chat DOM
+(see extest/). That found two bugs worth knowing about, both fixed here:
+
+  - Menu entries were matched item by item, so a loose label match on an
+    earlier entry could beat the exact icon on a later one. Against a menu
+    listing "Remove user from this channel" above "Remove", it BANNED the
+    viewer for a mild word and logged it as a message removal.
+  - A removal counted as successful on the strength of the click alone. Now
+    the message has to actually show as deleted, or it is logged as an error.
+
+A replica is not YouTube, so the test above on a throwaway message is still
+worth doing.
+
+If the log says "no message menu - is this account a moderator of the chat?",
+that is a permissions problem, not a code one.
+
+A deletion cannot be undone on YouTube. That is the whole reason the order is
+dry -> ask me -> auto.
+
+
+B) HEADLESS SERVICE  - runs without a browser tab, survives reboots
+--------------------------------------------------------------------
+Needs Node 20 or newer. You do not need this if the extension works for you;
+it is the always-on option, and the one that needs cookies.
+
+  cd headless
+  npm install
+  copy config.example.json config.json      (Mac/Linux: cp)
+  copy .env.example .env
+  npm run doctor
+  npm start
+
+Edit config.json  -> set "channel": "@yourhandle"
+Edit .env         -> Anthropic key + the five YouTube cookies
+
+Dashboard: http://127.0.0.1:8787
+
+"npm run doctor" checks your setup before you go live and tells you what is
+wrong. Run it first.
+
+
+WHAT IT DOES
+------------
+Standing rules  - hate speech, harassment, doxxing, spam/scam links. Acts
+                  immediately, for everyone, in every mode but dry run.
+                  Repeat offenders go delete -> timeout -> ban.
+Judgment calls  - mild swearing. Respects your mode; channel members get a
+                  human call instead of an automatic removal.
+Never touches   - owner or moderator messages, or anything a human mod has
+                  already handled.
+Answers questions - viewers type "!ask ..." and Claude replies, using your
+                  real pack count and notes so it does not invent numbers.
+
+Hate speech ships with an EMPTY word list on purpose. Add your terms in
+Settings, or leave that to YouTube Studio's own blocked-words list
+(Settings -> Community), which works whether or not this is running.
+
+
+TESTS
+-----
+  cd headless && npm install && npm run selftest    # 147 assertions
+  cd extest   && npm install && npm test            # 42 assertions
+
+The first covers the filter, the guide's rules, escalation, the dashboard and
+the throttled-tab waiting. The second loads this extension into a real Chromium
+and checks what it CLICKS: removal, timeout, ban, the escalation ladder, a
+non-moderator account, a confirmation dialog, YouTube in German, and the
+Delete/Keep buttons in the popup.
+
+The second one needs a real browser window (an extension will not load in a
+headless one). On a machine with no display: xvfb-run -a npm test
+
+Neither covers the live YouTube calls - nothing here has run against a real
+broadcast yet. That part is still on you.
