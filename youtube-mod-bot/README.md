@@ -95,6 +95,22 @@ Two places it is weaker than the headless bot, and worth knowing:
   failures.
 - An Anthropic API key, only if you want question answering.
 
+## Setup script
+
+Optional. The extension needs no terminal, but this prints the exact folder to
+load and proves the download is intact before you trust it with a live chat.
+
+```bash
+node setup.mjs              # check the machine, run the self-tests
+node setup.mjs --headless   # also create config.json and .env, then run doctor
+node setup.mjs --browser    # also drive the extension in a real Chromium
+```
+
+`setup.cmd` and `setup.sh` are one-line wrappers around it. It is Node rather
+than a shell script so Windows and Unix run the same code instead of a `.sh` and
+a `.ps1` drifting apart. Re-running it never overwrites a `config.json` or
+`.env` you have already filled in.
+
 ## Install
 
 1. Open `chrome://extensions` and turn on **Developer mode**.

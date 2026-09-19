@@ -42,13 +42,22 @@ const DEFAULTS = {
 
     // Guide Section 3. Mild stuff where tone and context matter.
     judgment: {
-      words: ['fuck', 'shit', 'bitch', 'asshole'],
+      // Kept in step with the extension's DEFAULT_BANNED_WORDS. Inflections
+      // follow from these roots; compounds cannot, so they are listed.
+      words: [
+        'fuck', 'shit', 'bitch', 'cunt', 'dick', 'whore',
+        'asshole', 'bullshit', 'dogshit', 'horseshit', 'dumbass', 'jackass',
+        'dickhead', 'motherfucker',
+      ],
       patterns: [],
       // 'act' removes and logs for review (safety-first, the operator's call).
       // 'hold' asks first, which is the guide's own Hype-over-Safety ordering.
       onMatch: 'act',
-      // Section 3: known members get a human call, not an automatic removal.
-      lenientForMembers: true,
+      // Section 3 gives known members a human call rather than an automatic
+      // removal - but this service runs unattended by definition, so holding a
+      // match means it waits out holdSeconds and is then quietly left up. Off
+      // unless someone is actually watching the dashboard.
+      lenientForMembers: false,
     },
 
     allowList: [],
@@ -64,7 +73,10 @@ const DEFAULTS = {
   },
 
   qa: {
-    enabled: true,
+    // Off by default: answering posts messages in the chat as the signed-in
+    // account, which is the opposite of moderating quietly, and it is the only
+    // part that needs an API key or costs anything per message.
+    enabled: false,
     trigger: 'prefix',
     prefix: '!ask',
     systemPrompt: DEFAULT_SYSTEM_PROMPT,

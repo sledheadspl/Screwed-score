@@ -4,6 +4,20 @@ YouTube Live Chat Mod Bot
 Two ways to run this. Pick one.
 
 
+OPTIONAL FIRST STEP: setup.cmd
+------------------------------
+Double-click setup.cmd (Windows) or run "node setup.mjs" from a terminal.
+It is not required - the extension needs no terminal at all - but it
+prints the exact folder path to paste into Load unpacked, and it runs the
+self-tests so you know the download is intact before you trust it.
+
+  setup.cmd                 check the machine, prove the engine works
+  setup.cmd --headless      also set up the browserless service below
+  setup.cmd --browser       also drive the extension in a real Chromium
+
+Needs Node 20+ (nodejs.org). If you skip it, everything below still works.
+
+
 A) BROWSER EXTENSION  - simplest, no terminal, no cookies
 ----------------------------------------------------------
 1. Open chrome://extensions  (Edge: edge://extensions)
