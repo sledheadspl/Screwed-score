@@ -90,11 +90,28 @@ if (problems.length) {
   process.exit(1)
 }
 
+// Zipped with the files at the archive ROOT, not inside a folder of their own.
+// Windows Explorer's "Extract All" already creates a folder named after the
+// zip, so a zip that also contains one leaves everything two levels down -
+// and picking the outer folder in Load unpacked gives exactly "Manifest file
+// is missing or unreadable", with no hint that the answer is one level in.
 const zip = join(HERE, 'dist', `${NAME}.zip`)
-const res = spawnSync('zip', ['-rq', zip, NAME], { cwd: join(HERE, 'dist'), stdio: 'inherit' })
+const res = spawnSync('zip', ['-rq', zip, '.'], { cwd: OUT, stdio: 'inherit' })
 if (res.status !== 0) {
   console.log(`\nBuilt dist/${NAME}/ — no "zip" command here, so compress that folder yourself.`)
   process.exit(0)
 }
 
-console.log(`Built dist/${NAME}.zip — ${FILES.length} files, everything they reference resolves.`)
+// Guard the thing that just went wrong. manifest.json has to be AT the archive
+// root: if it is inside a folder, Explorer's own extraction folder puts it two
+// levels down and Load unpacked fails on the obvious choice. Subdirectories
+// like src/ are fine - it is specifically the manifest's depth that matters.
+const listed = spawnSync('zip', ['-sf', zip], { encoding: 'utf8' }).stdout ?? ''
+const entries = listed.split('\n').map(l => l.trim().replace(/^\.\//, ''))
+if (!entries.includes('manifest.json')) {
+  console.error('manifest.json is not at the root of the archive; extraction would nest twice.')
+  console.error(entries.filter(Boolean).slice(0, 12).map(e => `  ${e}`).join('\n'))
+  process.exit(1)
+}
+
+console.log(`Built dist/${NAME}.zip — ${FILES.length} files at the archive root, everything they reference resolves.`)

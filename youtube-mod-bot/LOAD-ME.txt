@@ -8,14 +8,20 @@ There is nothing to install. No terminal, no Node, no API key.
 
 LOAD IT
 -------
+0. UNZIP IT FIRST. Chrome cannot load a .zip file.
+   Right-click the download -> "Extract All..." -> Extract.
+
 1. Open   chrome://extensions       (Edge: edge://extensions)
 2. Turn on "Developer mode"          - top right
 3. Click "Load unpacked"
-4. Pick THIS folder - the one holding manifest.json
+4. Pick the folder you extracted to - the one holding manifest.json.
+   If you extracted to your Downloads, that is:
 
-   If Chrome says "Manifest file is missing or unreadable", you picked the
-   wrong folder. Go one level in, or one level out, until you are in the
-   folder that contains manifest.json.
+       C:\Users\<you>\Downloads\pokebank-mod-bot
+
+   You are in the right folder when you can SEE manifest.json in it. If
+   Chrome says "Manifest file is missing or unreadable", you are one level
+   too high - go into the folder until manifest.json is sitting there.
 
 
 POINT IT AT YOUR CHAT
