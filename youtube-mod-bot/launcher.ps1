@@ -159,20 +159,22 @@ function Show-Setup([string]$browser) {
 
   if ($StateDir -and -not (Test-Path $StateDir)) { New-Item -ItemType Directory -Path $StateDir -Force | Out-Null }
   if ($SetupMarker) { Set-Content -Path $SetupMarker -Value (Get-Date).ToString('o') }
-
-  New-DesktopIcon
 }
 
 # One double-click from the desktop, from here on.
+#
+# Runs before anything else and on every launch, not as a step inside setup:
+# it used to sit behind "press Enter once you have dragged it in", so closing
+# the window at the extension step meant no icon ever appeared - and no icon
+# looks exactly like nothing happened.
 function New-DesktopIcon {
   $desktop = [Environment]::GetFolderPath('Desktop')
-  if (-not $desktop) { return }
+  if (-not $desktop -or -not (Test-Path $desktop)) {
+    Say '  Could not find your Desktop folder. Drag "Pokebank Mod Bot.cmd" there yourself.'
+    return
+  }
   $link = Join-Path $desktop 'Pokebank Mod Bot.lnk'
   if (Test-Path $link) { return }
-
-  Say ''
-  $answer = Read-Host '  Put an icon on your Desktop? [Y/n]'
-  if ($answer -and $answer.Trim().ToLower().StartsWith('n')) { return }
 
   try {
     $shell = New-Object -ComObject WScript.Shell
@@ -183,9 +185,17 @@ function New-DesktopIcon {
     $icon = Join-Path $ExtDir 'icon.ico'
     if (Test-Path $icon) { $sc.IconLocation = $icon }
     $sc.Save()
-    Say '  Done - "Pokebank Mod Bot" is on your Desktop.'
+    if (Test-Path $link) {
+      Say ''
+      Say '  Put "Pokebank Mod Bot" on your Desktop.'
+    } else {
+      Say '  The shortcut did not save. Drag "Pokebank Mod Bot.cmd" to your Desktop instead.'
+    }
   } catch {
-    Say '  Could not create the shortcut. Drag "Pokebank Mod Bot.cmd" to your Desktop instead.'
+    Say ''
+    Say '  Could not create the Desktop shortcut:'
+    Say ("    " + $_.Exception.Message)
+    Say '  Drag "Pokebank Mod Bot.cmd" to your Desktop instead - it works the same.'
   }
 }
 
@@ -200,7 +210,10 @@ if (-not $browser) {
   Fail 'Could not find Chrome or Edge. Install Chrome, or tell me where it is.'
 }
 
-if ($SetupOnly -or -not (Test-Path $SetupMarker)) {
+# Before anything that can be abandoned half-way.
+New-DesktopIcon
+
+if ($SetupOnly -or -not ($SetupMarker -and (Test-Path $SetupMarker))) {
   Show-Setup $browser
   if ($SetupOnly) { exit 0 }
 }
