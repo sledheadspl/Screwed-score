@@ -57,3 +57,6 @@ lost-assets/**/__pycache__/
 lost-assets/.venv/
 lost-assets/venv/
 lost-assets/app/lost_assets.db
+
+# Built by youtube-mod-bot/package.mjs from launcher/*.go
+youtube-mod-bot/launcher/rsrc_windows_amd64.syso
