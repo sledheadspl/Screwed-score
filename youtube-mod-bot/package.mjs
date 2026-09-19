@@ -26,6 +26,11 @@ const FILES = [
   'src/content.js', 'src/background.js', 'src/defaults.js',
   'src/engine/engine.js',
   'LOAD-ME.txt',
+  // The desktop-icon launcher. Chrome ignores files it does not know about,
+  // so these sit happily beside the extension it loads.
+  'Pokebank Mod Bot.cmd',
+  'launcher.ps1',
+  'icon.ico',
 ]
 
 await rm(join(HERE, 'dist'), { recursive: true, force: true })
