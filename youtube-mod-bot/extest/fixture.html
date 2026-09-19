@@ -1,0 +1,158 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>live chat fixture</title>
+<style>
+  body { font: 13px system-ui; margin: 0; padding: 8px; }
+  yt-live-chat-text-message-renderer { display:block; padding:4px 0; border-bottom:1px solid #eee; }
+  yt-live-chat-text-message-renderer[is-deleted] { opacity:.4; text-decoration:line-through; }
+  tp-yt-iron-dropdown { display:none; position:absolute; background:#fff; border:1px solid #ccc; }
+  tp-yt-iron-dropdown[open] { display:block; }
+  ytd-menu-service-item-renderer { display:block; padding:6px 12px; cursor:pointer; }
+  tp-yt-paper-dialog { display:none; position:absolute; top:40%; left:30%; background:#fff; border:1px solid #888; padding:12px; }
+  tp-yt-paper-dialog[open] { display:block; }
+</style></head>
+<body>
+<!-- Mirrors the structure src/content.js actually queries: an #items list with
+     the yt-live-chat-item-list-renderer class, message renderers carrying
+     author-type, and a per-message menu button that opens a dropdown of
+     ytd-menu-service-item-renderer entries with yt-icon icons.
+
+     Query params select the variants worth testing separately:
+       noMenu=1   the signed-in account is a plain viewer, so messages have no
+                  moderation menu at all - the most likely real failure
+       confirm=1  timeout and ban raise a confirmation dialog first
+       lang=de    YouTube in another language: no icon attributes, German
+                  labels, so only the label fallback in findMenuItem can work
+-->
+<yt-live-chat-item-list-renderer>
+  <div id="items" class="yt-live-chat-item-list-renderer"></div>
+</yt-live-chat-item-list-renderer>
+
+<yt-live-chat-message-input-renderer>
+  <div id="input" class="yt-live-chat-text-input-field-renderer" contenteditable="true"></div>
+  <div id="send-button"><button disabled>Send</button></div>
+</yt-live-chat-message-input-renderer>
+
+<tp-yt-iron-dropdown id="menu-popup" aria-hidden="true"></tp-yt-iron-dropdown>
+
+<tp-yt-paper-dialog id="confirm-dialog">
+  <div id="dialog-text"></div>
+  <yt-button-renderer id="confirm-button"><button>Confirm</button></yt-button-renderer>
+  <yt-button-renderer id="cancel-button"><button>Cancel</button></yt-button-renderer>
+</tp-yt-paper-dialog>
+
+<script>
+  const opts = new URLSearchParams(location.search)
+  const NO_MENU = opts.get('noMenu') === '1'
+  const NEEDS_CONFIRM = opts.get('confirm') === '1'
+  const GERMAN = opts.get('lang') === 'de'
+  // A menu whose ban entry is listed first and whose label begins with the same
+  // word as the remove entry. YouTube has shipped wordings like this, and it is
+  // the one confusion that costs a viewer their access rather than a message.
+  const AMBIGUOUS = opts.get('ambiguous') === '1'
+  // The remove entry is there and gets clicked, but the message never changes -
+  // a stand-in for any click that lands on the wrong thing or silently fails.
+  const NOOP_REMOVE = opts.get('noopRemove') === '1'
+
+  // Records what the extension actually did, for the harness to assert on.
+  window.__acted = []
+  window.__variant = { NO_MENU, NEEDS_CONFIRM, GERMAN }
+
+  const popup = document.getElementById('menu-popup')
+  const dialog = document.getElementById('confirm-dialog')
+  let target = null
+  let awaiting = null   // act queued behind the confirmation dialog
+
+  const ENTRIES = AMBIGUOUS
+    ? [['ban', 'visibility_off', 'Remove user from this channel'], ['timeout', 'timer', 'Put user in timeout'],
+       ['delete', 'delete', 'Remove'], ['report', 'flag', 'Report']]
+    : GERMAN
+    ? [['delete', null, 'Entfernen'], ['timeout', null, 'Nutzer in Auszeit versetzen'],
+       ['ban', null, 'Nutzer auf diesem Kanal ausblenden'], ['report', null, 'Melden']]
+    : [['delete', 'delete', 'Remove'], ['timeout', 'timer', 'Put user in timeout'],
+       ['ban', 'visibility_off', 'Hide user on this channel'], ['report', 'flag', 'Report']]
+
+  for (const [act, icon, label] of ENTRIES) {
+    const item = document.createElement('ytd-menu-service-item-renderer')
+    item.dataset.act = act
+    if (icon) {
+      const ic = document.createElement('yt-icon')
+      ic.setAttribute('icon', icon)
+      item.appendChild(ic)
+    }
+    const text = document.createElement('yt-formatted-string')
+    text.textContent = label
+    item.appendChild(text)
+    item.addEventListener('click', () => onItem(act))
+    popup.appendChild(item)
+  }
+
+  function openMenu (el) {
+    target = el
+    popup.setAttribute('open', '')
+    popup.setAttribute('aria-hidden', 'false')
+  }
+  function closeMenu () {
+    popup.removeAttribute('open')
+    popup.setAttribute('aria-hidden', 'true')
+  }
+
+  function commit (act, el) {
+    window.__acted.push({ act, id: el?.getAttribute('id'), author: el?.querySelector('#author-name')?.textContent })
+    if (act === 'delete' && el && !NOOP_REMOVE) el.setAttribute('is-deleted', '')
+  }
+
+  function onItem (act) {
+    const el = target
+    closeMenu()
+    // YouTube confirms the heavier actions; a delete goes through immediately.
+    if (NEEDS_CONFIRM && (act === 'timeout' || act === 'ban')) {
+      awaiting = { act, el }
+      document.getElementById('dialog-text').textContent = `Confirm ${act}?`
+      dialog.setAttribute('open', '')
+      return
+    }
+    commit(act, el)
+  }
+
+  dialog.querySelector('#confirm-button button').addEventListener('click', () => {
+    dialog.removeAttribute('open')
+    if (awaiting) { commit(awaiting.act, awaiting.el); awaiting = null }
+  })
+  dialog.querySelector('#cancel-button button').addEventListener('click', () => {
+    dialog.removeAttribute('open')
+    awaiting = null
+  })
+
+  // Escape closes the menu, as YouTube's does.
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeMenu() })
+
+  // The send button stays disabled until something is typed, the way Polymer
+  // gates it - that is what makes execCommand('insertText') necessary.
+  const input = document.getElementById('input')
+  const sendButton = document.getElementById('send-button').querySelector('button')
+  const syncSend = () => {
+    if (input.textContent.trim()) sendButton.removeAttribute('disabled')
+    else sendButton.setAttribute('disabled', '')
+  }
+  input.addEventListener('input', syncSend)
+  sendButton.addEventListener('click', () => {
+    window.__acted.push({ act: 'say', text: input.textContent })
+    input.textContent = ''
+    syncSend()
+  })
+
+  // Called by the harness to push a chat message, the way the live stream does.
+  window.__addMessage = (id, author, text, authorType) => {
+    const el = document.createElement('yt-live-chat-text-message-renderer')
+    el.setAttribute('id', id)
+    el.setAttribute('author-type', authorType || '')
+    const menu = NO_MENU ? '' : '<div id="menu"><yt-icon-button id="menu-button"><button>⋮</button></yt-icon-button></div>'
+    el.innerHTML = `<div id="content"><yt-live-chat-author-chip><span id="author-name"></span></yt-live-chat-author-chip><span id="message"></span></div>${menu}`
+    el.querySelector('#author-name').textContent = author
+    el.querySelector('#message').textContent = text
+    if (!NO_MENU) el.querySelector('#menu-button button').addEventListener('click', () => openMenu(el))
+    document.getElementById('items').appendChild(el)
+    return id
+  }
+</script>
+</body></html>

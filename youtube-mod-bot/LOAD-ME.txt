@@ -1,0 +1,66 @@
+Pokebank chat mod bot
+=====================
+
+Removes bad messages. Mutes whoever keeps sending them. Says nothing.
+
+There is nothing to install. No terminal, no Node, no API key.
+
+
+LOAD IT
+-------
+1. Open   chrome://extensions       (Edge: edge://extensions)
+2. Turn on "Developer mode"          - top right
+3. Click "Load unpacked"
+4. Pick THIS folder - the one holding manifest.json
+
+   If Chrome says "Manifest file is missing or unreadable", you picked the
+   wrong folder. Go one level in, or one level out, until you are in the
+   folder that contains manifest.json.
+
+
+POINT IT AT YOUR CHAT
+---------------------
+5. Open your live stream's chat
+6. In the chat panel: three dots -> "Pop out chat"
+7. Leave that little window somewhere you can see it
+
+   It has to stay visible. Chrome slows down timers in hidden windows, and
+   finding the menu entry to click depends on them. Minimised will fail.
+
+   The account you are signed in as must be the channel owner or a
+   moderator of that chat, or there is no menu to click and nothing can be
+   removed. The bot says so in the log if that is the case.
+
+
+TURN IT ON
+----------
+8. Click the extension icon. It starts in "Dry run".
+
+   Dry run logs what it WOULD remove and touches nothing. Watch one stream
+   that way and read the list.
+
+9. Then switch to "Ask me" and post a test message from a second account
+   that trips a word. Tap Delete when it appears.
+
+   That is the one step worth not skipping: dry run never opens a message
+   menu, so it proves nothing about whether removal works on YOUR account.
+
+10. Once that works, switch to "Auto".
+
+A deletion cannot be undone. That is the whole reason for that order.
+
+
+WHAT IT DOES BY DEFAULT
+-----------------------
+Removes  hate, harassment, doxxing, spam and scam links, and swearing.
+Mutes    anyone who trips the rules twice - a timeout, which expires.
+Never    bans. Raise the ceiling in Settings if you want that.
+Never    posts in your chat. Nothing is sent to Claude at all.
+Never    touches your own messages, your mods', or anything a mod already
+         handled.
+
+Catches f@ck, shiiit, fu(Cyrillic c)k, f.u.c.k and fucking. Misses "fu ck"
+on purpose - closing that gap starts flagging "he's hit".
+
+Settings has the word list, an allow list for false positives, and the
+ceiling. Nothing else needs touching.

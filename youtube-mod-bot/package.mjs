@@ -1,0 +1,100 @@
+#!/usr/bin/env node
+// Builds the extension-only download: just the files Chrome loads, nothing
+// else. The full repo folder also loads fine, but it carries headless/ and
+// extest/ alongside, and picking the wrong folder in Load unpacked is a real
+// way to lose ten minutes to "Manifest file is missing or unreadable".
+//
+//   node package.mjs            -> dist/pokebank-mod-bot/ and the .zip
+//
+// The file list is checked against what the code actually references rather
+// than trusted: a hand-assembled zip is how a file goes missing.
+
+import { mkdir, rm, copyFile, readFile, writeFile, readdir } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import { join, dirname, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const HERE = dirname(fileURLToPath(import.meta.url))
+const NAME = 'pokebank-mod-bot'
+const OUT = join(HERE, 'dist', NAME)
+
+const FILES = [
+  'manifest.json',
+  'popup.html', 'popup.js',
+  'options.html', 'options.js',
+  'src/content.js', 'src/background.js', 'src/defaults.js',
+  'src/engine/engine.js',
+  'LOAD-ME.txt',
+]
+
+await rm(join(HERE, 'dist'), { recursive: true, force: true })
+for (const file of FILES) {
+  const from = join(HERE, file)
+  if (!existsSync(from)) {
+    console.error(`missing source file: ${file}`)
+    process.exit(1)
+  }
+  await mkdir(dirname(join(OUT, file)), { recursive: true })
+  await copyFile(from, join(OUT, file))
+}
+
+// ── verify, rather than trust, the list above ──────────────────────────────
+
+const problems = []
+const manifest = JSON.parse(await readFile(join(OUT, 'manifest.json'), 'utf8'))
+
+const declared = [
+  ...(manifest.content_scripts ?? []).flatMap(c => c.js ?? []),
+  manifest.background?.service_worker,
+  manifest.options_page,
+  manifest.action?.default_popup,
+].filter(Boolean)
+
+for (const ref of declared) {
+  if (!existsSync(join(OUT, ref))) problems.push(`manifest references ${ref}, which is not in the package`)
+}
+
+// Anything the packaged files themselves pull in, relatively: a new import in
+// popup.js would otherwise ship broken and only show up as a blank page.
+async function walk (dir) {
+  const out = []
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) out.push(...await walk(full))
+    else out.push(full)
+  }
+  return out
+}
+
+for (const file of await walk(OUT)) {
+  if (!/\.(js|html)$/.test(file)) continue
+  const body = await readFile(file, 'utf8')
+  const refs = [
+    ...body.matchAll(/(?:from|import)\s+['"](\.[^'"]+)['"]/g),
+    ...body.matchAll(/<script[^>]+src=['"]([^'"]+)['"]/g),
+    ...body.matchAll(/<link[^>]+href=['"]([^'"]+)['"]/g),
+  ].map(m => m[1]).filter(r => !/^(https?:)?\/\//.test(r))
+
+  for (const ref of refs) {
+    const target = join(dirname(file), ref)
+    if (!existsSync(target)) {
+      problems.push(`${relative(OUT, file)} references ${ref}, which is not in the package`)
+    }
+  }
+}
+
+if (problems.length) {
+  console.error('Package is incomplete:')
+  for (const p of problems) console.error(`  ${p}`)
+  process.exit(1)
+}
+
+const zip = join(HERE, 'dist', `${NAME}.zip`)
+const res = spawnSync('zip', ['-rq', zip, NAME], { cwd: join(HERE, 'dist'), stdio: 'inherit' })
+if (res.status !== 0) {
+  console.log(`\nBuilt dist/${NAME}/ — no "zip" command here, so compress that folder yourself.`)
+  process.exit(0)
+}
+
+console.log(`Built dist/${NAME}.zip — ${FILES.length} files, everything they reference resolves.`)
