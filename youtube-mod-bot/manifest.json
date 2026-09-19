@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Live Chat Mod Bot",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Auto-moderates your YouTube live chat and answers viewer questions with Claude. Runs on your own logged-in account.",
   "permissions": [
     "storage",

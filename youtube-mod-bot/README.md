@@ -114,6 +114,19 @@ chat types the bare infinitive, and a plain whole-word match misses every form
 people actually use. The set is closed on purpose — a trailing wildcard would
 catch `shitake` and `dickens`.
 
+**Lookalike characters are folded.** Unicode normalization does not help here:
+Cyrillic `с` and Latin `c` are different letters, not two forms of one, so
+`fuсk` reads as clean text to any filter that stops at NFKD. Substituting one
+character is the commonest trick in a live chat, so the confusable set
+(Cyrillic, Greek, and dotless/stroked Latin) is folded explicitly.
+
+**A word pulled apart is caught too** — `f u c k`, `f.u.c.k`, `f-u-c-k`. This
+needs a separator in *every* gap, not optionally in each: with optional
+separators, `he's hit` matches `shit`, because the apostrophe is not a letter so
+the opening anchor holds and only one of the three gaps has anything in it.
+All-or-nothing keeps the split form an evasion rather than a coincidence, at the
+cost of missing half-measures like `fu ck`.
+
 **Compounds do not, and cannot.** `bullshit` does not follow from `shit`,
 because matching a root anywhere inside a word is exactly what makes a filter
 flag `Scunthorpe` — and `cunt` is on the default list. So common compounds ship

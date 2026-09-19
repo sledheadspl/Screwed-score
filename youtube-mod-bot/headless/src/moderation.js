@@ -21,12 +21,39 @@ function escapeClass (s) {
 
 // Strip accents and zero-width padding, lowercase, and collapse runs of 3+ so
 // "shiiiit" reads as "shit". Symbols are left alone for the pattern to handle.
+// Letters that render as a Latin letter but are a different codepoint.
+// Unicode normalization does not touch these - Cyrillic "с" and Latin "c" are
+// genuinely different letters, not two forms of one - so "fuсk" reads as clean
+// text to any filter that stops at NFKD. Substituting one lookalike character
+// is the most common evasion in a live chat, so the fold is explicit.
+const CONFUSABLES = {
+  // Cyrillic
+  а: 'a', в: 'b', е: 'e', ѕ: 's', і: 'i', ј: 'j', к: 'k',
+  м: 'm', н: 'h', о: 'o', р: 'p', с: 'c', т: 't', у: 'y', х: 'x',
+  // Greek
+  α: 'a', β: 'b', ε: 'e', ι: 'i', κ: 'k', ν: 'v', ο: 'o',
+  ρ: 'p', τ: 't', υ: 'u', χ: 'x',
+  // Latin letters stripped of a dot or stroke
+  ı: 'i', ȷ: 'j', ł: 'l', ø: 'o', đ: 'd',
+}
+const CONFUSABLE_RE = new RegExp(`[${Object.keys(CONFUSABLES).join('')}]`, 'g')
+const defuse = s => s.replace(CONFUSABLE_RE, ch => CONFUSABLES[ch])
+
+// Evasion by pulling a word apart: "f u c k", "f.u.c.k", "f-u-c-k". Compiled as
+// a second alternative that requires a separator in EVERY gap rather than an
+// optional one in each. An optional separator would flag "he's hit" as "shit":
+// the apostrophe is not a letter, so the opening anchor holds, and only one of
+// the three gaps has anything in it. All-or-nothing keeps the spaced form an
+// evasion rather than a coincidence.
+const SEPARATOR = '[\\s._\\-*+~,|]'
+
 export function normalize (text) {
   return text
     .normalize('NFKD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/[​-‏⁠﻿]/g, '')
     .toLowerCase()
+    .replace(CONFUSABLE_RE, ch => CONFUSABLES[ch])
     .replace(/(.)\1{2,}/g, '$1')
 }
 
@@ -38,6 +65,7 @@ function normalizeWord (word) {
     .replace(/[̀-ͯ]/g, '')
     .replace(/[​-‏⁠﻿]/g, '')
     .toLowerCase()
+    .replace(CONFUSABLE_RE, ch => CONFUSABLES[ch])
     .trim()
 }
 
@@ -45,12 +73,13 @@ function normalizeWord (word) {
 // letters that survived collapsing ("fuuck"), while word boundaries keep it
 // from firing inside an innocent longer word.
 function wordToPattern (word) {
-  let out = ''
+  const letters = []
   for (const ch of word) {
     const cls = LEET_CLASS[ch]
-    out += cls ? `[${escapeClass(cls)}]+` : `${escapeRegExp(ch)}+`
+    letters.push(cls ? `[${escapeClass(cls)}]+` : `${escapeRegExp(ch)}+`)
   }
-  return out
+  if (letters.length < 2) return letters.join('')
+  return `(?:${letters.join('')}|${letters.join(SEPARATOR + '+')})`
 }
 
 // The only endings allowed after a banned word. Anything longer is a

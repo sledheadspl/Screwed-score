@@ -99,6 +99,11 @@ Never touches   - owner or moderator messages, or anything a human mod has
 Answers questions - viewers type "!ask ..." and Claude replies, using your
                   real pack count and notes so it does not invent numbers.
 
+Evasion is handled: leetspeak (f@ck), stretched letters (shiiit),
+lookalike characters from other alphabets (Cyrillic c in "fuck"), and
+words pulled apart with spaces or dots (f.u.c.k). Half-measures like
+"fu ck" are NOT caught - closing that gap starts flagging "he's hit".
+
 Word matching catches endings but not compounds: "shit" also catches
 "shitty" and "shitting", but NOT "bullshit" - matching a word anywhere
 inside another is what makes filters flag Scunthorpe. Common compounds

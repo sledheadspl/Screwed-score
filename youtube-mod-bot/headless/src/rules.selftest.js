@@ -140,5 +140,42 @@ check('"dicker" is a real word, and the allow list is the escape hatch', () =>
 check('but the word it came from still fires', () =>
   assert.notEqual(hits('dont be a dick'), null))
 
+console.log('\nevasion by lookalike characters')
+// Unicode normalization does not fold these: Cyrillic "с" and Latin "c" are
+// different letters, not two forms of one. Substituting one is the most common
+// trick in a live chat, and it went straight through until this was written.
+const evasion = buildRules({ judgment: { words: ['fuck', 'shit', 'bitch'], patterns: [] } })
+const ev = t => evaluate(evasion, viewer, t)
+
+check('Cyrillic с is folded to c', () => assert.notEqual(ev('fuсk'), null))
+check('Cyrillic а and о are folded', () => assert.notEqual(ev('bіtсh'), null))
+check('a dotless i is folded', () => assert.notEqual(ev('shıt'), null))
+check('fullwidth forms still normalize', () => assert.notEqual(ev('ｆｕｃｋ'), null))
+check('a lookalike inside an inflection is caught', () => assert.notEqual(ev('fuсking'), null))
+
+console.log('\nevasion by pulling the word apart')
+check('spaces between letters', () => assert.notEqual(ev('f u c k'), null))
+check('periods between letters', () => assert.notEqual(ev('f.u.c.k'), null))
+check('hyphens between letters', () => assert.notEqual(ev('f-u-c-k'), null))
+check('underscores between letters', () => assert.notEqual(ev('b_i_t_c_h'), null))
+
+// A separator is required in EVERY gap, not optionally in each. With optional
+// separators "he's hit" matches "shit": the apostrophe is not a letter, so the
+// opening anchor holds and only one of the three gaps has anything in it.
+check('"he\'s hit" is not "shit"', () => assert.equal(ev("he's hit"), null))
+check('"that\'s hitting" is not "shit"', () => assert.equal(ev("that's hitting different"), null))
+check('a partly split word is not a match either', () => assert.equal(ev('fu ck'), null))
+for (const safe of ['i s o charizard', 'p s a 10', 'd i y sleeves', 'a b c d', 'the s in PSA']) {
+  check(`"${safe}" stays clean`, () => assert.equal(ev(safe), null))
+}
+
+// A chat message is capped at 200 characters, but the pattern should not be
+// the thing that decides whether that is true.
+check('an adversarial string does not hang the matcher', () => {
+  const started = Date.now()
+  ev('f.u.c'.repeat(800))
+  assert.ok(Date.now() - started < 500, `took ${Date.now() - started}ms`)
+})
+
 console.log(failures ? `\n${failures} failing` : '\nall passing')
 process.exit(failures ? 1 : 0)

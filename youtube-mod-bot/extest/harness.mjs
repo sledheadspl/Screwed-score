@@ -377,6 +377,27 @@ try {
     await page.close()
   }
 
+  // 8e. evasion, end to end -------------------------------------------------
+  // The engine tests cover these, but the extension reads text out of the DOM
+  // itself - emoji alt text, nested spans - so the characters the matcher sees
+  // are not obviously the characters that were typed.
+  console.log('\nevasion through the real DOM')
+  await writeConfig(context, id, base)
+  {
+    const { page } = await openChat(context, fixture, '')
+    let acted = await send(page, 'e1', 'Troll', 'this is fu\u0441king garbage')
+    check('a Cyrillic lookalike is still removed', actsFor(acted, 'e1').includes('delete'), JSON.stringify(acted))
+    acted = await send(page, 'e2', 'Troll', 'f u c k this stream')
+    check('a word pulled apart is still removed', actsFor(acted, 'e2').includes('delete'), JSON.stringify(acted))
+    acted = await send(page, 'e3', 'Troll', 's.h.i.t tier pulls')
+    check('periods between letters too', actsFor(acted, 'e3').includes('delete'), JSON.stringify(acted))
+    acted = await send(page, 'e4', 'Fan', "he's hit every pull tonight")
+    check('but the apostrophe case stays up', actsFor(acted, 'e4').length === 0, JSON.stringify(acted))
+    acted = await send(page, 'e5', 'Fan', 'i s o a charizard if anyone has one')
+    check('and single letters in chat stay up', actsFor(acted, 'e5').length === 0, JSON.stringify(acted))
+    await page.close()
+  }
+
   // 9. hold mode and the override round trip -------------------------------
   // What the popup does, through the same messages the popup sends.
   console.log('\nhold mode and the override')
