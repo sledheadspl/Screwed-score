@@ -95,6 +95,19 @@ Two places it is weaker than the headless bot, and worth knowing:
   failures.
 - An Anthropic API key, only if you want question answering.
 
+## Packaging the download
+
+`node package.mjs` builds `dist/pokebank-mod-bot.zip`: only the files Chrome
+loads, plus `LOAD-ME.txt`. The whole repo folder loads fine too, but it carries
+`headless/` and `extest/` alongside, and picking the wrong folder in Load
+unpacked is a real way to lose ten minutes to *Manifest file is missing or
+unreadable*.
+
+The file list is verified rather than trusted — every path the manifest declares,
+and every relative `import` or `<script src>` in the packaged files, has to
+resolve inside the package or the build fails and names what is missing. A
+hand-assembled zip is how a file goes missing.
+
 ## Setup script
 
 Optional. The extension needs no terminal, but this prints the exact folder to
