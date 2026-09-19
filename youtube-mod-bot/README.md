@@ -55,7 +55,15 @@ Two places it is weaker than the headless bot, and worth knowing:
    on that. A content script cannot read the page's own JS state, so the
    extension matches on message text and additionally never answers owner or
    moderator messages — which is what stops it answering itself.
-2. **Strike keys.** Escalation counts per display name, not per channel id,
+2. **The chat tab has to stay visible.** Chrome clamps timers in a hidden tab
+   to about a second and can stretch them to a minute after a few minutes
+   hidden, and finding a menu entry depends on polling. The waiter gives a
+   hidden tab a longer budget and a floor on how many times it looks, so a
+   briefly-backgrounded tab still works — but a minimised or long-buried one
+   will fail. Pop the chat out into its own window (⋮ → Pop out chat) and leave
+   it somewhere visible. When an action does fail because the tab is hidden, the
+   log says so rather than blaming your menu labels.
+3. **Strike keys.** Escalation counts per display name, not per channel id,
    because the DOM does not hand the content script a channel id. Names can
    change or collide, so strikes are session-scoped and conservative.
 

@@ -208,7 +208,43 @@
     return { action: baseAction, count }
   }
 
+  // Waiting for a menu entry to render, hardened for a hidden tab.
+  //
+  // Chrome clamps timers in a hidden tab to about a second, and after a few
+  // minutes hidden it can stretch them to a minute. A pure wall-clock budget
+  // then expires after one or two polls, so the attempt count matters as much
+  // as the time: a hidden tab gets a longer budget and a floor on how many
+  // times it looks before giving up.
+  //
+  // Dependencies are injected so this is testable against a fake clock.
+  async function waitFor (fn, options) {
+    const opts = options || {}
+    const timeout = opts.timeout === undefined ? 2000 : opts.timeout
+    const interval = opts.interval === undefined ? 50 : opts.interval
+    const minAttempts = opts.minAttempts === undefined ? 4 : opts.minAttempts
+    const maxAttempts = opts.maxAttempts === undefined ? 200 : opts.maxAttempts
+    const isHidden = opts.hidden || (() => false)
+    const now = opts.now || (() => Date.now())
+    const sleep = opts.sleep || (ms => new Promise(resolve => setTimeout(resolve, ms)))
+
+    const budget = isHidden() ? timeout * 4 : timeout
+    const deadline = now() + budget
+    let attempts = 0
+
+    for (;;) {
+      const value = fn()
+      attempts += 1
+      if (value) return value
+      if (attempts >= maxAttempts) return null
+      // Both must be spent: the clock alone is not a fair test when timers are
+      // being throttled, and attempts alone would spin on a fast machine.
+      if (attempts >= minAttempts && now() >= deadline) return null
+      await sleep(interval)
+    }
+  }
+
   root.ModBot = {
+    waitFor,
     normalize, compile, matchAgainst, buildRules, evaluate, trustOf, escalate, STANDING_DEFAULTS,
   }
 })(typeof self !== 'undefined' ? self : globalThis)

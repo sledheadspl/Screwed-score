@@ -20,14 +20,10 @@ const replyTimes = []
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-async function waitFor (fn, timeout = 2000, interval = 50) {
-  const deadline = Date.now() + timeout
-  for (;;) {
-    const value = fn()
-    if (value) return value
-    if (Date.now() > deadline) return null
-    await sleep(interval)
-  }
+// Thin wrapper over the engine's hidden-aware waiter. A buried tab has its
+// timers throttled, so the budget and the attempt floor both matter.
+function waitFor (fn, timeout = 2000, interval = 50) {
+  return ModBot.waitFor(fn, { timeout, interval, hidden: () => document.hidden })
 }
 
 // ── rules (shared engine, see src/engine/engine.js) ───────────────────────
@@ -130,7 +126,11 @@ async function actOnMessage (el, action, moderation) {
   const item = await waitFor(() => findMenuItem(spec.labels(moderation), spec.icons), 2500)
   if (!item) {
     closeMenu()
-    return { ok: false, reason: `menu opened but had no ${action} entry (check the labels in options)` }
+    // Reporting the wrong cause sends someone off to edit their menu labels
+    // when the real problem is a tab Chrome has throttled.
+    return document.hidden
+      ? { ok: false, reason: `could not find the ${action} entry while the chat tab is hidden - Chrome throttles timers in background tabs, so keep the popped-out chat window visible` }
+      : { ok: false, reason: `menu opened but had no ${action} entry (check the labels in options)` }
   }
 
   item.click()
@@ -400,6 +400,17 @@ async function attach () {
   watchForHumanActions(items)
 
   console.info(TAG, 'watching live chat')
+
+  // Moderation actions need the tab visible; warn when it is not, once per
+  // transition, so the cause is on the record before the failures are.
+  let warnedHidden = false
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) { warnedHidden = false; return }
+    if (warnedHidden || !config?.enabled) return
+    if (config.moderation?.mode === 'dry') return
+    warnedHidden = true
+    log({ kind: 'error', detail: 'chat tab is hidden - Chrome throttles background tabs, so removals may fail until it is visible again' })
+  })
 }
 
 // The popup resolves held matches through the worker, which relays to here.
