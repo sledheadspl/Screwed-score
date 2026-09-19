@@ -1,4 +1,4 @@
-import { withDefaults } from './src/defaults.js'
+import { DEFAULTS, withDefaults } from './src/defaults.js'
 
 const $ = id => document.getElementById(id)
 
@@ -43,7 +43,7 @@ async function render () {
   }
   $('nokey').hidden = Boolean(config.apiKey) || !config.qa.enabled
 
-  for (const key of ['deleted', 'wouldDelete', 'answered', 'timeouts', 'errors']) {
+  for (const key of ['deleted', 'wouldDelete', 'timeouts', 'bans', 'answered', 'errors']) {
     $(`s-${key}`).textContent = config.stats[key] ?? 0
   }
 
@@ -95,7 +95,10 @@ $('enabled').addEventListener('change', async () => {
 $('options').addEventListener('click', () => chrome.runtime.openOptionsPage())
 
 $('clear').addEventListener('click', async () => {
-  await chrome.storage.local.set({ log: [], stats: { deleted: 0, wouldDelete: 0, answered: 0, errors: 0 } })
+  // Every counter, not a hand-listed subset - a missed key leaves a stale
+  // number on screen next to freshly zeroed ones.
+  const cleared = Object.fromEntries(Object.keys(DEFAULTS.stats).map(k => [k, 0]))
+  await chrome.storage.local.set({ log: [], stats: cleared })
   render()
 })
 

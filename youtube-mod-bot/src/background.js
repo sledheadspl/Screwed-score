@@ -123,6 +123,21 @@ async function askClaude (question, author) {
   return text.slice(0, config.qa.maxReplyChars || DEFAULTS.qa.maxReplyChars)
 }
 
+// Which counter each logged outcome belongs to. A lookup rather than a chain
+// of ternaries ending in 'errors', because that default counted every
+// successful timeout, ban and held message as a failure while leaving the
+// timeout counter the popup displays at zero forever - so a run that worked
+// perfectly read as broken. An outcome with no counter simply gets none.
+const STAT_FOR_KIND = {
+  deleted: 'deleted',
+  wouldDelete: 'wouldDelete',
+  timeout: 'timeouts',
+  ban: 'bans',
+  pending: 'held',
+  pass: 'passed',
+  error: 'errors',
+}
+
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   switch (msg?.type) {
     case 'GET_CONFIG':
@@ -166,12 +181,14 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       })).then(() => sendResponse({ ok: true }))
       return true
 
-    case 'LOG_ACTION':
+    case 'LOG_ACTION': {
       // Moderation outcomes are decided in the page; the worker only records them.
-      bumpStat(msg.entry.kind === 'deleted' ? 'deleted' : msg.entry.kind === 'wouldDelete' ? 'wouldDelete' : 'errors')
+      const stat = STAT_FOR_KIND[msg.entry.kind]
+      ;(stat ? bumpStat(stat) : Promise.resolve())
         .then(() => appendLog(msg.entry))
         .then(() => sendResponse({ ok: true }))
       return true
+    }
 
     default:
       return false

@@ -99,6 +99,12 @@ Never touches   - owner or moderator messages, or anything a human mod has
 Answers questions - viewers type "!ask ..." and Claude replies, using your
                   real pack count and notes so it does not invent numbers.
 
+Word matching catches endings but not compounds: "shit" also catches
+"shitty" and "shitting", but NOT "bullshit" - matching a word anywhere
+inside another is what makes filters flag Scunthorpe. Common compounds
+ship as their own entries. If your chat invents a new one, add it in
+Settings; no setting would have caught it for you.
+
 Hate speech ships with an EMPTY word list on purpose. Add your terms in
 Settings, or leave that to YouTube Studio's own blocked-words list
 (Settings -> Community), which works whether or not this is running.

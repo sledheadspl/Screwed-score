@@ -12,6 +12,11 @@
     l: 'l1|', o: 'o0@*', s: 's5$', t: 't7+', u: 'u@*#', z: 'z2',
   }
 
+  // The only endings allowed after a banned word. Anything longer is a
+  // different word, not a form of this one.
+  const INFLECTIONS = ['s', 'es', 'ed', 'er', 'ers', 'ing', 'ings', 'in', 'ins', 'y', 'ies']
+  const SUFFIX = `(?:${INFLECTIONS.join('|')})?`
+
   const escapeRegExp = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const escapeClass = s => s.replace(/[\]\\^-]/g, '\\$&')
 
@@ -60,9 +65,21 @@
     }
 
     return {
-      // Letter-adjacency lookarounds rather than \b: a word spelled with a
-      // leading symbol ("$hit", "@ss") has no word boundary in front of it.
-      words: words.length ? new RegExp(`(?<![a-z0-9_])(?:${words.join('|')})(?![a-z0-9_])`, 'i') : null,
+    // Anchors are letter-adjacency lookarounds rather than \b: a word spelled
+      // with a leading symbol ("$hit", "@ss") has no word boundary in front of
+      // it, so \b lets exactly the obfuscated cases through.
+      //
+      // A closed set of inflections is allowed before the closing anchor,
+      // because nobody in chat types the bare infinitive - "fucking", "fucked",
+      // "bitches" and "shitty" are the forms that actually show up, and a bare
+      // whole-word anchor misses every one of them. Doubled final consonants
+      // ("shitty", "shitting") need no special case: wordToPattern already
+      // quantifies each letter.
+      //
+      // Closed, not open-ended: a trailing wildcard would catch "shitake" and
+      // "dickens". Compounds like "dickhead" are not inflections and still need
+      // their own entry in the list.
+      words: words.length ? new RegExp(`(?<![a-z0-9_])(?:${words.join('|')})${SUFFIX}(?![a-z0-9_])`, 'i') : null,
       patterns,
     }
   }

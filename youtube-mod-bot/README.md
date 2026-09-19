@@ -106,8 +106,24 @@ normalized away. Letter-adjacency lookarounds keep `Scunthorpe`, `class` and
 `shitake` safe. Regex patterns run against the raw text, so use those for links,
 handles, and anything case-sensitive.
 
+**Inflections follow from the root.** A closed set of endings — `s`, `es`, `ed`,
+`er(s)`, `ing(s)`, `in(s)`, `y`, `ies` — is allowed before the closing anchor,
+so `fuck` also catches `fucking`, `fucked`, `fucker` and `fucks`, and `shit`
+catches `shitty` and `shitting`. This matters more than it sounds: nobody in
+chat types the bare infinitive, and a plain whole-word match misses every form
+people actually use. The set is closed on purpose — a trailing wildcard would
+catch `shitake` and `dickens`.
+
+**Compounds do not, and cannot.** `bullshit` does not follow from `shit`,
+because matching a root anywhere inside a word is exactly what makes a filter
+flag `Scunthorpe` — and `cunt` is on the default list. So common compounds ship
+as their own entries (`bullshit`, `dickhead`, `dumbass`, `motherfucker`, and
+`asshole`, which always was one). If viewers invent a new one, add it to the
+list; there is no anchor setting that would have caught it for you.
+
 Anything in the allow list makes a message immune, which is the escape hatch for
-the Scunthorpe problem.
+the Scunthorpe problem — and for a real word that happens to be an inflection of
+a banned one, such as `dicker`.
 
 ## Answering questions
 

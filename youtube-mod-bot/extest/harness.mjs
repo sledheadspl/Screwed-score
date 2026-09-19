@@ -212,6 +212,17 @@ try {
 
     acted = await send(page, 's5', 'Supporter', 'discord.gg/pokebank', 'member')
     check('standing rules apply to members too', String(actsFor(acted, 's5')) === 'delete,timeout', JSON.stringify(actsFor(acted, 's5')))
+
+    // The counters are the one thing a host actually looks at. Every outcome
+    // above succeeded, so an error here means the popup is calling success a
+    // failure - which it did, counting timeouts and bans as errors and leaving
+    // the timeout tile it displays at zero.
+    await logUntil(context, id, l => l.filter(e => e.kind === 'deleted').length >= 5)
+    const stats = (await readStorage(context, id, 'stats')) ?? {}
+    check('counted five removals', stats.deleted === 5, JSON.stringify(stats))
+    check('counted the timeouts separately', stats.timeouts === 4, JSON.stringify(stats))
+    check('counted the ban separately', stats.bans === 1, JSON.stringify(stats))
+    check('counted no errors, because there were none', (stats.errors ?? 0) === 0, JSON.stringify(stats))
     await page.close()
   }
 
@@ -340,6 +351,29 @@ try {
       log.some(e => e.kind === 'error' && /never showed as deleted/.test(e.detail ?? '')) &&
       !log.some(e => e.kind === 'deleted'),
       JSON.stringify(log.slice(0, 3)))
+    await page.close()
+  }
+
+  // 8d. the list that actually ships ----------------------------------------
+  // Everything above sets its own word list, so none of it tests what a host
+  // gets out of the box. Compounds are the gap: the leading anchor that keeps
+  // "Scunthorpe" safe also means "bullshit" does not follow from "shit".
+  console.log('\nshipped default word list')
+  await writeConfig(context, id, {
+    enabled: true,
+    moderation: { enabled: true, mode: 'auto', standing: { categories: {} }, strikes: { enabled: false } },
+    qa: { enabled: false },
+  })
+  {
+    const { page } = await openChat(context, fixture, '')
+    let acted = await send(page, 'w1', 'Troll', 'this stream is bullshit')
+    check('a compound on the default list is removed', actsFor(acted, 'w1').includes('delete'), JSON.stringify(acted))
+    acted = await send(page, 'w2', 'Troll', 'what a dickhead')
+    check('and so is the other common one', actsFor(acted, 'w2').includes('delete'), JSON.stringify(acted))
+    acted = await send(page, 'w3', 'Chef', 'these shitake mushrooms are great')
+    check('but Scunthorpe cases stay safe', actsFor(acted, 'w3').length === 0, JSON.stringify(acted))
+    acted = await send(page, 'w4', 'Fan', 'that pull is amazing')
+    check('and clean messages stay up', actsFor(acted, 'w4').length === 0, JSON.stringify(acted))
     await page.close()
   }
 

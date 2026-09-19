@@ -14,8 +14,16 @@ export const DEFAULT_SYSTEM_PROMPT = [
 
 // Starter list. Deliberately mild — the point is to prove the pipeline works,
 // not to ship someone else's idea of what counts as a slur.
+//
+// Inflections are handled by the matcher ("fucking", "shitty", "bitches" all
+// follow from the roots below), but COMPOUNDS are not, and cannot be: matching
+// a root anywhere inside a word is what makes a filter flag Scunthorpe, and
+// "cunt" is on this list. So common compounds get their own entries, the way
+// "asshole" always has.
 export const DEFAULT_BANNED_WORDS = [
-  'fuck', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'whore',
+  'fuck', 'shit', 'bitch', 'cunt', 'dick', 'whore',
+  'asshole', 'bullshit', 'dogshit', 'horseshit', 'dumbass', 'jackass',
+  'dickhead', 'motherfucker',
 ]
 
 // The live chat context menu is localized, so matching is label-driven and

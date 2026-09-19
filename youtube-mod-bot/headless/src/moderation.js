@@ -53,6 +53,11 @@ function wordToPattern (word) {
   return out
 }
 
+// The only endings allowed after a banned word. Anything longer is a
+// different word, not a form of this one.
+const INFLECTIONS = ['s', 'es', 'ed', 'er', 'ers', 'ing', 'ings', 'in', 'ins', 'y', 'ies']
+const SUFFIX = `(?:${INFLECTIONS.join('|')})?`
+
 // Compiles one {words, patterns} rule set. Used for the judgment tier and for
 // each standing-rule category separately, so a hit knows which list it came
 // from and therefore how urgent it is.
@@ -73,10 +78,21 @@ export function compile ({ words = [], patterns = [] } = {}, onWarn = () => {}) 
   }
 
   return {
-    // Letter-adjacency lookarounds rather than \b: a word spelled with a
-    // leading symbol ("$hit", "@ss") has no word boundary in front of it, so
-    // \b would let exactly the obfuscated cases through.
-    words: expanded.length ? new RegExp(`(?<![a-z0-9_])(?:${expanded.join('|')})(?![a-z0-9_])`, 'i') : null,
+    // Anchors are letter-adjacency lookarounds rather than \b: a word spelled
+    // with a leading symbol ("$hit", "@ss") has no word boundary in front of
+    // it, so \b lets exactly the obfuscated cases through.
+    //
+    // A closed set of inflections is allowed before the closing anchor,
+    // because nobody in chat types the bare infinitive - "fucking", "fucked",
+    // "bitches" and "shitty" are the forms that actually show up, and a bare
+    // whole-word anchor misses every one of them. Doubled final consonants
+    // ("shitty", "shitting") need no special case: wordToPattern already
+    // quantifies each letter.
+    //
+    // Closed, not open-ended: a trailing wildcard would catch "shitake" and
+    // "dickens". Compounds like "dickhead" are not inflections and still need
+    // their own entry in the list.
+    words: expanded.length ? new RegExp(`(?<![a-z0-9_])(?:${expanded.join('|')})${SUFFIX}(?![a-z0-9_])`, 'i') : null,
     patterns: compiledPatterns,
   }
 }

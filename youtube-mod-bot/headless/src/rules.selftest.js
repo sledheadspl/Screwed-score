@@ -113,5 +113,32 @@ check('a bare config deletes nothing', () => {
   assert.equal(evaluate(bare, viewer, 'anything at all'), null)
 })
 
+console.log('\ninflected forms')
+// A bare whole-word anchor matched only the infinitive, which is the one form
+// nobody types. This was found by watching the bot leave "f@cking garbage"
+// standing in a browser while it removed "$hit" from the same author.
+const inflected = buildRules({
+  judgment: { words: ['fuck', 'shit', 'bitch', 'dick', 'ass'], patterns: [] },
+  allowList: ['dicker'],
+})
+const hits = t => evaluate(inflected, viewer, t)
+
+for (const form of ['fucking', 'fucked', 'fucks', 'fucker', 'fuckers', 'shits', 'shitting', 'shitty', 'bitches', 'bitchy', 'asses']) {
+  check(`"${form}" is caught`, () => assert.notEqual(hits(form), null))
+}
+check('obfuscation survives an ending', () => assert.notEqual(hits('this stream is f@cking garbage'), null))
+check('doubled consonants need no special case', () => assert.notEqual(hits('quit shitting on it'), null))
+
+// The endings are a closed set precisely so these stay safe.
+for (const safe of ['shitake mushrooms', 'shiitake', 'assume', 'assassin', 'massive', 'bass guitar', 'passing', 'glass', 'classic', 'Scunthorpe', 'dickens']) {
+  check(`"${safe}" is not a match`, () => assert.equal(hits(safe), null))
+}
+check('a compound is not an inflection and needs its own entry', () =>
+  assert.equal(hits('dickhead'), null))
+check('"dicker" is a real word, and the allow list is the escape hatch', () =>
+  assert.equal(hits('lets dicker on the price'), null))
+check('but the word it came from still fires', () =>
+  assert.notEqual(hits('dont be a dick'), null))
+
 console.log(failures ? `\n${failures} failing` : '\nall passing')
 process.exit(failures ? 1 : 0)
