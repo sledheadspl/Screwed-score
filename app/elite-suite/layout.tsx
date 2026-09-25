@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://www.screwedscore.com/elite-suite' },
   title: 'The Digital Powerhouse Suite™ — Elite Suite',
   description: 'A private, concierge-level digital ecosystem engineered for high-net-worth creators, founders, and investors. Starts at $7,500.',
   openGraph: {
