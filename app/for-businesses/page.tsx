@@ -3,6 +3,7 @@ import { ShieldCheck, Star, MessageSquare, TrendingUp, CheckCircle, Users, Dolla
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://www.screwedscore.com/for-businesses' },
   title: 'For Businesses — Own Your Reputation on ScrewedScore',
   description: 'Claim your business profile, respond to community reviews, and earn the Verified Honest Business badge. Build trust with customers before they even walk in the door.',
 }

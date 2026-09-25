@@ -35,9 +35,6 @@ export const metadata: Metadata = {
     'check if overcharged',
     'contractor estimate too high',
   ],
-  alternates: {
-    canonical: 'https://www.screwedscore.com',
-  },
   openGraph: {
     title: 'GetScrewedScore — Find Out If You\'re Being Overcharged',
     description: 'Upload any bill, invoice, or contract. Free AI tells you if you\'re getting screwed — and exactly what to do about it.',
