@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://www.screwedscore.com/dps' },
   title: 'Digital Prestige Serve (DPS)',
   description: 'Done-for-you digital branding, content strategy, and system architecture for creators and founders who operate at the highest level.',
   openGraph: {

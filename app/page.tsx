@@ -5,6 +5,7 @@
 // This file used to be `'use client'` in its entirety, which meant the hero and
 // the upload control could not be used until ~900 KB of JS had downloaded,
 // parsed and hydrated on the visitor's phone.
+import type { Metadata } from 'next'
 import {
   FileText, Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
   Star, ChevronDown, Flame, MessageSquare, Building2,
@@ -113,6 +114,13 @@ const FAQ_ITEMS = [
     a: 'Yes — every SCREWED or MAYBE result includes access to the Dispute Hub. Open a formal thread linked to the vendor, describe what happened, and they can respond publicly. Every outcome you report (full win, partial, or refused) adds to the community recovery total.',
   },
 ]
+
+// Canonical lives here, not in the root layout — a layout canonical is
+// inherited by every page that doesn't set its own, which tells Google those
+// pages are duplicates of the homepage.
+export const metadata: Metadata = {
+  alternates: { canonical: 'https://www.screwedscore.com' },
+}
 
 export default function HomePage() {
   return (
