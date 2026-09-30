@@ -12,12 +12,10 @@ items complete — see git log for the commit that closed each one.
       Optimization API via AVIF). `npm audit fix` → next 16.3.7, build
       verified clean. Commit `2c41466`.
       Not blocked.
-- [ ] **Verify GitHub's Dependabot re-scan reflects the fix.** The push
-      output still listed 34 alerts (2 critical) right after the fix commit —
-      that's very likely just scan lag, not a real miss, but wasn't confirmed
-      before moving on.
-      Blocked on: a few minutes of GitHub re-scan time, then a manual check
-      of the Security tab or `gh api .../dependabot/alerts`.
+- [x] **Verify GitHub's Dependabot re-scan reflects the fix.** Confirmed on
+      the next push: 34 alerts (2 critical) → 15 alerts (0 critical). The
+      remaining 15 line up with the ClipPilot-only subset below.
+      Not blocked.
 - [ ] **ClipPilot sub-product has ~30 open Dependabot alerts** (high: sharp,
       js-yaml, browserslist, nanoid, @xmldom/xmldom (9 separate advisories),
       rustls-webpki, several rust-openssl issues; moderate: tauri origin
@@ -66,15 +64,20 @@ items complete — see git log for the commit that closed each one.
       (`{className?: string}`) for the `style` prop `CourseCard` passes it;
       swapped for lucide-react's `LucideIcon` type. Committed (`894d706`).
       Not blocked.
-- [x] **`npm run lint` was broken again** — flat-config plugin scoping:
-      `eslint-config-next`'s flat config registers `react` / `react-hooks`
-      plugins only inside its own config objects, so the repo's custom rule
-      overrides (a separate object, `eslint.config.mjs`) couldn't resolve
+- [x] **`npm run lint` was broken again**, two separate bugs stacked:
+      (1) flat-config plugin scoping — `eslint-config-next`'s flat config
+      registers `react` / `react-hooks` plugins only inside its own config
+      objects, so the repo's rule-override object couldn't resolve
       `react/no-unescaped-entities` or `react-hooks/set-state-in-effect` for
-      files outside `nextCoreWebVitals`'s own `files` globs. Fixed by
+      files outside `nextCoreWebVitals`'s own `files` globs; fixed by
       importing and re-registering both plugins on the override object.
-      In progress — fix applied, full lint run in flight to confirm it's
-      clean end to end (large codebase, first run in a while).
+      (2) `.netlify/**` (Netlify's local build output — minified/bundled JS)
+      was never in `ignores`, so lint was scanning compiled vendor chunks —
+      that's what produced the apparent "14,180 problems" on the first
+      successful run. Added `.netlify/**` and `scripts/**` (a standalone CJS
+      Node utility, not app code) to `ignores`. Real result: 192 source
+      files scanned, 0 errors, 28 warnings. `npm run lint` exits 0.
+      Not blocked.
 - [ ] **Two known-but-unfixed findings from the last lint pass**, called out
       explicitly in that commit's message and worth resolving properly:
       `KIT_PRICE_CENTS` is inert because `kit-checkout` charges a hardcoded

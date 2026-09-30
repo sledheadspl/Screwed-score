@@ -9,8 +9,9 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks'
 export default [
   {
     ignores: [
-      '.next/**', 'node_modules/**', 'out/**', 'build/**',
+      '.next/**', '.netlify/**', 'node_modules/**', 'out/**', 'build/**',
       'clippilot/**', 'tools/**', 'supabase/functions/**', // Tauri / Python / Deno — other toolchains
+      'scripts/**', // standalone CJS Node CLI utilities, not part of the Next.js app
       'next-env.d.ts', 'fix-netlify-handler.js', 'seed-*.js',
     ],
   },
