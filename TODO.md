@@ -125,6 +125,20 @@ items complete — see git log for the commit that closed each one.
       somehow ended up pushed to this repo's remote. Left alone — not a
       Screwed Score item, not touching it.
 
+## Low priority
+
+- [ ] **This checkout's local Netlify CLI link is stale.** `.netlify/state.json`
+      (gitignored, machine-local, untouched by any commit here) points at
+      `flourishing-meerkat-9bc778` (no custom domain) — not the documented
+      production site `getscrewedscore` (`5e2b2f50-1c96-453d-94e1-55badd24ac09`).
+      Doesn't affect anything done today: every deploy this session went
+      through the GitHub→Netlify auto-deploy CI, verified live on
+      www.screwedscore.com directly, not through this CLI link. Only matters
+      if someone runs `netlify deploy --prod` by hand from this checkout —
+      it would currently target the wrong site. Fix: `netlify unlink` then
+      `netlify link` and pick `getscrewedscore` explicitly.
+      Not blocked — just not urgent.
+
 ## Environment note
 
 - C: drive is at ~98% (3.3GB free) — tight, not (yet) build-blocking; both
