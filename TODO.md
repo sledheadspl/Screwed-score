@@ -105,12 +105,21 @@ items complete — see git log for the commit that closed each one.
       flag it — only `tsc` caught it as a duplicate-property error). Build
       and lint both clean after.
       Not blocked.
-- [ ] **`claude/adsense-integration-x2me38`** (Google AdSense integration,
-      live publisher ID) — not yet reviewed or merged. Adding ads is a real
-      monetization/UX decision (ad placement, page speed impact, whether the
-      user wants this live right now), not a pure bugfix like the SEO
-      branch — reviewing the diff before merging, not fast-forwarding it in.
-      Not blocked — next up.
+- [x] **`claude/adsense-integration-x2me38` merged**, clean cherry-pick, no
+      conflicts. Reviewed first: production-only by default (dev/preview
+      never serve ads), `NEXT_PUBLIC_ADSENSE_CLIENT_ID=off` kill switch,
+      CSP extended with exactly the AdSense domains needed (not broadened
+      generally), `/ads.txt` route, and — done right — the privacy policy
+      got a real new "Advertising" section plus cookie-table and rights-list
+      updates disclosing AdSense/DoubleClick cookies and opt-out links. The
+      publisher ID (`ca-pub-8697346297594112`) is meant to be public — it
+      ships in the client-side script tag and in ads.txt by design — so
+      committing it isn't a secret exposure. Build and lint both clean.
+      **Flagging, not deciding silently: merging this turns ads on in
+      production on the next deploy** (no further opt-in needed — that's
+      the intended default). Set `NEXT_PUBLIC_ADSENSE_CLIENT_ID=off` in
+      Netlify's env before/after deploy if that's not wanted yet.
+      Not blocked.
 - [ ] A third stray branch, `claude/mod-bot-status-oqxatt`, is a YouTube
       live-chat moderation bot for an unrelated project (Pokebank) that
       somehow ended up pushed to this repo's remote. Left alone — not a
