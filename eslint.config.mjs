@@ -3,6 +3,8 @@
 // rather than resolved through the old .eslintrc mechanism.
 import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
 import nextTypeScript from 'eslint-config-next/typescript'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
 
 export default [
   {
@@ -15,6 +17,12 @@ export default [
   ...nextCoreWebVitals,
   ...nextTypeScript,
   {
+    // eslint-config-next's flat config scopes its own `plugins` registration
+    // to its own config objects; a rule override living in a separate object
+    // (this one) needs "react" registered again here or flat config can't
+    // resolve `react/...` for files that don't also match one of
+    // nextCoreWebVitals's own `files` globs.
+    plugins: { react: reactPlugin, 'react-hooks': reactHooksPlugin },
     rules: {
       // Unused imports are what slipped through while lint was silently dead.
       '@typescript-eslint/no-unused-vars': ['error', {
