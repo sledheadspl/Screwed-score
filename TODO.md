@@ -48,11 +48,13 @@ items complete — see git log for the commit that closed each one.
       WA/ID/OR, a real parser for Montana). Verified present on `main`.
       Not blocked. (Teaser only, by earlier explicit decision — the module
       itself is mock-data-only for 3 of 4 states, not wired to a live UI.)
-- [ ] **Confirm all three are actually live on screwedscore.com**, not just
-      on `main`. CLAUDE.md says pushing to `main` triggers a Netlify CI
-      deploy, and these commits are weeks old, so this should already be
-      true — just hasn't been checked against the live site in this pass.
-      Blocked on: a live-site check (not a build; can do without disk headroom).
+- [x] **Confirm all three are actually live on screwedscore.com**, not just
+      on `main`. Checked directly: homepage shows the Fight Back Kit promo
+      banner and the Lost Assets Finder teaser card; `/create` loads and
+      renders correctly. Not re-tested end-to-end (that costs a real Claude
+      call) — page-load + content verification was enough to confirm the
+      deploy actually shipped these, which was the open question.
+      Not blocked.
 
 ## P2 — Found while reconciling, not previously tracked anywhere
 
@@ -88,13 +90,27 @@ items complete — see git log for the commit that closed each one.
       wired up — wired it up with a 2.5s rotation, falling back to the
       static `label` prop for phases with only one message.
       Not blocked.
-- [ ] **Two finished feature branches sitting on GitHub, never merged**:
-      `claude/adsense-integration-x2me38` (Google AdSense integration, live
-      publisher ID) and `claude/focused-newton-u6r9n6` (stop pages inheriting
-      the homepage's canonical URL so Google actually indexes them — a real
-      SEO bug). Both look Screwed-Score-relevant and complete by their commit
-      messages; neither has been reviewed or merged yet.
-      Not blocked — needs review before merging, not just a fast-forward.
+- [x] **`claude/focused-newton-u6r9n6` merged** (stop pages inheriting the
+      homepage's canonical so Google indexes /jobs, /for-businesses,
+      /business-portal, /dps, /elite-suite, /jobs/[id], /workers/[id]; noindex
+      post-checkout/sign-in screens). Reviewed, not fast-forwarded: it
+      conflicted with the Academy-batch `business-portal/layout.tsx` (branch
+      wanted it publicly indexed; current code correctly noindexes it — it's
+      a login-gated dashboard that redirects signed-out visitors to /auth and
+      is deliberately excluded from sitemap.ts — verified against the actual
+      redirect and sitemap code before choosing, not just trusting my own
+      earlier comment). Kept the noindex version. Also found and fixed a
+      silent duplicate `alternates` key in `for-businesses/page.tsx` that the
+      line-based auto-merge produced (syntactically valid, so `git` didn't
+      flag it — only `tsc` caught it as a duplicate-property error). Build
+      and lint both clean after.
+      Not blocked.
+- [ ] **`claude/adsense-integration-x2me38`** (Google AdSense integration,
+      live publisher ID) — not yet reviewed or merged. Adding ads is a real
+      monetization/UX decision (ad placement, page speed impact, whether the
+      user wants this live right now), not a pure bugfix like the SEO
+      branch — reviewing the diff before merging, not fast-forwarding it in.
+      Not blocked — next up.
 - [ ] A third stray branch, `claude/mod-bot-status-oqxatt`, is a YouTube
       live-chat moderation bot for an unrelated project (Pokebank) that
       somehow ended up pushed to this repo's remote. Left alone — not a
