@@ -131,6 +131,43 @@ export const PRODUCT_CATALOG: Record<string, {
     defaultPath: '/downloads/course-creator-kit.html',
     accentColor: '#ffd60a',
   },
+
+  // ── ScrewedScore Academy ────────────────────────────────────────────────
+  'academy-estimate-mastery': {
+    name: 'Repair Estimate Mastery',
+    tagline: 'Read, question, and negotiate any auto repair estimate.',
+    deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_ESTIMATE_MASTERY',
+    defaultPath: '/downloads/academy-estimate-mastery.html',
+    accentColor: '#ffd60a',
+  },
+  'academy-check-engine': {
+    name: 'Check Engine Light: Complete Diagnostic Course',
+    tagline: 'Diagnose your own check engine light the way a shop does.',
+    deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_CHECK_ENGINE',
+    defaultPath: '/downloads/academy-check-engine.html',
+    accentColor: '#ffd60a',
+  },
+  'academy-noise-diagnosis': {
+    name: 'Car Noise Diagnosis: Complete Course',
+    tagline: "Train your ear system by system and stop guessing at what's making that sound.",
+    deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_NOISE_DIAGNOSIS',
+    defaultPath: '/downloads/academy-noise-diagnosis.html',
+    accentColor: '#ffd60a',
+  },
+  'academy-fight-back': {
+    name: 'Fight Back: Complete Dispute & Consumer Protection Course',
+    tagline: 'A full system for disputing bad bills, bad charges, and bad service.',
+    deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_FIGHT_BACK',
+    defaultPath: '/downloads/academy-fight-back.html',
+    accentColor: '#ffd60a',
+  },
+  'academy-bundle': {
+    name: 'ScrewedScore Academy — Complete Bundle',
+    tagline: 'All four courses, 28 modules total — one price.',
+    deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_BUNDLE',
+    defaultPath: '/downloads/academy-bundle.html',
+    accentColor: '#ffd60a',
+  },
 }
 
 function buildDownloadUrl(envKey: string, defaultPath: string): string {

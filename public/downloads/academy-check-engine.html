@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check Engine Light: Complete Diagnostic Course — ScrewedScore Academy</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #050505; --surface: #0f0f0f; --surface2: #141414; --gold: #ffd60a; --gold-dim: rgba(255,214,10,0.08);
+    --gold-border: rgba(255,214,10,0.25); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 100px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--gold); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 34px; font-weight: 900; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--sub); font-size: 16px; max-width: 620px; margin-bottom: 10px; }
+  .desc { color: var(--sub); font-size: 14px; max-width: 620px; margin-bottom: 32px; line-height: 1.7; }
+  .price-row { display:flex; align-items:center; gap: 14px; margin-bottom: 36px; }
+  .price-tag { font-size: 22px; font-weight: 900; color: var(--gold); }
+  .section { margin-bottom: 44px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--sub); line-height: 1.6; }
+  .check-mark { flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px; background: var(--gold-dim); border: 1px solid var(--gold-border); color: var(--gold); font-weight: 900; font-size: 12px; display:flex; align-items:center; justify-content:center; margin-top: 1px; }
+  .toc { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .toc li a { display:flex; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; transition: border-color .2s; }
+  .toc li a:hover { border-color: var(--gold-border); }
+  .toc li a span.num { color: var(--gold); font-weight: 800; margin-right: 10px; }
+  .module { border-top: 1px solid var(--border); padding-top: 36px; margin-top: 36px; scroll-margin-top: 20px; }
+  .module-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .module h2 { font-size: 24px; font-weight: 900; margin-bottom: 22px; letter-spacing: -0.01em; }
+  .module h3 { font-size: 15px; font-weight: 800; margin: 22px 0 8px; color: var(--text); }
+  .module p { font-size: 14.5px; color: var(--sub); margin-bottom: 14px; line-height: 1.75; }
+  .mod-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 8px 0 16px; }
+  .mod-list li { position: relative; padding-left: 20px; font-size: 14.5px; color: var(--sub); line-height: 1.65; }
+  .mod-list li::before { content: '\2022'; position: absolute; left: 4px; color: var(--gold); font-weight: 900; }
+  .template-box { background: var(--gold-dim); border: 1px solid var(--gold-border); border-left: 3px solid var(--gold); border-radius: 8px; padding: 16px 18px; margin: 10px 0 18px; }
+  .template-box p { margin-bottom: 0; font-size: 13.5px; color: rgba(242,242,242,0.75); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.8; }
+  .table-wrap { overflow-x: auto; margin: 14px 0 20px; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; background: var(--surface2); color: var(--gold); font-weight: 800; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); color: var(--sub); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .author-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-top: 56px; }
+  .author-box h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 10px; }
+  .author-box p { font-size: 13px; color: var(--sub); line-height: 1.7; }
+  .disclaimer { font-size: 11.5px; color: rgba(242,242,242,0.35); line-height: 1.7; margin-top: 16px; }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 40px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,214,10,0.25); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; max-width: 100%; }
+    .brand-logo span { color: #b8860b; }
+    .section-label, .module-eyebrow, .price-tag { color: #b8860b; }
+    .checklist li, .toc li a, .author-box, .table-wrap { border: 1px solid #ddd; background: #fafafa; }
+    th { background: #f0f0f0; color: #b8860b; }
+    td { color: #444; border-top-color: #ddd; }
+    .check-mark { background: #fdf3d6; color: #b8860b; border-color: #b8860b; }
+    .module p, .desc, .subtitle, .author-box p { color: #444; }
+    .mod-list li::before { color: #b8860b; }
+    .cta, .print-btn { display: none; }
+    .module { page-break-inside: avoid; }
+    .template-box { background: #fdf7e3; border-color: #e0c34a; }
+    .template-box p { color: #333; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Academy — Full Course</div>
+  </div>
+
+  <h1>Check Engine Light: Complete Diagnostic Course</h1>
+  <p class="subtitle">Learn to diagnose your own check engine light with the same systematic process a shop uses</p>
+  <p class="desc">Seven modules covering how the system actually works, how to read codes like a technician, a full diagnostic tree by system, and the tools worth owning.</p>
+  <div class="price-row"><span class="price-tag">$39</span><span style="color:var(--sub);font-size:13px;">— purchased and unlocked. Yours to keep.</span></div>
+
+  <div class="section">
+    <div class="section-label">What You'll Learn</div>
+    <ul class="checklist">
+      <li><div class="check-mark">&#10003;</div><div>Understand what the check engine light system actually monitors and why</div></li>
+<li><div class="check-mark">&#10003;</div><div>Read any OBD2 code's structure and know what each character tells you</div></li>
+<li><div class="check-mark">&#10003;</div><div>Follow a systematic diagnostic tree instead of guessing at parts</div></li>
+<li><div class="check-mark">&#10003;</div><div>Recognize the most common codes and their real-world causes</div></li>
+<li><div class="check-mark">&#10003;</div><div>Choose the right diagnostic tools for your skill level and budget</div></li>
+<li><div class="check-mark">&#10003;</div><div>Know exactly when a problem needs a professional and when it doesn't</div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Course Map</div>
+    <ul class="toc">
+      <li><a href="#module-1"><span><span class="num">01</span>How the System Actually Works</span><span>&rarr;</span></a></li>
+<li><a href="#module-2"><span><span class="num">02</span>Reading Codes Like a Technician</span><span>&rarr;</span></a></li>
+<li><a href="#module-3"><span><span class="num">03</span>The Diagnostic Tree — A System-by-System Method</span><span>&rarr;</span></a></li>
+<li><a href="#module-4"><span><span class="num">04</span>Common Codes, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-5"><span><span class="num">05</span>Tools of the Trade</span><span>&rarr;</span></a></li>
+<li><a href="#module-6"><span><span class="num">06</span>When to DIY and When to Call a Pro</span><span>&rarr;</span></a></li>
+<li><a href="#module-7"><span><span class="num">07</span>A Full Diagnose-Along Case Study</span><span>&rarr;</span></a></li>
+    </ul>
+  </div>
+
+  <div class="module" id="module-1"><div class="module-eyebrow">Module 1 of 7</div><h2>How the System Actually Works</h2><h3>The computer's job</h3>
+<p>Your vehicle's engine computer, usually called the ECU or PCM, constantly monitors dozens of sensors and adjusts fuel, timing, and other systems in real time to keep the engine running efficiently and cleanly. The check engine light exists because federal emissions law requires manufacturers to alert drivers when the emissions control system detects a problem serious enough to affect how clean the vehicle runs.</p>
+<h3>Monitors: the system's self-check routines</h3>
+<p>The computer runs a set of standardized tests called monitors — checks on the catalytic converter, oxygen sensors, evaporative emissions system, fuel system, and several others. Each monitor needs specific driving conditions to complete, which is why disconnecting a battery or clearing a code resets these monitors to "not ready" and can take several days of varied driving to complete again. This matters directly for emissions testing, which we cover in Module 4.</p>
+<h3>Solid light versus flashing light, in more depth</h3>
+<p>A solid light means a monitor detected a fault outside its normal range. This is worth addressing soon but is rarely an immediate emergency. A flashing light specifically indicates an active, severe misfire — one bad enough that raw, unburned fuel is reaching the catalytic converter, where it can overheat and cause expensive permanent damage within minutes of sustained driving. A flashing light means reduce your speed and engine load immediately and get the vehicle inspected as soon as safely possible.</p>
+<h3>The sensors that matter most</h3>
+<ul class="mod-list"><li>Oxygen sensors (or wideband air-fuel sensors): measure how much oxygen is in the exhaust, which tells the computer whether the engine is running rich or lean.</li><li>Mass airflow sensor: measures the volume of air entering the engine, the primary input for calculating fuel delivery.</li><li>Coolant temperature sensor: tells the computer whether the engine is cold or warmed up, which changes fuel and timing strategy significantly.</li><li>Crankshaft and camshaft position sensors: tell the computer exactly where the engine is in its rotation, which is required for both fuel injection and ignition timing.</li><li>Catalytic converter efficiency monitor: compares oxygen sensor readings before and after the converter to confirm it's still doing its job.</li></ul>
+<h3>Why this foundation matters</h3>
+<p>Every code you'll ever see traces back to one or more of these systems failing to behave the way the computer expects. Once you understand what each sensor and monitor is actually checking, a code stops being a mystery code and starts being a specific, understandable claim about what the computer observed.</p></div>
+<div class="module" id="module-2"><div class="module-eyebrow">Module 2 of 7</div><h2>Reading Codes Like a Technician</h2><h3>The full anatomy of an OBD2 code</h3>
+<p>A code like P0301 or B1342 breaks into four parts, and reading all four correctly is what separates a useful diagnosis from a guess.</p>
+<div class="table-wrap"><table><thead><tr><th>Position</th><th>What it tells you</th></tr></thead><tbody><tr><td>First letter</td><td>The system: P (powertrain — engine/transmission), B (body), C (chassis), U (network/communication)</td></tr><tr><td>Second character</td><td>0 = generic, standardized across all manufacturers. 1 = manufacturer-specific</td></tr><tr><td>Third character</td><td>The subsystem within that system (see the breakdown below for P-codes)</td></tr><tr><td>Last two digits</td><td>The specific fault within that subsystem</td></tr></tbody></table></div>
+<h3>The P-code subsystem map</h3>
+<div class="table-wrap"><table><thead><tr><th>Third digit</th><th>Subsystem</th></tr></thead><tbody><tr><td>0 or 1</td><td>Fuel and air metering</td></tr><tr><td>2</td><td>Fuel and air metering — injector circuit</td></tr><tr><td>3</td><td>Ignition system and misfires</td></tr><tr><td>4</td><td>Auxiliary emissions controls</td></tr><tr><td>5</td><td>Vehicle speed, idle control, and auxiliary inputs</td></tr><tr><td>6</td><td>Computer and output circuits</td></tr><tr><td>7, 8, 9</td><td>Transmission</td></tr></tbody></table></div>
+<p>Knowing this table means you can look at any P-code you've never seen before and immediately know which system it's pointing at, even before you search it.</p>
+<h3>Stored, pending, and permanent codes</h3>
+<p>A pending code has been detected once but hasn't yet met the threshold to trigger the light — this is useful early information. A stored code has been confirmed and triggered the light. A permanent code cannot be cleared by disconnecting the battery or using a generic scan tool — it only clears once the vehicle confirms, through actual driving, that the fault is genuinely fixed. Permanent codes exist specifically to stop people from clearing a code to pass an emissions test without fixing anything.</p>
+<h3>Freeze frame data: the most underused tool</h3>
+<p>When a code sets, the computer saves a snapshot of conditions at that exact moment: engine speed, vehicle speed, coolant temperature, load, and fuel trim. This is called freeze frame data, and almost every scan tool shows it. It answers the question "under what conditions did this actually happen," which often narrows the cause dramatically — a code that only appears at highway speed under load points somewhere very different than one that appears at idle.</p>
+<h3>Fuel trims: reading the computer's correction</h3>
+<p>Short-term fuel trim and long-term fuel trim show how much the computer is adjusting fuel delivery from its baseline programming to keep the engine running correctly. A trim that sits within roughly plus or minus 10 percent most of the time is normal. A trim that consistently sits well beyond that range means the computer is fighting a real problem — too much unmetered air (lean) or too much fuel or not enough air (rich) — and is one of the most reliable early clues available to you.</p>
+<h3>Manufacturer-specific codes</h3>
+<p>A code with a "1" in the second position is specific to that manufacturer and won't appear in generic code databases the same way. These require either a manufacturer-specific scan tool or a manufacturer-specific code lookup, since the generic OBD2 standard doesn't define what they mean.</p></div>
+<div class="module" id="module-3"><div class="module-eyebrow">Module 3 of 7</div><h2>The Diagnostic Tree — A System-by-System Method</h2><h3>Why a tree instead of a list</h3>
+<p>Random guessing wastes money by replacing parts that were never the problem. A diagnostic tree gives you an order of operations: check the cheapest and most likely causes first, and only move to expensive, less likely causes once you've ruled out what's ahead of them.</p>
+<h3>Fuel and air metering codes (P0100 to P0299)</h3>
+<p>1. Check for obvious vacuum leaks: cracked hoses, a loose intake boot, a disconnected line. 2. Inspect and clean the mass airflow sensor with the correct sensor-safe cleaner. 3. Check air filter condition. 4. Check for exhaust leaks upstream of the oxygen sensors, which can throw off readings. 5. Only then consider the sensor itself as a replacement candidate.</p>
+<h3>Ignition and misfire codes (P0300 to P0399)</h3>
+<p>1. Note the freeze frame conditions — idle, load, or speed-related. 2. Inspect spark plugs for wear, fouling, or the wrong gap. 3. Perform a coil swap test: move the coil from the misfiring cylinder to another cylinder and see if the code follows it. If it does, the coil is confirmed. If it doesn't, the problem is downstream of the coil. 4. Check for a fuel injector or compression issue on that specific cylinder if the coil swap doesn't resolve it.</p>
+<h3>Emissions control codes (P0400 to P0499)</h3>
+<p>1. Start with the gas cap — genuinely the most common cause of evaporative system codes. 2. Inspect visible hoses and connections in the evaporative system for cracks or disconnection. 3. Check the purge and vent valves for proper operation. 4. For catalytic converter efficiency codes, check for upstream causes first — misfires and exhaust leaks damage converters and cause these codes far more often than a converter failing on its own.</p>
+<h3>Idle and auxiliary input codes (P0500 to P0599)</h3>
+<p>1. Check the idle air control valve or electronic throttle body for carbon buildup. 2. Inspect the throttle position sensor's connector and wiring. 3. Check for vacuum leaks affecting idle specifically.</p>
+<h3>Computer and output circuit codes (P0600 to P0699)</h3>
+<p>These often point to wiring, connectors, grounds, or occasionally the computer itself. This is the category most worth handing to a professional with proper wiring diagrams, since chasing a computer or network fault without the right tools tends to burn more time than it saves.</p>
+<h3>Transmission codes (P0700 to P0899)</h3>
+<p>1. Check transmission fluid level and condition first — low or degraded fluid causes a large share of these codes. 2. Note whether the symptom is a hard shift, slipping, or no engagement, and match that description to the specific code. 3. Beyond fluid, transmission diagnostics generally require a professional with the right scan tool access to transmission-specific data.</p>
+<h3>The rule that ties this whole module together</h3>
+<p>At every step: cheap and likely before expensive and unlikely. A five-dollar hose or a tightened gas cap fixes a surprising share of check engine lights. Confirm the simple explanation is ruled out before you spend real money on the complex one.</p></div>
+<div class="module" id="module-4"><div class="module-eyebrow">Module 4 of 7</div><h2>Common Codes, Deep Dive</h2><h3>This module goes deeper than a quick-reference table</h3>
+<p>Each code below includes what it means, the diagnostic path, and a real-world note on what tends to actually cause it in practice.</p>
+<h3>P0171 / P0174 — System too lean</h3>
+<p>What it means: the computer is adding more fuel than expected to compensate for extra unmetered air. Diagnostic path: check for vacuum leaks first (cracked intake boots are extremely common), then the mass airflow sensor, then fuel pressure. Real-world note: on many vehicles, this is caused by a small, hard-to-spot crack in a rubber intake hose that's easy to miss on a casual glance but obvious once you flex the hose by hand while the engine runs.</p>
+<h3>P0172 / P0175 — System too rich</h3>
+<p>What it means: the opposite problem — too much fuel or not enough air relative to what the computer expects. Diagnostic path: check for a clogged air filter, a leaking fuel injector, or a faulty coolant temperature sensor telling the computer the engine is colder than it actually is. Real-world note: a coolant temperature sensor reading permanently cold is a commonly missed cause, because the engine runs and feels normal aside from the fuel trim numbers.</p>
+<h3>P0300 to P0308 — Misfires</h3>
+<p>What it means: one or more cylinders aren't combusting properly. Diagnostic path: covered in full in Module 3's ignition section. Real-world note: a random misfire code (P0300) with no specific cylinder often points to something affecting all cylinders equally, like fuel quality or a vacuum leak, rather than one bad coil or plug.</p>
+<h3>P0420 / P0430 — Catalyst efficiency below threshold</h3>
+<p>What it means: the catalytic converter isn't reducing emissions as effectively as the computer expects. Diagnostic path: rule out exhaust leaks and misfires first, since both damage converter efficiency readings without the converter itself being at fault. Real-world note: this is one of the most commonly misdiagnosed codes in the entire system — converters get replaced far more often than they actually need to be, when the real cause was an upstream misfire or a leak the whole time.</p>
+<h3>P0442 / P0455 / P0456 — Evaporative system leak (large versus small)</h3>
+<p>What it means: the evaporative emissions system, which captures fuel vapor instead of releasing it into the air, has a leak. The specific code indicates how large the detected leak is. Diagnostic path: gas cap first, then a visual inspection of accessible hoses, then a smoke test for hard-to-find leaks. Real-world note: P0455 (large leak) is very often the gas cap. P0442 (small leak) usually requires a smoke machine to actually find, since the leak is often too small to see or hear.</p>
+<h3>P0128 — Coolant temperature below thermostat regulating</h3>
+<p>temperature What it means: the engine is taking too long to reach normal operating temperature. Diagnostic path: this points to a thermostat stuck open. Real-world note: a stuck-open thermostat is a cheap, straightforward part replacement and is rarely anything more complicated than it sounds.</p>
+<h3>P0300-series versus P0171/P0174: telling them apart when symptoms</h3>
+<p>overlap Both can cause rough idle and reduced power, which confuses people. The distinguishing test is the freeze frame and fuel trim data: a lean code shows sustained high positive fuel trim; a misfire code shows specific cylinder or random misfire counters, which most scanners display directly.</p></div>
+<div class="module" id="module-5"><div class="module-eyebrow">Module 5 of 7</div><h2>Tools of the Trade</h2><h3>You don't need a shop's toolbox to diagnose most codes</h3>
+<p>This module breaks down tools by tier, so you can invest based on how deep you actually want to go, rather than overspending on your first purchase.</p>
+<h3>Tier 1: Basic code reader</h3>
+<p>A simple plug-in reader or Bluetooth adapter paired with a phone app. This reads and clears generic codes and shows basic freeze frame data. This is enough for the vast majority of the diagnostic tree in Module 3, and it's the right starting point for nearly everyone taking this course.</p>
+<h3>Tier 2: Mid-range scanner with live data</h3>
+<p>A step up that shows live sensor data streams — fuel trims, oxygen sensor voltage, live RPM and load — rather than just stored codes. This tier is worth it once you're comfortable with Tier 1 and want to chase intermittent problems or confirm a repair actually fixed the underlying condition, not just cleared the code.</p>
+<h3>Tier 3: Professional-level scan tool</h3>
+<p>Bidirectional control (the ability to command a component to activate, not just read its data), manufacturer-specific code access, and deeper system coverage. This tier makes sense if you're working on multiple vehicles regularly or diagnosing for other people, but it's genuine overkill for occasional personal use.</p>
+<h3>The multimeter</h3>
+<p>A basic digital multimeter, used to check voltage, resistance, and continuity, is one of the highest-value tools in this entire course relative to its cost. Testing whether a sensor is actually getting power and ground, or whether a wire has continuity end to end, resolves a huge share of electrical gremlins that a scan tool alone can't pin down.</p>
+<h3>The smoke machine</h3>
+<p>For evaporative system leaks (P0442, P0455, P0456) and vacuum leaks that aren't visible, a smoke machine injects visible smoke into the system under light pressure and shows you exactly where it escapes. This is a specialty tool worth borrowing or renting rather than owning, unless you're chasing these leaks often.</p>
+<h3>What you genuinely don't need for DIY diagnosis</h3>
+<p>A full professional-grade oscilloscope, dealer-level factory scan tools, and specialty pattern-failure databases are built for high-volume professional shops. They're not necessary for anything in this course, and most DIYers never need them.</p>
+<h3>A simple buying rule</h3>
+<p>Start with Tier 1. If you find yourself wanting to see live data to chase an intermittent problem, move to Tier 2. Add a multimeter early regardless — it's inexpensive and useful for far more than just check-engine-light work.</p></div>
+<div class="module" id="module-6"><div class="module-eyebrow">Module 6 of 7</div><h2>When to DIY and When to Call a Pro</h2><h3>The honest cost-benefit</h3>
+<p>DIY diagnosis saves the most money on common, well-documented codes with a clear diagnostic path — misfires, evaporative leaks, common sensor faults. It saves the least, and can cost the most in wasted time, on codes pointing to computer or network faults, intermittent electrical gremlins, or anything requiring specialized bidirectional testing.</p>
+<h3>Green light: DIY is usually the right call</h3>
+<ul class="mod-list"><li>A gas cap or evaporative system code</li><li>A specific-cylinder misfire you can coil-swap test yourself</li><li>A code with a well-documented, common cause for your exact vehicle (a quick search on your specific year, make, and model usually reveals this pattern quickly)</li><li>A code that isn't affecting how the car drives day to day</li></ul>
+<h3>Yellow light: proceed carefully, know your limit</h3>
+<ul class="mod-list"><li>A code you've chased through two rounds of the diagnostic tree without resolution</li><li>A code involving a system you're not confident testing safely (fuel system pressure, for example)</li><li>A repair that requires specialized tools you don't have and don't want to buy for one job</li></ul>
+<h3>Red light: stop and get professional help</h3>
+<ul class="mod-list"><li>A flashing check engine light</li><li>Any code alongside an oil pressure or temperature warning</li><li>A computer or network communication code (P06xx or U0xxx range) — these usually require professional-level tools and wiring diagrams</li><li>A transmission code beyond a simple fluid check</li><li>Any diagnosis you've attempted twice without success — the cost of a third wrong guess usually exceeds a professional diagnostic fee at that point</li></ul>
+<h3>How to hand off what you've already learned</h3>
+<p>If you do bring it to a shop after DIY work, bring your findings: the exact code, what you've already checked, and what you've already ruled out. This isn't just efficient — Module 3 of the Estimate Mastery course covers exactly how this documentation protects you from paying for diagnostic time re-doing work you've already done, and often gets you a faster, more respectful conversation with a technician who can see you've done real homework.</p>
+<h3>The bottom line</h3>
+<p>This course exists to make you a better-informed owner, not to replace a professional shop in every situation. Knowing where that line sits — and being honest with yourself about it — is what actually saves you money over the long run, instead of costing you more through a stalled DIY project.</p></div>
+<div class="module" id="module-7"><div class="module-eyebrow">Module 7 of 7 — Capstone</div><h2>A Full Diagnose-Along Case Study</h2><h3>The scenario</h3>
+<p>A 2015 sedan, roughly 95,000 miles, throws a check engine light. The owner notices a slight rough idle but no major performance loss. Let's walk the full process.</p>
+<h3>Step 1: Read the code (Module 2)</h3>
+<p>The scanner returns P0303. Breaking down the code structure: P (powertrain), 0 (generic), 3 (ignition system and misfires), 03 (cylinder 3 specifically). This is a confirmed, specific-cylinder misfire.</p>
+<h3>Step 2: Pull freeze frame data (Module 2)</h3>
+<p>Freeze frame shows the fault occurred at idle, engine warm, low load. This is a useful clue — an idle-only misfire that clears under load often points toward ignition components rather than a fuel delivery problem, which tends to show up more consistently across conditions.</p>
+<h3>Step 3: Follow the diagnostic tree (Module 3)</h3>
+<p>Per the ignition and misfire branch: inspect the spark plug for cylinder 3 first. Suppose it looks worn but not obviously fouled. Next, perform the coil swap test — move the coil from cylinder 3 to cylinder 1 and clear the code.</p>
+<h3>Step 4: Interpret the result</h3>
+<p>Drive the vehicle and watch for the code to return. Two outcomes:</p>
+<ul class="mod-list"><li>If P0303 returns: the problem stayed with cylinder 3 despite the coil moving, which points away from the coil and toward the plug, the injector, or a compression issue on that cylinder specifically.</li><li>If P0301 appears instead: the misfire followed the coil to its new position, confirming the coil itself was the failing part.</li></ul>
+<p>In this scenario, P0301 appears — confirming the coil.</p>
+<h3>Step 5: Repair and verify</h3>
+<p>Replace the coil (and, since the plug looked worn anyway, the plug at the same time — a reasonable bundled decision given they're already accessible). Clear the code and drive through a normal range of conditions to confirm the misfire doesn't return.</p>
+<h3>Step 6: Know what NOT to do next</h3>
+<p>Do not immediately clear the code and call it done without a confirming drive. And critically, per Module 4's readiness monitor note from Course 2's foundation: if this vehicle has an emissions test coming up soon, this drive cycle matters for more than just confirming your repair — it's also what allows the readiness monitors to reset to "ready" in time for testing.</p>
+<h3>Course complete</h3>
+<p>You've now walked the exact process a good technician uses: read the code correctly, use freeze frame data to narrow the possibilities, follow a systematic tree instead of guessing, use a swap test to confirm rather than assume, and verify the fix with a real drive. This process transfers to nearly any code in the P03xx, P01xx, and P04xx ranges covered in Module 4.</p>
+<h3>About the author</h3>
+<p>Ryan Morris is a working mobile mechanic and the owner of REMbyDesign LLC in Spokane Valley, WA. General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p></div>
+
+  <div class="author-box">
+    <h4>About the Course</h4>
+    <p>Ryan Morris is the founder of Get Screwed Score and the owner of REMbyDesign LLC in Spokane Valley, WA. This course is general information, not legal advice.</p>
+    <p class="disclaimer">General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p>
+  </div>
+
+  <div class="cta">
+    <p>Own the rest of the ScrewedScore Academy — every course, one price.</p>
+    <a href="https://www.screwedscore.com/academy">Browse the Academy →</a>
+  </div>
+
+  <div class="cta" style="margin-top:16px; background:transparent; border:1px solid var(--gold-border);">
+    <p>Have a question about this course, or want to share a win? The Academy Community is free and open to everyone.</p>
+    <a href="https://www.screwedscore.com/academy/community?course=academy-check-engine" style="background:transparent; border:1px solid var(--gold-border); color:var(--gold);">Discuss This Course →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

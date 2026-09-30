@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fight Back: Complete Dispute &amp; Consumer Protection Course — ScrewedScore Academy</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #050505; --surface: #0f0f0f; --surface2: #141414; --gold: #ffd60a; --gold-dim: rgba(255,214,10,0.08);
+    --gold-border: rgba(255,214,10,0.25); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 100px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--gold); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 34px; font-weight: 900; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--sub); font-size: 16px; max-width: 620px; margin-bottom: 10px; }
+  .desc { color: var(--sub); font-size: 14px; max-width: 620px; margin-bottom: 32px; line-height: 1.7; }
+  .price-row { display:flex; align-items:center; gap: 14px; margin-bottom: 36px; }
+  .price-tag { font-size: 22px; font-weight: 900; color: var(--gold); }
+  .section { margin-bottom: 44px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--sub); line-height: 1.6; }
+  .check-mark { flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px; background: var(--gold-dim); border: 1px solid var(--gold-border); color: var(--gold); font-weight: 900; font-size: 12px; display:flex; align-items:center; justify-content:center; margin-top: 1px; }
+  .toc { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .toc li a { display:flex; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; transition: border-color .2s; }
+  .toc li a:hover { border-color: var(--gold-border); }
+  .toc li a span.num { color: var(--gold); font-weight: 800; margin-right: 10px; }
+  .module { border-top: 1px solid var(--border); padding-top: 36px; margin-top: 36px; scroll-margin-top: 20px; }
+  .module-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .module h2 { font-size: 24px; font-weight: 900; margin-bottom: 22px; letter-spacing: -0.01em; }
+  .module h3 { font-size: 15px; font-weight: 800; margin: 22px 0 8px; color: var(--text); }
+  .module p { font-size: 14.5px; color: var(--sub); margin-bottom: 14px; line-height: 1.75; }
+  .mod-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 8px 0 16px; }
+  .mod-list li { position: relative; padding-left: 20px; font-size: 14.5px; color: var(--sub); line-height: 1.65; }
+  .mod-list li::before { content: '\2022'; position: absolute; left: 4px; color: var(--gold); font-weight: 900; }
+  .template-box { background: var(--gold-dim); border: 1px solid var(--gold-border); border-left: 3px solid var(--gold); border-radius: 8px; padding: 16px 18px; margin: 10px 0 18px; }
+  .template-box p { margin-bottom: 0; font-size: 13.5px; color: rgba(242,242,242,0.75); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.8; }
+  .table-wrap { overflow-x: auto; margin: 14px 0 20px; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; background: var(--surface2); color: var(--gold); font-weight: 800; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); color: var(--sub); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .author-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-top: 56px; }
+  .author-box h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 10px; }
+  .author-box p { font-size: 13px; color: var(--sub); line-height: 1.7; }
+  .disclaimer { font-size: 11.5px; color: rgba(242,242,242,0.35); line-height: 1.7; margin-top: 16px; }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 40px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,214,10,0.25); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; max-width: 100%; }
+    .brand-logo span { color: #b8860b; }
+    .section-label, .module-eyebrow, .price-tag { color: #b8860b; }
+    .checklist li, .toc li a, .author-box, .table-wrap { border: 1px solid #ddd; background: #fafafa; }
+    th { background: #f0f0f0; color: #b8860b; }
+    td { color: #444; border-top-color: #ddd; }
+    .check-mark { background: #fdf3d6; color: #b8860b; border-color: #b8860b; }
+    .module p, .desc, .subtitle, .author-box p { color: #444; }
+    .mod-list li::before { color: #b8860b; }
+    .cta, .print-btn { display: none; }
+    .module { page-break-inside: avoid; }
+    .template-box { background: #fdf7e3; border-color: #e0c34a; }
+    .template-box p { color: #333; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Academy — Full Course</div>
+  </div>
+
+  <h1>Fight Back: Complete Dispute &amp; Consumer Protection Course</h1>
+  <p class="subtitle">A full system for disputing bad bills, bad charges, and bad service — with the letters and scripts already written</p>
+  <p class="desc">Seven modules covering the paper trail, credit card and bank disputes, medical billing, auto repair and contractor disputes, online marketplace claims, and small claims court.</p>
+  <div class="price-row"><span class="price-tag">$39</span><span style="color:var(--sub);font-size:13px;">— purchased and unlocked. Yours to keep.</span></div>
+
+  <div class="section">
+    <div class="section-label">What You'll Learn</div>
+    <ul class="checklist">
+      <li><div class="check-mark">&#10003;</div><div>Build a paper trail strong enough to win almost any consumer dispute</div></li>
+<li><div class="check-mark">&#10003;</div><div>Understand exactly how credit card and bank disputes work, including the deadlines that matter</div></li>
+<li><div class="check-mark">&#10003;</div><div>Navigate medical billing disputes with the specific documents to request</div></li>
+<li><div class="check-mark">&#10003;</div><div>Dispute auto repair and contractor charges using a documented, non-emotional process</div></li>
+<li><div class="check-mark">&#10003;</div><div>Handle online marketplace disputes on platforms with their own internal claims systems</div></li>
+<li><div class="check-mark">&#10003;</div><div>Know when to escalate to a regulator or small claims court, and how to do it</div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Course Map</div>
+    <ul class="toc">
+      <li><a href="#module-1"><span><span class="num">01</span>The Mindset and the Paper Trail</span><span>&rarr;</span></a></li>
+<li><a href="#module-2"><span><span class="num">02</span>Credit Card and Bank Disputes, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-3"><span><span class="num">03</span>Medical Billing Disputes, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-4"><span><span class="num">04</span>Auto Repair and Contractor Disputes, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-5"><span><span class="num">05</span>Online Purchase and Marketplace Disputes</span><span>&rarr;</span></a></li>
+<li><a href="#module-6"><span><span class="num">06</span>Regulators, Agencies, and Small Claims Court</span><span>&rarr;</span></a></li>
+<li><a href="#module-7"><span><span class="num">07</span>Your Complete Letter and Script Library</span><span>&rarr;</span></a></li>
+    </ul>
+  </div>
+
+  <div class="module" id="module-1"><div class="module-eyebrow">Module 1 of 7</div><h2>The Mindset and the Paper Trail</h2><h3>Not legal advice</h3>
+<p>This course is general information for educational purposes, not legal advice. Laws differ by state, by industry, and by the specific facts of your situation. For a serious or high-dollar dispute, consult a licensed attorney or your state's consumer protection agency.</p>
+<h3>The mindset that wins disputes</h3>
+<p>The single biggest factor in whether a dispute gets resolved in your favor isn't how upset you are — it's how well-documented your case is. Companies and their dispute departments process disputes against a set of rules and evidence standards. Anger doesn't move those levers. Documentation does. This course trains you to build that documentation as a habit, every time, before you're upset.</p>
+<h3>The four categories of evidence that matter</h3>
+<p>1. The original agreement — the estimate, invoice, contract, order confirmation, or listing that describes what you were supposed to receive and at what price. 2. Proof of the discrepancy — the actual bill, charge, or delivered item, showing how it differs from what was agreed. 3. Communication records — every call, email, and message, with dates, names, and what was said. 4. Supporting documentation — photos, screenshots, receipts, and any third-party confirmation (like a second opinion or an independent price comparison).</p>
+<h3>Building the habit before you need it</h3>
+<p>Start a single folder — digital or physical — for every significant purchase or service. Drop in the estimate or order confirmation the moment you get it. This single habit means that if a dispute ever happens, you're not scrambling to reconstruct a timeline from memory weeks later; you already have it.</p>
+<h3>Taking notes during every call</h3>
+<p>For every call related to a dispute, capture: the date and time, the name of the person you spoke with (ask directly if they don't offer it), a summary of what was said, and any reference or case number provided. A simple note like "Called 9/14, spoke with Maria, case #4471, she confirmed the charge would be reversed within 5 business days" is worth more than any amount of remembered frustration later.</p>
+<h3>The tone that actually works</h3>
+<p>Every letter and script in this course is written calm, factual, and specific — never angry. This isn't about being a pushover. It's strategic: a company's dispute reviewer is far more likely to side with a customer who states facts clearly than one who vents, because the factual version is easier to act on and doesn't trigger a defensive response.</p>
+<h3>What this module sets up</h3>
+<p>Every module after this one assumes you're already doing this. The specific deadlines, letters, and escalation paths in Modules 2 through 6 only work as well as the paper trail underneath them.</p></div>
+<div class="module" id="module-2"><div class="module-eyebrow">Module 2 of 7</div><h2>Credit Card and Bank Disputes, Deep Dive</h2><h3>The Fair Credit Billing Act, in plain language</h3>
+<p>Federal law gives you a specific, time-limited right to dispute a billing error on a credit card. Under the Fair Credit Billing Act, you generally must send a written dispute to your card issuer within 60 days of the date the first statement containing the error was sent to you. This deadline is real and matters — miss it, and your legal protections weaken significantly, even if your underlying complaint is completely valid.</p>
+<h3>What counts as a billing error under the Act</h3>
+<ul class="mod-list"><li>A charge for something you didn't authorize</li><li>A charge for the wrong amount</li><li>A charge for goods or services not delivered as agreed</li><li>A math or accounting error on your statement</li><li>A charge for something you already returned or canceled</li></ul>
+<h3>The process, step by step</h3>
+<p>1. Write your dispute, stating the account number, the specific charge, the date, the amount, and the specific reason it's an error. 2. Send it in a way that gives you proof of delivery. A phone call alone does not satisfy the written requirement, though calling first to flag the issue is a reasonable first step. 3. The issuer must acknowledge your dispute in writing within 30 days of receiving it. 4. The issuer must resolve the dispute within two complete billing cycles, and no more than 90 days, from when they received your letter. 5. You don't have to pay the disputed amount while it's under investigation, though you do still need to pay any undisputed portion of your bill.</p>
+<h3>Debit cards work differently</h3>
+<p>Debit card disputes fall under a different federal framework (Regulation E) with different timelines and different levels of protection, generally tied to how quickly you report an unauthorized charge after it appears. Report any suspicious debit card activity immediately — the protections here are more time-sensitive than credit cards, not less.</p>
+<h3>The merchant dispute versus the bank dispute</h3>
+<p>Before filing a formal bank dispute, most issuers expect (and it's usually faster) for you to attempt resolution with the merchant directly first. Document that attempt — the date, who you spoke with, and what they said — because your bank will often ask for this as part of your dispute.</p>
+<h3>Letter template: credit card billing dispute</h3>
+<div class="template-box"><p>[Your name], [Address], [Date]. To: [Card issuer, Billing Dispute Department]. Re: Billing error, account ending [last 4 digits], charge of $[amount] dated [date], merchant [name]. I am disputing this charge under the Fair Credit Billing Act. [State the specific reason: charge was unauthorized / amount was incorrect / goods or services were not delivered as described / other specific reason]. I first attempted to resolve this directly with the merchant on [date], and [briefly describe the outcome]. I am requesting the charge be reversed. Enclosed are copies of [list your supporting documents]. Please confirm receipt of this dispute in writing. Sincerely, [Name]</p></div>
+<h3>What happens if you lose the dispute</h3>
+<p>If the issuer rules against you, you typically have the right to request the specific documentation they relied on. You can also escalate to the Consumer Financial Protection Bureau, covered in Module 6, if you believe the issuer didn't follow the required process correctly.</p></div>
+<div class="module" id="module-3"><div class="module-eyebrow">Module 3 of 7</div><h2>Medical Billing Disputes, Deep Dive</h2><h3>Why medical bills are uniquely disputable</h3>
+<p>Medical billing involves more moving parts than almost any other kind of bill: procedure codes, insurance adjudication, provider network status, and sometimes multiple billing entities for a single visit. This complexity means errors are common — and it also means there are more specific documents you can request to find them.</p>
+<h3>The two documents you need side by side</h3>
+<p>1. The itemized bill from the provider, showing every procedure code (CPT codes) and charge, not just a lump total. 2. The Explanation of Benefits (EOB) from your insurer, showing what was billed, what insurance covered, and what you're responsible for.</p>
+<p>Request the itemized bill specifically if you weren't given one automatically — you're generally entitled to it, and a lump-sum bill with no codes is the medical billing equivalent of the vague estimate lines covered in this program's estimate course.</p>
+<h3>What to look for once you have both documents</h3>
+<ul class="mod-list"><li>Duplicate charges — the same procedure billed more than once for a single visit.</li><li>Charges for services you didn't receive — this happens more often than people expect, especially after a hospital stay involving multiple departments.</li><li>Upcoding — being billed for a more complex or expensive procedure code than what was actually performed.</li><li>Out-of-network surprise charges on services you reasonably believed were in-network, particularly relevant given No Surprises Act protections described below.</li></ul>
+<h3>The No Surprises Act</h3>
+<p>Federal law generally protects patients from certain surprise out-of-network bills, particularly for emergency care and for out-of-network providers working at an in-network facility. If you receive a bill that seems to conflict with these protections, this is worth raising directly with the provider's billing department and, if unresolved, with your state insurance regulator.</p>
+<h3>Financial assistance and charity care</h3>
+<p>Many hospitals, especially nonprofit ones, are required to offer financial assistance programs, sometimes called charity care. This isn't just for people with no insurance — many programs apply on a sliding scale to underinsured patients as well. Ask the billing department directly whether you qualify, even if you assume you won't.</p>
+<h3>The dispute process, step by step</h3>
+<p>1. Request the itemized bill and your EOB. 2. Compare them line by line against what you remember receiving. 3. Call the provider's billing department with specific line items in question, take notes per Module 1. 4. If unresolved, submit a written dispute describing the specific discrepancy. 5. If still unresolved, contact your state's insurance regulator or the CFPB if it involves medical debt collection.</p>
+<h3>Letter template: medical billing dispute</h3>
+<div class="template-box"><p>[Your name], [Date]. To: [Provider, Billing Department]. Re: Account [number], date of service [date]. I am requesting a review of this bill. Specifically, [describe the discrepancy — e.g., "I was billed for two units of procedure code X but only received one" or "this itemized charge does not match what my Explanation of Benefits shows as my responsibility"]. Please provide a corrected bill or a detailed explanation of this charge within [14 or 30] days. Sincerely, [Name]</p></div>
+<h3>Medical debt and your credit report</h3>
+<p>Recent changes have reduced how medical debt affects credit reporting in many cases, and small medical debts in particular are increasingly excluded from credit reports. If a disputed medical bill shows up on your credit report, this is worth researching current rules specifically, since this area has changed significantly in recent years.</p></div>
+<div class="module" id="module-4"><div class="module-eyebrow">Module 4 of 7</div><h2>Auto Repair and Contractor Disputes, Deep Dive</h2><h3>Where this connects to the rest of this program</h3>
+<p>If you've taken this program's Estimate Mastery course, this module is the "what to do when it still goes wrong despite doing everything right" companion to that course. The estimate course prevents most disputes. This module handles the ones that happen anyway.</p>
+<h3>The core comparison: estimate versus final bill</h3>
+<p>Your first move in any repair or contractor dispute is always the same: put the original written estimate side by side with the final bill and mark every difference. Any charge on the final bill that wasn't on the approved estimate is the starting point of your dispute, full stop.</p>
+<h3>The authorization question</h3>
+<p>The central question in almost every repair or contractor dispute is: did you authorize this specific additional charge before it happened? Most states require some form of authorization — verbal at minimum, often expected to be documented — before a shop or contractor can bill beyond the original approved estimate. If you have a hard limit script on record (from this program's estimate course, Module 5) and the final bill exceeds it without your approval, you have a strong, specific claim.</p>
+<h3>Auto repair specifically</h3>
+<ul class="mod-list"><li>Compare final labor hours billed against the estimate's labor hours.</li><li>Check whether any "additional work found" was actually communicated and approved before it was performed.</li><li>Request your old, failed parts back if you haven't already, per your state's rules — this is direct physical evidence of what was actually done.</li><li>If the repair didn't fix the original problem, this is a different and often stronger claim: you paid for a specific outcome you didn't receive.</li></ul>
+<h3>Contractor work specifically</h3>
+<ul class="mod-list"><li>Compare the final invoice against the signed contract or written estimate.</li><li>Check for a required written change order for any added scope — many states require this in writing for the added cost to be enforceable.</li><li>Document the work with photos, especially anything that seems incomplete, done incorrectly, or different from what was specified.</li><li>Check whether the contractor is properly licensed and bonded in your state — this affects both your leverage and your options if the dispute escalates.</li></ul>
+<h3>The written dispute script for repair or contractor work</h3>
+<div class="template-box"><p>Script. "My original estimate was $[X], and the final invoice is $[Y]. I did not authorize the difference. Can you explain specifically what was added and when I approved it? If I didn't, I'm requesting the bill be adjusted to reflect only the work I authorized."</p></div>
+<h3>Where to escalate</h3>
+<ul class="mod-list"><li>Your state's consumer protection division, often specifically covering auto repair under a dedicated statute (see this program's estimate course, Module 6, for how to find yours).</li><li>Your state's contractor licensing board, for licensed contractor disputes specifically — this often carries real leverage, since contractors have a genuine interest in protecting their license.</li><li>The Better Business Bureau, as a public-record complaint.</li><li>Small claims court, covered fully in Module 6, for amounts within your local limit.</li></ul>
+<h3>A note on holding your vehicle or property</h3>
+<p>Some shops and contractors attempt to hold a vehicle or refuse to release finished work over a disputed charge. The legal rules around this — often called a lien — generally protect a business's right to payment for authorized work, but are considerably narrower for charges you never approved. This is a good moment to involve your state consumer protection office directly rather than resolving it purely through direct confrontation.</p></div>
+<div class="module" id="module-5"><div class="module-eyebrow">Module 5 of 7</div><h2>Online Purchase and Marketplace Disputes</h2><h3>Why this is its own category</h3>
+<p>Online marketplace disputes — a package that never arrived, an item that wasn't as described, a seller who won't respond — work differently from a credit card dispute or a medical bill, because you're usually dealing with two overlapping systems at once: the platform's own internal claims process, and your payment method's dispute process sitting behind it.</p>
+<h3>The general order of operations</h3>
+<p>1. Contact the seller directly first, through the platform's messaging system, not outside it. Keeping communication on-platform matters — it becomes part of your case record automatically. 2. File the platform's internal claim if the seller doesn't resolve it. Every major marketplace has one — a "case," a "claim," or a formal dispute process. 3. Escalate within the platform if your first claim is denied. Many platforms have a secondary review or appeal step that a large share of people don't realize exists. 4. File a payment dispute (credit card chargeback, per Module 2) if the platform's own process denies you and you believe the denial was wrong.</p>
+<h3>What to document for a "not as described" claim</h3>
+<ul class="mod-list"><li>The original listing, saved as a screenshot with the date visible, since listings can be edited after the fact.</li><li>Photos of exactly what you received, ideally including the shipping label and packaging.</li><li>Any specific claim in the listing that didn't match what arrived — quote the listing's exact language in your claim.</li></ul>
+<h3>What to document for a "not received" claim</h3>
+<ul class="mod-list"><li>The tracking number and its full status history, screenshotted rather than just described.</li><li>Any delivery photo the carrier provided, checked carefully against your actual address.</li><li>Your communication with the seller, showing you raised the issue promptly rather than waiting.</li></ul>
+<h3>A pattern worth knowing: the contradictory-story problem</h3>
+<p>Sometimes a platform's own support representatives give you conflicting explanations across different contacts — one agent says a claim is under review, another says it's already been denied, with no clear record of why it changed. When this happens, your move is to explicitly request a written summary of the decision and the specific policy it was based on. A platform that can't produce a consistent, written rationale for its own decision is a platform whose decision is worth appealing or escalating.</p>
+<h3>Escalating beyond the platform</h3>
+<p>If a platform's internal process denies a claim you believe is legitimate and well-documented, your options include: a chargeback through your card issuer (Module 2), a complaint to the Federal Trade Commission for the pattern of behavior even if it doesn't resolve your individual case, and in some situations, small claims court against the seller directly, covered in Module 6.</p>
+<h3>The single habit that helps most in this category</h3>
+<p>Screenshot everything, immediately, with visible timestamps — the listing, the tracking page, every message. Marketplace disputes are won or lost heavily on documentation the platform can verify independently, and pages that can be edited or removed later are worth nothing if you didn't capture them when they mattered.</p></div>
+<div class="module" id="module-6"><div class="module-eyebrow">Module 6 of 7</div><h2>Regulators, Agencies, and Small Claims Court</h2><h3>Matching your dispute to the right destination</h3>
+<p>Not every dispute goes to the same place. This module is a routing guide — matching your specific situation to the regulator or venue most likely to actually move it forward.</p>
+<h3>The Consumer Financial Protection Bureau (CFPB)</h3>
+<p>Handles complaints involving banks, credit cards, debt collection, medical debt reporting, and many other financial products. Filing is free and done through a straightforward online form. Companies are generally required to respond to CFPB complaints within a set timeframe, which is often faster and more effective than continuing to call a general customer service line.</p>
+<h3>Your state attorney general's consumer protection division</h3>
+<p>The broadest general-purpose destination for consumer complaints of nearly any kind — repair shops, contractors, retailers, and more. Filing is free. This office can't act as your personal lawyer, but a pattern of complaints against a business carries real weight, and individual complaints sometimes trigger direct mediation.</p>
+<h3>Industry-specific regulators</h3>
+<ul class="mod-list"><li>State insurance department — for insurance claim and medical billing disputes tied to coverage decisions.</li><li>State contractor licensing board — for licensed contractor disputes.</li><li>State department of licensing or motor vehicles — for auto repair shop disputes in states with a dedicated regulatory framework.</li><li>Federal Trade Commission — for broader marketplace and business practice complaints, especially useful for reporting a pattern even when it won't resolve your individual case directly.</li></ul>
+<h3>The Better Business Bureau</h3>
+<p>Not a government agency, but a public-record complaint platform that many businesses genuinely care about, since it affects their public rating. Worth using alongside, not instead of, an official regulator complaint.</p>
+<h3>Small claims court, explained</h3>
+<p>Small claims court is designed specifically for disputes within a set dollar limit (which varies by state, often somewhere in the few-thousand-dollar range) and specifically designed to be navigable without a lawyer.</p>
+<p>When it makes sense: you have a clear, documented dispute, the amount is within your state's limit, and other channels haven't resolved it.</p>
+<p>The general process:</p>
+<p>1. Send a final written demand letter first, stating the amount and a deadline, and explicitly noting you'll file in small claims court if unresolved — this step is sometimes legally required and often resolves the matter on its own. 2. File your claim with your local small claims court, paying a modest filing fee. 3. The other party is served notice and given a chance to respond. 4. You present your documentation — your paper trail from Module 1 is exactly what wins here — at a relatively informal hearing. 5. A judgment is issued, and if you win, you may need a separate step to actually collect if the other party doesn't pay voluntarily.</p>
+<h3>Your assignment for this module</h3>
+<p>Take your current or most recent unresolved dispute and identify, specifically, which one destination from this module fits it best. Most people default to complaining broadly online instead of routing their complaint to the specific place most likely to act on it — this module exists to fix exactly that.</p></div>
+<div class="module" id="module-7"><div class="module-eyebrow">Module 7 of 7 — Capstone</div><h2>Your Complete Letter and Script Library</h2><h3>How to use this module</h3>
+<p>This final module compiles every template from the course into one place, ready to copy, fill in, and send. Pair each one with its full context in the module noted.</p>
+<h3>General billing error letter (Module 1 principles, Module 2 format)</h3>
+<div class="template-box"><p>[Your name], [Address], [Date]. To: [Company, Billing Dispute Department]. Re: Billing error, account [number], amount $[X], dated [date]. I am writing to dispute the charge above. The charge is incorrect because [state the specific reason]. I request that you [remove the charge / issue a refund of $X] within [14 or 30] days. Enclosed are copies of [list documents]. Please confirm in writing. Sincerely, [Name]</p></div>
+<h3>Credit card billing dispute (Module 2)</h3>
+<div class="template-box"><p>[Your name], [Address], [Date]. To: [Card issuer, Billing Dispute Department]. Re: Billing error, account ending [last 4 digits], charge of $[amount] dated [date], merchant [name]. I am disputing this charge under the Fair Credit Billing Act. [State the specific reason]. I first attempted to resolve this directly with the merchant on [date], and [describe the outcome]. I am requesting the charge be reversed. Enclosed are copies of [list documents]. Please confirm receipt in writing. Sincerely, [Name]</p></div>
+<h3>Medical billing dispute (Module 3)</h3>
+<div class="template-box"><p>[Your name], [Date]. To: [Provider, Billing Department]. Re: Account [number], date of service [date]. I am requesting a review of this bill. Specifically, [describe the discrepancy]. Please provide a corrected bill or a detailed explanation of this charge within [14 or 30] days. Sincerely, [Name]</p></div>
+<h3>Repair or contractor overcharge dispute (Module 4)</h3>
+<div class="template-box"><p>Script. "My original estimate was $[X], and the final invoice is $[Y]. I did not authorize the difference. Can you explain specifically what was added and when I approved it? If I didn't, I'm requesting the bill be adjusted to reflect only the work I authorized."</p></div>
+<h3>Marketplace claim escalation (Module 5)</h3>
+<div class="template-box"><p>Script. "I filed claim number [X] on [date] regarding [issue], and it was denied. I'm requesting a written explanation of the specific policy this decision was based on, and I'd like this escalated to a secondary review."</p></div>
+<h3>Small claims pre-filing demand letter (Module 6)</h3>
+<div class="template-box"><p>[Your name], [Address], [Date]. To: [Business name]. Re: Final demand for payment of $[amount]. Despite my previous attempts to resolve this matter on [dates], this issue remains unresolved. I am requesting payment of $[amount] within [14] days of this letter. If this is not resolved by that date, I intend to file a claim in small claims court. Sincerely, [Name]</p></div>
+<h3>The phone call opener that works for almost any dispute</h3>
+<div class="template-box"><p>Script. "I'm calling about [specific issue] on account or order [number]. I have documentation showing [the specific discrepancy]. What's the process to get this corrected?"</p></div>
+<h3>Your dispute intake checklist</h3>
+<p>Use this at the start of any new dispute, before you send anything:</p>
+<ul class="mod-list"><li>Original agreement or estimate saved</li><li>Actual bill or charge saved</li><li>Every call logged with date, name, and summary</li><li>Photos or screenshots captured with visible dates</li><li>Correct destination identified (Module 6)</li><li>Letter drafted using the matching template above</li></ul>
+<h3>Course complete</h3>
+<p>You now have the complete system: the mindset and paper trail that wins disputes, the specific process for cards, medical bills, repairs and contractors, and marketplaces, the regulators who can help when a business won't, and the exact letters to send at every step. Keep this module bookmarked — it's built to be reused every time a new dispute comes up, not read once and set aside.</p>
+<h3>About the author</h3>
+<p>Ryan Morris is the founder of Get Screwed Score and the owner of REMbyDesign LLC in Spokane Valley, WA. This course is general information, not legal advice. General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p></div>
+
+  <div class="author-box">
+    <h4>About the Course</h4>
+    <p>Ryan Morris is the founder of Get Screwed Score and the owner of REMbyDesign LLC in Spokane Valley, WA. This course is general information, not legal advice.</p>
+    <p class="disclaimer">General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p>
+  </div>
+
+  <div class="cta">
+    <p>Own the rest of the ScrewedScore Academy — every course, one price.</p>
+    <a href="https://www.screwedscore.com/academy">Browse the Academy →</a>
+  </div>
+
+  <div class="cta" style="margin-top:16px; background:transparent; border:1px solid var(--gold-border);">
+    <p>Have a question about this course, or want to share a win? The Academy Community is free and open to everyone.</p>
+    <a href="https://www.screwedscore.com/academy/community?course=academy-fight-back" style="background:transparent; border:1px solid var(--gold-border); color:var(--gold);">Discuss This Course →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

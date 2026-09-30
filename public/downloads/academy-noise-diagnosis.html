@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Noise Diagnosis: Complete Course — ScrewedScore Academy</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #050505; --surface: #0f0f0f; --surface2: #141414; --gold: #ffd60a; --gold-dim: rgba(255,214,10,0.08);
+    --gold-border: rgba(255,214,10,0.25); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 100px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--gold); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 34px; font-weight: 900; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--sub); font-size: 16px; max-width: 620px; margin-bottom: 10px; }
+  .desc { color: var(--sub); font-size: 14px; max-width: 620px; margin-bottom: 32px; line-height: 1.7; }
+  .price-row { display:flex; align-items:center; gap: 14px; margin-bottom: 36px; }
+  .price-tag { font-size: 22px; font-weight: 900; color: var(--gold); }
+  .section { margin-bottom: 44px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--sub); line-height: 1.6; }
+  .check-mark { flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px; background: var(--gold-dim); border: 1px solid var(--gold-border); color: var(--gold); font-weight: 900; font-size: 12px; display:flex; align-items:center; justify-content:center; margin-top: 1px; }
+  .toc { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .toc li a { display:flex; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; transition: border-color .2s; }
+  .toc li a:hover { border-color: var(--gold-border); }
+  .toc li a span.num { color: var(--gold); font-weight: 800; margin-right: 10px; }
+  .module { border-top: 1px solid var(--border); padding-top: 36px; margin-top: 36px; scroll-margin-top: 20px; }
+  .module-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .module h2 { font-size: 24px; font-weight: 900; margin-bottom: 22px; letter-spacing: -0.01em; }
+  .module h3 { font-size: 15px; font-weight: 800; margin: 22px 0 8px; color: var(--text); }
+  .module p { font-size: 14.5px; color: var(--sub); margin-bottom: 14px; line-height: 1.75; }
+  .mod-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 8px 0 16px; }
+  .mod-list li { position: relative; padding-left: 20px; font-size: 14.5px; color: var(--sub); line-height: 1.65; }
+  .mod-list li::before { content: '\2022'; position: absolute; left: 4px; color: var(--gold); font-weight: 900; }
+  .template-box { background: var(--gold-dim); border: 1px solid var(--gold-border); border-left: 3px solid var(--gold); border-radius: 8px; padding: 16px 18px; margin: 10px 0 18px; }
+  .template-box p { margin-bottom: 0; font-size: 13.5px; color: rgba(242,242,242,0.75); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.8; }
+  .table-wrap { overflow-x: auto; margin: 14px 0 20px; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; background: var(--surface2); color: var(--gold); font-weight: 800; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); color: var(--sub); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .author-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-top: 56px; }
+  .author-box h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 10px; }
+  .author-box p { font-size: 13px; color: var(--sub); line-height: 1.7; }
+  .disclaimer { font-size: 11.5px; color: rgba(242,242,242,0.35); line-height: 1.7; margin-top: 16px; }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 40px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,214,10,0.25); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; max-width: 100%; }
+    .brand-logo span { color: #b8860b; }
+    .section-label, .module-eyebrow, .price-tag { color: #b8860b; }
+    .checklist li, .toc li a, .author-box, .table-wrap { border: 1px solid #ddd; background: #fafafa; }
+    th { background: #f0f0f0; color: #b8860b; }
+    td { color: #444; border-top-color: #ddd; }
+    .check-mark { background: #fdf3d6; color: #b8860b; border-color: #b8860b; }
+    .module p, .desc, .subtitle, .author-box p { color: #444; }
+    .mod-list li::before { color: #b8860b; }
+    .cta, .print-btn { display: none; }
+    .module { page-break-inside: avoid; }
+    .template-box { background: #fdf7e3; border-color: #e0c34a; }
+    .template-box p { color: #333; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Academy — Full Course</div>
+  </div>
+
+  <h1>Car Noise Diagnosis: Complete Course</h1>
+  <p class="subtitle">Train your ear system by system and stop guessing at what's making that sound</p>
+  <p class="desc">Seven modules covering how to listen like a mechanic, a deep system-by-system noise library, and how to document what you hear so a shop can act on it fast.</p>
+  <div class="price-row"><span class="price-tag">$29</span><span style="color:var(--sub);font-size:13px;">— purchased and unlocked. Yours to keep.</span></div>
+
+  <div class="section">
+    <div class="section-label">What You'll Learn</div>
+    <ul class="checklist">
+      <li><div class="check-mark">&#10003;</div><div>Use a repeatable method to isolate what's making any noise before touching a wrench</div></li>
+<li><div class="check-mark">&#10003;</div><div>Know the full library of engine, suspension, brake, and drivetrain noises and their causes</div></li>
+<li><div class="check-mark">&#10003;</div><div>Run safe diagnostic tests that narrow a noise without needing a lift or special tools</div></li>
+<li><div class="check-mark">&#10003;</div><div>Tell the difference between noises that can wait and noises that mean stop driving now</div></li>
+<li><div class="check-mark">&#10003;</div><div>Document a noise well enough that a shop can act on it immediately instead of re-diagnosing from scratch</div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Course Map</div>
+    <ul class="toc">
+      <li><a href="#module-1"><span><span class="num">01</span>How to Listen Like a Mechanic</span><span>&rarr;</span></a></li>
+<li><a href="#module-2"><span><span class="num">02</span>Engine and Accessory Noises, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-3"><span><span class="num">03</span>Suspension and Steering Noises, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-4"><span><span class="num">04</span>Brake Noises, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-5"><span><span class="num">05</span>Drivetrain and Wheel Noises, Deep Dive</span><span>&rarr;</span></a></li>
+<li><a href="#module-6"><span><span class="num">06</span>Documenting and Communicating with a Shop</span><span>&rarr;</span></a></li>
+<li><a href="#module-7"><span><span class="num">07</span>Ten Real Case Studies</span><span>&rarr;</span></a></li>
+    </ul>
+  </div>
+
+  <div class="module" id="module-1"><div class="module-eyebrow">Module 1 of 7</div><h2>How to Listen Like a Mechanic</h2><h3>The method beats the guess</h3>
+<p>Most people describe a noise as "a weird sound" and hope a mechanic figures it out from that alone. A trained ear doesn't have magic — it has a method: isolate variables one at a time until only one explanation is left standing. This module teaches you that method before Module 2 hands you the library of specific sounds to match against it.</p>
+<h3>The four variables that matter</h3>
+<p>Every noise can be placed against four variables. Answering all four before you do anything else does most of the diagnostic work by itself.</p>
+<p>1. When does it happen? Braking, turning, accelerating, over bumps, at idle, at a specific speed. 2. Where does it seem to come from? Front, rear, left, right, underneath, or from the engine bay specifically. 3. Does it change with a specific input? Does it follow engine RPM (rev it in park and see), road speed (does it change with speed but not RPM), or steering angle (does it change when turning)? 4. Does it change with temperature? Cold-start only, warm-only, or constant regardless.</p>
+<h3>Why order matters</h3>
+<p>Answer these in order, because each one eliminates entire categories. "When does it happen" alone often splits the possibilities in half. Add "where," and you've usually narrowed to a handful of specific components before you've even opened the hood.</p>
+<h3>The four safe tests, explained in depth</h3>
+<p>The neutral test. In a safe, flat location, put the vehicle in park or neutral and rev the engine gently. If the noise follows engine speed, the cause is likely the engine or an accessory (alternator, power steering pump, belt system). If the noise is silent here but present while driving, it's tied to the drivetrain, wheels, or road contact instead.</p>
+<p>The turn test. In an empty lot, drive slow, tight circles in both directions. A noise that appears or intensifies turning one direction but not the other often points to a CV joint or wheel bearing on that specific side, since those components are loaded asymmetrically during a turn.</p>
+<p>The brake test. At low, safe speed, apply the brakes gently and note whether the noise starts, stops, or changes. This isolates brake-specific causes from causes that are present regardless of braking.</p>
+<p>The cold-versus-warm test. Note whether a noise is present on a cold start and fades as the engine warms (common with certain belt and tensioner noises) or only appears once fully warm (common with certain exhaust and heat-shield expansion noises).</p>
+<h3>Recording what you find</h3>
+<p>Use your phone to record video with the windows down while a passenger drives, capturing both audio and the conditions. Immediately after, write down your answers to all four variables while they're fresh. This single habit is what turns "there's a weird noise" into a diagnosis a shop can act on in minutes instead of an hour of re-creating what you already know.</p></div>
+<div class="module" id="module-2"><div class="module-eyebrow">Module 2 of 7</div><h2>Engine and Accessory Noises, Deep Dive</h2><h3>Ticking that follows engine speed</h3>
+<p>A rhythmic tick that speeds up and slows down with the engine, most noticeable at idle, most often points to the valvetrain — lifters or rocker arms — or to low oil level or pressure. Check your oil level immediately if you hear this. A valvetrain tick with correct oil level is usually a wear item worth monitoring but not an emergency. A tick alongside a low oil level warning is a stop-and-check-now situation.</p>
+<h3>Squeal on cold start that fades as the engine warms</h3>
+<p>This is the classic signature of a worn serpentine belt or a weakening belt tensioner. Rubber compounds are stiffer when cold and the belt can briefly slip against a pulley until things warm up and settle. This is worth inspecting soon — a belt that fails completely while driving takes your power steering, alternator, and sometimes water pump with it all at once.</p>
+<h3>A high-pitched whine that rises and falls with RPM, present at all times</h3>
+<p>This pattern points to an accessory bearing — most commonly the alternator, power steering pump, or an idler pulley bearing starting to wear. Unlike belt squeal, this is a steadier, more constant tone rather than an intermittent squeal.</p>
+<h3>A deep knock that follows engine speed and gets louder under load</h3>
+<p>This is one of the more serious noises in this entire course. A knock that tracks engine speed and intensifies under acceleration load can indicate internal engine bearing wear. This is a stop-driving-and-get-it-inspected situation, not a monitor-it-for-a-while situation, because continued driving on a true internal knock risks turning an expensive repair into a catastrophic one.</p>
+<h3>A rattling or ticking specifically at startup that disappears after a few</h3>
+<p>seconds On some engines with variable valve timing, a brief rattle right at startup that clears quickly is a known characteristic related to oil pressure building up in the timing components. This is worth confirming against information for your specific engine, since on some models it's a known, benign characteristic, and on others it's an early warning sign.</p>
+<h3>A metallic rattle underneath, near the engine, that changes with</h3>
+<p>acceleration Often a loose heat shield around the exhaust system, which is annoying but low-urgency, versus a rattle from a loose or failing component under load, which deserves a closer look. The neutral test from Module 1 helps here: if the rattle appears revving in park, it's more likely engine or exhaust-adjacent; if it only appears while accelerating and moving, it's worth a visual check underneath.</p>
+<h3>Putting it together</h3>
+<p>Every noise in this module responds to the neutral test from Module 1 — nearly all of them will appear or intensify when you rev the engine in park, which is exactly what separates "engine and accessory" noises from the suspension, brake, and drivetrain noises covered in the next three modules.</p></div>
+<div class="module" id="module-3"><div class="module-eyebrow">Module 3 of 7</div><h2>Suspension and Steering Noises, Deep Dive</h2><h3>A clunk over bumps, from a specific corner</h3>
+<p>This is the most common suspension complaint, and it has several possible sources: sway bar end links (a very common wear item and relatively inexpensive to replace), worn strut mounts, loose or worn control arm bushings, or a failing ball joint. The location matters — try to pin down front-left, front-right, rear-left, or rear-right as precisely as you can, since this narrows the suspect list significantly.</p>
+<h3>Why ball joints deserve special attention</h3>
+<p>Unlike a worn bushing or link, which is mostly a comfort and noise issue until it gets quite bad, a severely worn ball joint is a genuine safety concern — in a worst case, a completely failed ball joint can allow a wheel to lose its connection to the suspension while driving. A clunk that's accompanied by any looseness you can feel in the steering, or a noise that seems to worsen quickly rather than staying stable, deserves prompt inspection rather than being added to a "someday" list.</p>
+<h3>A groan or whine when turning, especially at low speed</h3>
+<p>On vehicles with traditional hydraulic power steering, this points toward low power steering fluid or a weakening power steering pump. Check the fluid level first — this is a five-minute check that resolves a meaningful share of these complaints on its own. On vehicles with electric power steering, this specific symptom is less common and points more toward the steering rack or column instead.</p>
+<h3>A creak when turning the steering wheel at very low speed or while</h3>
+<p>parking Often a strut mount or a suspension bushing that's dry or worn, most noticeable at low speed because that's when steering effort and suspension articulation are both highest relative to vehicle speed.</p>
+<h3>A clunk specifically when shifting from drive to reverse, or</h3>
+<p>accelerating from a stop This pattern points more toward drivetrain components — motor mounts or transmission mounts — than pure suspension. A worn mount lets the engine or transmission shift slightly under torque, producing a clunk at the exact moment torque is applied. This overlaps with Module 5's drivetrain content, and is a good example of why the four-variable method in Module 1 matters: "when does it happen" (specifically at gear engagement) is the clue that redirects you here instead of toward suspension.</p>
+<h3>The turn test applied here</h3>
+<p>Recall from Module 1: drive slow, tight circles in both directions in a safe empty lot. A suspension noise that's clearly worse turning one direction than the other usually means the affected component is on the side loaded harder in that direction — which is the outside wheel in a turn, since it carries more weight transfer.</p>
+<h3>When to stop driving</h3>
+<p>Any looseness you can feel in the steering wheel itself, a clunk that's rapidly worsening, or any suspicion of a ball joint issue warrants getting off the road and having it inspected before continuing normal driving.</p></div>
+<div class="module" id="module-4"><div class="module-eyebrow">Module 4 of 7</div><h2>Brake Noises, Deep Dive</h2><h3>Squeal or chirp while braking</h3>
+<p>Most brake pads include a small metal wear indicator, a tab designed specifically to contact the rotor and make noise once the pad material wears down to a certain point. This is by design — it's an intentional early warning, not a malfunction. A squeal like this means schedule a brake inspection soon, not an emergency, but not something to ignore for months either.</p>
+<h3>Deep, harsh metal-on-metal grinding while braking</h3>
+<p>This means the pad material is fully worn through and metal is now contacting metal directly. This is a stop-driving-and-get-it-inspected-today situation. Continued driving in this state damages the rotor, dramatically increases repair cost, and reduces your stopping ability.</p>
+<h3>A pulsing or vibration felt in the brake pedal or steering wheel while</h3>
+<p>braking This usually indicates rotor warping (uneven thickness from heat cycling) rather than pad wear. It's a comfort and precision issue more than an immediate safety one in mild cases, but it's worth inspection soon, and it tends to worsen over time rather than resolve on its own.</p>
+<h3>A single clunk when first applying the brakes, especially after the car</h3>
+<p>has been sitting Often caused by slight, normal movement in caliper hardware or pad clips settling into position. If it's a single, consistent clunk right at initial brake application and nothing more, it's a lower-priority item — but if it's accompanied by grinding, pulling to one side, or a soft pedal, treat it with the urgency of those symptoms instead.</p>
+<h3>A soft or sinking brake pedal</h3>
+<p>This is a distinct symptom from any noise, and it deserves mention here because people sometimes describe it alongside a noise complaint. A pedal that sinks toward the floor, especially if it requires pumping to build pressure, can indicate air in the brake lines or a fluid leak. This is a stop-driving-now situation, full stop, regardless of whether any accompanying noise sounds minor.</p>
+<h3>The brake test, applied</h3>
+<p>From Module 1: at low, safe speed, apply the brakes gently and note exactly when a noise starts and stops. A noise present only during active braking is almost certainly brake-related. A noise that's constant regardless of braking, but happens to be near the wheels, points elsewhere — often a wheel bearing, covered in the next module.</p>
+<h3>Why brake noises deserve the fastest response of anything in this</h3>
+<p>course Every other system in this course has some noises that can reasonably wait weeks. Brakes are the exception. When in doubt on a brake noise, treat it as the higher-urgency interpretation until an inspection proves otherwise.</p></div>
+<div class="module" id="module-5"><div class="module-eyebrow">Module 5 of 7</div><h2>Drivetrain and Wheel Noises, Deep Dive</h2><h3>A rhythmic clicking that appears specifically at low speed while</h3>
+<p>turning This is close to a textbook description of a worn CV joint, especially common on front-wheel-drive vehicles. The clicking rate increases with vehicle speed and is usually most noticeable turning sharply — think pulling into a parking spot or navigating a tight corner. This is worth scheduling soon; a fully failed CV joint can eventually cause a loss of drive to that wheel.</p>
+<h3>A hum or roar that rises with vehicle speed and changes when you</h3>
+<p>steer This is the classic signature of a wheel bearing. A key diagnostic trick: gently weave the vehicle left and right at a safe, low speed on an empty road. A wheel bearing noise often changes — sometimes louder, sometimes quieter — as the weight shifts onto or off of the affected side. Compare that to cupped or unevenly worn tires, which produce a similar rising hum with speed but typically don't change meaningfully with this weaving test.</p>
+<h3>A vibration or noise at highway speed only</h3>
+<p>This pattern points toward tire balance, tire damage, or in more serious cases, internal tire separation. A vibration that's present at a fairly consistent speed range and goes away below or above that range often points to balance. A vibration that's more constant and worsens with speed deserves a tire inspection promptly, since internal belt separation is a genuine safety issue.</p>
+<h3>A clunk when accelerating from a stop or shifting between drive and</h3>
+<p>reverse As introduced in Module 3, this pattern often points to motor or transmission mounts rather than pure suspension components, since it appears specifically at the moment torque is applied rather than over bumps or while turning.</p>
+<h3>A whining or grinding noise from the transmission area, changing with</h3>
+<p>speed but not clearly tied to the engine This deserves a careful distinction: if the noise changes with engine RPM in the neutral test (Module 1), it's more likely engine or accessory related. If it's silent in neutral but present while driving and changes with road speed instead, it points toward the transmission or differential, and is generally a signal worth professional attention rather than DIY diagnosis, since these systems are harder to safely inspect without a lift.</p>
+<h3>Putting the whole system together</h3>
+<p>Notice how much of this module leans on the turn test and the weaving test from Module 1 — that's not a coincidence. Drivetrain and wheel-end components are almost all loaded asymmetrically during a turn, which is exactly why that test is one of the highest-value diagnostic tools in your entire toolkit for this category.</p></div>
+<div class="module" id="module-6"><div class="module-eyebrow">Module 6 of 7</div><h2>Documenting and Communicating with a Shop</h2><h3>Why this module exists</h3>
+<p>A perfect diagnosis in your head is worth nothing if you can't communicate it clearly. This module turns everything from Modules 1 through 5 into a format that gets you a faster, cheaper, more accurate shop visit.</p>
+<h3>The five-line report</h3>
+<p>Before you call or visit a shop, write down exactly five things:</p>
+<h3>1. When it happens (from Module 1's four variables)</h3>
+<p>2. Where it seems to come from 3. What changes it (RPM, speed, steering, braking, temperature) 4. How long it's been happening and whether it's getting worse 5. Anything else notable (a recent repair, a pothole hit, a new noise versus a long-standing one)</p>
+<h3>Why this report changes how a shop treats you</h3>
+<p>A customer who says "there's a noise, can you check it out" gets put into a generic multi-point inspection queue, often at a flat diagnostic rate, with the technician starting from zero. A customer who hands over the five-line report is giving the technician a head start that can meaningfully cut diagnostic time — and diagnostic time is exactly what you're often paying for by the hour.</p>
+<h3>Bring the video</h3>
+<p>Reference Module 1's recording tip. A 15-second video with audio, played for the technician, does more than any verbal description can. It also protects you: if the noise is intermittent and doesn't happen to occur during your shop visit, the video is proof it's real and gives the technician something concrete to try to reproduce.</p>
+<h3>The script for calling ahead</h3>
+<div class="template-box"><p>Script. "I've got a [when] noise coming from the [where]. It changes with [what changes it], and it's been happening for [how long]. I have a video of it. Can I bring it in and would you like me to send the video ahead of time?"</p></div>
+<p>This single call, done this way, often gets you a more accurate initial time estimate and sometimes a lower diagnostic fee, since you've already done a meaningful part of the diagnostic legwork yourself.</p>
+<h3>Connecting this back to the Estimate Mastery course</h3>
+<p>If you've also taken this program's estimate course, this is the exact moment those two skill sets meet: you arrive with a precise noise report, and you leave with an estimate you know how to read line by line. Together, they cover almost the entire lifecycle of a repair, from noticing a problem to paying a fair price to fix it.</p>
+<h3>What NOT to do</h3>
+<p>Don't diagnose out loud with guesses stacked on guesses — "I think it's probably the bearing, or maybe the CV joint, or it could be the strut." Stick to what you actually observed using the five-line report. Let the technician connect your observations to the cause; that's the part you're paying them for.</p></div>
+<div class="module" id="module-7"><div class="module-eyebrow">Module 7 of 7 — Capstone</div><h2>Ten Real Case Studies</h2><h3>How to use this module</h3>
+<p>Each case below gives you the same limited information a real customer would have, then walks the diagnostic reasoning using the method from Modules 1 through 5. Read each one and try to reason through it yourself before reading the conclusion.</p>
+<h3>Case 1</h3>
+<p>Report: Clicking noise, front-left, only when turning sharply at low speed while parking. Reasoning: Low speed, turning-specific, rhythmic clicking — matches Module 5's CV joint pattern closely.</p>
+<h3>Case 2</h3>
+<p>Report: Squeal on cold start only, gone within a minute once the car warms up. Reasoning: Cold-only, fades with warmth — matches Module 2's belt or tensioner pattern.</p>
+<h3>Case 3</h3>
+<p>Report: Grinding sound, front-right, only while braking, started three days ago. Reasoning: Braking-specific, grinding not squealing — Module 4's worn-through pad pattern. Stop driving and inspect today.</p>
+<h3>Case 4</h3>
+<p>Report: Hum that gets louder with speed, changes slightly when weaving left and right. Reasoning: Speed-related, changes with weaving test — Module 5's wheel bearing pattern.</p>
+<h3>Case 5</h3>
+<p>Report: Clunk over every bump, rear-left, no other symptoms. Reasoning: Bump-specific, isolated corner — Module 3's sway bar link or bushing pattern.</p>
+<h3>Case 6</h3>
+<p>Report: Deep knock, follows engine speed in the neutral test, worse under acceleration. Reasoning: Engine-speed-correlated, load-sensitive, deep tone — Module 2's serious internal engine knock pattern. Stop driving and get it inspected.</p>
+<h3>Case 7</h3>
+<p>Report: Groan when turning the wheel at low speed, especially parking. Reasoning: Turning-specific, low speed — Module 3's power steering pattern. Check fluid first.</p>
+<h3>Case 8</h3>
+<p>Report: Clunk only when shifting from park to drive. Reasoning: Gear-engagement-specific — Module 5's motor or transmission mount pattern.</p>
+<h3>Case 9</h3>
+<p>Report: High-pitched constant whine, present at all times, rises and falls smoothly with RPM. Reasoning: Constant tone versus intermittent squeal, tracks RPM precisely — Module 2's accessory bearing pattern, distinct from belt squeal.</p>
+<h3>Case 10</h3>
+<p>Report: Vibration only between 60 and 65 miles per hour, smooth outside that range. Reasoning: Narrow speed band — Module 5's tire balance pattern rather than a bearing, which would typically build more continuously with speed.</p>
+<h3>Course complete</h3>
+<p>If most of these matched your reasoning, you've internalized the method — not memorized a list. That's the actual goal of this course: a new, unfamiliar noise next month should still be solvable using the same four-variable process from Module 1, even without a case study to match it against.</p>
+<h3>About the author</h3>
+<p>Ryan Morris is a working mobile mechanic and the owner of REMbyDesign LLC in Spokane Valley, WA. General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p></div>
+
+  <div class="author-box">
+    <h4>About the Course</h4>
+    <p>Ryan Morris is the founder of Get Screwed Score and the owner of REMbyDesign LLC in Spokane Valley, WA. This course is general information, not legal advice.</p>
+    <p class="disclaimer">General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p>
+  </div>
+
+  <div class="cta">
+    <p>Own the rest of the ScrewedScore Academy — every course, one price.</p>
+    <a href="https://www.screwedscore.com/academy">Browse the Academy →</a>
+  </div>
+
+  <div class="cta" style="margin-top:16px; background:transparent; border:1px solid var(--gold-border);">
+    <p>Have a question about this course, or want to share a win? The Academy Community is free and open to everyone.</p>
+    <a href="https://www.screwedscore.com/academy/community?course=academy-noise-diagnosis" style="background:transparent; border:1px solid var(--gold-border); color:var(--gold);">Discuss This Course →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

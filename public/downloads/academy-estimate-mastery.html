@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repair Estimate Mastery — ScrewedScore Academy</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #050505; --surface: #0f0f0f; --surface2: #141414; --gold: #ffd60a; --gold-dim: rgba(255,214,10,0.08);
+    --gold-border: rgba(255,214,10,0.25); --text: #f2f2f2; --sub: rgba(242,242,242,0.55);
+    --border: rgba(255,255,255,0.08); --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 100px; }
+  .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+  .brand-logo { font-weight: 900; font-size: 18px; letter-spacing: -0.02em; }
+  .brand-logo span { color: var(--gold); }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); border-radius: 100px; padding: 3px 10px; }
+  h1 { font-size: 34px; font-weight: 900; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--sub); font-size: 16px; max-width: 620px; margin-bottom: 10px; }
+  .desc { color: var(--sub); font-size: 14px; max-width: 620px; margin-bottom: 32px; line-height: 1.7; }
+  .price-row { display:flex; align-items:center; gap: 14px; margin-bottom: 36px; }
+  .price-tag { font-size: 22px; font-weight: 900; color: var(--gold); }
+  .section { margin-bottom: 44px; }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--sub); line-height: 1.6; }
+  .check-mark { flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px; background: var(--gold-dim); border: 1px solid var(--gold-border); color: var(--gold); font-weight: 900; font-size: 12px; display:flex; align-items:center; justify-content:center; margin-top: 1px; }
+  .toc { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .toc li a { display:flex; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; transition: border-color .2s; }
+  .toc li a:hover { border-color: var(--gold-border); }
+  .toc li a span.num { color: var(--gold); font-weight: 800; margin-right: 10px; }
+  .module { border-top: 1px solid var(--border); padding-top: 36px; margin-top: 36px; scroll-margin-top: 20px; }
+  .module-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .module h2 { font-size: 24px; font-weight: 900; margin-bottom: 22px; letter-spacing: -0.01em; }
+  .module h3 { font-size: 15px; font-weight: 800; margin: 22px 0 8px; color: var(--text); }
+  .module p { font-size: 14.5px; color: var(--sub); margin-bottom: 14px; line-height: 1.75; }
+  .mod-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 8px 0 16px; }
+  .mod-list li { position: relative; padding-left: 20px; font-size: 14.5px; color: var(--sub); line-height: 1.65; }
+  .mod-list li::before { content: '\2022'; position: absolute; left: 4px; color: var(--gold); font-weight: 900; }
+  .template-box { background: var(--gold-dim); border: 1px solid var(--gold-border); border-left: 3px solid var(--gold); border-radius: 8px; padding: 16px 18px; margin: 10px 0 18px; }
+  .template-box p { margin-bottom: 0; font-size: 13.5px; color: rgba(242,242,242,0.75); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.8; }
+  .table-wrap { overflow-x: auto; margin: 14px 0 20px; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; background: var(--surface2); color: var(--gold); font-weight: 800; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); color: var(--sub); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .author-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-top: 56px; }
+  .author-box h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 10px; }
+  .author-box p { font-size: 13px; color: var(--sub); line-height: 1.7; }
+  .disclaimer { font-size: 11.5px; color: rgba(242,242,242,0.35); line-height: 1.7; margin-top: 16px; }
+  .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; margin-top: 40px; }
+  .cta p { color: var(--sub); font-size: 14px; margin-bottom: 20px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 14px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg,#ffe066,#ffd60a); color: #0a0a0a; font-weight: 900; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255,214,10,0.25); }
+  @media print {
+    body { background: #fff; color: #111; }
+    .wrap { padding: 20px; max-width: 100%; }
+    .brand-logo span { color: #b8860b; }
+    .section-label, .module-eyebrow, .price-tag { color: #b8860b; }
+    .checklist li, .toc li a, .author-box, .table-wrap { border: 1px solid #ddd; background: #fafafa; }
+    th { background: #f0f0f0; color: #b8860b; }
+    td { color: #444; border-top-color: #ddd; }
+    .check-mark { background: #fdf3d6; color: #b8860b; border-color: #b8860b; }
+    .module p, .desc, .subtitle, .author-box p { color: #444; }
+    .mod-list li::before { color: #b8860b; }
+    .cta, .print-btn { display: none; }
+    .module { page-break-inside: avoid; }
+    .template-box { background: #fdf7e3; border-color: #e0c34a; }
+    .template-box p { color: #333; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-logo">Screwed<span>Score</span></div>
+    <div class="brand-tag">Academy — Full Course</div>
+  </div>
+
+  <h1>Repair Estimate Mastery</h1>
+  <p class="subtitle">A complete course in reading, questioning, and negotiating any auto repair estimate</p>
+  <p class="desc">Seven modules that take you from confused customer to someone who reads an estimate the way a service advisor does — and never overpays out of not knowing what to ask.</p>
+  <div class="price-row"><span class="price-tag">$39</span><span style="color:var(--sub);font-size:13px;">— purchased and unlocked. Yours to keep.</span></div>
+
+  <div class="section">
+    <div class="section-label">What You'll Learn</div>
+    <ul class="checklist">
+      <li><div class="check-mark">&#10003;</div><div>Understand how a shop actually builds a price, from parts sourcing to labor guides to shop rate</div></li>
+<li><div class="check-mark">&#10003;</div><div>Read any estimate line by line and know exactly what each part should say</div></li>
+<li><div class="check-mark">&#10003;</div><div>Tell the difference between a diagnosis and a guess, and know what a diagnostic fee should buy you</div></li>
+<li><div class="check-mark">&#10003;</div><div>Understand flat-rate labor guides well enough to question hours that don't add up</div></li>
+<li><div class="check-mark">&#10003;</div><div>Negotiate from a position of knowledge instead of hoping for the best</div></li>
+<li><div class="check-mark">&#10003;</div><div>Know your state's consumer protection rights and how to use them if something goes wrong</div></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Course Map</div>
+    <ul class="toc">
+      <li><a href="#module-1"><span><span class="num">01</span>How a Shop Actually Builds a Price</span><span>&rarr;</span></a></li>
+<li><a href="#module-2"><span><span class="num">02</span>Reading Any Estimate Line by Line</span><span>&rarr;</span></a></li>
+<li><a href="#module-3"><span><span class="num">03</span>What 'Diagnosed' Actually Means</span><span>&rarr;</span></a></li>
+<li><a href="#module-4"><span><span class="num">04</span>Labor Time Guides Decoded</span><span>&rarr;</span></a></li>
+<li><a href="#module-5"><span><span class="num">05</span>Negotiating and Getting a Second Opinion</span><span>&rarr;</span></a></li>
+<li><a href="#module-6"><span><span class="num">06</span>Your Consumer Protection Rights</span><span>&rarr;</span></a></li>
+<li><a href="#module-7"><span><span class="num">07</span>Full Walkthrough of a Real Estimate</span><span>&rarr;</span></a></li>
+    </ul>
+  </div>
+
+  <div class="module" id="module-1"><div class="module-eyebrow">Module 1 of 7</div><h2>How a Shop Actually Builds a Price</h2><h3>Why prices vary so much for the "same" repair</h3>
+<p>Two shops can quote wildly different numbers for what sounds like the same job, and it is rarely because one of them is simply lying. A price is built from four things stacked together: the part, the labor, the shop's overhead, and the shop's target profit margin. Understanding each piece is what lets you tell a fair price from a padded one.</p>
+<h3>Where the part price comes from</h3>
+<p>Shops buy parts from a small number of channels: the dealer (OEM), a national parts distributor (aftermarket), a specialty remanufacturer, or a jobber warehouse that delivers same-day. Each channel has a different cost, and shops typically mark parts up somewhere between 25 and 100 percent over their cost, more on small cheap parts and less on big expensive ones. That markup is normal and is how a shop makes money on the parts side of the ticket. It is not, by itself, a red flag. What matters is whether the markup lands in a normal range and whether you were told which grade of part you are getting.</p>
+<h3>Where the labor price comes from</h3>
+<p>Labor is priced two ways in this industry: flat rate and actual time. Flat rate uses a published labor guide (Mitchell, ALLDATA, or the manufacturer's own guide) that assigns a fixed number of hours to a specific job on a specific vehicle, based on how long it takes an average trained technician to do it under normal conditions. Actual time bills for however long the tech really spends. Most shops use flat rate because it protects both sides: a fast technician isn't penalized for being fast, and a slow day doesn't cost you extra. We go deep on labor guides in Module 4.</p>
+<h3>Where overhead and margin come in</h3>
+<p>A shop's hourly rate (what you're billed per labor hour) is not the technician's wage. It covers rent, insurance, tool and equipment costs, software subscriptions, administrative staff, and the shop's profit. Rates vary heavily by region and by shop type — a dealership typically runs highest, an independent shop lands in the middle, and a mobile mechanic runs lowest because there's no facility overhead to cover. None of these is automatically "the right one." What matters is that the rate is disclosed and consistent with what similar shops in your area charge.</p>
+<h3>The four shop types and what each is actually selling you</h3>
+<div class="table-wrap"><table><thead><tr><th>Shop type</th><th>What you're paying for</th><th>Typical rate position</th></tr></thead><tbody><tr><td>Dealership</td><td>OEM parts, manufacturer-trained techs, factory tooling, warranty work</td><td>Highest</td></tr><tr><td>Independent shop</td><td>General expertise, often faster scheduling, negotiable</td><td>Middle</td></tr><tr><td>Specialty shop</td><td>Deep expertise in one system (transmission, exhaust, etc.)</td><td>Middle to high</td></tr><tr><td>Mobile mechanic</td><td>Convenience, lower overhead, limited to jobs doable outside a shop</td><td>Lowest</td></tr></tbody></table></div>
+<p>None of these is a scam and none is automatically the smart choice — the right one depends on the job. A complex electrical fault on a newer vehicle often belongs at a dealer with factory tooling. A brake job or alternator swap is routine work that an independent shop or a mobile mechanic can usually do for less.</p>
+<h3>What this means for you</h3>
+<p>When you get an estimate, you are looking at four stacked numbers: part cost plus markup, labor hours times hourly rate, shop fees, and tax. Once you can see those four pieces separately instead of one lump total, you can ask a specific question about the piece that looks off, instead of a vague one about the whole bill.</p></div>
+<div class="module" id="module-2"><div class="module-eyebrow">Module 2 of 7</div><h2>Reading Any Estimate Line by Line</h2><h3>The five-part structure, expanded</h3>
+<p>Every legitimate estimate breaks into five parts. This module goes deeper than a first pass — for each part, you'll see exactly what proper documentation looks like and the specific wording that should make you stop and ask a question.</p>
+<h3>Parts, done right</h3>
+<p>A properly written parts line states: the part's name, its grade (new OEM, new aftermarket, remanufactured, or used), the brand or source if aftermarket, the quantity, and the unit price. "Alternator — $340" is not a proper parts line. "Alternator, new aftermarket (Duralast Gold), qty 1 — $184" is. If the shop can't or won't tell you the grade, that alone is worth pausing on, because grade affects both price and expected lifespan significantly.</p>
+<h3>Labor, done right</h3>
+<p>A proper labor line names the job in plain language, states the hours billed, and states the rate or shows the flat total, matching the shop's posted or quoted rate. Watch for labor stacking — the same underlying task billed separately under two different job names when the work actually overlapped. We cover this in detail in Module 4.</p>
+<h3>Diagnostic fees, done right</h3>
+<p>A diagnostic fee pays for a technician's time to actually test and confirm a failure, not to plug in a code reader and read you the code. A proper diagnostic line states what was tested and what was found. Many reputable shops credit the diagnostic fee toward the repair if you proceed with them — ask whether that's their policy before you agree to the fee.</p>
+<h3>Shop fees and supplies, done right</h3>
+<p>Fees for shop supplies, disposal, and hazmat handling are standard and legitimate. What separates fair from padded is the math: a flat fee in the $3 to $15 range per typical job is normal; a percentage-based fee with no cap on a large job can balloon into real money for a line item that represents shop rags and degreaser. Ask for the fee to be capped or itemized if it looks large relative to the job.</p>
+<h3>Tax and total, done right</h3>
+<p>Confirm the tax is calculated on the correct taxable amount for your state — some states tax parts but not labor, or tax both differently. Add the lines yourself. A total that doesn't match the sum of its parts is either an error or an unstated fee, and you deserve to know which.</p>
+<h3>A worked example</h3>
+<p>Here is a real-style estimate, annotated the way you should read it:</p>
+<div class="table-wrap"><table><thead><tr><th>Line</th><th>As written</th><th>What to notice</th></tr></thead><tbody><tr><td>Parts</td><td>Front brake pads and rotors, new aftermarket, qty 2 axles — $210</td><td>Grade stated. Good.</td></tr><tr><td>Labor</td><td>Front brake pad and rotor replacement, 1.2 hrs @ $135/hr — $162</td><td>Hours are in a normal range for this job. Good.</td></tr><tr><td>Diagnostic</td><td>Brake inspection — $0, waived with repair</td><td>Fee waived because you're proceeding. Good.</td></tr><tr><td>Shop supplies</td><td>$14 flat</td><td>Reasonable flat fee. Good.</td></tr><tr><td>Tax</td><td>Per state rate on taxable total</td><td>Confirm this matches your state's rule.</td></tr></tbody></table></div>
+<p>This is what a clean estimate looks like. Your job is to hold every estimate you receive up against this same structure.</p></div>
+<div class="module" id="module-3"><div class="module-eyebrow">Module 3 of 7</div><h2>What 'Diagnosed' Actually Means</h2><h3>A code is a clue, not a verdict</h3>
+<p>This is the single most important concept in this entire course, and it's worth its own module. A trouble code tells the computer's story of what it saw — a sensor reading out of range, a monitor that failed, a pattern the computer recognized. It does not, by itself, tell you which physical part failed. Two different physical problems can throw the identical code. A technician's job is to take that code and run a real diagnostic process to find the actual cause. When a shop tells you "the code says it's the part, so we're replacing the part," that is not a diagnosis — it's a guess wearing a diagnosis's clothes.</p>
+<h3>What a real diagnostic process looks like</h3>
+<p>A proper diagnosis typically involves: pulling the code and the freeze frame data (the conditions present when the fault occurred), consulting a wiring diagram or technical service bulletin for that specific vehicle, performing physical tests (resistance checks, voltage checks, visual inspection of wiring and connectors), and only then arriving at a specific failed component. This takes real time, which is exactly why a legitimate diagnostic fee exists — you are paying for that process, not for the five seconds it takes to plug in a scanner.</p>
+<h3>Questions that separate a real diagnosis from a guess</h3>
+<ul class="mod-list"><li>"What tests did you run beyond reading the code?"</li><li>"What specifically did those tests show?"</li><li>"Is there a technical service bulletin for this exact symptom on my vehicle?"</li><li>"What's your confidence level that this fixes it, and what's the plan if it doesn't?"</li></ul>
+<p>A shop doing real diagnostic work will have specific answers. A shop guessing will circle back to the code itself as its only evidence.</p>
+<h3>Comebacks and the part-replacement spiral</h3>
+<p>Watch for a pattern called the "comeback spiral": a part gets replaced, the symptom returns, a different part gets replaced, the symptom returns again. This is the signature of parts being swapped without a real diagnosis. If you're on your second or third part for the same symptom, stop and ask directly: "What is the diagnostic plan now, beyond replacing another part?" You are entitled to a real answer before you spend another dollar.</p>
+<h3>Your right to ask for the failed part back</h3>
+<p>In most states, you can request your old, failed part back. This serves two purposes: it lets you visually confirm the part actually looked failed (a burned wire, a cracked housing, worn material), and it puts a shop on notice that its work is checkable. A shop that refuses this request with no explanation is a shop worth getting a second opinion from.</p></div>
+<div class="module" id="module-4"><div class="module-eyebrow">Module 4 of 7</div><h2>Labor Time Guides Decoded</h2><h3>What a labor guide actually is</h3>
+<p>Labor guides like Mitchell1 and ALLDATA publish, for nearly every job on nearly every vehicle, a fixed number of hours that job is expected to take a competent technician under normal shop conditions. These numbers come from manufacturer engineering data and real-world time studies, and they're the industry-standard way labor gets billed. Learning to sanity-check labor hours against public information is one of the highest-leverage skills in this entire course.</p>
+<h3>How to sanity-check labor hours yourself</h3>
+<p>You don't need a professional subscription to get a rough sense of whether labor hours are reasonable. Search "[your exact repair] [year make model] labor time" and look at forums, YouTube videos showing the job start to finish, and any labor estimator tools built into parts retailer websites. You're not trying to become a technician — you're trying to tell whether 4.5 hours for a job that visibly takes most people 90 minutes on video is a number worth questioning.</p>
+<h3>The concept that saves people the most money: overlapping labor</h3>
+<p>When a job requires removing parts to reach other parts, and you're having multiple jobs done in the same visit, the labor for that removal should not be charged in full twice. A textbook example: replacing a water pump and a timing belt on many engines requires removing the same drive belts, covers, and often the same components to reach both. A fair shop combines that shared labor into one line, or discounts the second job's labor to reflect the overlap. A shop that charges full independent labor for each job when they share significant teardown is charging you twice for the same hour of work.</p>
+<h3>How to ask about overlap without sounding accusatory</h3>
+<div class="template-box"><p>Script. "I noticed these two jobs both need [X] removed to get to them. Is that labor combined, or is there a reason it's billed separately for each?"</p></div>
+<p>This question does two things: it signals you understand the mechanics of the job, and it gives the shop room to explain a legitimate reason (sometimes there is one — not all overlap is fully shareable) rather than putting them on the defensive.</p>
+<h3>Flat rate versus hourly, and what it means for you</h3>
+<p>Under flat rate, you're not paying for the technician's actual clock time — you're paying for the job. This cuts both ways and is worth understanding fully: if the tech finishes in half the guide time because they're fast, you still pay the full guide hours, and that's the deal. If the tech hits a seized bolt and the job runs long, you still only pay the guide hours, and that protects you. What you should never accept is a technician-reported "actual hours" number that runs well above the published guide time with no explanation of what went wrong.</p>
+<h3>Multiplied labor: the trick worth knowing about</h3>
+<p>Some shops quote labor per job component rather than per job — for example, billing "diagnose," "remove," and "reinstall" as three separate labor lines for what the guide treats as a single job. This isn't always improper, but it's worth asking whether the total matches or exceeds the standard guide time for the complete job, stated as one number.</p></div>
+<div class="module" id="module-5"><div class="module-eyebrow">Module 5 of 7</div><h2>Negotiating and Getting a Second Opinion</h2><h3>The mindset shift</h3>
+<p>Negotiating a repair estimate isn't about being adversarial — it's about being a well-informed customer, which most shops actually respect, because most of their customers aren't. The technicians and service advisors you're dealing with see poorly-informed customers all day. Someone who asks specific, structured questions tends to get better treatment, not worse.</p>
+<h3>The three-quote rule</h3>
+<p>For any repair over roughly $300, or any repair you're not confident is urgent, get three quotes using the exact same information: the same part grade, the same described symptom, and a request for the same itemization structure from Module 2. Three quotes lets you see the real range for your market and spot the outlier — whether that outlier is suspiciously low (watch for corner-cutting) or suspiciously high (question it directly).</p>
+<h3>How to request a comparable quote</h3>
+<div class="template-box"><p>Script. "I'd like a quote for [specific job], using [OEM / new aftermarket / your choice — but be specific] parts. Can you give me an itemized estimate with labor hours shown separately from parts?"</p></div>
+<p>Asking for the same structure every time is what makes the three quotes actually comparable, instead of comparing three different things that happen to have three different totals.</p>
+<h3>Negotiating levers that actually work</h3>
+<ul class="mod-list"><li>Ask about part grade flexibility. A shop that quoted OEM may have a solid aftermarket option that saves real money with a smaller lifespan tradeoff. Ask directly.</li><li>Ask about bundling. If you have more than one issue, ask whether doing them together reduces labor overlap (see Module 4) or earns a package rate.</li><li>Ask about timing. Some shops offer lower rates for scheduled, non-urgent work versus same-day service.</li><li>Bring your second quote, stated plainly, without bluffing. "Another shop quoted $X for the same job with the same part grade — can you match or explain the difference?" is a fair, honest question that most reputable shops will engage with directly.</li></ul>
+<h3>What negotiating doesn't mean</h3>
+<p>It doesn't mean haggling down a fair price out of principle, and it doesn't mean assuming every shop is trying to cheat you. Most aren't. The goal is matching the price to the actual work, not squeezing a shop that's already being fair. A technician's time and expertise has real value — you're not trying to get free labor, you're trying to pay a fair price for real work.</p>
+<h3>Setting a hard limit before work starts</h3>
+<div class="template-box"><p>Script. "I'm authorizing the work on this estimate up to $[total]. If you find anything that would push it over that, please call me before doing the additional work."</p></div>
+<p>This single sentence, said before work begins, prevents the single most common billing surprise: a bill that's larger than the estimate because something was added along the way without a new approval.</p>
+<h3>Walking away</h3>
+<p>You're always allowed to say no, pay the diagnostic fee if one was owed, and leave. A shop that makes this difficult, or that holds your vehicle over a disputed charge you haven't agreed to, is a signal — and in most states, a vehicle held past a reasonable point for an unauthorized charge is its own legal issue, covered in the next module.</p></div>
+<div class="module" id="module-6"><div class="module-eyebrow">Module 6 of 7</div><h2>Your Consumer Protection Rights</h2><h3>This module is general information, not legal advice</h3>
+<p>Rules differ by state, and some differ by city or county on top of that. Use this module to know what to search for, not as a final answer for your situation. When real money is on the line, a call to your state attorney general's consumer protection division is free and worth the ten minutes.</p>
+<h3>The core protections that exist in most states</h3>
+<ul class="mod-list"><li>Written estimate requirement. Many states require a shop to provide a written estimate before starting work above a certain dollar threshold, and to get your authorization before exceeding it.</li><li>Authorization for additional work. Most states require separate authorization — verbal at minimum, often with a record — before a shop can bill you for work beyond the original estimate.</li><li>Right to old parts. Many states give you the right to request your replaced parts back, with some exceptions for parts under warranty exchange programs.</li><li>Mechanic's lien limits. Shops generally can hold a vehicle for unpaid, authorized charges, but the rules around disputed or unauthorized charges are narrower, and vary significantly by state.</li></ul>
+<h3>Where to look up your state's specific rules</h3>
+<p>Search "[your state] auto repair act" or "[your state] motor vehicle repair consumer protection." Washington State, for example, addresses this under RCW Chapter 46.71. Most states have a comparable statute, often enforced through the attorney general's office or a state department of licensing.</p>
+<h3>How to file a complaint, step by step</h3>
+<p>1. Document everything first — the written estimate, the final invoice, all communications, and photos if relevant. 2. Contact the shop in writing stating the specific issue and what resolution you want, with a reasonable deadline. 3. If unresolved, file with your state attorney general's consumer protection division. This is free and typically done through a simple online form. 4. Consider the Better Business Bureau as an additional public-record complaint, especially for a shop that cares about its reputation. 5. For amounts within your local limit, small claims court is a realistic option and doesn't require a lawyer.</p>
+<h3>When to bring in a professional</h3>
+<p>If the dollar amount is large, if there's a safety issue that caused damage or injury, or if the shop is being genuinely hostile or evasive, it's worth a consultation with a consumer protection attorney. Many offer free initial consultations for cases like this, and some work on contingency for cases with a strong paper trail.</p>
+<h3>Building the habit that prevents all of this</h3>
+<p>Every module in this course points at the same underlying habit: get it in writing, ask specific questions, and keep your documents. That habit alone resolves the vast majority of repair disputes before they ever need to become a formal complaint.</p></div>
+<div class="module" id="module-7"><div class="module-eyebrow">Module 7 of 7 — Capstone</div><h2>Full Walkthrough of a Real Estimate</h2><h3>Put it all together</h3>
+<p>This final module walks a complete, realistic estimate through every lens from this course. Read it the way you'd read your own next estimate.</p>
+<h3>The scenario</h3>
+<p>A customer's check engine light is on. The car is idling rough. They bring it to a shop and receive this estimate:</p>
+<h3>As written</h3>
+<h3>Check engine light diagnosis — $129</h3>
+<h3>Ignition coil (aftermarket), qty 4 — $220</h3>
+<h3>Spark plugs (aftermarket), qty 4 — $48</h3>
+<h3>Ignition coil and spark plug replacement, 1.5 hrs @ $140/hr — $210</h3>
+<h3>8% of labor — $16.80</h3>
+<h3>Per state rate</h3>
+<h3>— $623.80 plus tax</h3>
+<h3>Applying Module 2: structure check</h3>
+<p>Parts show grade and quantity. Good. Labor states hours, rate, and job description. Good. The diagnostic fee is listed separately and not waived — worth asking whether it's credited toward the repair.</p>
+<h3>Applying Module 3: is this a real diagnosis?</h3>
+<p>Ask: "What specifically did the diagnostic show — a misfire code on a specific cylinder, or a general code?" A real answer sounds like "P0301, misfire on cylinder 1, confirmed by swapping the coil to another cylinder and watching the code follow it." A weak answer just restates "the code said ignition coil."</p>
+<h3>Applying Module 4: are the labor hours reasonable?</h3>
+<p>1.5 hours for four coils and four plugs is worth a quick search against your specific engine — on some engines this is a straightforward job; on others, tight engine bays add real time. If your research shows most people complete it in under an hour, that's worth a direct, calm question.</p>
+<h3>Applying Module 5: negotiate or confirm</h3>
+<p>If everything checks out, you don't need to negotiate — you need to set your authorization limit and proceed. If the labor hours look high, ask the script from Module 5 before authorizing.</p>
+<h3>Applying Module 6: what if something goes wrong later</h3>
+<p>If the car comes back with the same misfire in two weeks, you now know this is a comeback (Module 3), and you know your first move is a direct, written request for a real diagnostic explanation — not simply paying for another guess.</p>
+<h3>Course complete</h3>
+<p>You now have a repeatable system: know how the price is built, read every line, tell a diagnosis from a guess, sanity-check labor hours, negotiate from real information, and know your rights if it goes sideways. Keep this course and refer back to whichever module matches the situation in front of you.</p>
+<h3>About the author</h3>
+<p>Ryan Morris is a working mobile mechanic and the owner of REMbyDesign LLC in Spokane Valley, WA. General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p></div>
+
+  <div class="author-box">
+    <h4>About the Course</h4>
+    <p>Ryan Morris is the founder of Get Screwed Score and the owner of REMbyDesign LLC in Spokane Valley, WA. This course is general information, not legal advice.</p>
+    <p class="disclaimer">General information for educational purposes only. It is not professional, legal, financial, or safety advice, and results are not guaranteed. Laws, prices, fees, and product details change, so verify current information for your situation. © REMbyDesign LLC. All rights reserved. Personal use license; do not resell or redistribute.</p>
+  </div>
+
+  <div class="cta">
+    <p>Own the rest of the ScrewedScore Academy — every course, one price.</p>
+    <a href="https://www.screwedscore.com/academy">Browse the Academy →</a>
+  </div>
+
+  <div class="cta" style="margin-top:16px; background:transparent; border:1px solid var(--gold-border);">
+    <p>Have a question about this course, or want to share a win? The Academy Community is free and open to everyone.</p>
+    <a href="https://www.screwedscore.com/academy/community?course=academy-estimate-mastery" style="background:transparent; border:1px solid var(--gold-border); color:var(--gold);">Discuss This Course →</a>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>

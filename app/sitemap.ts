@@ -95,6 +95,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${base}/academy`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${base}/academy/community`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.75,
+    },
+    {
       url: `${base}/jobs`,
       lastModified: new Date(),
       changeFrequency: 'daily',
@@ -112,12 +124,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    {
-      url: `${base}/business-portal`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
+    // /business-portal intentionally omitted: it's a login-gated vendor
+    // dashboard (redirects to /auth when signed out), not public content —
+    // it also now carries a noindex tag (app/business-portal/layout.tsx).
     {
       url: `${base}/privacy`,
       lastModified: new Date(),

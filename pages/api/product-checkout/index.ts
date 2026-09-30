@@ -24,6 +24,16 @@ const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = 
   'clippilot-pro-yearly':     { priceId: 'price_1TOCoWEKDzEsz6UjLJ68g3IZ', subscription: true  },
   'clippilot-unlimited':      { priceId: 'price_1TOCoWEKDzEsz6UjbPga14BI', subscription: true  },
   'clippilot-unlimited-yearly': { priceId: 'price_1TOCoXEKDzEsz6UjYMmOx1Qv', subscription: true },
+
+  // ── ScrewedScore Academy ────────────────────────────────────────────────
+  // TODO(Ryan): these are PLACEHOLDER Stripe Price IDs. Create a one-time
+  // Price for each product in the Stripe Dashboard (Products → Add product)
+  // and replace the string below with the real price_... id before launch.
+  'academy-estimate-mastery': { priceId: 'price_REPLACE_ACADEMY_ESTIMATE_MASTERY', subscription: false },
+  'academy-check-engine':     { priceId: 'price_REPLACE_ACADEMY_CHECK_ENGINE', subscription: false },
+  'academy-noise-diagnosis':  { priceId: 'price_REPLACE_ACADEMY_NOISE_DIAGNOSIS', subscription: false },
+  'academy-fight-back':       { priceId: 'price_REPLACE_ACADEMY_FIGHT_BACK', subscription: false },
+  'academy-bundle':           { priceId: 'price_REPLACE_ACADEMY_BUNDLE', subscription: false },
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -46,6 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!entry) return res.status(400).json({ error: 'Invalid product_id' })
 
   const isClipPilot = product_id!.startsWith('clippilot')
+  const isAcademy = product_id!.startsWith('academy-')
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -54,8 +65,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       metadata: { product_id: product_id! },
       success_url: isClipPilot
         ? `${origin}/clippilot/success?product=${product_id}&session_id={CHECKOUT_SESSION_ID}`
+        : isAcademy
+        ? `${origin}/academy/success?product=${product_id}&session_id={CHECKOUT_SESSION_ID}`
         : `${origin}/productivity/success?product=${product_id}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: isClipPilot ? `${origin}/clippilot#pricing` : `${origin}/productivity`,
+      cancel_url: isClipPilot ? `${origin}/clippilot#pricing` : isAcademy ? `${origin}/academy` : `${origin}/productivity`,
       allow_promotion_codes: true,
       customer_creation: entry.subscription ? undefined : 'always',
     })
