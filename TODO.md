@@ -78,12 +78,16 @@ items complete — see git log for the commit that closed each one.
       Node utility, not app code) to `ignores`. Real result: 192 source
       files scanned, 0 errors, 28 warnings. `npm run lint` exits 0.
       Not blocked.
-- [ ] **Two known-but-unfixed findings from the last lint pass**, called out
-      explicitly in that commit's message and worth resolving properly:
-      `KIT_PRICE_CENTS` is inert because `kit-checkout` charges a hardcoded
-      Stripe price ID instead; `ProgressBar`'s `MESSAGES` copy is defined but
-      never wired up. Not yet re-verified against current code.
-      Not blocked — just not reached yet.
+- [x] **Two known-but-unfixed findings from the last lint pass**:
+      `KIT_PRICE_CENTS` was inert — `kit-checkout` always charged a hardcoded
+      Stripe price ID, the env override never reached checkout. Removed the
+      dead code per the comment's own recommended resolution (treat the
+      Stripe price as the source of truth). `ProgressBar`'s `MESSAGES` copy
+      (rotating status lines: "Checking for suspicious charges...",
+      "Computing your Screwed Score...", etc.) was fully written but never
+      wired up — wired it up with a 2.5s rotation, falling back to the
+      static `label` prop for phases with only one message.
+      Not blocked.
 - [ ] **Two finished feature branches sitting on GitHub, never merged**:
       `claude/adsense-integration-x2me38` (Google AdSense integration, live
       publisher ID) and `claude/focused-newton-u6r9n6` (stop pages inheriting

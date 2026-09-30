@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import type { AppPhase } from '@/lib/types'
 
@@ -16,8 +17,7 @@ const STEPS = [
   { phase: 'done' as AppPhase,      label: 'Done' },
 ]
 
-// Orphaned: written for a rotating progress message that was never wired up.
-const _MESSAGES: Partial<Record<AppPhase, string[]>> = {
+const MESSAGES: Partial<Record<AppPhase, string[]>> = {
   uploading: ['Sending your file...'],
   parsing:   ['Reading the document...', 'Extracting text...'],
   analyzing: [
@@ -27,11 +27,25 @@ const _MESSAGES: Partial<Record<AppPhase, string[]>> = {
     'Almost there...',
   ],
 }
+const MESSAGE_INTERVAL_MS = 2500
 
 export function ProgressBar({ phase, progress, label }: ProgressBarProps) {
+  const messages = MESSAGES[phase]
+  const [messageIdx, setMessageIdx] = useState(0)
+
+  useEffect(() => {
+    setMessageIdx(0)
+    if (!messages || messages.length < 2) return
+    const id = setInterval(() => {
+      setMessageIdx(i => (i + 1) % messages.length)
+    }, MESSAGE_INTERVAL_MS)
+    return () => clearInterval(id)
+  }, [phase, messages])
+
   if (phase === 'idle' || phase === 'error') return null
 
   const currentIdx = STEPS.findIndex(s => s.phase === phase)
+  const displayLabel = messages?.[messageIdx] ?? label
 
   return (
     <div className="rounded-2xl border border-brand-border bg-brand-surface p-6 space-y-5 animate-fade-in"
@@ -67,7 +81,7 @@ export function ProgressBar({ phase, progress, label }: ProgressBarProps) {
 
       {/* Status message */}
       <div className="text-center space-y-1">
-        <p className="text-sm font-semibold text-brand-text">{label}</p>
+        <p key={displayLabel} className="text-sm font-semibold text-brand-text animate-fade-in">{displayLabel}</p>
         <p className="text-xs text-brand-sub">This usually takes 15–30 seconds</p>
       </div>
 
