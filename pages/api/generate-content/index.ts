@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createHash } from 'crypto'
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
-import { verifyToken } from '@/lib/auth'
+import { hasActivePro } from '@/lib/pro'
 import { isValidUUID, extractJSON } from '@/lib/utils'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const proToken = req.cookies['gss_pro']
-  if (!proToken || !verifyToken(proToken)) {
+  if (!(await hasActivePro(proToken))) {
     return res.status(403).json({ error: 'PRO_REQUIRED' })
   }
 

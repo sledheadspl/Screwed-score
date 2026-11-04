@@ -5,7 +5,7 @@ import { randomUUID, createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { detectDocumentType } from '@/lib/detect'
-import { parseToken } from '@/lib/auth'
+import { hasActivePro } from '@/lib/pro'
 import type { UploadResponse } from '@/lib/types'
 
 // Disable Next.js body parser — formidable reads the raw stream directly
@@ -53,22 +53,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // ── 2. Pro check — cookie token OR active profile subscription ────────────
-    const proToken = req.cookies['gss_pro']
-    const parsed = proToken ? parseToken(proToken) : null
-    let isPro = !!parsed
-
-    // Subscription tokens (sub_...) are long-lived — deny if the subscription
-    // was cancelled or its payment failed (webhook fills revoked_subscriptions).
-    if (isPro && parsed!.refId.startsWith('sub_')) {
-      try {
-        const { data: revoked } = await supabase
-          .from('revoked_subscriptions')
-          .select('subscription_id')
-          .eq('subscription_id', parsed!.refId)
-          .maybeSingle()
-        if (revoked) isPro = false
-      } catch { /* non-fatal — favor access on DB error */ }
-    }
+    // Signature + expiry + not revoked by the Stripe webhook (cancelled
+    // subscription, failed payment, refund).
+    let isPro = await hasActivePro(req.cookies['gss_pro'])
 
     if (!isPro && userId) {
       try {

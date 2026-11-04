@@ -6,6 +6,12 @@ import { getClipPilotTier, createLicense } from '@/lib/clippilot/license'
 import { sendGAEvent } from '@/lib/ga'
 import { logError } from '@/lib/log'
 
+/** Supabase calls resolve with { error } instead of throwing — make failures throw so Stripe retries. */
+function must<T extends { error: unknown }>(result: T, what: string): T {
+  if (result.error) throw new Error(`${what}: ${JSON.stringify(result.error)}`)
+  return result
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
@@ -65,23 +71,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // ClipPilot subscription purchase — generate and email license key
         const clipPilotTier = productId ? getClipPilotTier(productId) : null
         if (clipPilotTier && customerEmail) {
-          try {
-            const licenseKey = await createLicense({
-              stripeSessionId: session.id,
-              customerEmail,
-              productId: productId!,
-              tier: clipPilotTier,
+          // createLicense is idempotent per session, so a Stripe retry after a
+          // failure here will not mint a second key.
+          const licenseKey = await createLicense({
+            stripeSessionId: session.id,
+            customerEmail,
+            productId: productId!,
+            tier: clipPilotTier,
+          })
+          const result = await sendClipPilotLicenseEmail({
+            toEmail: customerEmail,
+            licenseKey,
+            tier: clipPilotTier,
+          })
+          if (!result.ok) {
+            await logError('stripe-webhook/clippilot-email', new Error(result.error ?? 'unknown'), {
+              customer_email: customerEmail,
+              session_id: session.id,
             })
-            const result = await sendClipPilotLicenseEmail({
-              toEmail: customerEmail,
-              licenseKey,
-              tier: clipPilotTier,
-            })
-            if (!result.ok) {
-              console.error('[stripe-webhook] ClipPilot license email failed:', result.error)
-            }
-          } catch (err) {
-            console.error('[stripe-webhook] ClipPilot license creation failed:', err)
           }
         }
 
@@ -108,8 +115,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           const documentType = session.metadata.document_type ?? 'bill'
           const scorePercent = session.metadata.score_percent ?? '?'
 
-          // Create a job in the marketplace for this audit
-          await supabase.from('jobs').insert({
+          // Create a job in the marketplace for this audit. Non-fatal: the
+          // owner notification email below still carries everything needed.
+          const { error: jobErr } = await supabase.from('jobs').insert({
             title:           `Human Audit — ${documentType.replace(/_/g, ' ')} (Score: ${scorePercent}%)`,
             description:     `Customer paid $9.99 for a human bill audit.\n\nAnalysis ID: ${analysisId}\nDocument type: ${documentType}\nAI score: ${scorePercent}%\nCustomer email: ${customerEmail ?? 'unknown'}\n\nReview the analysis at the admin panel, flag all overcharges and errors in plain English, and email the customer your findings within 48 hours.`,
             category:        'research',
@@ -120,6 +128,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             min_reputation:  40,
             max_applicants:  1,
           })
+          if (jobErr) {
+            await logError('stripe-webhook/audit-job', new Error(jobErr.message), { session_id: session.id })
+          }
 
           // Confirmation email to customer
           if (customerEmail) {
@@ -176,45 +187,44 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription
-        await supabase.from('revoked_subscriptions').upsert(
+        must(await supabase.from('revoked_subscriptions').upsert(
           { subscription_id: sub.id, reason: 'cancelled', revoked_at: new Date().toISOString() },
           { onConflict: 'subscription_id' }
-        )
-        await supabase
+        ), 'revoke subscription')
+        must(await supabase
           .from('profiles')
           .update({ subscription_status: 'cancelled' })
-          .eq('stripe_subscription_id', sub.id)
-        // Deactivate any ClipPilot license tied to this subscription's customer
-        const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id
-        if (customerId) {
-          const stripeCustomer = await stripe.customers.retrieve(customerId) as Stripe.Customer
-          const email = stripeCustomer.email
-          if (email) {
-            await supabase
-              .from('clippilot_licenses')
-              .update({ is_active: false })
-              .eq('customer_email', email)
-            console.log('[stripe-webhook] ClipPilot license deactivated for:', email)
-          }
+          .eq('stripe_subscription_id', sub.id), 'update profile')
+        // Deactivate only the ClipPilot license(s) bought with THIS subscription
+        // (licenses are keyed by checkout session), not every license that
+        // shares the customer's email.
+        const sessions = await stripe.checkout.sessions.list({ subscription: sub.id, limit: 10 })
+        const sessionIds = sessions.data.map(s => s.id)
+        if (sessionIds.length > 0) {
+          must(await supabase
+            .from('clippilot_licenses')
+            .update({ is_active: false })
+            .in('stripe_session_id', sessionIds), 'deactivate clippilot license')
         }
         console.log('[stripe-webhook] Subscription cancelled:', sub.id)
         break
       }
 
       case 'invoice.payment_failed': {
-        // In Stripe SDK v21 the Invoice type uses `parent` for subscription linkage;
-        // cast to access the subscription field safely regardless of SDK version.
-        const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null }
-        const subscriptionId = typeof invoice.subscription === 'string' ? invoice.subscription : null
+        // Since API version 2025-03-31.basil the subscription lives under
+        // invoice.parent.subscription_details (top-level invoice.subscription is gone).
+        const invoice = event.data.object as Stripe.Invoice
+        const subRef = invoice.parent?.subscription_details?.subscription
+        const subscriptionId = typeof subRef === 'string' ? subRef : subRef?.id ?? null
         if (subscriptionId) {
-          await supabase.from('revoked_subscriptions').upsert(
+          must(await supabase.from('revoked_subscriptions').upsert(
             { subscription_id: subscriptionId, reason: 'payment_failed', revoked_at: new Date().toISOString() },
             { onConflict: 'subscription_id' }
-          )
-          await supabase
+          ), 'revoke subscription')
+          must(await supabase
             .from('profiles')
             .update({ subscription_status: 'past_due' })
-            .eq('stripe_subscription_id', subscriptionId)
+            .eq('stripe_subscription_id', subscriptionId), 'update profile')
           console.log('[stripe-webhook] Payment failed for subscription:', subscriptionId)
         }
         break
@@ -224,14 +234,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const sub = event.data.object as Stripe.Subscription
         if (sub.status === 'active') {
           // Re-activate if previously revoked (e.g. payment recovered)
-          await supabase
+          must(await supabase
             .from('revoked_subscriptions')
             .delete()
-            .eq('subscription_id', sub.id)
-          await supabase
+            .eq('subscription_id', sub.id), 'un-revoke subscription')
+          must(await supabase
             .from('profiles')
             .update({ subscription_status: 'active' })
-            .eq('stripe_subscription_id', sub.id)
+            .eq('stripe_subscription_id', sub.id), 'update profile')
           console.log('[stripe-webhook] Subscription re-activated:', sub.id)
         }
         break
@@ -243,6 +253,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
   } catch (err) {
     await logError('stripe-webhook', err, { event_type: event.type, event_id: event.id })
+    // Release the idempotency claim so Stripe's retry is processed instead of
+    // being skipped as a duplicate.
+    await supabase.from('stripe_webhook_events').delete().eq('event_id', event.id)
     return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
 
