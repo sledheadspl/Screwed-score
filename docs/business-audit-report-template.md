@@ -158,7 +158,7 @@ Reply to your audit email if either is interesting.
 
 ---
 
-*Prepared by ScrewedScore · screwedscore.com · hello@screwedscore.com*
+*Prepared by ScrewedScore · screwedscore.com · sledheadspl@gmail.com*
 
 <!--
 TEMPLATE USAGE NOTES (delete this block before sending)

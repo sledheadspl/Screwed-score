@@ -53,13 +53,13 @@ export default function LeadForm() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         setStatus('error')
-        setErrMsg(data?.error ?? 'Could not submit. Try again or email hello@screwedscore.com.')
+        setErrMsg(data?.error ?? 'Could not submit. Try again or email sledheadspl@gmail.com.')
         return
       }
       setStatus('ok')
     } catch {
       setStatus('error')
-      setErrMsg('Network error. Try again or email hello@screwedscore.com.')
+      setErrMsg('Network error. Try again or email sledheadspl@gmail.com.')
     }
   }
 

@@ -5,7 +5,7 @@ import { logError } from '@/lib/log'
 export const runtime = 'nodejs'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-const OPERATOR_EMAIL = process.env.ALERT_EMAIL ?? 'hello@screwedscore.com'
+const OPERATOR_EMAIL = process.env.ALERT_EMAIL ?? 'sledheadspl@gmail.com'
 
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, c => ({
@@ -96,6 +96,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: true })
   } catch (err) {
     await logError('business-audit-lead', err)
-    return NextResponse.json({ error: 'Failed to submit. Try again or email hello@screwedscore.com.' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to submit. Try again or email sledheadspl@gmail.com.' }, { status: 500 })
   }
 }

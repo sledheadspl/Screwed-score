@@ -47,7 +47,7 @@ export default function BusinessAuditSuccessPage() {
         </div>
         <p className="text-xs text-brand-sub opacity-70">
           Questions? Reply to your receipt email or write to{' '}
-          <a href="mailto:hello@screwedscore.com" className="underline">hello@screwedscore.com</a>.
+          <a href="mailto:sledheadspl@gmail.com" className="underline">sledheadspl@gmail.com</a>.
         </p>
         <Link
           href="/"

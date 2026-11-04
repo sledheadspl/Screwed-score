@@ -9,12 +9,12 @@
  *     throw err
  *   }
  *
- * Set ALERT_EMAIL in env (defaults to hello@screwedscore.com — operator).
+ * Set ALERT_EMAIL in env (defaults to sledheadspl@gmail.com — operator).
  * Throttled in-memory: each (scope, message) combo emails at most once per hour.
  */
 
 const RESEND_API = 'https://api.resend.com/emails'
-const ALERT_EMAIL_DEFAULT = 'hello@screwedscore.com'
+const ALERT_EMAIL_DEFAULT = 'sledheadspl@gmail.com'
 const FROM_DEFAULT = 'alerts@screwedscore.com'
 const THROTTLE_MS = 60 * 60 * 1000 // 1 hour
 

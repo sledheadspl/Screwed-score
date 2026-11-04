@@ -155,7 +155,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             // Notify the owner (override with OWNER_ALERT_EMAIL in Netlify)
             await resend.emails.send({
               from:    process.env.RESEND_FROM_EMAIL ?? 'hello@screwedscore.com',
-              to:      process.env.OWNER_ALERT_EMAIL || 'hello@screwedscore.com',
+              to:      process.env.OWNER_ALERT_EMAIL || 'sledheadspl@gmail.com',
               subject: `New Human Audit — ${documentType} — ${scorePercent}% — $9.99`,
               html: `<p>New paid audit request.</p><p><b>Customer:</b> ${customerEmail}<br/><b>Document:</b> ${documentType}<br/><b>AI Score:</b> ${scorePercent}%<br/><b>Analysis ID:</b> ${analysisId}</p><p>Job has been added to the marketplace queue.</p>`,
             }).catch(e => console.error('[audit notify]', e))
