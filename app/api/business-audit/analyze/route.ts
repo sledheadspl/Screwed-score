@@ -283,7 +283,7 @@ ${actionTable}
 
 ---
 
-*Prepared by ScrewedScore · screwedscore.com · sledheadspl@gmail.com*
+*Prepared by ScrewedScore · screwedscore.com · hello@screwedscore.com*
 `
 }
 
