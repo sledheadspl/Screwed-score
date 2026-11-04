@@ -8,127 +8,127 @@ function getResend(): Resend {
 }
 
 // ── Product registry ──────────────────────────────────────────────────────────
-// `defaultPath` is the production download URL — the actual deliverable file
-// served from the Next.js public directory. To override (e.g. swap to a Gumroad
-// or signed-S3 link without redeploying), set the corresponding PRODUCT_LINK_*
-// env var in Netlify.
+// `file` is the deliverable in private/products/. It is NOT publicly served:
+// buyers get it through /api/download, which checks the Stripe checkout session
+// was paid for this product. To override (e.g. swap to a Gumroad or signed-S3
+// link without redeploying), set the corresponding PRODUCT_LINK_* env var in Netlify.
 export const PRODUCT_CATALOG: Record<string, {
   name: string
   tagline: string
   deliveryEnvKey: string
-  defaultPath: string
+  file: string
   accentColor: string
 }> = {
   'creator-os': {
     name: 'Creator OS Bundle',
     tagline: 'Your complete operating system for digital creators.',
     deliveryEnvKey: 'PRODUCT_LINK_CREATOR_OS',
-    defaultPath: '/downloads/creator-os-bundle.html',
+    file: 'creator-os-bundle.html',
     accentColor: '#00E5FF',
   },
   'content-pipeline': {
     name: 'Content Pipeline Pro',
     tagline: 'End-to-end content automation — built in Make/Zapier.',
     deliveryEnvKey: 'PRODUCT_LINK_CONTENT_PIPELINE',
-    defaultPath: '/downloads/content-pipeline-pro.html',
+    file: 'content-pipeline-pro.html',
     accentColor: '#00E5FF',
   },
   'brand-deal': {
     name: 'Brand Deal Negotiation Pack',
     tagline: '12 proven email scripts and contract templates.',
     deliveryEnvKey: 'PRODUCT_LINK_BRAND_DEAL',
-    defaultPath: '/downloads/brand-deal-negotiation-pack.html',
+    file: 'brand-deal-negotiation-pack.html',
     accentColor: '#00E5FF',
   },
   'revenue-dashboard': {
     name: 'Revenue Dashboard Kit',
     tagline: 'Your custom Google Sheets + Notion income dashboard.',
     deliveryEnvKey: 'PRODUCT_LINK_REVENUE_DASHBOARD',
-    defaultPath: '/downloads/revenue-dashboard-kit.html',
+    file: 'revenue-dashboard-kit.html',
     accentColor: '#30d158',
   },
   'social-assets': {
     name: 'Social Media Asset Pack',
     tagline: '200+ premium Canva templates across every platform.',
     deliveryEnvKey: 'PRODUCT_LINK_SOCIAL_ASSETS',
-    defaultPath: '/downloads/social-media-asset-pack.html',
+    file: 'social-media-asset-pack.html',
     accentColor: '#00E5FF',
   },
   'launch-sequence': {
     name: 'Launch Sequence Playbook',
     tagline: 'Step-by-step digital product launch system.',
     deliveryEnvKey: 'PRODUCT_LINK_LAUNCH_SEQUENCE',
-    defaultPath: '/downloads/launch-sequence-playbook.html',
+    file: 'launch-sequence-playbook.html',
     accentColor: '#ffd60a',
   },
   'ai-prompt-vault': {
     name: 'AI Prompt Vault for Creators',
     tagline: '500+ battle-tested AI prompts, organized by use case.',
     deliveryEnvKey: 'PRODUCT_LINK_AI_PROMPT_VAULT',
-    defaultPath: '/downloads/ai-prompt-vault.html',
+    file: 'ai-prompt-vault.html',
     accentColor: '#a78bfa',
   },
   'youtube-accelerator': {
     name: 'YouTube Growth Accelerator',
     tagline: 'The full system to grow your channel from any starting point.',
     deliveryEnvKey: 'PRODUCT_LINK_YOUTUBE_ACCELERATOR',
-    defaultPath: '/downloads/youtube-growth-accelerator.html',
+    file: 'youtube-growth-accelerator.html',
     accentColor: '#ff4444',
   },
   'email-list-builder': {
     name: 'Email List Builder System',
     tagline: 'Lead magnets, opt-in copy, and 14 emails that convert.',
     deliveryEnvKey: 'PRODUCT_LINK_EMAIL_LIST_BUILDER',
-    defaultPath: '/downloads/email-list-builder.html',
+    file: 'email-list-builder.html',
     accentColor: '#00E5FF',
   },
   'viral-content-formula': {
     name: 'Viral Content Formula',
     tagline: 'The repeatable framework behind content that spreads.',
     deliveryEnvKey: 'PRODUCT_LINK_VIRAL_CONTENT_FORMULA',
-    defaultPath: '/downloads/viral-content-formula.html',
+    file: 'viral-content-formula.html',
     accentColor: '#ff6b35',
   },
   'freelance-rate-kit': {
     name: 'Freelance Rate Masterclass Kit',
     tagline: 'Price your work confidently and negotiate like a pro.',
     deliveryEnvKey: 'PRODUCT_LINK_FREELANCE_RATE_KIT',
-    defaultPath: '/downloads/freelance-rate-kit.html',
+    file: 'freelance-rate-kit.html',
     accentColor: '#30d158',
   },
   'personal-brand-kit': {
     name: 'Personal Brand Positioning Kit',
     tagline: 'Build a brand so sharp it sells itself.',
     deliveryEnvKey: 'PRODUCT_LINK_PERSONAL_BRAND_KIT',
-    defaultPath: '/downloads/personal-brand-positioning-kit.html',
+    file: 'personal-brand-positioning-kit.html',
     accentColor: '#00E5FF',
   },
   'creator-legal-toolkit': {
     name: 'Creator Legal Toolkit',
     tagline: '7 contract templates that protect your business and IP.',
     deliveryEnvKey: 'PRODUCT_LINK_CREATOR_LEGAL_TOOLKIT',
-    defaultPath: '/downloads/creator-legal-toolkit.html',
+    file: 'creator-legal-toolkit.html',
     accentColor: '#ffd60a',
   },
   'passive-income-blueprint': {
     name: 'Passive Income Blueprint',
     tagline: '7 income streams, fully mapped. Start building tomorrow.',
     deliveryEnvKey: 'PRODUCT_LINK_PASSIVE_INCOME_BLUEPRINT',
-    defaultPath: '/downloads/passive-income-blueprint.html',
+    file: 'passive-income-blueprint.html',
     accentColor: '#30d158',
   },
   'video-script-formula': {
     name: 'Video Script & Hook Formula',
     tagline: '50 hook templates and the structure behind high-retention video.',
     deliveryEnvKey: 'PRODUCT_LINK_VIDEO_SCRIPT_FORMULA',
-    defaultPath: '/downloads/video-script-formula.html',
+    file: 'video-script-formula.html',
     accentColor: '#00E5FF',
   },
   'course-creator-kit': {
     name: 'Digital Course Creator Kit',
     tagline: 'Everything you need to build, launch, and sell a $500+ course.',
     deliveryEnvKey: 'PRODUCT_LINK_COURSE_CREATOR_KIT',
-    defaultPath: '/downloads/course-creator-kit.html',
+    file: 'course-creator-kit.html',
     accentColor: '#ffd60a',
   },
 
@@ -137,44 +137,49 @@ export const PRODUCT_CATALOG: Record<string, {
     name: 'Repair Estimate Mastery',
     tagline: 'Read, question, and negotiate any auto repair estimate.',
     deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_ESTIMATE_MASTERY',
-    defaultPath: '/downloads/academy-estimate-mastery.html',
+    file: 'academy-estimate-mastery.html',
     accentColor: '#ffd60a',
   },
   'academy-check-engine': {
     name: 'Check Engine Light: Complete Diagnostic Course',
     tagline: 'Diagnose your own check engine light the way a shop does.',
     deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_CHECK_ENGINE',
-    defaultPath: '/downloads/academy-check-engine.html',
+    file: 'academy-check-engine.html',
     accentColor: '#ffd60a',
   },
   'academy-noise-diagnosis': {
     name: 'Car Noise Diagnosis: Complete Course',
     tagline: "Train your ear system by system and stop guessing at what's making that sound.",
     deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_NOISE_DIAGNOSIS',
-    defaultPath: '/downloads/academy-noise-diagnosis.html',
+    file: 'academy-noise-diagnosis.html',
     accentColor: '#ffd60a',
   },
   'academy-fight-back': {
     name: 'Fight Back: Complete Dispute & Consumer Protection Course',
     tagline: 'A full system for disputing bad bills, bad charges, and bad service.',
     deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_FIGHT_BACK',
-    defaultPath: '/downloads/academy-fight-back.html',
+    file: 'academy-fight-back.html',
     accentColor: '#ffd60a',
   },
   'academy-bundle': {
     name: 'ScrewedScore Academy — Complete Bundle',
     tagline: 'All four courses, 28 modules total — one price.',
     deliveryEnvKey: 'PRODUCT_LINK_ACADEMY_BUNDLE',
-    defaultPath: '/downloads/academy-bundle.html',
+    file: 'academy-bundle.html',
     accentColor: '#ffd60a',
   },
 }
 
-function buildDownloadUrl(envKey: string, defaultPath: string): string {
+/** Site-relative URL of the purchase-gated download for a checkout session. */
+export function downloadPath(productId: string, stripeSessionId: string): string {
+  return `/api/download?product=${encodeURIComponent(productId)}&session_id=${encodeURIComponent(stripeSessionId)}`
+}
+
+function buildDownloadUrl(envKey: string, productId: string, stripeSessionId: string): string {
   const override = process.env[envKey]
   if (override && override.startsWith('http')) return override
   const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com').replace(/\/+$/, '')
-  return `${origin}${defaultPath}`
+  return `${origin}${downloadPath(productId, stripeSessionId)}`
 }
 
 function buildEmailHtml(opts: {
@@ -384,7 +389,7 @@ export async function sendProductDeliveryEmail(opts: {
     return { ok: false, error: `Unknown product_id: ${productId}` }
   }
 
-  const downloadUrl = buildDownloadUrl(product.deliveryEnvKey, product.defaultPath)
+  const downloadUrl = buildDownloadUrl(product.deliveryEnvKey, opts.productId, opts.stripeSessionId)
 
   const fromAddress = process.env.RESEND_FROM_EMAIL ?? 'products@screwedscore.com'
 

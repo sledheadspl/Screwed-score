@@ -8,12 +8,12 @@ import { CheckCircle, ArrowRight, Mail, Download } from 'lucide-react'
 // Mirror of the academy entries in PRODUCT_CATALOG (lib/email/product-delivery.ts) —
 // kept here for instant client-side rendering of the download link without a
 // server round-trip.
-const PRODUCTS: Record<string, { name: string; download: string }> = {
-  'academy-estimate-mastery': { name: 'Repair Estimate Mastery', download: '/downloads/academy-estimate-mastery.html' },
-  'academy-check-engine':     { name: 'Check Engine Light: Complete Diagnostic Course', download: '/downloads/academy-check-engine.html' },
-  'academy-noise-diagnosis':  { name: 'Car Noise Diagnosis: Complete Course', download: '/downloads/academy-noise-diagnosis.html' },
-  'academy-fight-back':       { name: 'Fight Back: Complete Dispute & Consumer Protection Course', download: '/downloads/academy-fight-back.html' },
-  'academy-bundle':           { name: 'ScrewedScore Academy — Complete Bundle', download: '/downloads/academy-bundle.html' },
+const PRODUCTS: Record<string, { name: string }> = {
+  'academy-estimate-mastery': { name: 'Repair Estimate Mastery' },
+  'academy-check-engine':     { name: 'Check Engine Light: Complete Diagnostic Course' },
+  'academy-noise-diagnosis':  { name: 'Car Noise Diagnosis: Complete Course' },
+  'academy-fight-back':       { name: 'Fight Back: Complete Dispute & Consumer Protection Course' },
+  'academy-bundle':           { name: 'ScrewedScore Academy — Complete Bundle' },
 }
 
 function SuccessInner() {
@@ -21,7 +21,11 @@ function SuccessInner() {
   const productId = params?.get('product') ?? ''
   const product = PRODUCTS[productId]
   const productName = product?.name ?? 'Your purchase'
-  const downloadUrl = product?.download
+  const sessionId = params?.get('session_id') ?? ''
+  // Paid files are served by /api/download, which checks this checkout session.
+  const downloadUrl = product && sessionId
+    ? `/api/download?product=${encodeURIComponent(productId)}&session_id=${encodeURIComponent(sessionId)}`
+    : null
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-5 overflow-x-hidden">

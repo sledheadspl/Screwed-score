@@ -7,23 +7,23 @@ import { CheckCircle, ArrowRight, Mail, Download } from 'lucide-react'
 
 // Mirror of PRODUCT_CATALOG in lib/email/product-delivery.ts — kept here for
 // instant client-side rendering of the download link without a server round-trip.
-const PRODUCTS: Record<string, { name: string; download: string }> = {
-  'creator-os':               { name: 'Creator OS Bundle',                 download: '/downloads/creator-os-bundle.html' },
-  'content-pipeline':         { name: 'Content Pipeline Pro',              download: '/downloads/content-pipeline-pro.html' },
-  'brand-deal':               { name: 'Brand Deal Negotiation Pack',       download: '/downloads/brand-deal-negotiation-pack.html' },
-  'revenue-dashboard':        { name: 'Revenue Dashboard Kit',             download: '/downloads/revenue-dashboard-kit.html' },
-  'social-assets':            { name: 'Social Media Asset Pack',           download: '/downloads/social-media-asset-pack.html' },
-  'launch-sequence':          { name: 'Launch Sequence Playbook',          download: '/downloads/launch-sequence-playbook.html' },
-  'ai-prompt-vault':          { name: 'AI Prompt Vault for Creators',      download: '/downloads/ai-prompt-vault.html' },
-  'youtube-accelerator':      { name: 'YouTube Growth Accelerator',        download: '/downloads/youtube-growth-accelerator.html' },
-  'email-list-builder':       { name: 'Email List Builder System',         download: '/downloads/email-list-builder.html' },
-  'viral-content-formula':    { name: 'Viral Content Formula',             download: '/downloads/viral-content-formula.html' },
-  'freelance-rate-kit':       { name: 'Freelance Rate Masterclass Kit',    download: '/downloads/freelance-rate-kit.html' },
-  'personal-brand-kit':       { name: 'Personal Brand Positioning Kit',    download: '/downloads/personal-brand-positioning-kit.html' },
-  'creator-legal-toolkit':    { name: 'Creator Legal Toolkit',             download: '/downloads/creator-legal-toolkit.html' },
-  'passive-income-blueprint': { name: 'Passive Income Blueprint',          download: '/downloads/passive-income-blueprint.html' },
-  'video-script-formula':     { name: 'Video Script & Hook Formula',       download: '/downloads/video-script-formula.html' },
-  'course-creator-kit':       { name: 'Digital Course Creator Kit',        download: '/downloads/course-creator-kit.html' },
+const PRODUCTS: Record<string, { name: string }> = {
+  'creator-os':               { name: 'Creator OS Bundle' },
+  'content-pipeline':         { name: 'Content Pipeline Pro' },
+  'brand-deal':               { name: 'Brand Deal Negotiation Pack' },
+  'revenue-dashboard':        { name: 'Revenue Dashboard Kit' },
+  'social-assets':            { name: 'Social Media Asset Pack' },
+  'launch-sequence':          { name: 'Launch Sequence Playbook' },
+  'ai-prompt-vault':          { name: 'AI Prompt Vault for Creators' },
+  'youtube-accelerator':      { name: 'YouTube Growth Accelerator' },
+  'email-list-builder':       { name: 'Email List Builder System' },
+  'viral-content-formula':    { name: 'Viral Content Formula' },
+  'freelance-rate-kit':       { name: 'Freelance Rate Masterclass Kit' },
+  'personal-brand-kit':       { name: 'Personal Brand Positioning Kit' },
+  'creator-legal-toolkit':    { name: 'Creator Legal Toolkit' },
+  'passive-income-blueprint': { name: 'Passive Income Blueprint' },
+  'video-script-formula':     { name: 'Video Script & Hook Formula' },
+  'course-creator-kit':       { name: 'Digital Course Creator Kit' },
 }
 
 function SuccessInner() {
@@ -31,7 +31,11 @@ function SuccessInner() {
   const productId = params?.get('product') ?? ''
   const product = PRODUCTS[productId]
   const productName = product?.name ?? 'Your purchase'
-  const downloadUrl = product?.download
+  const sessionId = params?.get('session_id') ?? ''
+  // Paid files are served by /api/download, which checks this checkout session.
+  const downloadUrl = product && sessionId
+    ? `/api/download?product=${encodeURIComponent(productId)}&session_id=${encodeURIComponent(sessionId)}`
+    : null
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-5 overflow-x-hidden">

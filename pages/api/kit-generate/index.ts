@@ -1,12 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Stripe from 'stripe'
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import type { DocumentType } from '@/lib/types'
+import { getStripe, isPaidSession, recordUse } from '@/lib/stripe'
 
-const stripe    = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
 const anthropic = new Anthropic()
+
+// Each generation is a paid Claude call. The client caches the kit in
+// localStorage, so a buyer only needs a couple of regenerations.
+const MAX_GENERATIONS = 3
 
 export interface KitContent {
   demand_letter:    string
@@ -25,6 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Verify payment
+  const stripe = getStripe()
   let stripeSession
   try {
     stripeSession = await stripe.checkout.sessions.retrieve(session_id)
@@ -32,12 +36,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Invalid session' })
   }
 
-  if (stripeSession.payment_status !== 'paid') {
+  if (!isPaidSession(stripeSession)) {
     return res.status(402).json({ error: 'Payment not completed' })
   }
 
   if (stripeSession.metadata?.analysis_id !== analysis_id) {
     return res.status(403).json({ error: 'Session does not match analysis' })
+  }
+
+  const piId = typeof stripeSession.payment_intent === 'string' ? stripeSession.payment_intent : null
+  if (!piId) {
+    return res.status(400).json({ error: 'Invalid session' })
+  }
+  try {
+    const allowed = await recordUse({
+      read: async () => (await stripe.paymentIntents.retrieve(piId)).metadata,
+      write: metadata => stripe.paymentIntents.update(piId, { metadata }),
+      key: 'gss_kit_generations',
+      period: analysis_id,
+      max: MAX_GENERATIONS,
+    })
+    if (!allowed) {
+      return res.status(429).json({ error: 'This kit has already been generated the maximum number of times. Reply to your receipt email if you need it resent.' })
+    }
+  } catch (err) {
+    console.error('[kit-generate] usage check failed', err)
+    return res.status(500).json({ error: 'Could not verify purchase — try again' })
   }
 
   // Fetch analysis

@@ -9,6 +9,7 @@ function PaidInner() {
   const router = useRouter()
   const params = useSearchParams()
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying')
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   useEffect(() => {
     const sessionId = params?.get('session_id')
@@ -25,6 +26,7 @@ function PaidInner() {
           setStatus('success')
           setTimeout(() => router.replace('/'), 2500)
         } else {
+          setErrorMsg(typeof data.error === 'string' ? data.error : null)
           setStatus('error')
         }
       })
@@ -50,8 +52,8 @@ function PaidInner() {
       )}
       {status === 'error' && (
         <>
-          <p className="text-red-400 font-semibold">Something went wrong verifying your payment.</p>
-          <p className="text-brand-sub text-sm">Your card was not charged. <Link href="/" className="underline">Go back</Link>.</p>
+          <p className="text-red-400 font-semibold">{errorMsg ?? 'Something went wrong verifying your payment.'}</p>
+          <p className="text-brand-sub text-sm">Questions? Reply to your Stripe receipt email. <Link href="/" className="underline">Go back</Link>.</p>
         </>
       )}
     </div>
