@@ -11,7 +11,7 @@ date: "2026-05-16"
 
 You picked up your car, paid **$1,400**, and something still doesn't feel right — or worse, the problem came back two days later. Now you're staring at a receipt full of line items you don't fully understand, wondering if you just got taken.
 
-You're not alone. Auto repair is one of the most consistently overcharged service categories in the country. A 2023 AAA survey found that **two in three U.S. drivers don't trust auto repair shops**. That distrust is earned.
+You're not alone. Auto repair is one of the most consistently overcharged service categories in the country. AAA research has found that **about two in three U.S. drivers don't trust auto repair shops**. That distrust is earned.
 
 ---
 

@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         <div className="w-full h-px bg-brand-border" />
 
         <Section title="1. What We Collect">
-          <p><strong className="text-brand-text">Documents you upload.</strong> When you upload a file for analysis, we extract the text content and store it temporarily to run the AI analysis. The extracted text is stored in our database linked to an anonymized IP hash — never to your name or email unless you create an account.</p>
+          <p><strong className="text-brand-text">Documents you upload.</strong> When you upload a file for analysis, we extract its text to run the AI analysis. The file itself is never saved. The extracted text is held only until your result is ready and is then erased; if a scan fails, it is kept so you can retry. What we keep is the analysis itself (the score and findings), linked to an anonymized IP hash, never to your name or email unless you create an account.</p>
           <p><strong className="text-brand-text">Usage data.</strong> We track how many analyses have been run from a given IP address (stored as a one-way SHA-256 hash) to enforce our free tier limits. Raw IP addresses are not stored.</p>
           <p><strong className="text-brand-text">Account data (optional).</strong> If you sign in with Google, we receive your email address and Google profile ID from Google OAuth. We use this to identify your account and allow you to revisit past analyses.</p>
           <p><strong className="text-brand-text">Payment data.</strong> If you subscribe to GetScrewedScore Pro, payment is processed by Stripe. We do not store your full card number, CVV, or billing address — Stripe handles all payment data. We store your Stripe customer ID and subscription ID to manage your Pro status.</p>
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="3. Document Retention">
-          <p>Uploaded documents and their extracted text are stored in our database to power the shareable results page at <code className="text-xs bg-brand-muted px-1.5 py-0.5 rounded">/r/[id]</code>. If you did not explicitly share your result, your document data is not publicly accessible.</p>
+          <p>Your analysis (score and findings, not your document) is stored in our database to power the shareable results page at <code className="text-xs bg-brand-muted px-1.5 py-0.5 rounded">/r/[id]</code>. Results pages have unguessable links; if you did not share yours, nobody else has the link.</p>
           <p>We do not use your document content to train AI models. Your documents are passed to Anthropic&apos;s Claude API for analysis and are subject to{' '}
             <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">Anthropic&apos;s Privacy Policy</a>.
             Anthropic does not train models on API inputs.
@@ -93,7 +93,7 @@ export default function PrivacyPage() {
               </thead>
               <tbody className="divide-y divide-brand-border">
                 {[
-                  ['Supabase', 'Database, authentication, file storage', 'supabase.com/privacy'],
+                  ['Supabase', 'Database and authentication', 'supabase.com/privacy'],
                   ['Anthropic Claude', 'AI document analysis', 'anthropic.com/legal/privacy'],
                   ['Stripe', 'Payment processing', 'stripe.com/privacy'],
                   ['Google OAuth', 'Sign-in (optional)', 'policies.google.com/privacy'],

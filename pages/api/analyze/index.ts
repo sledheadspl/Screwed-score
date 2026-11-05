@@ -75,6 +75,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (saveError) {
       console.error('[analyze] Failed to persist analysis:', saveError.message)
+    } else {
+      // Privacy promise: the document's text is erased once the scan is
+      // saved. Only the analysis (findings, score) is kept. If saving failed
+      // we keep the text so the user's "try again" still works.
+      const { error: eraseError } = await supabase
+        .from('documents')
+        .update({ extracted_text: null })
+        .eq('id', body.document_id)
+      if (eraseError) console.error('[analyze] Failed to erase document text:', eraseError.message)
     }
 
     await sendGAEvent('scan_complete', {

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import formidable from 'formidable'
 import { readFileSync } from 'fs'
-import { randomUUID, createHash } from 'crypto'
+import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { detectDocumentType } from '@/lib/detect'
@@ -175,19 +175,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .replace(/\.{2,}/g, '_')
       .slice(0, 80)
 
-    const storageId   = randomUUID()
-    const storagePath = `uploads/${ipHash.slice(0, 16)}/${storageId}-${safeName}`
-
-    const { error: storageError } = await supabase.storage
-      .from('documents')
-      .upload(storagePath, buffer, {
-        contentType: uploadedFile.mimetype ?? '',
-        upsert: false,
-      })
-
-    if (storageError) {
-      console.warn('Storage upload failed (non-fatal):', storageError.message)
-    }
+    // The original file is NOT kept: it is never written to storage. Only the
+    // extracted text is held, and /api/analyze erases it once the scan is
+    // saved. This is what the site's privacy promise says, so keep it true.
 
     // ── 8. Persist document record ──────────────────────────────────────────
     // Cap extracted_text at 100KB to prevent row bloat. Practical AI analysis
@@ -200,8 +190,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data: doc, error: docError } = await supabase
       .from('documents')
       .insert({
-        original_file_name: (uploadedFile.originalFilename ?? 'upload').slice(0, 255),
-        storage_path:       storageError ? null : storagePath,
+        // File names often contain people's names; keep only the extension.
+        original_file_name: `upload${(safeName.match(/\.[a-zA-Z0-9]{1,8}$/) ?? [''])[0]}`,
+        storage_path:       null,
         mime_type:          uploadedFile.mimetype ?? '',
         extracted_text:     truncatedText,
         document_type:      documentType,

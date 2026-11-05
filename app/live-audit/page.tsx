@@ -6,7 +6,7 @@ import { LIVE_AUDIT_AREA, LIVE_AUDIT_AUDITOR, LIVE_AUDIT_OPTIONS, formatPrice } 
 const FROM = formatPrice(Math.min(...Object.values(LIVE_AUDIT_OPTIONS).map(o => o.priceCents)))
 
 export const metadata: Metadata = {
-  title: `Live Bill & Finance Audit with a Real Person, from ${FROM} | ScrewedScore`,
+  title: `Bill & Finance Audit in Spokane, WA: In Person or by Video, from ${FROM}`,
   description: `Sit down with a real person, in person around ${LIVE_AUDIT_AREA} or by video anywhere, and go through your bills, statements and contracts line by line. Leave knowing exactly what to dispute, cancel or renegotiate.`,
   alternates: { canonical: 'https://www.screwedscore.com/live-audit' },
   openGraph: {
@@ -39,9 +39,45 @@ const FAQ = [
   { q: 'What if I need to reschedule?', a: 'Reply to your confirmation email or tell us when we call, and we will find another time.' },
 ]
 
+const SITE = 'https://www.screwedscore.com'
+
+// Structured data: a local service-area business (no street address shown),
+// its two priced offers, and the FAQ. Keep in sync with what the page says.
+const JSON_LD = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${SITE}/live-audit#service`,
+    name: 'ScrewedScore Live Bill & Finance Audit',
+    url: `${SITE}/live-audit`,
+    image: `${SITE}/og`,
+    description: `A real person reviews your bills, bank and credit card statements, subscriptions and contracts with you, in person around ${LIVE_AUDIT_AREA} or by video, and shows you what to dispute, cancel or renegotiate.`,
+    areaServed: [
+      { '@type': 'City', name: 'Spokane', containedInPlace: { '@type': 'State', name: 'Washington' } },
+      { '@type': 'City', name: 'Spokane Valley', containedInPlace: { '@type': 'State', name: 'Washington' } },
+      { '@type': 'Country', name: 'United States' },
+    ],
+    priceRange: Object.values(LIVE_AUDIT_OPTIONS).map(o => formatPrice(o.priceCents)).join('–'),
+    founder: { '@type': 'Person', name: LIVE_AUDIT_AUDITOR },
+    makesOffer: Object.values(LIVE_AUDIT_OPTIONS).map(o => ({
+      '@type': 'Offer',
+      name: `Live audit: ${o.label} (${o.minutes} minutes)`,
+      price: (o.priceCents / 100).toFixed(2),
+      priceCurrency: 'USD',
+      url: `${SITE}/live-audit#book`,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+]
+
 export default function LiveAuditPage() {
   return (
     <main className="min-h-screen bg-brand-bg overflow-x-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       {/* Hero */}
       <section className="relative max-w-6xl mx-auto px-5 sm:px-8 pt-28 sm:pt-32 pb-16">
         <div className="absolute inset-x-0 top-0 h-[480px] pointer-events-none -z-0"

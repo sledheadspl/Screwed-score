@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { LIVE_AUDIT_AUDITOR } from '@/lib/live-audit'
 
 export const metadata: Metadata = {
-  title: 'Live audit booked | ScrewedScore',
+  title: 'Live audit booked',
   robots: { index: false, follow: false },
 }
 

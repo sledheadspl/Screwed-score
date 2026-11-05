@@ -12,7 +12,7 @@ date: "2026-05-16"
 
 You drop off your car for a brake job quoted at **$220**. You come back to a bill for **$389**. The service advisor rattles off a list of added charges — shop supplies, hazmat disposal, "miscellaneous labor" — and you nod because you don't want to look cheap, and also because they have your car.
 
-This happens every day. A 2024 survey by Consumer Reports found that nearly 1 in 3 people who took their car in for a quoted repair paid more than they were told they would. The average gap: **$167**. That's not a rounding error. That's a pattern.
+It happens all the time, and it's rarely a rounding error. Most of the gap usually comes from a handful of add-on fees that never appeared on the estimate.
 
 ---
 
