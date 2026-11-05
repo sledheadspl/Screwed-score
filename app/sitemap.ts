@@ -59,6 +59,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: `${base}/live-audit`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1.0,
+    },
+    {
       url: `${base}/pro`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -83,36 +89,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${base}/clippilot`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${base}/productivity`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${base}/academy`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    },
-    {
-      url: `${base}/academy/community`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.75,
-    },
-    {
-      url: `${base}/jobs`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
       url: `${base}/for-businesses`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -124,6 +100,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    // ClipPilot, the creator products (/productivity), the Academy and /jobs
+    // are intentionally omitted: they are unrelated to bill auditing and
+    // dilute the site. Their pages still work at their URLs.
     // /business-portal intentionally omitted: it's a login-gated vendor
     // dashboard (redirects to /auth when signed out), not public content —
     // it also now carries a noindex tag (app/business-portal/layout.tsx).

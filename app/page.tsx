@@ -8,9 +8,10 @@
 import type { Metadata } from 'next'
 import {
   FileText, Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
-  Star, ChevronDown, Flame, MessageSquare, Building2,
+  ChevronDown, Flame, MessageSquare, Building2,
 } from 'lucide-react'
 import { AnalysisShell } from '@/components/home/AnalysisShell'
+import { LiveAuditCTA } from '@/components/LiveAuditCTA'
 import { UploadSlot, SampleButton } from '@/components/home/UploadSlot'
 import {
   DeferredLiveTicker,
@@ -59,33 +60,6 @@ const EXAMPLES = [
   },
 ]
 
-// ── Testimonials ────────────────────────────────────────────────────────────
-const TESTIMONIALS = [
-  {
-    quote: "Found $1,100 in bogus labor charges on my mechanic invoice. Showed the breakdown to the shop — they removed $800 on the spot. This thing paid for itself in 5 minutes.",
-    name: 'Marcus T.',
-    location: 'Houston, TX',
-    doc: 'Mechanic Invoice',
-    initials: 'MT',
-    color: '#ff6b60',
-  },
-  {
-    quote: "My dentist billed me for a procedure that was covered 100% by insurance. The AI flagged it as duplicate billing. Got a $590 refund I never would've caught.",
-    name: 'Priya K.',
-    location: 'Chicago, IL',
-    doc: 'Dental Bill',
-    initials: 'PK',
-    color: '#f59e0b',
-  },
-  {
-    quote: "Uploaded my new lease before signing. It flagged a clause that would've let my landlord enter without notice. Negotiated it out before I ever put pen to paper.",
-    name: 'Jason M.',
-    location: 'Seattle, WA',
-    doc: 'Lease Agreement',
-    initials: 'JM',
-    color: '#4ade80',
-  },
-]
 
 // ── FAQ ──────────────────────────────────────────────────────────────────────
 const FAQ_ITEMS = [
@@ -199,22 +173,9 @@ export default function HomePage() {
                 <a href="/privacy" className="underline underline-offset-2 hover:text-brand-text transition-colors">How we handle your data →</a>
               </div>
 
-              {/* Social proof */}
-              <div className="animate-fade-up delay-500 flex items-center justify-center gap-3">
-                <div className="flex -space-x-2">
-                  {[
-                    { c: '#ff6b60', i: 'MT' }, { c: '#f59e0b', i: 'PK' },
-                    { c: '#4ade80', i: 'JM' }, { c: '#60a5fa', i: 'RS' }, { c: '#a78bfa', i: 'AL' },
-                  ].map(({ c, i }) => (
-                    <div key={i} className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-[9px] font-black shrink-0"
-                      style={{ background: c + '22', borderColor: '#080808', color: c }}>
-                      {i}
-                    </div>
-                  ))}
-                </div>
-                <span className="text-sm text-brand-sub/50">
-                  Used by early access members
-                </span>
+              {/* Live person offer */}
+              <div className="animate-fade-up delay-500 w-full max-w-xl mx-auto">
+                <LiveAuditCTA variant="button" />
               </div>
             </section>
 
@@ -466,65 +427,13 @@ export default function HomePage() {
               </div>
             </section>
 
-            {/* ════ TESTIMONIALS ══════════════════════════════════════════ */}
-            <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
+            {/* ════ LIVE AUDIT ══════════════════════════════════════════ */}
+            <section id="live-audit" className="animate-fade-up max-w-3xl mx-auto px-5 sm:px-8 pb-24 space-y-6 scroll-mt-24">
               <div className="text-center space-y-2">
-                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">The evidence</p>
-                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">They found out.</h2>
+                <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">Prefer a human?</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Get a live audit with a real person.</h2>
               </div>
-
-              {/* Featured pull quote */}
-              <div className="relative rounded-3xl border border-brand-border bg-brand-surface overflow-hidden p-10 sm:p-16"
-                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 0 80px rgba(255,59,48,0.03)' }}>
-                {/* Giant decorative quote mark */}
-                <div className="absolute top-4 left-8 font-black leading-none select-none pointer-events-none"
-                  style={{
-                    fontSize: '160px', lineHeight: 1,
-                    color: 'rgba(255,59,48,0.05)',
-                    fontFamily: 'Georgia, "Times New Roman", serif',
-                  }}>"</div>
-                <div className="relative z-10 max-w-2xl mx-auto text-center">
-                  <p className="font-bold text-brand-text/85 leading-relaxed mb-10"
-                    style={{ fontSize: 'clamp(22px, 3.2vw, 30px)', lineHeight: 1.4 }}>
-                    "{TESTIMONIALS[0].quote}"
-                  </p>
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-black shrink-0"
-                      style={{ background: TESTIMONIALS[0].color + '18', color: TESTIMONIALS[0].color, border: `1px solid ${TESTIMONIALS[0].color}30` }}>
-                      {TESTIMONIALS[0].initials}
-                    </div>
-                    <div className="text-left">
-                      <p className="text-sm font-bold text-brand-text">{TESTIMONIALS[0].name}</p>
-                      <p className="text-xs text-brand-sub/50 mt-0.5">{TESTIMONIALS[0].location} · {TESTIMONIALS[0].doc}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Two secondary testimonials */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                {TESTIMONIALS.slice(1).map((t) => (
-                  <div key={t.name} className="rounded-2xl border border-brand-border bg-brand-surface p-7 space-y-5 relative overflow-hidden"
-                    style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                    <div className="absolute top-0 right-0 w-28 h-28 pointer-events-none"
-                      style={{ background: `radial-gradient(circle at top right, ${t.color}07 0%, transparent 70%)` }} />
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />)}
-                    </div>
-                    <p className="text-sm text-brand-text/75 leading-relaxed relative z-10">"{t.quote}"</p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
-                        style={{ background: t.color + '16', color: t.color, border: `1px solid ${t.color}28` }}>
-                        {t.initials}
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-brand-text">{t.name}</p>
-                        <p className="text-[10px] text-brand-sub/65 mt-0.5">{t.location} · {t.doc}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <LiveAuditCTA heading="Bring all your bills. Leave with a plan." />
             </section>
 
             {/* ════ SCREWED SCORE GAME ════════════════════════════════════ */}
@@ -534,8 +443,8 @@ export default function HomePage() {
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-10">
               <div className="text-center space-y-2">
                 <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">What it looks like</p>
-                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Real results. Real money.</h2>
-                <p className="text-sm text-brand-sub/50 max-w-md mx-auto">Plain-English breakdown. Exact charges. What to do next.</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">What a result looks like.</h2>
+                <p className="text-sm text-brand-sub/50 max-w-md mx-auto">Illustrative examples, not real customer results. Plain-English breakdown, exact charges, what to do next.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ gridAutoRows: 'auto' }}>

@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { RotateCcw, Receipt } from 'lucide-react'
 import type { AnalysisResult, DocumentType } from '@/lib/types'
 import { formatDollar } from '@/lib/utils'
+import { LiveAuditCTA } from '@/components/LiveAuditCTA'
 
 // Done-state components. This whole module is itself loaded on demand by
 // AnalysisShell, so none of it — nor the cards below — is in the landing chunk.
@@ -112,6 +113,10 @@ export function ResultView({
 
       {!isSample && <FixDocument result={result} />}
       {!isSample && <FightBackKit analysisId={analysisId} score={result.screwed_score} />}
+
+      {!isSample && result.screwed_score !== 'SAFE' && (
+        <LiveAuditCTA heading="Want a real person to go through this with you?" />
+      )}
 
       {!isSample && (
         <HumanAuditCard

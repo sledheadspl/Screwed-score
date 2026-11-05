@@ -9,18 +9,8 @@ interface TickerItem {
   minsAgo: number
 }
 
-const FALLBACK: TickerItem[] = [
-  { score: 'SCREWED', doc: 'Mechanic Invoice',     amount: '$847',   minsAgo: 4  },
-  { score: 'SAFE',    doc: 'Employment Contract',  amount: '',       minsAgo: 7  },
-  { score: 'SCREWED', doc: 'Medical Bill',         amount: '$1,240', minsAgo: 12 },
-  { score: 'MAYBE',   doc: 'Phone Bill',           amount: '$43',    minsAgo: 18 },
-  { score: 'SCREWED', doc: 'Contractor Estimate',  amount: '$2,100', minsAgo: 23 },
-  { score: 'MAYBE',   doc: 'Lease Agreement',      amount: '$310',   minsAgo: 31 },
-  { score: 'SCREWED', doc: 'Dental Bill',          amount: '$590',   minsAgo: 45 },
-  { score: 'SAFE',    doc: 'Insurance Quote',      amount: '',       minsAgo: 52 },
-  { score: 'SCREWED', doc: 'Internet / Cable',     amount: '$34/mo', minsAgo: 67 },
-  { score: 'MAYBE',   doc: 'Brand Deal Contract',  amount: '',       minsAgo: 88 },
-]
+// No placeholder data: the ticker only appears when there are enough real
+// recent scans to show. Invented "4m ago" activity would be fake social proof.
 
 const EMOJI:  Record<string, string> = { SCREWED: '🚨', MAYBE: '⚠️', SAFE: '✅' }
 const BADGE:  Record<string, string> = {
@@ -38,7 +28,7 @@ function timeLabel(mins: number) {
 }
 
 export function LiveTicker() {
-  const [items, setItems] = useState<TickerItem[]>(FALLBACK)
+  const [items, setItems] = useState<TickerItem[] | null>(null)
 
   useEffect(() => {
     fetch('/api/recent-scans')
@@ -49,6 +39,7 @@ export function LiveTicker() {
       .catch(() => {})
   }, [])
 
+  if (!items) return null
   const display = [...items, ...items]
 
   return (
