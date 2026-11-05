@@ -166,7 +166,7 @@ export default function HomePage() {
 
               {/* Privacy inline disclosure */}
               <div className="animate-fade-up delay-380 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-brand-sub/80 mt-1 mb-6">
-                <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-green-500/70" /> Your file is read once by AI, then deleted — never stored, sold, or used for training</span>
+                <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-green-500/70" /> We never keep your file. Its text is erased as soon as your score is ready. Never sold or used to train AI</span>
                 <span className="text-brand-sub/30 hidden sm:inline">·</span>
                 <span>No account · No credit card</span>
                 <span className="text-brand-sub/30 hidden sm:inline">·</span>
@@ -187,10 +187,10 @@ export default function HomePage() {
               <div className="max-w-6xl mx-auto px-5 sm:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
-                    { value: '20 sec',  label: 'average analysis time',      color: '#ff3b30' },
+                    { value: '~20 sec', label: 'typical scan time',          color: '#ff3b30' },
                     { value: '5/day',   label: 'free scans, no account',     color: '#60a5fa' },
-                    { value: '78%',     label: 'of scans flag something',    color: '#ffd60a' },
-                    { value: '12',      label: 'languages supported',        color: '#30d158' },
+                    { value: '$49',     label: 'live audit with a real person', color: '#ffd60a' },
+                    { value: '11',      label: 'kinds of bills & contracts', color: '#30d158' },
                   ].map(({ value, label, color }, idx) => (
                     <div key={label} className={`px-4 sm:px-8 py-6 text-center ${idx > 0 ? 'stat-divider' : ''}`}>
                       <p className="font-black tracking-tighter leading-none mb-2.5"
@@ -593,10 +593,10 @@ export default function HomePage() {
                 <div className="flex flex-col items-center gap-1.5">
                   <p className="flex items-center justify-center gap-2 text-sm font-semibold text-green-400/70">
                     <ShieldCheck className="w-4 h-4 text-green-400/60" />
-                    Your documents are never stored, sold, or shared.
+                    We never keep your file, and never sell your data.
                   </p>
                   <p className="text-xs text-brand-sub/55">
-                    File deleted immediately after scan · Results saved privately · No account required
+                    Text erased once your score is ready · Results on a private link you choose to share · No account required
                   </p>
                 </div>
               </div>

@@ -49,7 +49,7 @@ function buildStep1(): { subject: string; html: string } {
 <p style="margin:0 0 14px;">Most people don't. The average American overpays $1,300/year on bills they never read — mechanic invoices, medical bills, phone bills, contractor estimates. Every single one.</p>
 <p style="margin:0 0 14px;">If you've got one sitting in your inbox or glove box right now, this is your nudge. It takes 20 seconds.</p>
 ${CTA('Scan a bill now (free)', 'https://www.screwedscore.com', accent)}
-<p style="margin:0;font-size:13px;color:rgba(242,242,242,0.5);">No account. No credit card. We delete the file after we read it.</p>`
+<p style="margin:0;font-size:13px;color:rgba(242,242,242,0.5);">No account. No credit card. We don't keep your file.</p>`
   return { subject: 'Quick gut check on that last bill', html: SHELL('Day 1', accent, body) }
 }
 
@@ -97,7 +97,7 @@ function buildStep3(): { subject: string; html: string } {
 <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:${accent};letter-spacing:0.2em;text-transform:uppercase;">Day 7 · Final note</p>
 <h1 style="margin:0 0 14px;font-size:24px;font-weight:900;color:#f2f2f2;letter-spacing:-0.02em;line-height:1.15;">One last nudge.</h1>
 <p style="margin:0 0 14px;">This is the last email in this sequence. After this, we only message you if there's something genuinely useful — a new product, a public Wall of Shame update, or something we built specifically for what you signed up for.</p>
-<p style="margin:0 0 14px;">If you came here because you suspected you were being overcharged on something, that suspicion was probably right. <strong>78% of the bills our AI scans flag at least one suspicious charge.</strong></p>
+<p style="margin:0 0 14px;">If you came here because you suspected you were being overcharged on something, that suspicion was probably right. <strong>Upload it and find out in about 20 seconds.</strong></p>
 <p style="margin:0 0 14px;">If you found this useful, the single most helpful thing you can do is share one scan with a friend. Their first one is free.</p>
 ${CTA('Scan a bill', 'https://www.screwedscore.com', accent)}
 <p style="margin:0;font-size:13px;color:rgba(242,242,242,0.5);">Thanks for being here. — Ryan, REMbyDesign</p>`

@@ -3,6 +3,20 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
 import { Download } from 'lucide-react'
+import { LiveAuditCTA } from '@/components/LiveAuditCTA'
+
+// In-depth guides for each bill type (internal links help both readers and search).
+const GUIDES: Record<string, { href: string; title: string }[]> = {
+  'medical-bill':        [{ href: '/blog/how-to-dispute-a-medical-bill', title: 'How to dispute a medical bill' },
+                          { href: '/blog/dental-bill-errors-what-to-check', title: 'Dental bill errors: what to check' }],
+  'mechanic-invoice':    [{ href: '/blog/how-to-dispute-a-mechanic-bill', title: 'How to dispute a mechanic bill' },
+                          { href: '/blog/signs-your-mechanic-is-overcharging-you', title: 'Signs your mechanic is overcharging you' }],
+  'contractor-estimate': [{ href: '/blog/hire-someone-to-review-your-bills', title: 'Should you pay someone to review your bills?' }],
+  'lease-agreement':     [{ href: '/blog/hire-someone-to-review-your-bills', title: 'Should you pay someone to review your bills?' }],
+  'phone-bill':          [{ href: '/blog/how-to-lower-your-internet-and-phone-bill', title: 'How to lower your internet and phone bill' },
+                          { href: '/blog/how-to-find-and-cancel-subscriptions', title: 'How to find and cancel forgotten subscriptions' }],
+  'brand-deal':          [],
+}
 
 interface FAQ { q: string; a: string }
 
@@ -29,12 +43,12 @@ const CONFIGS: Record<string, PageConfig> = {
     h1:              'How to Find and Dispute Medical Bill Overcharges',
     intro: [
       'The average American hospital bill contains at least one significant error — and most people never catch it. Medical billing is intentionally complex: coded procedures, insurance adjustments, facility fees, and line items that mean nothing to anyone without a billing degree. Hospitals count on that confusion.',
-      'ScrewedScore\'s AI was trained on thousands of medical bills to identify the exact patterns that inflate your total. Upload your bill and get a plain-English breakdown of every suspicious charge in about 20 seconds.',
+      'ScrewedScore\'s AI reads your bill line by line and looks for the patterns that commonly inflate totals: duplicate charges, upcoding, and services you did not receive. Upload your bill and get a plain-English breakdown of every suspicious charge in about 20 seconds.',
     ],
     stats: [
-      { value: '80%',   label: 'of hospital bills contain at least one error' },
-      { value: '$1,300', label: 'average amount overcharged per incorrect bill' },
-      { value: '70%',   label: 'of disputed medical bills result in a reduced amount' },
+      { value: 'Itemized',     label: 'ask for the line-by-line bill; the summary version can hide errors' },
+      { value: 'No Surprises', label: 'the federal No Surprises Act limits many surprise out-of-network bills' },
+      { value: 'Free',         label: 'to scan your bill here in about 20 seconds' },
     ],
     redFlags: [
       { flag: 'Upcoding',               detail: 'Your 15-minute checkup gets billed as a 45-minute comprehensive exam. Hospitals assign billing codes to every service — upcoding means they use a higher-complexity code than what actually happened.' },
@@ -44,11 +58,11 @@ const CONFIGS: Record<string, PageConfig> = {
       { flag: 'Surprise facility fees', detail: 'You went to what looked like a private doctor\'s office. It was technically on hospital property. You get hit with a $200-800 "facility fee" on top of the doctor\'s charge — often without any prior disclosure.' },
     ],
     howTo: [
-      { step: 'Request the itemized bill',    detail: 'Always ask for a fully itemized bill — every single line item with CPT codes. Hospitals are legally required to provide one in most states. The summary bill you receive first hides most errors.' },
+      { step: 'Request the itemized bill',    detail: 'Always ask for a fully itemized bill — every single line item with CPT codes. Hospitals are legally required to provide one in most states. The summary bill you receive first can hide errors.' },
       { step: 'Look up the CPT codes',        detail: 'Every procedure has a standardized billing code. Look each one up at cms.gov or AMA\'s code lookup. If the description doesn\'t match what actually happened, you have grounds to dispute.' },
       { step: 'Flag and dispute in writing',  detail: 'Write a formal dispute letter identifying each suspicious charge by line item and CPT code. Request documentation showing the service was rendered. Send via certified mail — this creates a paper trail.' },
       { step: 'Negotiate the balance',        detail: 'After removing errors, the remaining balance is usually negotiable. Hospitals have financial assistance programs and will frequently accept 40-60% of the remaining amount, especially for uninsured patients.' },
-      { step: 'Appeal through your insurer',  detail: 'If your insurance denied a claim you think should be covered, file a formal appeal. Insurers are required to respond within 30-60 days. External appeals (through your state) succeed about 40% of the time.' },
+      { step: 'Appeal through your insurer',  detail: 'If your insurance denied a claim you think should be covered, file a formal appeal. Insurers are required to respond within 30-60 days. If that fails, you can usually request an external review through your state.' },
     ],
     faq: [
       { q: 'How common are medical billing errors?',
@@ -77,9 +91,9 @@ const CONFIGS: Record<string, PageConfig> = {
       'The good news: auto repair pricing is more transparent than most industries. Standard labor times are published, parts pricing is publicly available, and most states have consumer protection laws that require written estimates and authorization before work begins.',
     ],
     stats: [
-      { value: '1 in 3', label: 'auto repair customers report feeling overcharged' },
-      { value: '$200-800', label: 'typical overcharge on inflated parts + labor invoices' },
-      { value: '48hrs',  label: 'typical window to dispute before you lose leverage' },
+      { value: 'Written',     label: 'many states require a written estimate and your approval before work' },
+      { value: 'Labor guides', label: 'publish standard hours for most repairs, so padded labor shows' },
+      { value: 'Old parts',   label: 'you can ask to see or keep the parts they replaced' },
     ],
     redFlags: [
       { flag: 'Labor rates over $150/hr',       detail: 'National average shop labor rates run $75-125/hr for most repairs. Dealerships run higher ($150-200/hr) but should be clearly disclosed. Anything above $200/hr for a standard shop is a red flag.' },
@@ -122,9 +136,9 @@ const CONFIGS: Record<string, PageConfig> = {
       'The best time to dispute a contractor estimate is before you sign, not after work starts. Upload your estimate and we\'ll flag every line item that doesn\'t pass the smell test.',
     ],
     stats: [
-      { value: '35%',  label: 'of home renovation projects go over the original estimate' },
-      { value: '$3,000', label: 'average cost overrun on a $20k renovation project' },
-      { value: '60%',  label: 'of disputes resolved when raised before contract signing' },
+      { value: 'License',      label: 'check it on your state contractor lookup before you sign' },
+      { value: 'Change orders', label: 'should be in writing before any extra work starts' },
+      { value: 'Milestones',   label: 'tie payments to finished work, not to dates' },
     ],
     redFlags: [
       { flag: 'Materials priced above retail',   detail: 'Contractors typically mark up materials 10-20% — that\'s reasonable. If lumber, tile, or fixtures are priced 50-100% above what you can find at Home Depot or the manufacturer, push back.' },
@@ -167,9 +181,9 @@ const CONFIGS: Record<string, PageConfig> = {
       'A lease is a legal contract. Once you sign it, you\'re bound by its terms regardless of what you were told verbally. Upload your lease before you sign and we\'ll flag every clause that could cost you later.',
     ],
     stats: [
-      { value: '40%',  label: 'of renters report being charged fees not disclosed before move-in' },
-      { value: '$200-500', label: 'average in illegitimate fees charged at lease end' },
-      { value: '1 in 4', label: 'leases contain at least one clause that is unenforceable in that state' },
+      { value: 'Deposit',   label: 'most states cap it and set a deadline for returning it' },
+      { value: 'Photos',    label: 'at move-in are your best defense against move-out damage claims' },
+      { value: 'State law', label: 'overrides lease clauses that conflict with it' },
     ],
     redFlags: [
       { flag: 'Broad entry rights',             detail: 'Landlord can enter "at any time" or "with reasonable notice" without defining what that means. Most states require 24-48 hours written notice except in emergencies.' },
@@ -212,9 +226,9 @@ const CONFIGS: Record<string, PageConfig> = {
       'The FCC receives more complaints about phone and internet billing than almost any other industry. Upload your bill and see exactly what you\'re paying that you shouldn\'t be.',
     ],
     stats: [
-      { value: '$300+',  label: 'average American overpays on telecom bills per year' },
-      { value: '24%',    label: 'of consumers have been charged for a service they never requested' },
-      { value: '2x',     label: 'average difference between advertised rate and actual bill' },
+      { value: 'Promo end', label: 'is when most bills jump, so check the date on yours' },
+      { value: 'Equipment', label: 'rental fees can often be dropped by using your own modem or router' },
+      { value: 'Retention', label: 'teams can often offer a better rate when you ask to cancel' },
     ],
     redFlags: [
       { flag: 'Administrative and regulatory fees', detail: '"Administrative Recovery Fee," "Federal Universal Service Charge," "Network Access Fee" — these are not government taxes. They are carrier-invented fees dressed to look like taxes. They are negotiable and removable.' },
@@ -257,9 +271,9 @@ const CONFIGS: Record<string, PageConfig> = {
       'You don\'t need a lawyer to spot the biggest red flags. Upload your contract and we\'ll flag the clauses that have cost creators the most — from IP rights that never expire to exclusivity that freezes your income for months.',
     ],
     stats: [
-      { value: '3x',    label: 'average rate increase creators get after learning to negotiate contracts' },
-      { value: '68%',   label: 'of first-draft brand contracts contain IP terms that are broader than needed' },
-      { value: '$0',    label: 'what most creators get for content used in paid ads for years after the deal ends' },
+      { value: 'Usage rights',  label: 'should have an end date and a separate fee for paid ads' },
+      { value: 'Exclusivity',   label: 'should be narrow, time-limited, and paid for' },
+      { value: 'Payment terms', label: 'belong in writing, with a due date and late fee' },
     ],
     redFlags: [
       { flag: 'Perpetual IP assignment',        detail: 'The brand owns your content forever, across all media, for any use, without additional payment. This means they can run your video as a paid ad two years from now and owe you nothing. Push for a limited license instead.' },
@@ -380,12 +394,12 @@ export default async function AnalyzeLandingPage(
             <p className="text-xs text-brand-sub">{c.ctaSubtext}</p>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
+          {/* Key facts */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {c.stats.map(({ value, label }) => (
-              <div key={label} className="rounded-2xl p-5 text-center space-y-1"
+              <div key={label} className="rounded-2xl p-5 text-left sm:text-center space-y-1"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <p className="text-2xl font-black text-brand-text" style={{ color: '#ff3b30' }}>{value}</p>
+                <p className="text-lg font-black text-brand-text break-words" style={{ color: '#ff3b30' }}>{value}</p>
                 <p className="text-xs text-brand-sub leading-snug">{label}</p>
               </div>
             ))}
@@ -469,6 +483,22 @@ export default async function AnalyzeLandingPage(
             </div>
           </div>
 
+          {/* Guides + live audit */}
+          {(GUIDES[type] ?? []).length > 0 && (
+            <div className="space-y-3">
+              <h2 className="text-2xl font-black text-brand-text">Step-by-step guides</h2>
+              <ul className="space-y-2">
+                {(GUIDES[type] ?? []).map(g => (
+                  <li key={g.href}>
+                    <Link href={g.href} className="text-sm font-semibold text-red-400 hover:text-red-300 underline underline-offset-4">{g.title} →</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {type !== 'brand-deal' && <LiveAuditCTA heading="Rather go through it with a real person?" />}
+
           {/* Final CTA */}
           <div className="rounded-2xl p-10 text-center space-y-5"
             style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -480,7 +510,7 @@ export default async function AnalyzeLandingPage(
               style={{ background: 'linear-gradient(135deg,#ff6b60,#ff3b30)', color: '#fff' }}>
               Scan mine free →
             </Link>
-            <p className="text-xs text-brand-sub opacity-50">No account. No upload limit. Results in ~20 seconds.</p>
+            <p className="text-xs text-brand-sub opacity-50">No account. 5 free scans a day. Results in about 20 seconds.</p>
           </div>
 
         </main>

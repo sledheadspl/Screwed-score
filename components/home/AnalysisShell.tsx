@@ -285,7 +285,7 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
               Scan my own bill — it&apos;s free →
             </button>
             <p className="text-center text-[11px] mt-2" style={{ color: 'rgba(107,122,153,0.5)' }}>
-              No account · No credit card · Files deleted after scan
+              No account · No credit card · We don't keep your file
             </p>
           </div>
         </div>

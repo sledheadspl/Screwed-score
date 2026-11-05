@@ -14,12 +14,12 @@ import type { Metadata } from 'next'
 import LeadForm from './LeadForm'
 
 export const metadata: Metadata = {
-  title: 'Business Bill Audit — Find $3,000+/yr in Savings or Money Back | ScrewedScore',
+  title: 'Business Bill Audit: Find the Overcharges in Your Bills | ScrewedScore',
   description:
     'We audit your business bills (credit card processing, telecom, waste, insurance) and find the overcharges. 48-hour turnaround. $497 flat. Money-back guarantee.',
   alternates: { canonical: 'https://www.screwedscore.com/business-audit' },
   openGraph: {
-    title: 'Business Bill Audit — $3,000+/yr in savings or money back',
+    title: 'Business Bill Audit: $1,500/yr in savings or your money back',
     description:
       'We audit 5 of your recurring bills and find the overcharges. 48 hours. $497 flat. Money-back guarantee.',
     url: 'https://www.screwedscore.com/business-audit',
@@ -32,25 +32,25 @@ const BILLS_WE_AUDIT = [
     icon: Receipt,
     color: '#4ade80',
     title: 'Credit card processing',
-    body: 'Most independent restaurants overpay 0.5–2% on processing. On $1M revenue that\'s $5–20K/yr quietly leaking out.',
+    body: 'Processing statements bury markups in rate tiers and monthly fees. A few tenths of a percent adds up fast on real volume.',
   },
   {
     icon: Wifi,
     color: '#00e5ff',
     title: 'Internet, phone, & telecom',
-    body: 'Auto-renewals push contracted rates up 8–15% per year. Most owners never call back to renegotiate.',
+    body: 'Auto-renewals and expired promos quietly raise rates. Many owners never call back to renegotiate.',
   },
   {
     icon: Trash2,
     color: '#fbbf24',
     title: 'Waste hauling',
-    body: 'Frequency upcharges and "container rental" fees that should have stopped years ago. We see this on 70% of statements.',
+    body: 'Frequency upcharges and "container rental" fees that should have stopped long ago.',
   },
   {
     icon: ShieldCheck,
     color: '#ff3b30',
     title: 'Business insurance',
-    body: 'Coverage you don\'t need, deductibles too low, payroll classifications wrong. 1 in 3 policies has at least one fixable issue.',
+    body: 'Coverage you don\'t need, deductibles set too low, payroll classifications that cost you more.',
   },
   {
     icon: Stethoscope,
@@ -138,7 +138,7 @@ export default function BusinessAuditPage() {
             <DollarSign className="w-3.5 h-3.5" /> For Small Businesses
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-brand-text leading-tight">
-            Find $3,000+/yr in your business bills.<br />
+            Find the overcharges in your business bills.<br />
             <span style={{ color: '#4ade80' }}>Or get your money back.</span>
           </h1>
           <p className="text-base text-brand-sub leading-relaxed">

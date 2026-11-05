@@ -101,9 +101,9 @@ export default function ForBusinessesPage() {
         {/* Stats bar */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { value: '12,000+', label: 'documents analyzed' },
-            { value: '4 of 5',  label: 'businesses rate SAFE or MAYBE' },
-            { value: '48hrs',   label: 'average time to verified badge' },
+            { value: 'Free',    label: 'basic business profile' },
+            { value: 'Public',  label: 'reply to any review of your business' },
+            { value: 'No card', label: 'needed to claim your page' },
           ].map(({ value, label }) => (
             <div key={label} className="rounded-2xl p-5 text-center"
               style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
@@ -186,7 +186,7 @@ export default function ForBusinessesPage() {
               <p className="font-black text-brand-text">Audit your own business bills</p>
               <p className="text-sm text-brand-sub leading-relaxed">
                 We also run paid bill audits for small businesses — credit card processing, telecom, waste, insurance, software.
-                $3,000+/yr in savings or full refund. <span className="font-semibold text-brand-text">$497 flat, 48-hour turnaround. →</span>
+                At least $1,500/yr in savings or a full refund. <span className="font-semibold text-brand-text">$497 flat, 48-hour turnaround. →</span>
               </p>
             </div>
           </div>

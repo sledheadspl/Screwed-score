@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/navigation/Navbar'
+import Link from 'next/link'
 import { ADSENSE_CLIENT_ID } from '@/lib/adsense'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' })
@@ -140,7 +141,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Navbar />
         {children}
-        <footer className="text-center py-8 text-sm text-gray-500 space-y-2">
+        <footer className="text-center py-8 text-sm text-gray-500 space-y-4">
+          <nav aria-label="Site" className="max-w-4xl mx-auto px-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs">
+            <Link href="/live-audit" className="hover:text-brand-text">Live bill audit (Spokane &amp; video)</Link>
+            <Link href="/analyze/medical-bill" className="hover:text-brand-text">Medical bills</Link>
+            <Link href="/analyze/mechanic-invoice" className="hover:text-brand-text">Mechanic invoices</Link>
+            <Link href="/analyze/contractor-estimate" className="hover:text-brand-text">Contractor estimates</Link>
+            <Link href="/analyze/phone-bill" className="hover:text-brand-text">Phone &amp; internet bills</Link>
+            <Link href="/analyze/lease-agreement" className="hover:text-brand-text">Leases</Link>
+            <Link href="/business-audit" className="hover:text-brand-text">Business bill audit</Link>
+            <Link href="/blog" className="hover:text-brand-text">Guides</Link>
+            <Link href="/privacy" className="hover:text-brand-text">Privacy</Link>
+            <Link href="/terms" className="hover:text-brand-text">Terms</Link>
+          </nav>
           <div className="flex justify-center">
             <img src="/rembydesign-logo.svg" alt="REMbyDesign logo" className="h-8 opacity-80" width="120" height="32" />
           </div>

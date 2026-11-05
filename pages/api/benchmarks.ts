@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .eq('is_public', true)
 
   if (error) return res.status(500).json({ error: 'Query failed' })
-  if (!data || data.length < 5) {
+  if (!data || data.length < 25) {
     // Not enough data yet to show a meaningful benchmark
     return res.status(200).json({ benchmark: null })
   }

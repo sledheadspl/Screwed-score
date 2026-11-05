@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getAllPosts, getPostBySlug } from '@/lib/blog'
 import { getRelatedPosts } from '@/lib/related-posts'
+import { LIVE_AUDIT_OPTIONS, formatPrice } from '@/lib/live-audit'
+
+const LIVE_AUDIT_FROM = formatPrice(Math.min(...Object.values(LIVE_AUDIT_OPTIONS).map(o => o.priceCents)))
 
 const SITE = 'https://www.screwedscore.com'
 const DEFAULT_OG = `${SITE}/og`
@@ -53,6 +56,12 @@ function CtaBox() {
       >
         Scan my bill →
       </Link>
+      <p className="mt-3 text-sm text-emerald-900">
+        Rather talk it through with a real person?{' '}
+        <Link href="/live-audit" className="font-semibold underline">
+          Book a live audit, in person in Spokane or by video, from {LIVE_AUDIT_FROM}
+        </Link>
+      </p>
     </div>
   )
 }
