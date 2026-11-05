@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'ScrewedScore Academy — Learn to Never Get Overcharged Again',
@@ -12,6 +13,12 @@ export const metadata: Metadata = {
   },
 }
 
+// Hidden until the courses have real Stripe prices (product-checkout still has
+// price_REPLACE_ACADEMY_* placeholders, so every Buy button fails). Set
+// NEXT_PUBLIC_ACADEMY_ENABLED=true in Netlify to bring it back.
+const ACADEMY_ENABLED = process.env.NEXT_PUBLIC_ACADEMY_ENABLED === 'true'
+
 export default function AcademyLayout({ children }: { children: React.ReactNode }) {
+  if (!ACADEMY_ENABLED) notFound()
   return <>{children}</>
 }

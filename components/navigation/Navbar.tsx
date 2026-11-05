@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Zap, Menu, X } from 'lucide-react'
+import { Zap, Menu, X, UserRound } from 'lucide-react'
 import { getBrowserSupabase, hasProCookie } from '@/lib/supabase-browser'
 
 // Stripped to two-item nav. Empty community pages are conversion killers
@@ -13,6 +13,7 @@ import { getBrowserSupabase, hasProCookie } from '@/lib/supabase-browser'
 // still works at its URL but is hidden from the nav.
 const NAV_LINKS = [
   { label: 'Screwed Score',  href: '/',                    exact: true,  accent: 'red' },
+  { label: 'Live Audit',     href: '/live-audit',           exact: false, accent: 'green' },
   { label: 'Fight Back Kit', href: '/#fight-back-kit',      exact: false, accent: 'gold' },
   { label: 'Create Docs',    href: '/create',               exact: false, accent: 'cyan' },
   { label: 'Wall of Shame',  href: '/shame',                exact: false, accent: 'red' },
@@ -137,10 +138,10 @@ export default function Navbar() {
               <Zap className="w-3 h-3" /> Pro
             </span>
           ) : (
-            <Link href="/pro"
+            <Link href="/live-audit"
               className="flex items-center gap-1.5 text-xs font-black text-white rounded-lg px-3.5 py-1.5 transition-all hover:opacity-90 active:scale-95"
               style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-              <Zap className="w-3 h-3" /> Go Pro
+              <UserRound className="w-3 h-3" /> Book a live audit
             </Link>
           )}
           {userEmail ? (
@@ -160,7 +161,13 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile: live audit always visible next to the menu */}
+        <div className="lg:hidden flex items-center gap-1.5">
+        <Link href="/live-audit"
+          className="flex items-center gap-1 text-[11px] font-black text-white rounded-lg px-2.5 py-1.5 active:scale-95"
+          style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
+          <UserRound className="w-3 h-3" /> Live audit
+        </Link>
         <button
           className="lg:hidden text-brand-sub hover:text-brand-text p-2 rounded-lg hover:bg-brand-muted transition-colors"
           onClick={() => setMenuOpen(o => !o)}
@@ -168,6 +175,7 @@ export default function Navbar() {
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -191,10 +199,10 @@ export default function Navbar() {
               )
             })}
             {!isPro && (
-              <Link href="/pro" onClick={() => setMenuOpen(false)}
+              <Link href="/live-audit" onClick={() => setMenuOpen(false)}
                 className="flex items-center justify-center gap-1.5 text-sm font-black text-white rounded-lg px-4 py-2.5 transition-all active:scale-95"
                 style={{ background: 'linear-gradient(135deg, #ff6b60, #ff3b30)' }}>
-                <Zap className="w-3.5 h-3.5" /> Go Pro — unlimited scans
+                <UserRound className="w-4 h-4" /> Book a live audit
               </Link>
             )}
             <div className="pt-3 border-t border-brand-border/30">

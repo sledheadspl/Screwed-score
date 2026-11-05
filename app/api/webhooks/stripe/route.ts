@@ -5,6 +5,7 @@ import { sendProductDeliveryEmail, sendClipPilotLicenseEmail, PRODUCT_CATALOG } 
 import { getClipPilotTier, createLicense } from '@/lib/clippilot/license'
 import { sendGAEvent } from '@/lib/ga'
 import { logError } from '@/lib/log'
+import { sendLiveAuditEmails } from '@/lib/email/live-audit'
 
 /** Supabase calls resolve with { error } instead of throwing — make failures throw so Stripe retries. */
 function must<T extends { error: unknown }>(result: T, what: string): T {
@@ -97,17 +98,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           ? `ClipPilot ${clipPilotTier}`
           : productId && productId in PRODUCT_CATALOG
             ? PRODUCT_CATALOG[productId].name
-            : session.metadata?.plan
-              ? `Pro Membership (${session.metadata.plan})`
-              : session.metadata?.analysis_id
-                ? 'Fight Back Kit'
-                : 'Scan Token Pack'
+            : session.metadata?.type === 'live_audit'
+              ? `Live Audit (${session.metadata.format ?? 'video'})`
+              : session.metadata?.plan
+                ? `Pro Membership (${session.metadata.plan})`
+                : session.metadata?.analysis_id
+                  ? 'Fight Back Kit'
+                  : 'Scan Token Pack'
         await sendGAEvent('purchase', {
           transaction_id: session.id,
           value:          (session.amount_total ?? 0) / 100,
           currency:       (session.currency ?? 'usd').toUpperCase(),
           item_name:      itemName,
         })
+
+        // Live audit with a real person — notify the owner (throws on failure
+        // so Stripe retries) and confirm with the customer.
+        if (session.metadata?.type === 'live_audit') {
+          await sendLiveAuditEmails(session)
+          break
+        }
 
         // Human audit purchase — create job + send confirmation
         if (session.metadata?.type === 'human_audit') {
