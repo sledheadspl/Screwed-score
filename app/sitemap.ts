@@ -1,14 +1,8 @@
 import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/blog'
+import { GUIDE_SLUGS } from '@/lib/guides'
 
-const ANALYZE_TYPES = [
-  'mechanic-invoice',
-  'medical-bill',
-  'contractor-estimate',
-  'lease-agreement',
-  'phone-bill',
-  'brand-deal',
-]
+const ANALYZE_TYPES = GUIDE_SLUGS
 
 const CREATE_TYPES = [
   'invoice',
@@ -27,12 +21,15 @@ const CREATE_TYPES = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://www.screwedscore.com'
 
-  const analyzePages: MetadataRoute.Sitemap = ANALYZE_TYPES.map(type => ({
+  const analyzePages: MetadataRoute.Sitemap = [
+    { url: `${base}/analyze`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.9 },
+    ...ANALYZE_TYPES.map(type => ({
     url: `${base}/analyze/${type}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.85,
-  }))
+  })),
+  ]
 
   const createPages: MetadataRoute.Sitemap = [
     { url: `${base}/create`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },

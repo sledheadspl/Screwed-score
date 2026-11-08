@@ -7,3 +7,8 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Pings IndexNow (Bing and friends) with the live sitemap after each
+# production deploy. Never fails the build. See netlify/plugins/indexnow.
+[[plugins]]
+  package = "./netlify/plugins/indexnow"

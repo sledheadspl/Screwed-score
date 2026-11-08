@@ -1,3 +1,5 @@
+import { GUIDES, GUIDE_SLUGS } from '@/lib/guides'
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Script from 'next/script'
@@ -141,6 +143,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         {children}
         <footer className="text-center py-8 text-sm text-gray-500 space-y-2">
+          <nav aria-label="Site" className="max-w-3xl mx-auto px-4 pb-4 space-y-3">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
+              <Link href="/analyze" className="hover:text-gray-300">Bill and contract guides</Link>
+              <Link href="/shame" className="hover:text-gray-300">Wall of Shame</Link>
+              <Link href="/create" className="hover:text-gray-300">Create a document</Link>
+              <Link href="/blog" className="hover:text-gray-300">Blog</Link>
+              <Link href="/weekly" className="hover:text-gray-300">Weekly report</Link>
+              <Link href="/privacy" className="hover:text-gray-300">Privacy</Link>
+              <Link href="/terms" className="hover:text-gray-300">Terms</Link>
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs text-gray-600">
+              {GUIDE_SLUGS.map(slug => (
+                <Link key={slug} href={`/analyze/${slug}`} className="hover:text-gray-300">
+                  {GUIDES[slug].cardTitle}
+                </Link>
+              ))}
+            </div>
+          </nav>
           <div className="flex justify-center">
             <img src="/rembydesign-logo.svg" alt="REMbyDesign logo" className="h-8 opacity-80" width="120" height="32" />
           </div>

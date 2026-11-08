@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createHash } from 'crypto'
-import Stripe from 'stripe'
 import { createServiceClient } from '@/lib/supabase'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
+import { stripe } from '@/lib/stripe'
 
 // Max 10 kit checkout attempts per IP per hour
 const LIMIT     = 10
