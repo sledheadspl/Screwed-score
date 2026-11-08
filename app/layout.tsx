@@ -108,13 +108,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* Google Analytics + Ads — one gtag load, configures all 3 properties.
-            lazyOnload defers until the browser idles, since none of these are
-            needed for first paint or interactive use. */}
+            The library stays lazyOnload (not needed for first paint). The tiny
+            init script runs afterInteractive so the gtag queue exists before a
+            visitor can click: funnel events from lib/track.ts queue up and are
+            sent once the library arrives, instead of being lost for visitors
+            who bounce before the browser idles. */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-MZCC8P2NG7"
           strategy="lazyOnload"
         />
-        <Script id="gtag-init" strategy="lazyOnload">{`
+        <Script id="gtag-init" strategy="afterInteractive">{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());

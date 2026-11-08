@@ -2,6 +2,7 @@
 
 import { UploadZone } from '@/components/UploadZone'
 import { useUploadContext } from './upload-context'
+import { track } from '@/lib/track'
 
 /**
  * Thin client wrapper so the server-rendered landing page can drop an upload
@@ -18,7 +19,7 @@ export function SampleButton() {
   const { onSample } = useUploadContext()
   return (
     <button
-      onClick={onSample}
+      onClick={() => { track('sample_click'); onSample() }}
       className="w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-95 hover:border-brand-border sample-cta"
       style={{
         background: 'rgba(255,255,255,0.03)',

@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { Upload, Loader2, Camera, FolderOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { track } from '@/lib/track'
 
 interface UploadZoneProps {
   onUpload: (file: File) => void
@@ -47,12 +48,14 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
       if (!file) return
       if (file.size > MAX_BYTES) {
         setSizeError(true)
+        track('file_rejected', { reason: 'too_large', upload_slot: idPrefix })
         return
       }
+      track('file_selected', { file_type: file.type || 'unknown', upload_slot: idPrefix })
       setSizeError(false)
       onUpload(file)
     },
-    [onUpload]
+    [onUpload, idPrefix]
   )
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +123,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
         {/* Primary: Camera */}
         <label
           htmlFor={cameraId}
+          onClick={() => track('upload_click', { method: 'camera', upload_slot: idPrefix })}
           className="w-full rounded-2xl p-8 flex flex-col items-center gap-4 text-center border-2 transition-all active:scale-[0.98] cursor-pointer"
           style={{
             borderColor: 'rgba(255,59,48,0.4)',
@@ -144,6 +148,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
         {/* Secondary: File picker */}
         <label
           htmlFor={fileId}
+          onClick={() => track('upload_click', { method: 'file', upload_slot: idPrefix })}
           className="w-full rounded-xl border border-brand-border bg-brand-surface px-5 py-3.5 flex items-center gap-3 text-left transition-all active:scale-[0.99] hover:bg-brand-muted/40 cursor-pointer"
         >
           <FolderOpen className="w-5 h-5 text-brand-sub shrink-0" />
@@ -187,6 +192,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
 
           <label
             htmlFor={desktopId}
+            onClick={() => track('upload_click', { method: 'desktop', upload_slot: idPrefix })}
             className={cn(
               'relative border-2 border-dashed rounded-2xl p-10 sm:p-14 flex flex-col items-center gap-6 text-center transition-all duration-300 cursor-pointer',
               dragActive
