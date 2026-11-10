@@ -8,6 +8,7 @@ import { isValidUUID } from '@/lib/utils'
 import { isDocumentType } from '@/lib/types'
 import type { AnalyzeRequest, DocumentType } from '@/lib/types'
 import { sendGAEvent } from '@/lib/ga'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -21,6 +22,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (!isValidUUID(body.document_id)) {
       return res.status(400).json({ error: 'Invalid document_id format' })
+    }
+
+    // Each upload is counted against the free limit in /api/upload; without
+    // these caps one upload could be re-analyzed endlessly (two AI calls each).
+    if (
+      !(await allowRequest('analyze-doc', body.document_id, 3, 24 * 60 * 60 * 1000)) ||
+      !(await allowRequest('analyze-ip', clientIp(req.headers), 30, 60 * 60 * 1000))
+    ) {
+      return res.status(429).json({ error: 'Too many analyses. Try again later.' })
     }
 
     const supabase = createServiceClient()

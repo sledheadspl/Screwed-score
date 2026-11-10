@@ -15,10 +15,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['line_items'] })
 
     if (session.payment_status !== 'paid') {
       return res.status(402).json({ error: 'Payment not completed' })
+    }
+
+    // Only a Pro purchase unlocks Pro. Without this, any paid session (a Fight
+    // Back Kit, a human audit, a ClipPilot license) could be traded for Pro.
+    const proPrices = new Set(
+      [
+        process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY,
+        process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_YEARLY,
+        process.env.GSS_STRIPE_PRICE_ID,
+      ].filter((p): p is string => !!p)
+    )
+    const boughtPro = (session.line_items?.data ?? []).some(
+      item => !!item.price?.id && proPrices.has(item.price.id)
+    )
+    if (!boughtPro) {
+      return res.status(403).json({ error: 'This purchase does not include Pro' })
     }
 
     const customerId = typeof session.customer === 'string' ? session.customer : null

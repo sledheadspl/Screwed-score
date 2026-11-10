@@ -1,10 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY!)
+}
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com'
+const ALLOWED_ORIGINS = new Set([
+  SITE,
+  SITE.replace('https://', 'https://www.'),
+  SITE.replace('https://www.', 'https://'),
+])
+const MAX_HTML_BYTES = 200_000
+
+// Drop scripts, iframes, forms and inline event handlers from the document
+// body. Email clients block most of this anyway; this keeps the route from
+// relaying active content under our domain.
+function stripActiveContent(html: string) {
+  return html
+    .replace(/<\s*(script|iframe|object|embed|form|meta|link|base)[\s\S]*?(<\s*\/\s*\1\s*>|\/?>)/gi, '')
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(/(href|src)\s*=\s*("|')?\s*javascript:[^"'>\s]*/gi, '$1=$2#')
 }
 
 // Basic email validator
@@ -18,10 +37,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
+  // Only the site's own Document Creator may call this.
+  const origin = req.headers.get('origin')
+  if (!origin || !ALLOWED_ORIGINS.has(origin)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const { email, html, label } = body as { email: string; html: string; label: string }
+
+  if (typeof email !== 'string' || typeof html !== 'string' || typeof label !== 'string') {
+    return NextResponse.json({ error: 'Invalid fields' }, { status: 400 })
+  }
+  if (Buffer.byteLength(html) > MAX_HTML_BYTES || label.length > 120 || email.length > 254) {
+    return NextResponse.json({ error: 'Document too large' }, { status: 413 })
+  }
 
   if (!isValidEmail(email)) {
     return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
+  }
+
+  // 5 sends per IP per hour, 3 per recipient per day.
+  const ip = clientIp(req.headers)
+  const recipient = email.trim().toLowerCase()
+  if (
+    !(await allowRequest('send-doc-ip', ip, 5, 60 * 60 * 1000)) ||
+    !(await allowRequest('send-doc-to', recipient, 3, 24 * 60 * 60 * 1000))
+  ) {
+    return NextResponse.json({ error: 'Too many emails. Try again later.' }, { status: 429 })
   }
 
   if (!process.env.RESEND_API_KEY) {
@@ -42,7 +84,7 @@ export async function POST(req: NextRequest) {
 </head>
 <body>
   <div class="wrapper">
-    ${html}
+    ${stripActiveContent(html)}
     <div class="footer">
       Sent via <a href="https://www.screwedscore.com/create" style="color:#555;">GetScrewedScore.com Document Creator</a>
     </div>
@@ -54,8 +96,8 @@ export async function POST(req: NextRequest) {
 
   const { error } = await resend.emails.send({
     from: 'GetScrewedScore <docs@screwedscore.com>',
-    to: email,
-    subject: `Your ${label} — GetScrewedScore`,
+    to: recipient,
+    subject: `Your ${label.replace(/[\r\n]/g, ' ')} — GetScrewedScore`,
     html: emailHtml,
   })
 
