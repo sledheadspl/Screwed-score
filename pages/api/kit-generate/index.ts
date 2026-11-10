@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Stripe from 'stripe'
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import type { DocumentType } from '@/lib/types'
 
-const stripe    = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
+import { stripe } from '@/lib/stripe'
 const anthropic = new Anthropic()
 
 export interface KitContent {

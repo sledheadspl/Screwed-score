@@ -1,3 +1,5 @@
+import { GUIDES, GUIDE_SLUGS } from '@/lib/guides'
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Script from 'next/script'
@@ -106,13 +108,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* Google Analytics + Ads — one gtag load, configures all 3 properties.
-            lazyOnload defers until the browser idles, since none of these are
-            needed for first paint or interactive use. */}
+            The library stays lazyOnload (not needed for first paint). The tiny
+            init script runs afterInteractive so the gtag queue exists before a
+            visitor can click: funnel events from lib/track.ts queue up and are
+            sent once the library arrives, instead of being lost for visitors
+            who bounce before the browser idles. */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-MZCC8P2NG7"
           strategy="lazyOnload"
         />
-        <Script id="gtag-init" strategy="lazyOnload">{`
+        <Script id="gtag-init" strategy="afterInteractive">{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
@@ -141,6 +146,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         {children}
         <footer className="text-center py-8 text-sm text-gray-500 space-y-2">
+          <nav aria-label="Site" className="max-w-3xl mx-auto px-4 pb-4 space-y-3">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
+              <Link href="/analyze" className="hover:text-gray-300">Bill and contract guides</Link>
+              <Link href="/shame" className="hover:text-gray-300">Wall of Shame</Link>
+              <Link href="/create" className="hover:text-gray-300">Create a document</Link>
+              <Link href="/blog" className="hover:text-gray-300">Blog</Link>
+              <Link href="/weekly" className="hover:text-gray-300">Weekly report</Link>
+              <Link href="/privacy" className="hover:text-gray-300">Privacy</Link>
+              <Link href="/terms" className="hover:text-gray-300">Terms</Link>
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs text-gray-600">
+              {GUIDE_SLUGS.map(slug => (
+                <Link key={slug} href={`/analyze/${slug}`} className="hover:text-gray-300">
+                  {GUIDES[slug].cardTitle}
+                </Link>
+              ))}
+            </div>
+          </nav>
           <div className="flex justify-center">
             <img src="/rembydesign-logo.svg" alt="REMbyDesign logo" className="h-8 opacity-80" width="120" height="32" />
           </div>

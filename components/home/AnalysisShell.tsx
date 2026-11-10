@@ -1,5 +1,6 @@
 'use client'
 
+import { track } from '@/lib/track'
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { AlertCircle, RotateCcw } from 'lucide-react'
@@ -126,6 +127,7 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
           setShowPaywall(true)
           return
         }
+        track('scan_error', { stage: 'upload' })
         setState(s => ({ ...s, phase: 'error', error: uploadData.error ?? 'Upload failed' }))
         return
       }
@@ -155,6 +157,7 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
       let analyzeData: { error?: string; analysis_id?: string; result?: AnalyzeResponse['result'] } = {}
       try { analyzeData = JSON.parse(analyzeText) } catch { /* non-JSON response */ }
       if (!analyzeRes.ok) {
+        track('scan_error', { stage: 'analyze', status: analyzeRes.status })
         setState(s => ({ ...s, phase: 'error', error: analyzeData.error ?? 'Analysis timed out — please try again.' }))
         return
       }
@@ -170,6 +173,7 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
         result: { ...result, created_at: new Date().toISOString() },
       }))
     } catch (err) {
+      track('scan_error', { stage: 'network' })
       setState(s => ({
         ...s, phase: 'error',
         error: err instanceof Error ? err.message : 'Something went wrong. Please try again.',

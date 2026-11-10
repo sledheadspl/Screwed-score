@@ -11,7 +11,7 @@ export default [
     ignores: [
       '.next/**', '.netlify/**', 'node_modules/**', 'out/**', 'build/**',
       'clippilot/**', 'tools/**', 'supabase/functions/**', // Tauri / Python / Deno — other toolchains
-      'scripts/**', // standalone CJS Node CLI utilities, not part of the Next.js app
+      'scripts/**', 'netlify/plugins/**', // standalone CJS Node CLI utilities, not part of the Next.js app
       'next-env.d.ts', 'fix-netlify-handler.js', 'seed-*.js',
     ],
   },

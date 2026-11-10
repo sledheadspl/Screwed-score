@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
+import { stripe } from '@/lib/stripe'
 
 const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = {
   'creator-os':               { priceId: 'price_1TOCoPEKDzEsz6UjwGJfStP0', subscription: false },
