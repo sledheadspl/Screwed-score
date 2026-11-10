@@ -29,7 +29,7 @@ async function getAnalysis(id: string): Promise<AnalysisResult | null> {
 
   // Increment share view counter — non-fatal if it fails
   await Promise.resolve(
-    supabase.rpc('increment_share_views', { analysis_id: id })
+    supabase.rpc('increment_share_views', { p_analysis_id: id })
   ).catch((err: unknown) => console.error('[share] increment_share_views failed:', err))
 
   return {
