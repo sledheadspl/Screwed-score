@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { lookupLicenseByEmail } from '@/lib/clippilot/license'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -18,8 +19,13 @@ export async function POST(req: NextRequest) {
     if (!email || typeof email !== 'string') {
       return NextResponse.json({ found: false, tier: null, license_key: null }, { status: 400, headers: CORS })
     }
-    const result = await lookupLicenseByEmail(email)
-    return NextResponse.json(result, { headers: CORS })
+    if (!(await allowRequest('license-lookup', clientIp(req.headers), 10, 60 * 60 * 1000))) {
+      return NextResponse.json({ found: false, tier: null, license_key: null }, { status: 429, headers: CORS })
+    }
+    // Never hand out a license key to whoever types an email address. The key
+    // goes to the buyer in the purchase email; this only says whether one exists.
+    const result = await lookupLicenseByEmail(email.trim())
+    return NextResponse.json({ found: result.found, tier: result.tier, license_key: null }, { headers: CORS })
   } catch (err) {
     console.error('[clippilot-license/lookup-by-email]', err)
     return NextResponse.json({ found: false, tier: null, license_key: null }, { status: 500, headers: CORS })

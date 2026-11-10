@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 import type { AnalysisResult } from '@/lib/types'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 
@@ -81,7 +82,15 @@ Generate a complete corrected ${docLabel} that resolves every issue above. Use p
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => null)
+  // Each call runs a large AI request; cap it per visitor and cap input size.
+  if (!(await allowRequest('fix-doc', clientIp(req.headers), 10, 60 * 60 * 1000))) {
+    return NextResponse.json({ error: 'Too many requests. Try again in an hour.' }, { status: 429 })
+  }
+  const raw = await req.text().catch(() => '')
+  if (raw.length > 100_000) {
+    return NextResponse.json({ error: 'Request too large' }, { status: 413 })
+  }
+  const body = (() => { try { return JSON.parse(raw) } catch { return null } })()
   if (!body?.result) {
     return NextResponse.json({ error: 'Missing analysis result' }, { status: 400 })
   }

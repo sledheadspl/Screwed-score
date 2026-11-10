@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRef, useState } from 'react'
 import { Download, FileText } from 'lucide-react'
 
 interface Props {
@@ -8,16 +9,24 @@ interface Props {
 }
 
 export default function SharedDocViewer({ doc }: Props) {
+  // The document is user-supplied HTML, so it renders inside a sandboxed
+  // iframe with scripts disabled. allow-same-origin lets this page size and
+  // print the frame; without allow-scripts nothing inside it can run.
+  const frameRef = useRef<HTMLIFrameElement>(null)
+  const [height, setHeight] = useState(800)
+  const srcDoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+      body { margin: 0; padding: 32px; background: #f5f5f0; font-family: Georgia, serif; }
+      .doc { max-width: 720px; margin: 0 auto; }
+      @media print { body { background: #fff; padding: 0; } @page { margin: 0.75in; } }
+    </style></head><body><div class="doc">${doc.html}</div></body></html>`
+
+  const handleLoad = () => {
+    const body = frameRef.current?.contentDocument?.body
+    if (body) setHeight(Math.max(600, body.scrollHeight + 64))
+  }
+
   const handlePrint = () => {
-    const win = window.open('', '_blank')
-    if (!win) return
-    win.document.write(`<!DOCTYPE html><html><head><title>${doc.doc_label}</title><style>
-      body { margin: 0; padding: 0; font-family: Georgia, serif; }
-      @media print { @page { margin: 0.75in; } }
-    </style></head><body>${doc.html}</body></html>`)
-    win.document.close()
-    win.focus()
-    setTimeout(() => win.print(), 300)
+    frameRef.current?.contentWindow?.print()
   }
 
   return (
@@ -50,9 +59,15 @@ export default function SharedDocViewer({ doc }: Props) {
 
       <div className="max-w-4xl mx-auto px-5 sm:px-8 py-8">
         <div className="rounded-2xl border border-brand-border overflow-hidden shadow-2xl">
-          <div className="bg-[#f5f5f0] min-h-[600px] p-8">
-            <div dangerouslySetInnerHTML={{ __html: doc.html }} className="max-w-[720px] mx-auto" />
-          </div>
+          <iframe
+            ref={frameRef}
+            title={doc.doc_label}
+            sandbox="allow-same-origin allow-modals"
+            srcDoc={srcDoc}
+            onLoad={handleLoad}
+            style={{ height }}
+            className="w-full bg-[#f5f5f0] block border-0"
+          />
         </div>
       </div>
     </main>

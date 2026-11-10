@@ -74,6 +74,12 @@ export async function POST(req: NextRequest) {
   if (!body?.html || !body?.doc_type || !body?.doc_label) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
   }
+  if (
+    typeof body.html !== 'string' || typeof body.doc_type !== 'string' || typeof body.doc_label !== 'string' ||
+    body.html.length > 200_000 || body.doc_type.length > 64 || body.doc_label.length > 120
+  ) {
+    return NextResponse.json({ error: 'Invalid or oversized document' }, { status: 400 })
+  }
 
   const existing = readSession(req)
   const sessionId = existing ?? randomUUID()

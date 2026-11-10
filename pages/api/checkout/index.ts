@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ? await stripe.checkout.sessions.create({
           mode: 'subscription',
           line_items: [{ price: subscriptionPrice!, quantity: 1 }],
-          metadata: { plan },
+          metadata: { plan, kind: 'pro' },
           success_url: `${origin}/paid?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url:  `${origin}/`,
           allow_promotion_codes: true,
@@ -84,6 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       : await stripe.checkout.sessions.create({
           mode: 'payment',
           line_items: [{ price: process.env.GSS_STRIPE_PRICE_ID!, quantity: 1 }],
+          metadata: { kind: 'pro' },
           success_url: `${origin}/paid?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url:  `${origin}/`,
           allow_promotion_codes: true,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -189,7 +190,15 @@ const TYPE_PROMPTS: Record<DocType, string> = {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => null)
+  // Each call runs a large AI request; cap it per visitor and cap input size.
+  if (!(await allowRequest('create-doc', clientIp(req.headers), 10, 60 * 60 * 1000))) {
+    return NextResponse.json({ error: 'Too many requests. Try again in an hour.' }, { status: 429 })
+  }
+  const raw = await req.text().catch(() => '')
+  if (raw.length > 100_000) {
+    return NextResponse.json({ error: 'Request too large' }, { status: 413 })
+  }
+  const body = (() => { try { return JSON.parse(raw) } catch { return null } })()
   if (!body?.type) {
     return NextResponse.json({ error: 'Missing type' }, { status: 400 })
   }

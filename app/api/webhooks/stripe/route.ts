@@ -108,10 +108,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           const documentType = session.metadata.document_type ?? 'bill'
           const scorePercent = session.metadata.score_percent ?? '?'
 
-          // Create a job in the marketplace for this audit
+          // Create a job in the marketplace for this audit. Job listings are
+          // public, so the customer's email stays out of it; the operator gets
+          // it in the notification email below.
           await supabase.from('jobs').insert({
             title:           `Human Audit — ${documentType.replace(/_/g, ' ')} (Score: ${scorePercent}%)`,
-            description:     `Customer paid $9.99 for a human bill audit.\n\nAnalysis ID: ${analysisId}\nDocument type: ${documentType}\nAI score: ${scorePercent}%\nCustomer email: ${customerEmail ?? 'unknown'}\n\nReview the analysis at the admin panel, flag all overcharges and errors in plain English, and email the customer your findings within 48 hours.`,
+            description:     `Customer paid $9.99 for a human bill audit.\n\nAnalysis ID: ${analysisId}\nDocument type: ${documentType}\nAI score: ${scorePercent}%\n\nReview the analysis at the admin panel, flag all overcharges and errors in plain English, and send your findings to the operator within 48 hours.`,
             category:        'research',
             skills_required: ['research', 'medical billing'],
             pay_description: '$7',
