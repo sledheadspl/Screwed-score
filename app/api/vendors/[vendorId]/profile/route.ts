@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
 import { createServiceClient } from '@/lib/supabase'
 import { getVendorById } from '@/lib/vendors/service'
 import { computeVendorReputation } from '@/lib/vendors/reputation'
+import { getSessionUserId } from '@/lib/session-user'
+import { toHttpUrl } from '@/lib/safe-url'
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
@@ -31,27 +32,7 @@ export async function PATCH(req: NextRequest, { params }: Params): Promise<NextR
   try {
     const { vendorId } = await params
 
-    // Auth required
-    const cookieHeader = req.headers.get('cookie') ?? ''
-    let userId: string | null = null
-    try {
-      const supabaseAuth = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          cookies: {
-            getAll: () => cookieHeader.split(';').map(c => {
-              const [n, ...rest] = c.trim().split('=')
-              return { name: n, value: rest.join('=') }
-            }),
-            setAll: () => {},
-          },
-        }
-      )
-      const { data: { user } } = await supabaseAuth.auth.getUser()
-      userId = user?.id ?? null
-    } catch { /* no auth */ }
-
+    const userId = await getSessionUserId(req.headers.get('cookie'))
     if (!userId) return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
 
     const supabase = createServiceClient()
@@ -59,23 +40,42 @@ export async function PATCH(req: NextRequest, { params }: Params): Promise<NextR
     // Verify ownership
     const { data: vendor } = await supabase
       .from('vendors')
-      .select('claimed_by')
+      .select('claimed_by, verified')
       .eq('id', vendorId)
       .maybeSingle()
 
     if (!vendor) return NextResponse.json({ error: 'Vendor not found' }, { status: 404 })
     if (vendor.claimed_by !== userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    // A pending claim can't change the public listing until an operator approves it.
+    if (!vendor.verified) {
+      return NextResponse.json(
+        { error: 'Your claim is pending review. You can edit your profile once it is approved.' },
+        { status: 403 }
+      )
+    }
 
     const body = await req.json().catch(() => null)
     if (!body) return NextResponse.json({ error: 'Invalid body' }, { status: 400 })
 
     // Allowlist of editable fields
     const allowed = ['bio', 'tagline', 'logo_url', 'response_statement', 'website', 'phone', 'city', 'state', 'zip']
-    const updates: Record<string, string> = {}
+    const updates: Record<string, string | null> = {}
     for (const key of allowed) {
       if (key in body && (typeof body[key] === 'string' || body[key] === null)) {
         updates[key] = typeof body[key] === 'string' ? (body[key] as string).slice(0, 2000) : body[key]
       }
+    }
+
+    // Links must be plain http(s): no javascript:, data: or other schemes.
+    for (const key of ['website', 'logo_url'] as const) {
+      if (!(key in updates)) continue
+      const raw = updates[key]
+      if (raw === null || raw.trim() === '') { updates[key] = null; continue }
+      const url = toHttpUrl(raw)
+      if (!url || url.length > 500) {
+        return NextResponse.json({ error: `${key} must be an http or https URL` }, { status: 400 })
+      }
+      updates[key] = url
     }
 
     if (Object.keys(updates).length === 0) {

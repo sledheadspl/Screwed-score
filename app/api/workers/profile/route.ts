@@ -1,35 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
 import { createWorkerProfile, updateWorkerProfile } from '@/lib/workers/service'
 import { createServiceClient } from '@/lib/supabase'
+import { getSessionUserId } from '@/lib/session-user'
+import { toHttpUrl } from '@/lib/safe-url'
 
 export const runtime = 'nodejs'
 
-async function getAuthUser(req: NextRequest): Promise<string | null> {
-  const cookieHeader = req.headers.get('cookie') ?? ''
-  try {
-    const supabaseAuth = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll: () => cookieHeader.split(';').map(c => {
-            const [n, ...rest] = c.trim().split('=')
-            return { name: n, value: rest.join('=') }
-          }),
-          setAll: () => {},
-        },
-      }
-    )
-    const { data: { user } } = await supabaseAuth.auth.getUser()
-    return user?.id ?? null
-  } catch {
-    return null
-  }
-}
-
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const userId = await getAuthUser(req)
+  const userId = await getSessionUserId(req.headers.get('cookie'))
   if (!userId) return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
 
   try {
@@ -39,6 +17,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { display_name, bio, skills, city, state, website } = body as Record<string, unknown>
     if (typeof display_name !== 'string' || !display_name.trim()) {
       return NextResponse.json({ error: 'display_name is required' }, { status: 400 })
+    }
+
+    // Website must be a plain http(s) URL (no javascript:, data: etc.).
+    // Empty clears it; leaving it out keeps the current value.
+    let safeWebsite: string | null | undefined = undefined
+    if (website === null || (typeof website === 'string' && website.trim() === '')) {
+      safeWebsite = null
+    } else if (website !== undefined) {
+      const url = toHttpUrl(website)
+      if (!url || url.length > 500) {
+        return NextResponse.json({ error: 'website must be an http or https URL' }, { status: 400 })
+      }
+      safeWebsite = url
     }
 
     // Check if profile exists
@@ -56,7 +47,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         skills:       Array.isArray(skills) ? skills.map(String) : [],
         city:         typeof city === 'string' ? city : undefined,
         state:        typeof state === 'string' ? state : undefined,
-        website:      typeof website === 'string' ? website : undefined,
+        ...(safeWebsite !== undefined ? { website: safeWebsite } : {}),
       })
       return NextResponse.json({ profile })
     }
@@ -68,11 +59,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       skills:       Array.isArray(skills) ? skills.map(String) : [],
       city:         typeof city === 'string' ? city : undefined,
       state:        typeof state === 'string' ? state : undefined,
-      website:      typeof website === 'string' ? website : undefined,
+      website:      safeWebsite ?? undefined,
     })
     return NextResponse.json({ profile }, { status: 201 })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to save profile'
-    return NextResponse.json({ error: message }, { status: 500 })
+    console.error('[api/workers/profile]', err)
+    return NextResponse.json({ error: 'Failed to save profile' }, { status: 500 })
   }
 }

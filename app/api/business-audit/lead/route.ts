@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { logError } from '@/lib/log'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
@@ -31,6 +32,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
     if (!EMAIL_RE.test(email)) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
+    }
+
+    // 5 lead submissions per IP per hour, 3 confirmation emails per address
+    // per day. Each submission emails both the operator and the lead.
+    if (
+      !(await allowRequest('audit-lead-ip', clientIp(req.headers), 5, 60 * 60 * 1000)) ||
+      !(await allowRequest('audit-lead-to', email, 3, 24 * 60 * 60 * 1000))
+    ) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 })
     }
 
     const apiKey = process.env.RESEND_API_KEY

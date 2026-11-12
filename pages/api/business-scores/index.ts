@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServiceClient } from '@/lib/supabase'
+import { secretMatches } from '@/lib/secure-compare'
 
 function slugify(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -54,8 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // POST — upsert business score from experience submission (internal only)
   if (req.method === 'POST') {
     // Restrict to internal server-to-server calls only
-    const internalSecret = req.headers['x-internal-secret']
-    if (!internalSecret || internalSecret !== process.env.GSS_TOKEN_SECRET) {
+    if (!secretMatches(req.headers['x-internal-secret'], process.env.GSS_TOKEN_SECRET)) {
       return res.status(403).json({ error: 'Forbidden' })
     }
 

@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isOperatorRequest } from '@/lib/secure-compare'
 import { createServiceClient } from '@/lib/supabase'
 import { banWorker } from '@/lib/workers/service'
 
 export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const secret = req.headers.get('x-operator-secret')
-  if (!secret || secret !== process.env.OWNER_ACCESS_SECRET) {
+  if (!isOperatorRequest(req.headers)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

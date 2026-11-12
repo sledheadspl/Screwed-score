@@ -22,7 +22,7 @@ export default async (): Promise<Response> => {
     return new Response(body, { status: res.status })
   } catch (err) {
     console.error('[nurture-cron] fetch failed:', err)
-    return new Response(JSON.stringify({ error: String(err) }), { status: 500 })
+    return new Response(JSON.stringify({ error: 'Cron request failed' }), { status: 500 })
   }
 }
 

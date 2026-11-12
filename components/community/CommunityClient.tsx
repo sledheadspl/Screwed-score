@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Users, ThumbsUp, Filter, ShieldCheck, AlertTriangle, CheckCircle, Plus, BadgeCheck } from 'lucide-react'
 import Link from 'next/link'
+import { safeHref } from '@/lib/safe-url'
 
 interface VerifiedBusiness {
   id: string
@@ -244,8 +245,8 @@ export default function CommunityClient({ initialExperiences }: { initialExperie
               {verifiedBizs.map(v => (
                 <div key={v.id} className="flex items-center gap-3 rounded-2xl px-4 py-3"
                   style={{ background: 'rgba(74,222,128,0.04)', border: '1px solid rgba(74,222,128,0.12)' }}>
-                  {v.logo_url ? (
-                    <img src={v.logo_url} alt={v.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
+                  {safeHref(v.logo_url) ? (
+                    <img src={safeHref(v.logo_url)} alt={v.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-black flex-shrink-0"
                       style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80' }}>

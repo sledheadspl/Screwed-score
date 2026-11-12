@@ -64,7 +64,10 @@ export async function GET(req: NextRequest) {
     .order('created_at', { ascending: false })
     .limit(20)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[api/documents GET]', error)
+    return NextResponse.json({ error: 'Could not load documents' }, { status: 500 })
+  }
   return NextResponse.json({ documents: data ?? [] })
 }
 
@@ -98,7 +101,10 @@ export async function POST(req: NextRequest) {
     .select('id, share_slug')
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[api/documents POST]', error)
+    return NextResponse.json({ error: 'Could not save document' }, { status: 500 })
+  }
 
   const res = NextResponse.json({ id: data.id, share_slug: data.share_slug })
   return existing ? res : attachSession(res, sessionId)
@@ -118,6 +124,9 @@ export async function DELETE(req: NextRequest) {
     .eq('id', id)
     .eq('session_id', sessionId)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[api/documents DELETE]', error)
+    return NextResponse.json({ error: 'Could not delete document' }, { status: 500 })
+  }
   return NextResponse.json({ ok: true })
 }

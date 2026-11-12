@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isOperatorRequest } from '@/lib/secure-compare'
 import { completeJob } from '@/lib/jobs/service'
 import { recomputeWorkerReputation } from '@/lib/workers/reputation'
 
 export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<NextResponse> {
-  const secret = req.headers.get('x-operator-secret')
-  if (!secret || secret !== process.env.OWNER_ACCESS_SECRET) {
+  if (!isOperatorRequest(req.headers)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     return NextResponse.json({ completion }, { status: 201 })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to complete job'
-    return NextResponse.json({ error: message }, { status: 500 })
+    console.error('[api/jobs/[id]/complete]', err)
+    return NextResponse.json({ error: 'Failed to complete job' }, { status: 500 })
   }
 }

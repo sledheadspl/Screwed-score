@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isOperatorRequest } from '@/lib/secure-compare'
 import { createJob, listJobs, JOB_CATEGORIES } from '@/lib/jobs/service'
 
 export const runtime = 'nodejs'
@@ -21,8 +22,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const secret = req.headers.get('x-operator-secret')
-  if (!secret || secret !== process.env.OWNER_ACCESS_SECRET) {
+  if (!isOperatorRequest(req.headers)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

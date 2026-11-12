@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
 import { resolveDispute } from '@/lib/disputes/service'
+import { getSessionUserId } from '@/lib/session-user'
+import { isOperatorRequest } from '@/lib/secure-compare'
 
 export const runtime = 'nodejs'
 
@@ -8,11 +9,24 @@ interface Params {
   params: Promise<{ id: string }>
 }
 
+const KNOWN_ERRORS = new Map<string, number>([
+  ['Dispute not found', 404],
+  ['Not authorized to resolve this dispute', 403],
+  ['Dispute is already resolved', 409],
+])
+
 export async function POST(req: NextRequest, { params }: Params): Promise<NextResponse> {
   try {
     const { id } = await params
     if (!id) {
       return NextResponse.json({ error: 'id is required' }, { status: 400 })
+    }
+
+    // Who is asking: the operator (X-Operator-Secret) or a signed-in user.
+    const isOperator = isOperatorRequest(req.headers)
+    const userId = await getSessionUserId(req.headers.get('cookie'))
+    if (!isOperator && !userId) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
     }
 
     const body = await req.json().catch(() => null)
@@ -24,36 +38,19 @@ export async function POST(req: NextRequest, { params }: Params): Promise<NextRe
     if (typeof resolution_notes !== 'string' || !resolution_notes.trim()) {
       return NextResponse.json({ error: 'resolution_notes is required' }, { status: 400 })
     }
+    if (resolution_notes.length > 2000) {
+      return NextResponse.json({ error: 'resolution_notes too long (max 2000 characters)' }, { status: 400 })
+    }
 
-    // Get user from session (optional — in production you'd enforce ownership)
-    let userId: string | null = null
-    const cookieHeader = req.headers.get('cookie') ?? ''
-    try {
-      const supabaseAuth = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          cookies: {
-            getAll: () => cookieHeader.split(';').map(c => {
-              const [n, ...rest] = c.trim().split('=')
-              return { name: n, value: rest.join('=') }
-            }),
-            setAll: () => {},
-          },
-        }
-      )
-      const { data: { user } } = await supabaseAuth.auth.getUser()
-      userId = user?.id ?? null
-    } catch { /* anon */ }
-
-    const dispute = await resolveDispute(id, { resolution_notes }, userId)
+    // Ownership is enforced in resolveDispute: only the dispute's owner or
+    // the operator can resolve; ownerless disputes are operator-only.
+    const dispute = await resolveDispute(id, { resolution_notes }, { userId, isOperator })
     return NextResponse.json({ dispute })
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Internal server error'
-    let status = 500
-    if (msg === 'Dispute not found') status = 404
-    else if (msg === 'Not authorized to resolve this dispute') status = 403
-    else if (msg === 'Dispute is already resolved') status = 409
-    return NextResponse.json({ error: msg }, { status })
+    const msg = err instanceof Error ? err.message : ''
+    const status = KNOWN_ERRORS.get(msg)
+    if (status) return NextResponse.json({ error: msg }, { status })
+    console.error('[disputes/resolve] error:', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

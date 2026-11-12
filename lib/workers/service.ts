@@ -1,4 +1,5 @@
 import { createServiceClient } from '@/lib/supabase'
+import { toHttpUrl } from '@/lib/safe-url'
 import { recomputeWorkerReputation } from './reputation'
 
 export interface WorkerProfile {
@@ -39,7 +40,7 @@ export async function createWorkerProfile(input: CreateWorkerProfileInput): Prom
       skills:       input.skills ?? [],
       city:         input.city?.trim().slice(0, 50) ?? null,
       state:        input.state?.trim().slice(0, 2).toUpperCase() ?? null,
-      website:      input.website?.trim() ?? null,
+      website:      toHttpUrl(input.website),
     })
     .select()
     .single()
@@ -57,6 +58,9 @@ export async function updateWorkerProfile(
   updates: Partial<Omit<WorkerProfile, 'id' | 'created_at' | 'is_verified' | 'is_banned' | 'ban_reason'>>
 ): Promise<WorkerProfile> {
   const supabase = createServiceClient()
+
+  // Never store a website that isn't a plain http(s) URL.
+  if ('website' in updates) updates = { ...updates, website: toHttpUrl(updates.website) }
 
   const { data, error } = await supabase
     .from('worker_profiles')

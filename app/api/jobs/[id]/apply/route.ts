@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isOperatorRequest } from '@/lib/secure-compare'
 import { createServerClient } from '@supabase/ssr'
 import { applyForJob, updateApplicationStatus } from '@/lib/jobs/service'
 
 export const runtime = 'nodejs'
+
+// Messages thrown by applyForJob that are meant for the applicant.
+const APPLY_USER_ERRORS = new Set([
+  'Job is not accepting applications',
+  'Job has reached maximum applicants',
+  'You have already applied for this job',
+])
 
 async function getAuthUser(req: NextRequest): Promise<string | null> {
   const cookieHeader = req.headers.get('cookie') ?? ''
@@ -56,15 +64,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const application = await applyForJob(jobId, userId, body?.cover_note)
     return NextResponse.json({ application }, { status: 201 })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to apply'
-    return NextResponse.json({ error: message }, { status: 400 })
+    // Pass through the service's own eligibility messages; anything else
+    // (database errors and the like) stays in the server log.
+    const message = err instanceof Error ? err.message : ''
+    if (APPLY_USER_ERRORS.has(message) || /^Minimum reputation score of \d+ required$/.test(message)) {
+      return NextResponse.json({ error: message }, { status: 400 })
+    }
+    console.error('[api/jobs/[id]/apply POST]', err)
+    return NextResponse.json({ error: 'Failed to apply' }, { status: 400 })
   }
 }
 
 // PATCH — operator approves or rejects an application
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
-  const secret = req.headers.get('x-operator-secret')
-  if (!secret || secret !== process.env.OWNER_ACCESS_SECRET) {
+  if (!isOperatorRequest(req.headers)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -83,7 +96,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     )
     return NextResponse.json({ application })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to update application'
-    return NextResponse.json({ error: message }, { status: 500 })
+    console.error('[api/jobs/[id]/apply PATCH]', err)
+    return NextResponse.json({ error: 'Failed to update application' }, { status: 500 })
   }
 }

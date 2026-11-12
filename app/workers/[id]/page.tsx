@@ -4,6 +4,7 @@ import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Star, CheckCircle, AlertTriangle } from 'lucide-react'
 import { ReputationBadge } from '@/components/ReputationBadge'
+import { safeHref } from '@/lib/safe-url'
 
 interface WorkerProfile {
   display_name: string
@@ -164,8 +165,8 @@ export default function WorkerProfilePage({ params }: { params: Promise<{ id: st
               <div className="flex flex-wrap gap-3 mt-1 text-xs text-brand-sub">
                 {profile.city && profile.state && <span>📍 {profile.city}, {profile.state}</span>}
                 {memberSince && <span>Member {memberSince}</span>}
-                {profile.website && (
-                  <a href={profile.website} target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-text transition-colors">
+                {safeHref(profile.website) && (
+                  <a href={safeHref(profile.website)} target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-text transition-colors">
                     Website ↗
                   </a>
                 )}

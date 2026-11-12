@@ -65,7 +65,7 @@ export async function getDisputeById(id: string): Promise<DisputeWithMessages | 
 export async function replyToDispute(
   disputeId: string,
   data: ReplyToDisputeRequest,
-  authorId: string | null
+  authorId: string
 ): Promise<DisputeMessage> {
   const supabase = createServiceClient()
 
@@ -106,14 +106,20 @@ export async function replyToDispute(
   return message as DisputeMessage
 }
 
+export interface DisputeActor {
+  /** Signed-in Supabase user, or null. */
+  userId: string | null
+  /** True when the request carried the operator secret. */
+  isOperator: boolean
+}
+
 export async function resolveDispute(
   disputeId: string,
   data: ResolveDisputeRequest,
-  userId: string | null
+  actor: DisputeActor
 ): Promise<Dispute> {
   const supabase = createServiceClient()
 
-  // Verify ownership — only the dispute creator or admin (no userId) can resolve
   const { data: existing } = await supabase
     .from('disputes')
     .select('user_id, status')
@@ -122,11 +128,11 @@ export async function resolveDispute(
 
   if (!existing) throw new Error('Dispute not found')
 
-  // Require authentication to resolve any dispute
-  if (!userId) throw new Error('Not authorized to resolve this dispute')
-
-  // If the dispute has a recorded owner, require the caller to be that owner
-  if (existing.user_id !== null && userId !== existing.user_id) {
+  // Only the operator, or the signed-in user who opened the dispute, may
+  // resolve it. A dispute with no recorded owner can only be resolved by the
+  // operator.
+  const isOwner = actor.userId !== null && existing.user_id !== null && actor.userId === existing.user_id
+  if (!actor.isOperator && !isOwner) {
     throw new Error('Not authorized to resolve this dispute')
   }
 
