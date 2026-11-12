@@ -5,6 +5,8 @@ import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import type { DocumentType } from '@/lib/types'
 
 import { stripe } from '@/lib/stripe'
+import { allowRequest } from '@/lib/rate-limit'
+import { isPurchaseRevoked } from '@/lib/pro'
 const anthropic = new Anthropic()
 
 export interface KitContent {
@@ -19,8 +21,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   const { session_id, analysis_id } = req.body as { session_id?: string; analysis_id?: string }
-  if (!session_id || !analysis_id) {
+  if (typeof session_id !== 'string' || typeof analysis_id !== 'string' || !session_id || !analysis_id) {
     return res.status(400).json({ error: 'session_id and analysis_id required' })
+  }
+
+  // One purchase buys a kit, not unlimited AI generations.
+  if (!(await allowRequest('kit-generate', session_id, 5, 24 * 60 * 60 * 1000))) {
+    return res.status(429).json({ error: 'This kit has been generated too many times today. Try again tomorrow.' })
   }
 
   // Verify payment
@@ -33,6 +40,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (stripeSession.payment_status !== 'paid') {
     return res.status(402).json({ error: 'Payment not completed' })
+  }
+
+  const kitPaymentId =
+    typeof stripeSession.payment_intent === 'string' ? stripeSession.payment_intent : stripeSession.payment_intent?.id
+  if (await isPurchaseRevoked(kitPaymentId)) {
+    return res.status(402).json({ error: 'This purchase was refunded or disputed' })
   }
 
   if (stripeSession.metadata?.analysis_id !== analysis_id) {

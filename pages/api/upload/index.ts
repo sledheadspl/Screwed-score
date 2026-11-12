@@ -6,6 +6,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { detectDocumentType } from '@/lib/detect'
 import { parseToken } from '@/lib/auth'
+import { isPurchaseRevoked } from '@/lib/pro'
 import type { UploadResponse } from '@/lib/types'
 
 // Disable Next.js body parser — formidable reads the raw stream directly
@@ -57,18 +58,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const parsed = proToken ? parseToken(proToken) : null
     let isPro = !!parsed
 
-    // Subscription tokens (sub_...) are long-lived — deny if the subscription
-    // was cancelled or its payment failed (webhook fills revoked_subscriptions).
-    if (isPro && parsed!.refId.startsWith('sub_')) {
-      try {
-        const { data: revoked } = await supabase
-          .from('revoked_subscriptions')
-          .select('subscription_id')
-          .eq('subscription_id', parsed!.refId)
-          .maybeSingle()
-        if (revoked) isPro = false
-      } catch { /* non-fatal — favor access on DB error */ }
-    }
+    // Deny if the purchase behind the token was cancelled, failed to pay,
+    // refunded or disputed (the Stripe webhook fills revoked_subscriptions).
+    if (isPro && await isPurchaseRevoked(parsed!.refId)) isPro = false
 
     if (!isPro && userId) {
       try {

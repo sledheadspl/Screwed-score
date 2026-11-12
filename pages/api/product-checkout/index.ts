@@ -53,6 +53,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { product_id } = req.body as { product_id?: string }
   const entry = product_id ? PRODUCT_MAP[product_id] : null
   if (!entry) return res.status(400).json({ error: 'Invalid product_id' })
+  if (entry.priceId.startsWith('price_REPLACE')) {
+    return res.status(503).json({ error: 'This product is not on sale yet' })
+  }
 
   const isClipPilot = product_id!.startsWith('clippilot')
   const isAcademy = product_id!.startsWith('academy-')
@@ -74,8 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ url: session.url })
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err)
-    console.error('[product-checkout]', msg)
-    return res.status(500).json({ error: msg })
+    console.error('[product-checkout]', err instanceof Error ? err.message : String(err))
+    return res.status(500).json({ error: 'Failed to create checkout session' })
   }
 }
