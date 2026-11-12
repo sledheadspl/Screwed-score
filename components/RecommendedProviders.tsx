@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ShieldCheck, Globe, Phone, ChevronRight, Plus, CheckCircle } from 'lucide-react'
+import { safeHref } from '@/lib/safe-url'
 
 interface Provider {
   id: string
@@ -111,8 +112,8 @@ export function RecommendedProviders({ documentType, score }: Props) {
                   <p className="text-xs text-brand-sub mt-0.5 line-clamp-1">{p.description}</p>
                 )}
                 <div className="flex items-center gap-3 mt-1">
-                  {p.website && (
-                    <a href={p.website} target="_blank" rel="noopener noreferrer"
+                  {safeHref(p.website) && (
+                    <a href={safeHref(p.website)} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 transition-colors">
                       <Globe className="w-3 h-3" /> Website <ChevronRight className="w-3 h-3" />
                     </a>

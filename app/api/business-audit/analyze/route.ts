@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
 import { logError } from '@/lib/log'
+import { secretMatches } from '@/lib/secure-compare'
 
 export const runtime = 'nodejs'
 export const maxDuration = 300
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!adminKey) {
     return NextResponse.json({ error: 'Analyzer not configured.' }, { status: 503 })
   }
-  if (req.headers.get('x-audit-admin-key') !== adminKey) {
+  if (!secretMatches(req.headers.get('x-audit-admin-key'), adminKey)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -126,9 +127,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const buffer = Buffer.from(await file.arrayBuffer())
       try {
         checkMagicBytes(buffer, file.type)
-      } catch (err) {
+      } catch {
         return NextResponse.json(
-          { error: `${file.name}: ${(err as Error).message}` },
+          { error: `${file.name}: file content does not match the declared file type` },
           { status: 400 }
         )
       }
@@ -178,10 +179,7 @@ ${truncated}`
     })
   } catch (err) {
     await logError('business-audit-analyze', err)
-    return NextResponse.json(
-      { error: (err as Error).message || 'Analysis failed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Analysis failed' }, { status: 500 })
   }
 }
 

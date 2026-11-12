@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Gift, Copy, Check, Users } from 'lucide-react'
 import type { AnalysisResult } from '@/lib/types'
 
@@ -19,6 +20,7 @@ export function ReferralCard({ result, analysisId }: ReferralCardProps) {
   const [url, setUrl]         = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied]   = useState(false)
+  const [notice, setNotice]   = useState<'signin' | 'limit' | null>(null)
 
   const handleGenerate = async () => {
     if (url) { copyUrl(url); return }
@@ -29,6 +31,8 @@ export function ReferralCard({ result, analysisId }: ReferralCardProps) {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ analysis_id: analysisId }),
       })
+      if (res.status === 401) { setNotice('signin'); return }
+      if (res.status === 429) { setNotice('limit'); return }
       const data = await res.json()
       if (data.url) {
         setUrl(data.url)
@@ -89,6 +93,17 @@ export function ReferralCard({ result, analysisId }: ReferralCardProps) {
             <><Users className="w-4 h-4" /> Generate free scan link</>
           )}
         </button>
+
+        {notice === 'signin' && (
+          <p className="text-xs text-brand-sub text-center">
+            <Link href="/auth" className="underline hover:text-brand-text">Sign in</Link> to create a free scan link.
+          </p>
+        )}
+        {notice === 'limit' && (
+          <p className="text-xs text-brand-sub text-center">
+            You&apos;ve made today&apos;s free scan links. Try again tomorrow.
+          </p>
+        )}
 
         <p className="text-[11px] text-brand-sub/40 text-center">
           One-use link · works for any document type

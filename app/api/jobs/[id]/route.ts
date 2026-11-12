@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isOperatorRequest } from '@/lib/secure-compare'
 import { getJobById, getJobApplications } from '@/lib/jobs/service'
 import { rankApplicants } from '@/lib/workers/recommend'
 
@@ -11,8 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!job) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
 
     // Operator sees ranked applicants; public sees only the job
-    const secret = req.headers.get('x-operator-secret')
-    if (secret && secret === process.env.OWNER_ACCESS_SECRET) {
+    if (isOperatorRequest(req.headers)) {
       const rawApplicants = await getJobApplications(id)
       const applicants = rankApplicants(
         rawApplicants.map((a: Record<string, unknown>) => ({
@@ -34,8 +34,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<NextResponse> {
-  const secret = req.headers.get('x-operator-secret')
-  if (!secret || secret !== process.env.OWNER_ACCESS_SECRET) {
+  if (!isOperatorRequest(req.headers)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -53,7 +52,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       .select()
       .single()
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+    if (error) {
+      console.error('[api/jobs/[id] PATCH] update failed:', error)
+      return NextResponse.json({ error: 'Failed to update job' }, { status: 400 })
+    }
     return NextResponse.json({ job: data })
   } catch (err) {
     console.error('[api/jobs/[id] PATCH]', err)

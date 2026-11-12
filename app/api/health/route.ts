@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { secretMatches } from '@/lib/secure-compare'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,8 +8,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // Require X-Health-Token header if HEALTH_SECRET is configured
   const healthSecret = process.env.HEALTH_SECRET
   if (healthSecret) {
-    const provided = req.headers.get('x-health-token')
-    if (provided !== healthSecret) {
+    if (!secretMatches(req.headers.get('x-health-token'), healthSecret)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
   }

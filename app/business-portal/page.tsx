@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { getAuthClient } from '@/lib/auth-client'
 import { ShieldCheck, Search, Plus, CheckCircle, AlertTriangle, Edit3, Save, X } from 'lucide-react'
 import Link from 'next/link'
+import { safeHref } from '@/lib/safe-url'
 
 interface Vendor {
   id: string
@@ -262,7 +263,9 @@ export default function BusinessPortalPage() {
                 </div>
                 <button
                   onClick={() => { setEditing(!editing); setDraft(claimedVendor) }}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all flex-shrink-0"
+                  disabled={!claimedVendor.verified}
+                  title={claimedVendor.verified ? undefined : 'You can edit your profile once your claim is approved'}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#f2f2f2' }}>
                   <Edit3 className="w-3.5 h-3.5" /> {editing ? 'Cancel' : 'Edit Profile'}
                 </button>
@@ -368,10 +371,12 @@ export default function BusinessPortalPage() {
                       <p className="text-xs font-bold text-brand-sub uppercase tracking-wider mb-2">About</p>
                       <p className="text-sm text-brand-sub leading-relaxed">{claimedVendor.bio}</p>
                     </div>
-                  ) : (
+                  ) : claimedVendor.verified ? (
                     <button onClick={() => setEditing(true)} className="text-sm text-brand-sub opacity-60 hover:opacity-100 underline underline-offset-2">
                       + Add a bio to tell customers who you are
                     </button>
+                  ) : (
+                    <p className="text-sm text-brand-sub opacity-60">You can add a bio once your claim is approved.</p>
                   )}
                   {claimedVendor.response_statement && (
                     <div>
@@ -382,10 +387,14 @@ export default function BusinessPortalPage() {
                   {claimedVendor.website && (
                     <p className="text-xs text-brand-sub">
                       <span className="opacity-50">Website: </span>
-                      <a href={claimedVendor.website} target="_blank" rel="noopener noreferrer"
-                        className="underline hover:text-brand-text transition-colors">
-                        {claimedVendor.website}
-                      </a>
+                      {safeHref(claimedVendor.website) ? (
+                        <a href={safeHref(claimedVendor.website)} target="_blank" rel="noopener noreferrer"
+                          className="underline hover:text-brand-text transition-colors">
+                          {claimedVendor.website}
+                        </a>
+                      ) : (
+                        <span>{claimedVendor.website}</span>
+                      )}
                     </p>
                   )}
                 </div>
@@ -396,7 +405,7 @@ export default function BusinessPortalPage() {
                     <AlertTriangle className="w-5 h-5 flex-shrink-0" style={{ color: '#fbbf24' }} />
                     <div className="space-y-1">
                       <p className="text-sm font-black text-brand-text">Verification pending</p>
-                      <p className="text-xs text-brand-sub">We review business claims within 48 hours. Once verified, your profile displays the green Verified Honest Business badge on the community page and your profile.</p>
+                      <p className="text-xs text-brand-sub">We review business claims within 48 hours. Once approved, you can edit your profile, and it displays the green Verified Honest Business badge on the community page and your profile.</p>
                     </div>
                   </div>
                 )}

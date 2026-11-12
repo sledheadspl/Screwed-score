@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { Resend } from 'resend'
+import { allowRequest, clientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
@@ -92,6 +93,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const email = body.email.toLowerCase().trim()
     if (!EMAIL_RE.test(email) || email.length > 254) {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
+    }
+
+    // 5 guide requests per IP per hour, 2 emails per recipient per day, so
+    // the route can't be used to flood an inbox from our domain.
+    if (
+      !(await allowRequest('guide-ip', clientIp(req.headers), 5, 60 * 60 * 1000)) ||
+      !(await allowRequest('guide-to', email, 2, 24 * 60 * 60 * 1000))
+    ) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 })
     }
 
     // Store in waitlist + schedule first nurture email 24h after this signup.

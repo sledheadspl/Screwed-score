@@ -69,7 +69,8 @@ export async function searchVendors(params: VendorSearchParams): Promise<Vendor[
     query = query.eq('claimed_by', params.claimed_by)
   }
   if (params.claimedOnly) {
-    query = query.not('claimed_by', 'is', null)
+    // Public "verified businesses" list: only claims an operator approved.
+    query = query.not('claimed_by', 'is', null).eq('verified', true)
   }
 
   const { data, error } = await query

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { sendNurtureStep, NURTURE_DELAYS_HOURS } from '@/lib/email/nurture'
 import { logError } from '@/lib/log'
+import { secretMatches } from '@/lib/secure-compare'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -25,9 +26,11 @@ export async function POST(req: NextRequest) {
 }
 
 async function handle(req: NextRequest): Promise<NextResponse> {
-  // Auth: header X-Cron-Secret must match env. Reject anything else.
-  const secret = req.headers.get('x-cron-secret') ?? new URL(req.url).searchParams.get('secret')
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  // Auth: header X-Cron-Secret must match env (constant-time). The secret is
+  // never accepted in the query string, where it would end up in access logs.
+  // The Netlify scheduled function (netlify/functions/nurture-cron.ts) sends
+  // the header.
+  if (!secretMatches(req.headers.get('x-cron-secret'), process.env.CRON_SECRET)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -92,11 +95,13 @@ async function handle(req: NextRequest): Promise<NextResponse> {
     }
   }
 
+  // Per-row details stay in the server log, not the response.
+  if (errors.length) console.error('[cron/nurture] failures:', errors.slice(0, 10))
+
   return NextResponse.json({
     ok: true,
     processed: rows.length,
     sent,
     failed,
-    ...(errors.length ? { errors: errors.slice(0, 10) } : {}),
   })
 }
