@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { issueToken } from '@/lib/auth'
+import { isPurchaseRevoked } from '@/lib/pro'
 
 import { stripe } from '@/lib/stripe'
 
@@ -46,6 +47,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!customerId || !refId) {
       return res.status(400).json({ error: 'Invalid session data' })
+    }
+
+    // A refunded, disputed or cancelled purchase can't be traded for a new cookie.
+    if (await isPurchaseRevoked(refId)) {
+      return res.status(403).json({ error: 'This purchase is no longer active' })
     }
 
     // One-time pass / monthly: 32 days covers a billing cycle. Yearly: 370 days

@@ -3,7 +3,7 @@ import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { runAutomationJob } from '@/lib/automation/engine'
 import { isAutomationJobType } from '@/lib/types/automation'
-import { verifyToken } from '@/lib/auth'
+import { isProTokenActive } from '@/lib/pro'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Require Pro access
     const proToken = getProToken(req)
-    if (!proToken || !verifyToken(proToken)) {
+    if (!(await isProTokenActive(proToken))) {
       return NextResponse.json({ error: 'PRO_REQUIRED' }, { status: 403 })
     }
 
