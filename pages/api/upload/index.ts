@@ -67,10 +67,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('plan, subscription_status')
+          .select('subscription_tier, subscription_status')
           .eq('id', userId)
           .maybeSingle()
-        if (profile?.plan === 'pro' && profile?.subscription_status === 'active') {
+        const paidTier = ['pro', 'business', 'enterprise'].includes(profile?.subscription_tier ?? '')
+        if (paidTier && profile?.subscription_status === 'active') {
           isPro = true
         }
       } catch { /* non-fatal */ }
