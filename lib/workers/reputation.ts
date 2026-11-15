@@ -83,27 +83,30 @@ export async function recomputeWorkerReputation(workerId: string): Promise<Worke
     .from('worker_reputations')
     .upsert(rep, { onConflict: 'worker_id' })
 
-  // Auto-flag for Wall of Shame if score drops below 20 after earning it
+  // Auto-flag a worker whose score drops below 20 after earning it. The Wall
+  // of Shame only holds businesses (each entry must point at a vendor), so a
+  // worker goes into worker_flags for the operator to review instead. Only one
+  // open system flag per worker, so recomputing doesn't pile up duplicates.
   if (reputation_score < 20 && jobsCompleted >= 3) {
-    await supabase.from('worker_profiles').select('display_name, ban_reason').eq('id', workerId).single()
-      .then(async ({ data: profile }) => {
-        if (!profile) return
-        await supabase.from('wall_of_shame_entries').upsert({
-          vendor_id:           workerId,
-          vendor_name:         profile.display_name,
-          category:            'worker',
-          city:                null,
-          state:               null,
-          total_analyses:      jobsCompleted,
-          screwed_count:       jobsAbandoned + rep.disputes_lost,
-          screwed_rate:        reputation_score / 100,
-          avg_screwed_percent: 100 - reputation_score,
-          total_flagged_amount: 0,
-          ai_summary:          profile.ban_reason ?? 'Worker reputation fell below minimum threshold.',
-          updated_at:          new Date().toISOString(),
-          entity_type:         'worker',
-        }, { onConflict: 'vendor_id' })
+    const { data: openFlag } = await supabase
+      .from('worker_flags')
+      .select('id')
+      .eq('worker_id', workerId)
+      .eq('flagged_by', 'system')
+      .eq('resolved', false)
+      .limit(1)
+      .maybeSingle()
+
+    if (!openFlag) {
+      const { error: flagError } = await supabase.from('worker_flags').insert({
+        worker_id:  workerId,
+        job_id:     null,
+        flagged_by: 'system',
+        reason:     `Reputation score fell to ${reputation_score} after ${jobsCompleted} jobs.`,
+        severity:   'high',
       })
+      if (flagError) console.error('[workers/reputation] auto-flag failed:', flagError.message)
+    }
   }
 
   return rep
