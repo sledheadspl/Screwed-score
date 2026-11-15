@@ -12,7 +12,8 @@ import type { UploadResponse } from '@/lib/types'
 // Disable Next.js body parser — formidable reads the raw stream directly
 export const config = { api: { bodyParser: false } }
 
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
+// Matches lib/prepare-upload.ts; Netlify refuses bodies over ~6 MB anyway.
+const MAX_FILE_SIZE_BYTES = 4.5 * 1024 * 1024
 
 const ALLOWED_MIME_TYPES = new Set([
   'application/pdf',

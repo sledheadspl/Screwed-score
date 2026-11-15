@@ -39,8 +39,8 @@ const EXAMPLES = [
   {
     score: 'SCREWED', emoji: '🚨',
     doc: 'Mechanic Invoice',
-    amount: '$847',
-    reason: 'Labor billed at 3× book rate. Parts marked up 180%. "Diagnostic fee" charged twice.',
+    amount: '$849',
+    reason: 'Labor billed at over 2× the local rate. Brake pads billed at nearly 4× retail. Diagnostic fee charged twice.',
     color: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)',
   },
   {
@@ -271,7 +271,7 @@ export default function HomePage() {
                     style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', boxShadow: '0 0 30px rgba(245,158,11,0.35)' }}>
                     Scan a bill to unlock it <ChevronRight className="w-4 h-4" />
                   </a>
-                  <span className="text-xs font-black" style={{ color: 'rgba(245,158,11,0.7)' }}>$14.99 · One-time · Avg. recovery $400+</span>
+                  <span className="text-xs font-black" style={{ color: 'rgba(245,158,11,0.7)' }}>$14.99 · One-time</span>
                 </div>
               </div>
             </section>
@@ -552,7 +552,7 @@ export default function HomePage() {
                       <div className="flex items-center justify-between">
                         <span className="text-2xl font-black score-text-screwed">🚨 SCREWED</span>
                         <span className="font-black score-text-screwed" style={{ fontSize: 'clamp(28px, 4vw, 44px)', lineHeight: 1 }}>
-                          $847
+                          {EXAMPLES[0].amount}
                         </span>
                       </div>
                       <p className="text-xs font-bold text-brand-sub/50 uppercase tracking-widest">{EXAMPLES[0].doc}</p>
@@ -561,9 +561,11 @@ export default function HomePage() {
                     {/* Faux receipt fragment */}
                     <div className="mt-6 pt-5 border-t border-red-500/15 space-y-0">
                       {[
-                        { label: 'Labor (4.5 hrs × $195)', amount: '$877', flagged: true },
-                        { label: 'Parts markup (180% over MSRP)', amount: '$310', flagged: true },
-                        { label: 'Diagnostic fee ×2 (duplicate)', amount: '$150', flagged: true },
+                        // These three must add up to EXAMPLES[0].amount ($420 + $340 + $89 = $849),
+                        // and match the live example in lib/sample-result.ts.
+                        { label: 'Labor (2.0 hrs × $210)', amount: '$420', flagged: true },
+                        { label: 'Brake pads (retail $55–$90)', amount: '$340', flagged: true },
+                        { label: 'Diagnostic fee (charged twice)', amount: '$89', flagged: true },
                       ].map(item => (
                         <div key={item.label} className="receipt-item">
                           <span className="text-brand-sub/55 flex-1 pr-4">{item.label}</span>

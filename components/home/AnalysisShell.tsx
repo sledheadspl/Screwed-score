@@ -7,6 +7,7 @@ import { AlertCircle, RotateCcw } from 'lucide-react'
 import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '@/lib/types'
 import { getBrowserSupabase, hasProCookie } from '@/lib/supabase-browser'
 import { UploadContext } from './upload-context'
+import { prepareUpload, UPLOAD_MAX_BYTES } from '@/lib/prepare-upload'
 
 // Everything past the landing page is fetched on demand. The result view in
 // particular drags in ~15 cards; keeping it out of the initial chunk is most of
@@ -104,9 +105,19 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
   const setPhase = (phase: AppState['phase'], progress: number, label: string) =>
     setState(s => ({ ...s, phase, progress, progressLabel: label }))
 
-  const handleUpload = useCallback(async (file: File) => {
+  const handleUpload = useCallback(async (picked: File) => {
     setState({ ...INITIAL_STATE, phase: 'uploading', progress: 10, progressLabel: 'Uploading file...' })
+    let fileKb = Math.round(picked.size / 1024)
     try {
+      // Shrink large phone photos first: the host refuses bodies over ~6 MB.
+      const file = await prepareUpload(picked)
+      fileKb = Math.round(file.size / 1024)
+      if (file.size > UPLOAD_MAX_BYTES) {
+        track('scan_error', { stage: 'too_large', file_type: file.type || 'unknown', file_kb: fileKb })
+        setState(s => ({ ...s, phase: 'error', error: 'That file is too big to scan. Try a photo of the bill or a PDF under 4 MB.' }))
+        return
+      }
+
       const form = new FormData()
       form.append('file', file)
       setPhase('uploading', 25, 'Uploading file...')
@@ -119,7 +130,11 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
       if (refToken)  uploadHeaders['x-ref-token'] = refToken
 
       const uploadRes  = await fetch('/api/upload', { method: 'POST', body: form, headers: uploadHeaders })
-      const uploadData = await uploadRes.json()
+      // The host answers some failures (e.g. 413 body too large) with a
+      // non-JSON page, so never assume JSON here.
+      const uploadText = await uploadRes.text()
+      let uploadData: { error?: string } & Partial<UploadResponse> = {}
+      try { uploadData = JSON.parse(uploadText) } catch { /* non-JSON response */ }
 
       if (!uploadRes.ok) {
         if (uploadRes.status === 429 || uploadData.error === 'LIMIT_REACHED') {
@@ -127,8 +142,11 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
           setShowPaywall(true)
           return
         }
-        track('scan_error', { stage: 'upload' })
-        setState(s => ({ ...s, phase: 'error', error: uploadData.error ?? 'Upload failed' }))
+        track('scan_error', { stage: 'upload', status: uploadRes.status, file_type: file.type || 'unknown', file_kb: fileKb })
+        const message = uploadRes.status === 413
+          ? 'That file is too big to scan. Try a photo of the bill or a PDF under 4 MB.'
+          : uploadData.error ?? 'Upload failed. Please try again.'
+        setState(s => ({ ...s, phase: 'error', error: message }))
         return
       }
 
@@ -173,10 +191,16 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
         result: { ...result, created_at: new Date().toISOString() },
       }))
     } catch (err) {
-      track('scan_error', { stage: 'network' })
+      // Record what failed so the next one can be diagnosed from analytics.
+      track('scan_error', {
+        stage: 'network',
+        error_name: err instanceof Error ? err.name : 'unknown',
+        file_type: picked.type || 'unknown',
+        file_kb: fileKb,
+      })
       setState(s => ({
         ...s, phase: 'error',
-        error: err instanceof Error ? err.message : 'Something went wrong. Please try again.',
+        error: 'The upload didn\'t go through. Check your connection and try again. If the file came from cloud storage, save it to your phone first.',
       }))
     }
   }, [refToken])

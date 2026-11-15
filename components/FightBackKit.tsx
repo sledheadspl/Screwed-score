@@ -300,7 +300,7 @@ export function FightBackKit({ analysisId, score }: Props) {
 
         <div className="flex items-center justify-center gap-1.5 text-xs text-green-400/70">
           <CheckCircle className="w-3 h-3" />
-          <span>Avg. user who disputes recovers $400+</span>
+          <span>Written for the exact charges your scan flagged</span>
         </div>
       </div>
     </div>

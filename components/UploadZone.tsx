@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Upload, Loader2, Camera, FolderOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { track } from '@/lib/track'
+import { UPLOAD_MAX_BYTES, PHOTO_MAX_BYTES, isShrinkableImage } from '@/lib/prepare-upload'
 
 interface UploadZoneProps {
   onUpload: (file: File) => void
@@ -13,7 +14,6 @@ interface UploadZoneProps {
 }
 
 const ACCEPT_ATTR = '.pdf,.docx,.doc,.jpg,.jpeg,.png,.webp,.txt,image/*,application/pdf'
-const MAX_BYTES = 10 * 1024 * 1024
 
 const DOC_TYPES = ['Mechanic Invoice', 'Medical Bill', 'Lease Agreement', 'Contractor Estimate', 'Brand Deal', 'Phone Bill', 'Insurance Quote']
 
@@ -46,12 +46,14 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
   const accept = useCallback(
     (file: File | undefined | null) => {
       if (!file) return
-      if (file.size > MAX_BYTES) {
+      // Photos get shrunk in the browser before upload, so they can start larger.
+      const limit = isShrinkableImage(file) ? PHOTO_MAX_BYTES : UPLOAD_MAX_BYTES
+      if (file.size > limit) {
         setSizeError(true)
         track('file_rejected', { reason: 'too_large', upload_slot: idPrefix })
         return
       }
-      track('file_selected', { file_type: file.type || 'unknown', upload_slot: idPrefix })
+      track('file_selected', { file_type: file.type || 'unknown', file_kb: Math.round(file.size / 1024), upload_slot: idPrefix })
       setSizeError(false)
       onUpload(file)
     },
@@ -85,7 +87,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
   }
 
   const tooLarge = sizeError && (
-    <p className="text-xs text-red-400 text-center pt-1">That file is over 10 MB — try a photo or a smaller PDF.</p>
+    <p className="text-xs text-red-400 text-center pt-1">That file is too big. Files can be up to 4 MB (photos can be bigger). Try a photo of the bill or a smaller PDF.</p>
   )
 
   const ticker = (
@@ -154,7 +156,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
           <FolderOpen className="w-5 h-5 text-brand-sub shrink-0" />
           <div className="min-w-0">
             <p className="text-sm font-semibold text-brand-text">Choose from files</p>
-            <p className="text-xs text-brand-sub truncate">PDF, DOCX, JPG, PNG — up to 10 MB</p>
+            <p className="text-xs text-brand-sub truncate">PDF, DOCX, JPG, PNG — up to 4 MB</p>
           </div>
         </label>
 
