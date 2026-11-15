@@ -10,7 +10,7 @@ interface TickerItem {
 }
 
 const FALLBACK: TickerItem[] = [
-  { score: 'SCREWED', doc: 'Mechanic Invoice',     amount: '$847',   minsAgo: 4  },
+  { score: 'SCREWED', doc: 'Mechanic Invoice',     amount: '$849',   minsAgo: 4  },
   { score: 'SAFE',    doc: 'Employment Contract',  amount: '',       minsAgo: 7  },
   { score: 'SCREWED', doc: 'Medical Bill',         amount: '$1,240', minsAgo: 12 },
   { score: 'MAYBE',   doc: 'Phone Bill',           amount: '$43',    minsAgo: 18 },
