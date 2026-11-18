@@ -5,6 +5,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { createDispute } from '@/lib/disputes/service'
 import { DISPUTE_CATEGORIES } from '@/lib/types/disputes'
 import type { DisputeCategory } from '@/lib/types/disputes'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 export const runtime = 'nodejs'
 
@@ -78,8 +79,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const cookieHeader = req.headers.get('cookie') ?? ''
     try {
       const supabaseAuth = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
         {
           cookies: {
             getAll: () => cookieHeader.split(';').map(c => {

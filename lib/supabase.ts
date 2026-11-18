@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 // Netlify Supabase extension provides SUPABASE_URL + SUPABASE_ANON_KEY (server-side).
 // NEXT_PUBLIC_ vars are kept as fallback for local dev and browser-side usage.
-const supabaseUrl  = process.env.SUPABASE_URL  ?? process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnon = process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl  = process.env.SUPABASE_URL  ?? SUPABASE_URL
+const supabaseAnon = process.env.SUPABASE_ANON_KEY ?? SUPABASE_ANON_KEY
 
 // Server client (service role) — only import in API routes / server components
 export function createServiceClient() {

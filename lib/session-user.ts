@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 /**
  * Supabase Auth user id for the request's session cookies, or null when the
@@ -9,8 +10,8 @@ export async function getSessionUserId(cookieHeader: string | null | undefined):
   const raw = cookieHeader ?? ''
   try {
     const supabaseAuth = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
       {
         cookies: {
           getAll: () => raw.split(';').map(c => {

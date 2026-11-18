@@ -8,6 +8,7 @@ import { detectDocumentType } from '@/lib/detect'
 import { parseToken } from '@/lib/auth'
 import { isPurchaseRevoked } from '@/lib/pro'
 import type { UploadResponse } from '@/lib/types'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 // Disable Next.js body parser — formidable reads the raw stream directly
 export const config = { api: { bodyParser: false } }
@@ -46,8 +47,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const { createClient } = await import('@supabase/supabase-js')
         const userClient = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY
         )
         const { data: { user } } = await userClient.auth.getUser(authToken)
         userId = user?.id ?? null

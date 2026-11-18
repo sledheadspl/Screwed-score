@@ -12,9 +12,10 @@
  * don't interact).
  */
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
-const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl  = SUPABASE_URL
+const supabaseAnon = SUPABASE_ANON_KEY
 
 let clientPromise: Promise<SupabaseClient> | null = null
 
