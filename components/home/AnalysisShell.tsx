@@ -8,6 +8,7 @@ import type { AppState, AnalysisResult, UploadResponse, AnalyzeResponse } from '
 import { getBrowserSupabase, hasProCookie } from '@/lib/supabase-browser'
 import { UploadContext } from './upload-context'
 import { prepareUpload, UPLOAD_MAX_BYTES } from '@/lib/prepare-upload'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 // Everything past the landing page is fetched on demand. The result view in
 // particular drags in ~15 cards; keeping it out of the initial chunk is most of
@@ -122,9 +123,14 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
       form.append('file', file)
       setPhase('uploading', 25, 'Uploading file...')
 
-      const client = await getBrowserSupabase()
-      const { data: sessionData } = await client.auth.getSession()
-      const authToken = sessionData?.session?.access_token
+      // A signed-in user's token is optional; never let the auth lookup stop
+      // the scan itself.
+      let authToken: string | undefined
+      try {
+        const client = await getBrowserSupabase()
+        const { data: sessionData } = await client.auth.getSession()
+        authToken = sessionData?.session?.access_token
+      } catch { /* scan as a signed-out visitor */ }
       const uploadHeaders: Record<string, string> = {}
       if (authToken) uploadHeaders['x-supabase-token'] = authToken
       if (refToken)  uploadHeaders['x-ref-token'] = refToken
@@ -158,13 +164,13 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
       setPhase('analyzing', 65, 'Running AI analysis...')
 
       const analyzeRes = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/analyze`,
+        `${SUPABASE_URL}/functions/v1/analyze`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
           },
           body: JSON.stringify({ document_id }),
         }

@@ -4,6 +4,7 @@ import { createServerClient } from '@supabase/ssr'
 import { createServiceClient } from '@/lib/supabase'
 import { createVendor } from '@/lib/vendors/service'
 import { isVendorCategory } from '@/lib/types/vendors'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 export const runtime = 'nodejs'
 
@@ -76,8 +77,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const cookieHeader = req.headers.get('cookie') ?? ''
     try {
       const supabaseAuth = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
         {
           cookies: {
             getAll: () => cookieHeader.split(';').map(c => {

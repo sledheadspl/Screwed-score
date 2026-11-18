@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { isOperatorRequest } from '@/lib/secure-compare'
 import { createServerClient } from '@supabase/ssr'
 import { applyForJob, updateApplicationStatus } from '@/lib/jobs/service'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
 
 export const runtime = 'nodejs'
 
@@ -16,8 +17,8 @@ async function getAuthUser(req: NextRequest): Promise<string | null> {
   const cookieHeader = req.headers.get('cookie') ?? ''
   try {
     const supabaseAuth = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
       {
         cookies: {
           getAll: () => cookieHeader.split(';').map(c => {
