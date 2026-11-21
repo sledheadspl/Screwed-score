@@ -207,7 +207,7 @@ function QuickFixCard({ lesson }: { lesson: QuickFixLesson }) {
       </div>
       <div className="flex items-baseline justify-between gap-3 text-sm mt-auto">
         <span style={{ color: 'rgba(242,242,242,0.5)' }}>
-          A shop charges <span className="line-through">${lesson.shopPrice}</span>
+          A shop charges <span className="font-semibold text-brand-text/70">{lesson.shopPrice}</span>
         </span>
         <span className="font-black text-brand-text">This guide: <span style={{ color: ORANGE }}>${lesson.price}</span></span>
       </div>

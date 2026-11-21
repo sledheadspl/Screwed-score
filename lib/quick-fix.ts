@@ -15,8 +15,8 @@ export interface QuickFixLesson {
   category: QuickFixCategory
   priceId: string
   price: number
-  /** Rough typical shop / tradesperson charge for the same job, in USD. */
-  shopPrice: number
+  /** What a shop or tradesperson typically charges, as stated in the lesson itself. */
+  shopPrice: string
   /** Filename in public/downloads/. */
   file: string
 }
@@ -32,16 +32,16 @@ export interface QuickFixBundle {
 }
 
 export const QF_LESSONS: QuickFixLesson[] = [
-  { id: 'qf-no-start-diagnosis', num: '01', title: "Car Won't Start? The 10-Minute Diagnosis", category: 'car', priceId: 'price_1UeK4QEKDzEsz6UjognEMCWZ', price: 9,  shopPrice: 150, file: 'academy-qf-01-no-start-diagnosis.html' },
-  { id: 'qf-serpentine-belt',    num: '02', title: 'Replace Your Serpentine Belt',               category: 'car', priceId: 'price_1UeK4WEKDzEsz6UjQtv49ddn', price: 9,  shopPrice: 175, file: 'academy-qf-02-serpentine-belt.html' },
-  { id: 'qf-brake-pads-rotors',  num: '03', title: 'Front Brake Pads and Rotors',                category: 'car', priceId: 'price_1UeK4XEKDzEsz6Ujci39Dckt', price: 12, shopPrice: 450, file: 'academy-qf-03-brake-pads-rotors.html' },
-  { id: 'qf-coolant-leak',       num: '04', title: 'Find and Fix a Coolant Leak',                category: 'car', priceId: 'price_1UeK4YEKDzEsz6Uj755JLGFf', price: 9,  shopPrice: 250, file: 'academy-qf-04-coolant-leak.html' },
-  { id: 'qf-battery-charging',   num: '05', title: 'Battery and Charging System: Test and Replace', category: 'car', priceId: 'price_1UeK4ZEKDzEsz6Uj0Qsj79vV', price: 9,  shopPrice: 200, file: 'academy-qf-05-battery-charging.html' },
-  { id: 'qf-running-toilet',     num: '06', title: 'Fix a Running Toilet for Good',              category: 'home', priceId: 'price_1UeK4aEKDzEsz6UjEdogNdDb', price: 9, shopPrice: 175, file: 'academy-qf-06-running-toilet.html' },
-  { id: 'qf-unclog-drain',       num: '07', title: 'Unclog Any Drain Without Chemicals',         category: 'home', priceId: 'price_1UeK4bEKDzEsz6UjZcEInCP4', price: 9, shopPrice: 200, file: 'academy-qf-07-unclog-drain.html' },
-  { id: 'qf-gfci-outlet',        num: '08', title: 'Replace a GFCI Outlet Safely',               category: 'home', priceId: 'price_1UeK4cEKDzEsz6UjcMioDcbG', price: 9, shopPrice: 180, file: 'academy-qf-08-gfci-outlet.html' },
-  { id: 'qf-drywall-patch',      num: '09', title: "Patch Drywall Holes So You Can't See Them",  category: 'home', priceId: 'price_1UeK4dEKDzEsz6UjExusTink', price: 9, shopPrice: 250, file: 'academy-qf-09-drywall-patch.html' },
-  { id: 'qf-leaky-faucet',       num: '10', title: 'Fix a Leaky Faucet (Any Type)',              category: 'home', priceId: 'price_1UeK4eEKDzEsz6UjNkyfyAcg', price: 9, shopPrice: 200, file: 'academy-qf-10-leaky-faucet.html' },
+  { id: 'qf-no-start-diagnosis', num: '01', title: "Car Won't Start? The 10-Minute Diagnosis", category: 'car', priceId: 'price_1UeK4QEKDzEsz6UjognEMCWZ', price: 9,  shopPrice: '$100–$180', file: 'academy-qf-01-no-start-diagnosis.html' },
+  { id: 'qf-serpentine-belt',    num: '02', title: 'Replace Your Serpentine Belt',               category: 'car', priceId: 'price_1UeK4WEKDzEsz6UjQtv49ddn', price: 9,  shopPrice: '$100–$200', file: 'academy-qf-02-serpentine-belt.html' },
+  { id: 'qf-brake-pads-rotors',  num: '03', title: 'Front Brake Pads and Rotors',                category: 'car', priceId: 'price_1UeK4XEKDzEsz6Ujci39Dckt', price: 12, shopPrice: '$250–$500', file: 'academy-qf-03-brake-pads-rotors.html' },
+  { id: 'qf-coolant-leak',       num: '04', title: 'Find and Fix a Coolant Leak',                category: 'car', priceId: 'price_1UeK4YEKDzEsz6Uj755JLGFf', price: 9,  shopPrice: '$100–$150+', file: 'academy-qf-04-coolant-leak.html' },
+  { id: 'qf-battery-charging',   num: '05', title: 'Battery and Charging System: Test and Replace', category: 'car', priceId: 'price_1UeK4ZEKDzEsz6Uj0Qsj79vV', price: 9,  shopPrice: '$100–$150+', file: 'academy-qf-05-battery-charging.html' },
+  { id: 'qf-running-toilet',     num: '06', title: 'Fix a Running Toilet for Good',              category: 'home', priceId: 'price_1UeK4aEKDzEsz6UjEdogNdDb', price: 9, shopPrice: '$150–$300', file: 'academy-qf-06-running-toilet.html' },
+  { id: 'qf-unclog-drain',       num: '07', title: 'Unclog Any Drain Without Chemicals',         category: 'home', priceId: 'price_1UeK4bEKDzEsz6UjZcEInCP4', price: 9, shopPrice: '$150–$350', file: 'academy-qf-07-unclog-drain.html' },
+  { id: 'qf-gfci-outlet',        num: '08', title: 'Replace a GFCI Outlet Safely',               category: 'home', priceId: 'price_1UeK4cEKDzEsz6UjcMioDcbG', price: 9, shopPrice: '$150–$250', file: 'academy-qf-08-gfci-outlet.html' },
+  { id: 'qf-drywall-patch',      num: '09', title: "Patch Drywall Holes So You Can't See Them",  category: 'home', priceId: 'price_1UeK4dEKDzEsz6UjExusTink', price: 9, shopPrice: '$150–$350', file: 'academy-qf-09-drywall-patch.html' },
+  { id: 'qf-leaky-faucet',       num: '10', title: 'Fix a Leaky Faucet (Any Type)',              category: 'home', priceId: 'price_1UeK4eEKDzEsz6UjNkyfyAcg', price: 9, shopPrice: '$150–$300', file: 'academy-qf-10-leaky-faucet.html' },
 ]
 
 export const QF_BUNDLES: QuickFixBundle[] = [
