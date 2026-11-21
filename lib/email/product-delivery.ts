@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { QF_LESSONS, QF_BUNDLES, qfLessonsFor, qfDownloadPath, qfProductName } from '@/lib/quick-fix'
 
 // Lazily initialized so missing key only throws at send-time, not build-time
 let _resend: Resend | null = null
@@ -18,6 +19,8 @@ export const PRODUCT_CATALOG: Record<string, {
   deliveryEnvKey: string
   defaultPath: string
   accentColor: string
+  /** Multi-file products (Quick-Fix bundles): one download link per file. */
+  files?: { label: string; path: string }[]
 }> = {
   'creator-os': {
     name: 'Creator OS Bundle',
@@ -168,6 +171,22 @@ export const PRODUCT_CATALOG: Record<string, {
     defaultPath: '/downloads/academy-bundle.html',
     accentColor: '#ffd60a',
   },
+
+  // ── Quick-Fix Series 1 (see lib/quick-fix.ts) ───────────────────────────
+  ...Object.fromEntries([...QF_LESSONS, ...QF_BUNDLES].map(p => {
+    const lessons = qfLessonsFor(p.id)
+    const isBundle = lessons.length > 1
+    return [p.id, {
+      name: qfProductName(p.id)!,
+      tagline: isBundle
+        ? `${lessons.length} step-by-step repair guides with printable checklists.`
+        : 'Step-by-step repair guide with a printable checklist.',
+      deliveryEnvKey: `PRODUCT_LINK_${p.id.toUpperCase().replace(/-/g, '_')}`,
+      defaultPath: qfDownloadPath(lessons[0]),
+      accentColor: '#ff7a1a',
+      files: lessons.map(l => ({ label: `#${l.num} ${l.title}`, path: qfDownloadPath(l) })),
+    }]
+  })),
 }
 
 function buildDownloadUrl(envKey: string, defaultPath: string): string {
@@ -177,14 +196,35 @@ function buildDownloadUrl(envKey: string, defaultPath: string): string {
   return `${origin}${defaultPath}`
 }
 
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 function buildEmailHtml(opts: {
   productName: string
   tagline: string
   downloadUrl: string
   accentColor: string
   customerEmail: string
+  links?: { label: string; url: string }[]
 }): string {
-  const { productName, tagline, downloadUrl, accentColor } = opts
+  const { productName, tagline, downloadUrl, accentColor, links } = opts
+
+  const downloadBlock = links && links.length > 1
+    ? `<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+${links.map(l => `                    <tr><td style="padding:0 0 8px;">
+                      <a href="${l.url}" style="display:block;padding:12px 16px;border-radius:10px;background:${accentColor}14;border:1px solid ${accentColor}44;font-size:14px;font-weight:700;color:${accentColor};text-decoration:none;">${esc(l.label)} →</a>
+                    </td></tr>`).join('\n')}
+                  </table>`
+    : `<table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+                    <tr>
+                      <td style="border-radius:12px;background:linear-gradient(135deg,${accentColor}22,${accentColor}08);border:1px solid ${accentColor}44;">
+                        <a href="${downloadUrl}" style="display:inline-block;padding:14px 28px;font-size:14px;font-weight:700;color:${accentColor};text-decoration:none;letter-spacing:0.02em;">
+                          Download Your Product →
+                        </a>
+                      </td>
+                    </tr>
+                  </table>`
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -224,16 +264,8 @@ function buildEmailHtml(opts: {
                   <h1 style="margin:0 0 8px;font-size:28px;font-weight:900;color:#f2f2f2;letter-spacing:-0.03em;line-height:1.1;">${productName}</h1>
                   <p style="margin:0 0 32px;font-size:15px;color:rgba(242,242,242,0.5);line-height:1.5;">${tagline}</p>
 
-                  <!-- Download button -->
-                  <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
-                    <tr>
-                      <td style="border-radius:12px;background:linear-gradient(135deg,${accentColor}22,${accentColor}08);border:1px solid ${accentColor}44;">
-                        <a href="${downloadUrl}" style="display:inline-block;padding:14px 28px;font-size:14px;font-weight:700;color:${accentColor};text-decoration:none;letter-spacing:0.02em;">
-                          Download Your Product →
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
+                  <!-- Download button(s) -->
+                  ${downloadBlock}
 
                   <!-- Info box -->
                   <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
@@ -385,6 +417,8 @@ export async function sendProductDeliveryEmail(opts: {
   }
 
   const downloadUrl = buildDownloadUrl(product.deliveryEnvKey, product.defaultPath)
+  const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com').replace(/\/+$/, '')
+  const links = product.files?.map(f => ({ label: f.label, url: `${origin}${f.path}` }))
 
   const fromAddress = process.env.RESEND_FROM_EMAIL ?? 'products@screwedscore.com'
 
@@ -399,6 +433,7 @@ export async function sendProductDeliveryEmail(opts: {
         downloadUrl,
         accentColor: product.accentColor,
         customerEmail: toEmail,
+        links,
       }),
     })
 

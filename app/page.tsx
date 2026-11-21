@@ -8,7 +8,7 @@
 import type { Metadata } from 'next'
 import {
   FileText, Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
-  Star, ChevronDown, Flame, MessageSquare, Building2,
+  Star, ChevronDown, Flame, MessageSquare, Building2, Wrench,
 } from 'lucide-react'
 import { AnalysisShell } from '@/components/home/AnalysisShell'
 import { UploadSlot, SampleButton } from '@/components/home/UploadSlot'
@@ -149,6 +149,19 @@ export default function HomePage() {
                   Free · No account required · AI-powered results in 20 seconds
                 </span>
               </div>
+
+              {/* Quick-Fix repair guides */}
+              <a href="/academy#quick-fix"
+                className="animate-fade-up w-full max-w-md mx-auto mb-8 sm:mb-10 flex items-center justify-center gap-2.5 min-h-[56px] px-6 py-4 rounded-2xl text-base sm:text-lg font-black transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  background: 'linear-gradient(135deg, #ff9a3c 0%, #ff6a00 100%)',
+                  color: '#0a0a0a',
+                  boxShadow: '0 0 40px rgba(255,122,26,0.35)',
+                }}>
+                <Wrench className="w-5 h-5 shrink-0" />
+                Fix It Yourself — Repair Guides from $9
+                <ChevronRight className="w-5 h-5 shrink-0" />
+              </a>
 
               {/* Headline */}
               <div className="animate-fade-up delay-100 mb-4 sm:mb-6">
