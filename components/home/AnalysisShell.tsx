@@ -28,6 +28,31 @@ function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+// A real bill takes about a minute to analyze. Phones often drop a request
+// that long (screen locks, tab backgrounded), even though the analysis still
+// finishes and is saved. So after this long, or as soon as the request fails,
+// look the saved result up by document id instead of giving up.
+const RECOVER_AFTER_MS   = 75_000
+const RECOVER_WINDOW_MS  = 120_000
+const RECOVER_POLL_MS    = 4_000
+
+async function findSavedAnalysis(documentId: string, windowMs: number, isCancelled: () => boolean): Promise<string | null> {
+  const deadline = Date.now() + windowMs
+  while (Date.now() < deadline && !isCancelled()) {
+    try {
+      const res = await fetch(`/api/analysis-for-document?document_id=${encodeURIComponent(documentId)}`, { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json() as { analysis_id?: string | null }
+        if (data.analysis_id) return data.analysis_id
+      }
+    } catch { /* offline for a moment; try again */ }
+    await delay(RECOVER_POLL_MS)
+  }
+  return null
+}
+
+type AnalyzeOutcome = { ok: boolean; status: number; text: string } | null
+
 /**
  * Owns the upload → analyse → result state machine for the homepage.
  *
@@ -106,6 +131,16 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
   const setPhase = (phase: AppState['phase'], progress: number, label: string) =>
     setState(s => ({ ...s, phase, progress, progressLabel: label }))
 
+  // Keep the bar moving while the AI works (about a minute for a real bill),
+  // so a long scan doesn't look frozen. It stops short of the end on its own.
+  useEffect(() => {
+    if (state.phase !== 'analyzing') return
+    const id = setInterval(() => {
+      setState(s => (s.phase === 'analyzing' && s.progress < 92 ? { ...s, progress: s.progress + 1 } : s))
+    }, 2000)
+    return () => clearInterval(id)
+  }, [state.phase])
+
   const handleUpload = useCallback(async (picked: File) => {
     setState({ ...INITIAL_STATE, phase: 'uploading', progress: 10, progressLabel: 'Uploading file...' })
     let fileKb = Math.round(picked.size / 1024)
@@ -163,7 +198,8 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
       await delay(400)
       setPhase('analyzing', 65, 'Running AI analysis...')
 
-      const analyzeRes = await fetch(
+      let settled = false
+      const analyzeOutcome: Promise<AnalyzeOutcome> = fetch(
         `${SUPABASE_URL}/functions/v1/analyze`,
         {
           method: 'POST',
@@ -174,15 +210,50 @@ export function AnalysisShell({ children }: { children: React.ReactNode }) {
           },
           body: JSON.stringify({ document_id }),
         }
-      )
-      setPhase('analyzing', 88, 'Computing your Screwed Score...')
+      ).then(async r => ({ ok: r.ok, status: r.status, text: await r.text() }))
+       .catch(() => null)
 
-      const analyzeText = await analyzeRes.text()
+      // Start looking for the saved result if the request is still open after
+      // RECOVER_AFTER_MS, so a dropped connection doesn't leave the bar stuck.
+      const earlyRecovery = delay(RECOVER_AFTER_MS)
+        .then(() => settled ? null : findSavedAnalysis(document_id, RECOVER_WINDOW_MS, () => settled))
+
+      const first = await Promise.race([
+        analyzeOutcome.then(outcome => ({ kind: 'analyze' as const, outcome })),
+        earlyRecovery.then(id => ({ kind: 'recovered' as const, id })),
+      ])
+
+      const openSavedResult = (id: string, how: string) => {
+        settled = true
+        track('scan_recovered', { how, document_type })
+        setPhase('analyzing', 98, 'Opening your result...')
+        window.location.href = `/r/${id}`
+      }
+
+      if (first.kind === 'recovered') {
+        if (first.id) { openSavedResult(first.id, 'slow_request'); return }
+        settled = true
+        track('scan_error', { stage: 'analyze', status: 'no_result_after_wait' })
+        setState(s => ({ ...s, phase: 'error', error: 'This one is taking longer than it should. Please try again in a minute.' }))
+        return
+      }
+
+      const outcome = first.outcome
+      // The request itself broke (network drop) or the function failed on the
+      // server side: the analysis may still have been saved, so check first.
+      if (!outcome || outcome.status >= 500) {
+        setPhase('analyzing', 90, 'Still working, checking for your result...')
+        const savedId = await findSavedAnalysis(document_id, RECOVER_WINDOW_MS, () => settled)
+        if (savedId) { openSavedResult(savedId, outcome ? `status_${outcome.status}` : 'network') ; return }
+      }
+      settled = true
+      setPhase('analyzing', 95, 'Computing your Screwed Score...')
+
       let analyzeData: { error?: string; analysis_id?: string; result?: AnalyzeResponse['result'] } = {}
-      try { analyzeData = JSON.parse(analyzeText) } catch { /* non-JSON response */ }
-      if (!analyzeRes.ok) {
-        track('scan_error', { stage: 'analyze', status: analyzeRes.status })
-        setState(s => ({ ...s, phase: 'error', error: analyzeData.error ?? 'Analysis timed out — please try again.' }))
+      try { analyzeData = JSON.parse(outcome?.text ?? '') } catch { /* non-JSON response */ }
+      if (!outcome || !outcome.ok) {
+        track('scan_error', { stage: 'analyze', status: outcome?.status ?? 'network' })
+        setState(s => ({ ...s, phase: 'error', error: analyzeData.error ?? 'The analysis didn\'t finish. Please try again.' }))
         return
       }
 

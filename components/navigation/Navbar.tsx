@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { label: 'Fight Back Kit', href: '/#fight-back-kit',      exact: false, accent: 'gold' },
   { label: 'Create Docs',    href: '/create',               exact: false, accent: 'cyan' },
   { label: 'Wall of Shame',  href: '/shame',                exact: false, accent: 'red' },
+  { label: 'Academy',        href: '/academy',              exact: false, accent: 'gold' },
 ] as const
 
 type Accent = 'red' | 'cyan' | 'gold' | 'green'

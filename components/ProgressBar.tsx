@@ -23,8 +23,9 @@ const MESSAGES: Partial<Record<AppPhase, string[]>> = {
   analyzing: [
     'Running it through the AI...',
     'Checking for suspicious charges...',
+    'Comparing prices line by line...',
+    'Reading the fine print...',
     'Computing your Screwed Score...',
-    'Almost there...',
   ],
 }
 const MESSAGE_INTERVAL_MS = 2500
@@ -82,7 +83,7 @@ export function ProgressBar({ phase, progress, label }: ProgressBarProps) {
       {/* Status message */}
       <div className="text-center space-y-1">
         <p key={displayLabel} className="text-sm font-semibold text-brand-text animate-fade-in">{displayLabel}</p>
-        <p className="text-xs text-brand-sub">This usually takes 15–30 seconds</p>
+        <p className="text-xs text-brand-sub">This takes about a minute. Keep this page open.</p>
       </div>
 
       {/* Progress bar */}
