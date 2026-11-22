@@ -80,7 +80,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
         </div>
         <div className="space-y-1">
           <p className="text-xl font-bold text-brand-sub">Analyzing your document...</p>
-          <p className="text-sm text-brand-sub/60">Hang tight — this takes about 20–30 seconds</p>
+          <p className="text-sm text-brand-sub/60">Hang tight, this takes about a minute</p>
         </div>
       </div>
     )
@@ -143,7 +143,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
           </div>
           <div className="flex items-center gap-2 text-xs text-green-400/80">
             <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            Free · No account · Results in ~20 seconds
+            Free · No account · Results in about a minute
           </div>
         </label>
 
@@ -241,7 +241,7 @@ export function UploadZone({ onUpload, isLoading, idPrefix = 'uz' }: UploadZoneP
             {!dragActive && (
               <div className="flex items-center gap-2 text-xs text-brand-sub/60">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Free · No account required · Results in ~20 seconds
+                Free · No account required · Results in about a minute
               </div>
             )}
           </label>

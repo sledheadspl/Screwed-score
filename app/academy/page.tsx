@@ -53,6 +53,22 @@ const COURSES: Course[] = [
   },
 ]
 
+// The four courses and the bundle have no Stripe prices yet (checkout still
+// holds price_REPLACE_* placeholders), so every Buy button failed with "This
+// product is not on sale yet". Show them as coming soon instead. Flip this
+// once scripts/create-academy-stripe-prices.js has created the live prices
+// and patched pages/api/product-checkout.
+const COURSES_ON_SALE = false
+
+function ComingSoon() {
+  return (
+    <span className="text-xs font-semibold px-4 py-2 rounded-lg"
+      style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(242,242,242,0.55)', border: '1px solid rgba(255,255,255,0.1)' }}>
+      Coming soon
+    </span>
+  )
+}
+
 const VALUE_BLOCKS = [
   { stat: '4', label: 'Complete courses', desc: '28 modules total, built from real shop-floor experience.', color: '#ffd60a' },
   { stat: '$40', label: 'Saved with the bundle', desc: 'All four courses for $106 instead of $146 apart.', color: '#30d158' },
@@ -132,11 +148,13 @@ function CourseCard({ course }: { course: Course }) {
 
       <div className="flex items-center justify-between pt-2 border-t border-brand-border/30">
         <span className="text-xl font-black text-brand-text">{course.price}</span>
-        <BuyButton
-          productId={course.id}
-          label="Get it"
-          style={{ background: 'rgba(255,214,10,0.1)', color: '#ffd60a', border: '1px solid rgba(255,214,10,0.25)' }}
-        />
+        {COURSES_ON_SALE ? (
+          <BuyButton
+            productId={course.id}
+            label="Get it"
+            style={{ background: 'rgba(255,214,10,0.1)', color: '#ffd60a', border: '1px solid rgba(255,214,10,0.25)' }}
+          />
+        ) : <ComingSoon />}
       </div>
     </div>
   )
@@ -263,16 +281,18 @@ export default function AcademyPage() {
             </div>
             <div className="flex items-center gap-5">
               <span className="text-3xl font-black" style={{ color: '#ffd60a' }}>$106</span>
-              <BuyButton
-                productId="academy-bundle"
-                label="Get the bundle"
-                style={{
-                  background: 'linear-gradient(135deg, #ffe066, #ffd60a)',
-                  color: '#0a0a0a',
-                  fontWeight: 900,
-                  padding: '12px 20px',
-                }}
-              />
+              {COURSES_ON_SALE ? (
+                <BuyButton
+                  productId="academy-bundle"
+                  label="Get the bundle"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffe066, #ffd60a)',
+                    color: '#0a0a0a',
+                    fontWeight: 900,
+                    padding: '12px 20px',
+                  }}
+                />
+              ) : <ComingSoon />}
             </div>
           </div>
         </section>

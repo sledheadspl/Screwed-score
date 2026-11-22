@@ -146,7 +146,7 @@ export default function HomePage() {
               <div className="animate-fade-up mb-8 sm:mb-10">
                 <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-semibold" style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.18)', color: 'rgba(255,140,120,0.9)', letterSpacing: '0.02em' }}>
                   <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse shrink-0" />
-                  Free · No account required · AI-powered results in 20 seconds
+                  Free · No account required · AI-powered results in about a minute
                 </span>
               </div>
 
@@ -173,7 +173,7 @@ export default function HomePage() {
                 The free AI checker for bills, contracts &amp; invoices.
               </p>
               <p className="animate-fade-up delay-200 text-base sm:text-lg text-brand-sub/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-7">
-                Upload one and AI flags overcharges, hidden fees, and shady clauses in about 20 seconds.
+                Upload one and AI flags overcharges, hidden fees, and shady clauses in about a minute.
               </p>
 
               {/* Upload zone */}
@@ -226,7 +226,7 @@ export default function HomePage() {
               <div className="max-w-6xl mx-auto px-5 sm:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-4">
                   {[
-                    { value: '20 sec',  label: 'average analysis time',      color: '#ff3b30' },
+                    { value: '~1 min', label: 'typical analysis time',      color: '#ff3b30' },
                     { value: '5/day',   label: 'free scans, no account',     color: '#60a5fa' },
                     { value: '78%',     label: 'of scans flag something',    color: '#ffd60a' },
                     { value: '12',      label: 'languages supported',        color: '#30d158' },
@@ -295,7 +295,7 @@ export default function HomePage() {
             <section className="animate-fade-up max-w-6xl mx-auto px-5 sm:px-8 pb-24 space-y-14">
               <div className="text-center space-y-2">
                 <p className="text-[11px] font-bold text-brand-sub/55 uppercase tracking-[0.25em]">How it works</p>
-                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Three steps. Twenty seconds.</h2>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">Three steps. About a minute.</h2>
               </div>
 
               <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
