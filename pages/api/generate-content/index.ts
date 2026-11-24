@@ -4,6 +4,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
 import { isProTokenActive } from '@/lib/pro'
 import { isValidUUID, extractJSON } from '@/lib/utils'
+import { clientIp } from '@/lib/rate-limit'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -22,10 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Rate limit by IP
-  const ip     = (req.headers['x-real-ip'] as string) ??
-    (req.headers['cf-connecting-ip'] as string) ??
-    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-    '0.0.0.0'
+  const ip     = clientIp(req.headers)
   const ipHash = createHash('sha256').update(`generate-content:${ip}`).digest('hex')
 
   try {

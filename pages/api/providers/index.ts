@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { VENDOR_CATEGORIES } from '@/lib/types/vendors'
+import { clientIp } from '@/lib/rate-limit'
 
 const POST_RATE_LIMIT = 10 // submissions per IP per hour
 const POST_WINDOW_MS = 60 * 60 * 1000
@@ -28,10 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     // Per-IP rate limit on provider submissions (spam guard)
-    const ip = (req.headers['x-real-ip'] as string) ??
-      (req.headers['cf-connecting-ip'] as string) ??
-      (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-      '0.0.0.0'
+    const ip = clientIp(req.headers)
     const ipHash = createHash('sha256').update(`providers:${ip}`).digest('hex')
     const { data: rl } = await supabase
       .from('rate_limits')

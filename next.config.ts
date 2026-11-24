@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
   // Force webpack (disables Turbopack default in Next.js 16) — required for Netlify edge bundler compatibility
   webpack: (config) => config,
   images: {
+    // The VPS disk is shared with Pack Pursuit. Next's default is to let the
+    // optimized-image cache grow to 50% of free disk; cap it at 200 MB
+    // (least-recently-used images are evicted past that).
+    maximumDiskCacheSize: 200_000_000,
     remotePatterns: [
       {
         protocol: 'https',
@@ -17,6 +21,19 @@ const nextConfig: NextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
+  },
+  // Canonical host is www. The apex (screwedscore.com) reaches the app directly
+  // through the VPS's shared Caddy, which must only be changed via the
+  // front-door tool, so the apex → www redirect lives here in the app.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'screwedscore.com' }],
+        destination: 'https://www.screwedscore.com/:path*',
+        permanent: true,
+      },
+    ]
   },
   async headers() {
     // Marketing/landing pages: allow Netlify Edge to cache the prerendered HTML.

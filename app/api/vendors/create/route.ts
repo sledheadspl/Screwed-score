@@ -5,6 +5,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { createVendor } from '@/lib/vendors/service'
 import { isVendorCategory } from '@/lib/types/vendors'
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
+import { clientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
@@ -15,10 +16,7 @@ const WINDOW_MS = 60 * 60 * 1000
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Rate limit by IP
-    const ip     = req.headers.get('x-real-ip') ??
-      req.headers.get('cf-connecting-ip') ??
-      req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
-      '0.0.0.0'
+    const ip     = clientIp(req.headers)
     const ipHash = createHash('sha256').update(`vendor-create:${ip}`).digest('hex')
 
     try {

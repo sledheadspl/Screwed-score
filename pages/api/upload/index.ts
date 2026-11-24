@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import formidable from 'formidable'
 import { readFileSync } from 'fs'
+import { unlink } from 'fs/promises'
 import { randomUUID, createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { extractTextFromBuffer, checkMagicBytes } from '@/lib/extract'
@@ -9,6 +10,7 @@ import { parseToken } from '@/lib/auth'
 import { isPurchaseRevoked } from '@/lib/pro'
 import type { UploadResponse } from '@/lib/types'
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase-public'
+import { clientIp } from '@/lib/rate-limit'
 
 // Disable Next.js body parser — formidable reads the raw stream directly
 export const config = { api: { bodyParser: false } }
@@ -100,11 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // ── 4. Rate limiting (skipped for Pro or valid referral) ─────────────────
-    // Prefer x-real-ip (set by reverse proxy) over x-forwarded-for to prevent spoofing
-    const ip = (req.headers['x-real-ip'] as string) ??
-      (req.headers['cf-connecting-ip'] as string) ??
-      (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-      '0.0.0.0'
+    const ip = clientIp(req.headers)
     const ipHash = createHash('sha256').update(ip).digest('hex')
 
     // Auth users tracked by user_id; anon by IP hash
@@ -143,17 +141,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const [, files] = await form.parse(req)
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
 
+    // Read the upload into memory, then delete every temp file formidable
+    // wrote. On the shared VPS the container's /tmp sits on the host disk, so
+    // leftovers would slowly eat space the other projects need.
+    let buffer: Buffer | null = null
+    try {
+      if (uploadedFile && uploadedFile.size > 0) buffer = readFileSync(uploadedFile.filepath)
+    } finally {
+      for (const f of Object.values(files).flat()) {
+        if (f) await unlink(f.filepath).catch(() => {})
+      }
+    }
+
     if (!uploadedFile) {
       return res.status(400).json({ error: 'No file provided' })
     }
-    if (uploadedFile.size === 0) {
+    if (uploadedFile.size === 0 || !buffer) {
       return res.status(400).json({ error: 'File is empty' })
     }
     if (!ALLOWED_MIME_TYPES.has(uploadedFile.mimetype ?? '')) {
       return res.status(400).json({ error: 'Unsupported file type' })
     }
-
-    const buffer = readFileSync(uploadedFile.filepath)
 
     // ── 4. Magic byte validation (guards against MIME spoofing) ────────────
     try {

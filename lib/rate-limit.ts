@@ -12,16 +12,20 @@ function header(h: HeaderSource, name: string): string | null {
 }
 
 /**
- * Client IP. Netlify sets x-nf-client-connection-ip itself, so it can't be
- * forged by the caller; the others are fallbacks for local dev.
+ * Client IP, using only values a caller can't forge.
+ *
+ * Production runs behind Caddy on the VPS. Caddy appends the real TCP peer as
+ * the rightmost X-Forwarded-For entry, so that entry is trustworthy. Headers
+ * Caddy passes through untouched (x-real-ip, cf-connecting-ip,
+ * x-nf-client-connection-ip) can be set by anyone and must not be trusted
+ * there. x-nf-client-connection-ip is only honoured on Netlify, which sets it.
  */
 export function clientIp(h: HeaderSource): string {
-  return (
-    header(h, 'x-nf-client-connection-ip') ??
-    header(h, 'x-real-ip') ??
-    header(h, 'x-forwarded-for')?.split(',').at(-1)?.trim() ??
-    '0.0.0.0'
-  )
+  if (process.env.NETLIFY === 'true') {
+    const nf = header(h, 'x-nf-client-connection-ip')
+    if (nf) return nf
+  }
+  return header(h, 'x-forwarded-for')?.split(',').at(-1)?.trim() || '0.0.0.0'
 }
 
 /**

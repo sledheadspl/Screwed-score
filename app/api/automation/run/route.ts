@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { runAutomationJob } from '@/lib/automation/engine'
 import { isAutomationJobType } from '@/lib/types/automation'
 import { isProTokenActive } from '@/lib/pro'
+import { clientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -27,10 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Per-IP rate limit
-    const ip     = req.headers.get('x-real-ip') ??
-      req.headers.get('cf-connecting-ip') ??
-      req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
-      '0.0.0.0'
+    const ip     = clientIp(req.headers)
     const ipHash = createHash('sha256').update(`automation:${ip}`).digest('hex')
 
     try {

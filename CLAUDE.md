@@ -14,7 +14,22 @@ Every session — PC, VPS, cloud or app — shares one memory: **Notion Memory**
 
 **screwedscore.com** — AI-powered consumer protection tool. Users upload bills, invoices, or contracts; the app runs two Claude AI passes (contract analysis + overcharge detection) and returns a SCREWED / MAYBE / SAFE rating with specific findings.
 
-Deployed on **Netlify** via `@netlify/plugin-nextjs`. The production Netlify site is **`getscrewedscore`** (id `5e2b2f50-1c96-453d-94e1-55badd24ac09`) — verify `.netlify/state.json` points there before deploying; a second site `resonant-panda-b682ce` exists but serves no domain. Cloudflare fronts the domain: apex `screwedscore.com` 301s to canonical `https://www.screwedscore.com`. Pushing to `main` on GitHub (sledheadspl/Screwed-score) triggers a CI deploy; `netlify deploy --prod` also works. `fix-netlify-handler.js` is a legacy no-op kept in the build script (plugin v5 no longer produces the file it patched).
+### Hosting (since 2026-11-24): Hostinger VPS, shared with Pack Pursuit
+
+Production runs on the Hostinger VPS **82.180.173.218** (`srv2142114.hstgr.cloud`, Debian 13), **behind Pack Pursuit's shared Caddy "front door"**.
+
+- **DNS (Cloudflare zone `screwedscore.com`)** — `@`, `www` and `origin` are A records → 82.180.173.218, **DNS only (grey cloud)**. Cloudflare's proxy is off, so nothing Cloudflare-side (redirects, caching, WAF) applies any more. Caddy holds the Let's Encrypt certificates and renews them itself.
+- **Apex** — `screwedscore.com` reaches the app directly and is 308-redirected to the canonical `https://www.screwedscore.com` by `redirects()` in `next.config.ts` (it used to be a Cloudflare redirect). Keep that redirect in the app; don't add it to Caddy.
+- **Container** — `/opt/screwedscore/compose.yaml`, project `screwedscore`, service `web` (image `screwedscore-app`, built from `/opt/screwedscore/src` with `next start` on port 3000). It joins the external network `packpursuit-sites` with alias `screwedscore-web`; its own network is `screwedscore_net`. Limits: 512 MB RAM, 1 CPU, 256 PIDs; json-file logs 3×10 MB. Runtime config comes from `/opt/screwedscore/.env` (never commit it). Routing lives in `packpursuit-site.json` (domains, upstream `screwedscore-web:3000`, healthPath `/`, maxBodyMB 12).
+- **Deploy** — rebuild and recreate only this project, from `/opt/screwedscore`: `docker compose build web && docker compose up -d web`. Pushing to `main` does **not** update the live site.
+- **Netlify** — the old site `getscrewedscore` (id `5e2b2f50-1c96-453d-94e1-55badd24ac09`) still builds on pushes to `main` and still runs `netlify/functions/nurture-cron.ts`, but it no longer serves the domain. `fix-netlify-handler.js` is a legacy no-op kept in the build script.
+
+**VPS hard rules — Pack Pursuit's contract. Never break these:**
+- Never touch anything `packpursuit-*` (containers, networks, volumes, files, `/opt/packpursuit`, `/etc/packpursuit`).
+- No `docker system/image/volume/network prune`, never restart the Docker daemon, no firewall (nftables) changes, **no host ports** (`ports:`) in our compose — only `expose`.
+- Caddy is changed **only** through `python3 -I /usr/local/sbin/packpursuit-front-door` (`--list`, `--add screwedscore`). Never edit its Caddyfile or restart its container.
+- Keep our resource limits. Anything that writes to disk must be bounded — the disk is shared (see the upload temp-file cleanup and `images.maximumDiskCacheSize`).
+- Client IPs: trust only the rightmost `X-Forwarded-For` entry (set by Caddy) via `clientIp()` in `lib/rate-limit.ts`. Headers like `x-real-ip` / `cf-connecting-ip` pass through Caddy untouched and are forgeable.
 
 ## Commands
 
@@ -25,7 +40,7 @@ npm run build         # next build + fix-netlify-handler.js (always run before d
 npm run lint          # ESLint
 ```
 
-Deploy: `netlify deploy --prod`
+Deploy: on the VPS — see "Hosting" above (`netlify deploy --prod` only updates the retired Netlify site).
 
 ## Environment Variables
 
