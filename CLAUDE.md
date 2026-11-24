@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Session memory (Notion)
+
+Every session — PC, VPS, cloud or app — shares one memory: **Notion Memory** (the Notion connector, `fetch` with id `"memory"`). Local memory files don't carry between machines or cloud containers, so don't rely on them.
+
+- **At the start:** fetch Notion Memory and run `memory-search` for the topic at hand before asking the owner for anything they may already have provided.
+- **Before finishing:** save or update durable facts, decisions, next steps and where things live (`notion-create-pages` with parent `"memory"`; update the existing topic instead of duplicating it).
+- **Never** store secrets (keys, tokens, passwords) — note only where a credential lives or that it's missing.
+
 ## Project
 
 **screwedscore.com** — AI-powered consumer protection tool. Users upload bills, invoices, or contracts; the app runs two Claude AI passes (contract analysis + overcharge detection) and returns a SCREWED / MAYBE / SAFE rating with specific findings.
