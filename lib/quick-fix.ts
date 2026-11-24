@@ -17,7 +17,7 @@ export interface QuickFixLesson {
   price: number
   /** What a shop or tradesperson typically charges, as stated in the lesson itself. */
   shopPrice: string
-  /** Filename in public/downloads/. */
+  /** Filename in private/downloads/ (served by /api/download). */
   file: string
 }
 

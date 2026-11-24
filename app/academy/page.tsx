@@ -1,131 +1,20 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import {
-  ArrowRight, FileSearch, Gauge, Ear, Scale, Loader2, GraduationCap, Layers, Download, ShieldCheck, Users,
+  ArrowRight, Loader2, GraduationCap, Layers, Download, ShieldCheck, Users,
   KeyRound, Cog, Disc3, Thermometer, BatteryCharging, Bath, ShowerHead, PlugZap, PaintRoller, Droplets, Wrench, ShieldAlert,
   type LucideIcon,
 } from 'lucide-react'
 import { QF_LESSONS, QF_BUNDLES, type QuickFixLesson, type QuickFixBundle } from '@/lib/quick-fix'
-
-interface Course {
-  id: string
-  icon: LucideIcon
-  title: string
-  subtitle: string
-  price: string
-  modules: number
-  badge: string | null
-}
-
-const COURSES: Course[] = [
-  {
-    id: 'academy-estimate-mastery',
-    icon: FileSearch,
-    title: 'Repair Estimate Mastery',
-    subtitle: 'Read, question, and negotiate any auto repair estimate like a service advisor would.',
-    price: '$39',
-    modules: 7,
-    badge: 'Best Seller',
-  },
-  {
-    id: 'academy-check-engine',
-    icon: Gauge,
-    title: 'Check Engine Light: Complete Diagnostic Course',
-    subtitle: 'Read OBD2 codes like a technician and follow a real diagnostic tree instead of guessing at parts.',
-    price: '$39',
-    modules: 7,
-    badge: null,
-  },
-  {
-    id: 'academy-noise-diagnosis',
-    icon: Ear,
-    title: 'Car Noise Diagnosis: Complete Course',
-    subtitle: "Train your ear system by system and stop guessing at what's making that sound.",
-    price: '$29',
-    modules: 7,
-    badge: null,
-  },
-  {
-    id: 'academy-fight-back',
-    icon: Scale,
-    title: 'Fight Back: Complete Dispute & Consumer Protection Course',
-    subtitle: 'Win almost any dispute — bad bill, bad charge, bad service — with the letters already written.',
-    price: '$39',
-    modules: 7,
-    badge: null,
-  },
-]
-
-// The four courses and the bundle have no Stripe prices yet (checkout still
-// holds price_REPLACE_* placeholders), so every Buy button failed with "This
-// product is not on sale yet". Show them as coming soon instead. Flip this
-// once scripts/create-academy-stripe-prices.js has created the live prices
-// and patched pages/api/product-checkout.
-const COURSES_ON_SALE = false
-
-function ComingSoon() {
-  return (
-    <span className="text-xs font-semibold px-4 py-2 rounded-lg"
-      style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(242,242,242,0.55)', border: '1px solid rgba(255,255,255,0.1)' }}>
-      Coming soon
-    </span>
-  )
-}
+import { COURSES, type Course } from '@/lib/academy'
+import { BuyButton, useCheckout } from '@/components/academy/BuyButton'
 
 const VALUE_BLOCKS = [
   { stat: '4', label: 'Complete courses', desc: '28 modules total, built from real shop-floor experience.', color: '#ffd60a' },
   { stat: '$40', label: 'Saved with the bundle', desc: 'All four courses for $106 instead of $146 apart.', color: '#30d158' },
   { stat: '∞', label: 'Yours to keep', desc: 'Instant download, no subscription, no expiration.', color: '#00E5FF' },
 ]
-
-function useCheckout(productId: string) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleBuy = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await fetch('/api/product-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId }),
-      })
-      const data = await res.json()
-      if (!res.ok || !data.url) {
-        setError(data.error ?? 'Something went wrong. Please try again.')
-        setLoading(false)
-        return
-      }
-      window.location.href = data.url
-    } catch {
-      setError('Network error. Please try again.')
-      setLoading(false)
-    }
-  }
-
-  return { loading, error, handleBuy }
-}
-
-function BuyButton({ productId, label, style }: { productId: string; label: string; style: React.CSSProperties }) {
-  const { loading, error, handleBuy } = useCheckout(productId)
-
-  return (
-    <div className="flex flex-col items-end gap-1">
-      <button
-        onClick={handleBuy}
-        disabled={loading}
-        className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
-        style={style}
-      >
-        {loading ? (<><Loader2 className="w-3.5 h-3.5 animate-spin" /> Redirecting…</>) : (<>{label} <ArrowRight className="w-3.5 h-3.5" /></>)}
-      </button>
-      {error && <p className="text-[11px] text-red-400 max-w-[160px] text-right">{error}</p>}
-    </div>
-  )
-}
 
 function CourseCard({ course }: { course: Course }) {
   const Icon = course.icon
@@ -139,7 +28,7 @@ function CourseCard({ course }: { course: Course }) {
             <Icon className="w-4 h-4" style={{ color: '#ffd60a' }} />
           </div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-brand-sub/50">
-            {course.modules} Modules
+            {course.modules.length} Modules
           </span>
         </div>
         {course.badge && (
@@ -151,21 +40,25 @@ function CourseCard({ course }: { course: Course }) {
       </div>
 
       <div className="space-y-1.5 flex-1">
-        <p className="font-bold text-brand-text">{course.title}</p>
+        <Link href={`/academy/${course.slug}`} className="font-bold text-brand-text hover:underline underline-offset-4">
+          {course.title}
+        </Link>
         <p className="text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>
           {course.subtitle}
         </p>
+        <Link href={`/academy/${course.slug}`} className="inline-flex items-center gap-1 text-xs font-semibold pt-1"
+          style={{ color: 'rgba(255,214,10,0.8)' }}>
+          See all {course.modules.length} modules <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       <div className="flex items-center justify-between pt-2 border-t border-brand-border/30">
         <span className="text-xl font-black text-brand-text">{course.price}</span>
-        {COURSES_ON_SALE ? (
-          <BuyButton
-            productId={course.id}
-            label="Get it"
-            style={{ background: 'rgba(255,214,10,0.1)', color: '#ffd60a', border: '1px solid rgba(255,214,10,0.25)' }}
-          />
-        ) : <ComingSoon />}
+        <BuyButton
+          productId={course.id}
+          label="Get it"
+          style={{ background: 'rgba(255,214,10,0.1)', color: '#ffd60a', border: '1px solid rgba(255,214,10,0.25)' }}
+        />
       </div>
     </div>
   )
@@ -435,8 +328,7 @@ export default function AcademyPage() {
             </div>
             <div className="flex items-center gap-5">
               <span className="text-3xl font-black" style={{ color: '#ffd60a' }}>$106</span>
-              {COURSES_ON_SALE ? (
-                <BuyButton
+                              <BuyButton
                   productId="academy-bundle"
                   label="Get the bundle"
                   style={{
@@ -446,7 +338,6 @@ export default function AcademyPage() {
                     padding: '12px 20px',
                   }}
                 />
-              ) : <ComingSoon />}
             </div>
           </div>
         </section>

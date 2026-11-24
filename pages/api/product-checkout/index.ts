@@ -26,14 +26,12 @@ const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = 
   'clippilot-unlimited-yearly': { priceId: 'price_1TOCoXEKDzEsz6UjYMmOx1Qv', subscription: true },
 
   // ── ScrewedScore Academy ────────────────────────────────────────────────
-  // TODO(Ryan): these are PLACEHOLDER Stripe Price IDs. Create a one-time
-  // Price for each product in the Stripe Dashboard (Products → Add product)
-  // and replace the string below with the real price_... id before launch.
-  'academy-estimate-mastery': { priceId: 'price_REPLACE_ACADEMY_ESTIMATE_MASTERY', subscription: false },
-  'academy-check-engine':     { priceId: 'price_REPLACE_ACADEMY_CHECK_ENGINE', subscription: false },
-  'academy-noise-diagnosis':  { priceId: 'price_REPLACE_ACADEMY_NOISE_DIAGNOSIS', subscription: false },
-  'academy-fight-back':       { priceId: 'price_REPLACE_ACADEMY_FIGHT_BACK', subscription: false },
-  'academy-bundle':           { priceId: 'price_REPLACE_ACADEMY_BUNDLE', subscription: false },
+  // Live prices in the "Screwed Score" Stripe account (acct_1TOBfIEKDzEsz6Uj).
+  'academy-estimate-mastery': { priceId: 'price_1UfSF0EKDzEsz6UjWnQGur1x', subscription: false }, // $39
+  'academy-check-engine':     { priceId: 'price_1UfSF5EKDzEsz6UjQbLtOOmV', subscription: false }, // $39
+  'academy-noise-diagnosis':  { priceId: 'price_1UfSF7EKDzEsz6UjRDHwu4Kl', subscription: false }, // $29
+  'academy-fight-back':       { priceId: 'price_1UfSF9EKDzEsz6UjuBARdmhx', subscription: false }, // $39
+  'academy-bundle':           { priceId: 'price_1UfSFAEKDzEsz6UjOh8x9Ags', subscription: false }, // $106
 
   // ── Quick-Fix Series 1 (live prices live in lib/quick-fix.ts) ───────────
   ...Object.fromEntries(

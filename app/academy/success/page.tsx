@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, Mail, Download } from 'lucide-react'
 import { isQuickFixProduct, qfLessonsFor, qfDownloadPath, qfProductName } from '@/lib/quick-fix'
+import { paidDownloadUrl } from '@/lib/paid-downloads'
 
 // Mirror of the academy entries in PRODUCT_CATALOG (lib/email/product-delivery.ts) —
 // kept here for instant client-side rendering of the download link without a
@@ -23,7 +24,8 @@ function SuccessInner() {
   const isQuickFix = isQuickFixProduct(productId)
   const product = PRODUCTS[productId]
   const productName = (isQuickFix ? qfProductName(productId) : product?.name) ?? 'Your purchase'
-  const downloadUrl = product?.download
+  const sessionId = params?.get('session_id') ?? ''
+  const downloadUrl = product?.download && sessionId ? paidDownloadUrl(product.download, sessionId) : undefined
   const qfLessons = isQuickFix ? qfLessonsFor(productId) : []
 
   return (
@@ -70,7 +72,7 @@ function SuccessInner() {
             {qfLessons.map(l => (
               <a
                 key={l.id}
-                href={qfDownloadPath(l)}
+                href={paidDownloadUrl(qfDownloadPath(l), sessionId)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 w-full px-5 py-4 rounded-xl text-sm font-bold text-left transition-all hover:opacity-90"

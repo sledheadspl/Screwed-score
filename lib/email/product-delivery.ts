@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { QF_LESSONS, QF_BUNDLES, qfLessonsFor, qfDownloadPath, qfProductName } from '@/lib/quick-fix'
+import { paidDownloadUrl } from '@/lib/paid-downloads'
 
 // Lazily initialized so missing key only throws at send-time, not build-time
 let _resend: Resend | null = null
@@ -9,10 +10,10 @@ function getResend(): Resend {
 }
 
 // ── Product registry ──────────────────────────────────────────────────────────
-// `defaultPath` is the production download URL — the actual deliverable file
-// served from the Next.js public directory. To override (e.g. swap to a Gumroad
-// or signed-S3 link without redeploying), set the corresponding PRODUCT_LINK_*
-// env var in Netlify.
+// `defaultPath` names the deliverable file in private/downloads/; buyers get it
+// through /api/download (see lib/paid-downloads.ts), which checks the Stripe
+// session is paid. To deliver from elsewhere instead (e.g. Gumroad or a signed
+// S3 link), set the corresponding PRODUCT_LINK_* env var.
 export const PRODUCT_CATALOG: Record<string, {
   name: string
   tagline: string
@@ -189,11 +190,13 @@ export const PRODUCT_CATALOG: Record<string, {
   })),
 }
 
-function buildDownloadUrl(envKey: string, defaultPath: string): string {
+// Paid files are served by /api/download, which checks the Stripe session
+// is paid, so every link carries this purchase's session id.
+function buildDownloadUrl(envKey: string, defaultPath: string, sessionId: string): string {
   const override = process.env[envKey]
   if (override && override.startsWith('http')) return override
   const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com').replace(/\/+$/, '')
-  return `${origin}${defaultPath}`
+  return paidDownloadUrl(defaultPath, sessionId, origin)
 }
 
 function esc(s: string): string {
@@ -409,16 +412,16 @@ export async function sendProductDeliveryEmail(opts: {
   productId: string
   stripeSessionId: string
 }): Promise<{ ok: boolean; error?: string }> {
-  const { toEmail, productId } = opts
+  const { toEmail, productId, stripeSessionId } = opts
   const product = PRODUCT_CATALOG[productId]
 
   if (!product) {
     return { ok: false, error: `Unknown product_id: ${productId}` }
   }
 
-  const downloadUrl = buildDownloadUrl(product.deliveryEnvKey, product.defaultPath)
+  const downloadUrl = buildDownloadUrl(product.deliveryEnvKey, product.defaultPath, stripeSessionId)
   const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.screwedscore.com').replace(/\/+$/, '')
-  const links = product.files?.map(f => ({ label: f.label, url: `${origin}${f.path}` }))
+  const links = product.files?.map(f => ({ label: f.label, url: paidDownloadUrl(f.path, stripeSessionId, origin) }))
 
   const fromAddress = process.env.RESEND_FROM_EMAIL ?? 'products@screwedscore.com'
 
