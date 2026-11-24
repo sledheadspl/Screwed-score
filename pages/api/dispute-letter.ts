@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase'
 import Anthropic from '@anthropic-ai/sdk'
 import { DOCUMENT_TYPE_LABELS } from '@/lib/types'
 import type { DocumentType } from '@/lib/types'
+import { clientIp } from '@/lib/rate-limit'
 
 const anthropic = new Anthropic()
 
@@ -30,10 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   // Rate limit by IP
-  const ip     = (req.headers['x-real-ip'] as string) ??
-    (req.headers['cf-connecting-ip'] as string) ??
-    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-    '0.0.0.0'
+  const ip     = clientIp(req.headers)
   const ipHash = createHash('sha256').update(`dispute-letter:${ip}`).digest('hex')
 
   const supabase = createServiceClient()

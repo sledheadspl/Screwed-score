@@ -3,6 +3,7 @@ import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 
 import { stripe } from '@/lib/stripe'
+import { clientIp } from '@/lib/rate-limit'
 
 // Max 10 checkout attempts per IP per hour
 const CHECKOUT_LIMIT = 10
@@ -25,11 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(403).json({ error: 'Forbidden' })
   }
 
-  // Rate limit by IP — rightmost x-forwarded-for is the most tamper-resistant
-  const ip = (req.headers['x-real-ip'] as string) ??
-    (req.headers['cf-connecting-ip'] as string) ??
-    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-    '0.0.0.0'
+  // Rate limit by IP
+  const ip = clientIp(req.headers)
   const ipHash = createHash('sha256').update(`checkout:${ip}`).digest('hex')
 
   try {

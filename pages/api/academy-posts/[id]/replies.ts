@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
+import { clientIp } from '@/lib/rate-limit'
 
 const RATE_LIMIT = 15
 const WINDOW_MS = 60 * 60 * 1000
@@ -10,10 +11,7 @@ async function checkAndIncrementRateLimit(
   req: NextApiRequest,
   scope: string
 ): Promise<{ ok: boolean }> {
-  const ip = (req.headers['x-real-ip'] as string) ??
-    (req.headers['cf-connecting-ip'] as string) ??
-    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-    '0.0.0.0'
+  const ip = clientIp(req.headers)
   const ipHash = createHash('sha256').update(`${scope}:${ip}`).digest('hex')
 
   const { data } = await supabase

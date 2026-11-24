@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 import { isValidUUID } from '@/lib/utils'
+import { clientIp } from '@/lib/rate-limit'
 
 const RATE_LIMIT     = 3
 const RATE_WINDOW_MS = 60 * 60 * 1000   // 1 hour
@@ -13,11 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
   try {
-    // Prefer x-real-ip (set by reverse proxy) over x-forwarded-for to prevent spoofing
-    const ip     = (req.headers['x-real-ip'] as string) ??
-      (req.headers['cf-connecting-ip'] as string) ??
-      (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-      '0.0.0.0'
+    const ip     = clientIp(req.headers)
     const ipHash = createHash('sha256').update(`waitlist:${ip}`).digest('hex')
 
     const supabase = createServiceClient()

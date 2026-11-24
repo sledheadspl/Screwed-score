@@ -3,6 +3,7 @@ import { createHash } from 'crypto'
 import { createServiceClient } from '@/lib/supabase'
 
 import { stripe } from '@/lib/stripe'
+import { clientIp } from '@/lib/rate-limit'
 
 // Max 10 kit checkout attempts per IP per hour
 const LIMIT     = 10
@@ -24,10 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Rate limit by IP
-  const ip     = (req.headers['x-real-ip'] as string) ??
-    (req.headers['cf-connecting-ip'] as string) ??
-    (req.headers['x-forwarded-for'] as string)?.split(',').at(-1)?.trim() ??
-    '0.0.0.0'
+  const ip     = clientIp(req.headers)
   const ipHash = createHash('sha256').update(`kit-checkout:${ip}`).digest('hex')
 
   try {
