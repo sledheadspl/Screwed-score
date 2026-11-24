@@ -2,7 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, FileSearch, Gauge, Ear, Scale, Loader2, GraduationCap, Layers, Download, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
+import {
+  ArrowRight, FileSearch, Gauge, Ear, Scale, Loader2, GraduationCap, Layers, Download, ShieldCheck, Users,
+  KeyRound, Cog, Disc3, Thermometer, BatteryCharging, Bath, ShowerHead, PlugZap, PaintRoller, Droplets, Wrench, ShieldAlert,
+  type LucideIcon,
+} from 'lucide-react'
+import { QF_LESSONS, QF_BUNDLES, type QuickFixLesson, type QuickFixBundle } from '@/lib/quick-fix'
 
 interface Course {
   id: string
@@ -75,7 +80,7 @@ const VALUE_BLOCKS = [
   { stat: '∞', label: 'Yours to keep', desc: 'Instant download, no subscription, no expiration.', color: '#00E5FF' },
 ]
 
-function BuyButton({ productId, label, style }: { productId: string; label: string; style: React.CSSProperties }) {
+function useCheckout(productId: string) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -100,6 +105,12 @@ function BuyButton({ productId, label, style }: { productId: string; label: stri
       setLoading(false)
     }
   }
+
+  return { loading, error, handleBuy }
+}
+
+function BuyButton({ productId, label, style }: { productId: string; label: string; style: React.CSSProperties }) {
+  const { loading, error, handleBuy } = useCheckout(productId)
 
   return (
     <div className="flex flex-col items-end gap-1">
@@ -160,6 +171,142 @@ function CourseCard({ course }: { course: Course }) {
   )
 }
 
+// ── Quick-Fix Series 1 ────────────────────────────────────────────────────────
+
+const ORANGE = '#ff7a1a'
+
+const QF_ICONS: Record<string, LucideIcon> = {
+  'qf-no-start-diagnosis': KeyRound,
+  'qf-serpentine-belt':    Cog,
+  'qf-brake-pads-rotors':  Disc3,
+  'qf-coolant-leak':       Thermometer,
+  'qf-battery-charging':   BatteryCharging,
+  'qf-running-toilet':     Bath,
+  'qf-unclog-drain':       ShowerHead,
+  'qf-gfci-outlet':        PlugZap,
+  'qf-drywall-patch':      PaintRoller,
+  'qf-leaky-faucet':       Droplets,
+}
+
+function QuickFixBuyButton({ productId, label, solid }: { productId: string; label: string; solid?: boolean }) {
+  const { loading, error, handleBuy } = useCheckout(productId)
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={handleBuy}
+        disabled={loading}
+        className="w-full min-h-[48px] flex items-center justify-center gap-2 rounded-xl text-base font-black transition-all active:scale-[0.98] hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+        style={solid
+          ? { background: 'linear-gradient(135deg, #ff9a3c, #ff6a00)', color: '#0a0a0a', boxShadow: '0 0 30px rgba(255,122,26,0.25)' }
+          : { background: 'rgba(255,122,26,0.12)', color: '#ff9a3c', border: '1px solid rgba(255,122,26,0.35)' }}
+      >
+        {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Opening checkout…</>) : (<>{label} <ArrowRight className="w-4 h-4" /></>)}
+      </button>
+      {error && <p className="text-xs text-red-400 text-center">{error}</p>}
+    </div>
+  )
+}
+
+function QuickFixCard({ lesson }: { lesson: QuickFixLesson }) {
+  const Icon = QF_ICONS[lesson.id] ?? Wrench
+  return (
+    <div className="glass-card rounded-2xl p-5 flex flex-col gap-4">
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(255,122,26,0.1)', border: '1px solid rgba(255,122,26,0.25)' }}>
+          <Icon className="w-5 h-5" style={{ color: ORANGE }} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,154,60,0.75)' }}>
+            #{lesson.num} · {lesson.category === 'car' ? 'Car' : 'Home'}
+          </p>
+          <p className="font-bold text-brand-text leading-snug">{lesson.title}</p>
+        </div>
+      </div>
+      <div className="flex items-baseline justify-between gap-3 text-sm mt-auto">
+        <span style={{ color: 'rgba(242,242,242,0.5)' }}>
+          A shop charges <span className="font-semibold text-brand-text/70">{lesson.shopPrice}</span>
+        </span>
+        <span className="font-black text-brand-text">This guide: <span style={{ color: ORANGE }}>${lesson.price}</span></span>
+      </div>
+      <QuickFixBuyButton productId={lesson.id} label={`Buy — $${lesson.price}`} />
+    </div>
+  )
+}
+
+function QuickFixBundleCard({ bundle }: { bundle: QuickFixBundle }) {
+  const separate = bundle.includes.reduce((sum, id) => sum + (QF_LESSONS.find(l => l.id === id)?.price ?? 0), 0)
+  const hl = bundle.highlight
+  return (
+    <div className={`rounded-2xl p-5 flex flex-col gap-4 relative ${hl ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+      style={hl
+        ? { background: 'linear-gradient(135deg, rgba(255,122,26,0.16), rgba(255,122,26,0.04))', border: `2px solid ${ORANGE}`, boxShadow: '0 0 50px rgba(255,122,26,0.18)' }
+        : { background: 'rgba(255,122,26,0.04)', border: '1px solid rgba(255,122,26,0.2)' }}>
+      {hl && (
+        <span className="absolute -top-3 left-5 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full"
+          style={{ background: ORANGE, color: '#0a0a0a' }}>
+          Best Value
+        </span>
+      )}
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(255,122,26,0.12)', border: '1px solid rgba(255,122,26,0.3)' }}>
+          <Layers className="w-5 h-5" style={{ color: ORANGE }} />
+        </div>
+        <div>
+          <p className="font-black text-lg text-brand-text leading-tight">{bundle.title}</p>
+          <p className="text-sm" style={{ color: 'rgba(242,242,242,0.5)' }}>{bundle.subtitle}</p>
+        </div>
+      </div>
+      <div className="flex items-baseline gap-2 mt-auto">
+        <span className="text-3xl font-black" style={{ color: ORANGE }}>${bundle.price}</span>
+        <span className="text-sm line-through" style={{ color: 'rgba(242,242,242,0.35)' }}>${separate}</span>
+        <span className="text-xs font-bold" style={{ color: 'rgba(255,154,60,0.8)' }}>save ${separate - bundle.price}</span>
+      </div>
+      <QuickFixBuyButton productId={bundle.id} label={`Get ${bundle.includes.length} guides — $${bundle.price}`} solid={hl} />
+    </div>
+  )
+}
+
+function QuickFixSection() {
+  return (
+    <section id="quick-fix" className="scroll-mt-16 max-w-6xl mx-auto px-4 sm:px-8 pt-16 pb-20 sm:py-24">
+      <div className="text-center space-y-3 mb-10">
+        <p className="text-[11px] font-bold uppercase tracking-[0.25em] flex items-center justify-center gap-2"
+          style={{ color: 'rgba(255,154,60,0.8)' }}>
+          <Wrench className="w-3.5 h-3.5" /> Quick-Fix Guides · Series 1
+        </p>
+        <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+          Fix it yourself. Keep the shop money.
+        </h2>
+        <p className="text-sm max-w-md mx-auto" style={{ color: 'rgba(242,242,242,0.5)' }}>
+          Ten step-by-step repair guides for the car and the house, each with a printable checklist.
+          Read it on your phone in the driveway.
+        </p>
+      </div>
+
+      {/* Bundles first: on a phone the best deal is the first thing you see */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 pt-3">
+        {QF_BUNDLES.map(b => <QuickFixBundleCard key={b.id} bundle={b} />)}
+      </div>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {QF_LESSONS.map(l => <QuickFixCard key={l.id} lesson={l} />)}
+      </div>
+
+      <div className="mt-8 rounded-xl p-4 flex items-start gap-3 text-left max-w-2xl mx-auto"
+        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" style={{ color: ORANGE }} />
+        <p className="text-xs leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>
+          Every guide opens with a safety notice. At checkout you confirm you&apos;ve read it and that you&apos;re
+          responsible for your own work. Shop prices are typical U.S. estimates and vary by area and vehicle.
+          Instant access after purchase, plus a copy by email.
+        </p>
+      </div>
+    </section>
+  )
+}
+
 export default function AcademyPage() {
   return (
     <div className="min-h-screen bg-brand-bg overflow-x-hidden">
@@ -214,12 +361,19 @@ export default function AcademyPage() {
               }}>
               Browse the Courses <ArrowRight className="w-4 h-4" />
             </a>
+            <a href="#quick-fix"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-black transition-all hover:opacity-90 hover:scale-[1.02]"
+              style={{ background: 'linear-gradient(135deg, #ff9a3c, #ff6a00)', color: '#0a0a0a' }}>
+              <Wrench className="w-4 h-4" /> Repair Guides from $9
+            </a>
             <Link href="/academy/community"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02] text-brand-sub border border-brand-border hover:text-brand-text hover:bg-brand-muted">
               <Users className="w-4 h-4" /> Join the Community
             </Link>
           </div>
         </section>
+
+        <QuickFixSection />
 
         {/* ── Value blocks ─────────────────────────────────────────────── */}
         <section className="border-t border-b border-brand-border/30 py-14">

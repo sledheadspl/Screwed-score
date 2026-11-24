@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '@/lib/stripe'
+import { QF_LESSONS, QF_BUNDLES, QF_SAFETY_CONSENT, isQuickFixProduct } from '@/lib/quick-fix'
 
 const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = {
   'creator-os':               { priceId: 'price_1TOCoPEKDzEsz6UjwGJfStP0', subscription: false },
@@ -33,6 +34,11 @@ const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = 
   'academy-noise-diagnosis':  { priceId: 'price_REPLACE_ACADEMY_NOISE_DIAGNOSIS', subscription: false },
   'academy-fight-back':       { priceId: 'price_REPLACE_ACADEMY_FIGHT_BACK', subscription: false },
   'academy-bundle':           { priceId: 'price_REPLACE_ACADEMY_BUNDLE', subscription: false },
+
+  // ── Quick-Fix Series 1 (live prices live in lib/quick-fix.ts) ───────────
+  ...Object.fromEntries(
+    [...QF_LESSONS, ...QF_BUNDLES].map(p => [p.id, { priceId: p.priceId, subscription: false }]),
+  ),
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -58,7 +64,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const isClipPilot = product_id!.startsWith('clippilot')
-  const isAcademy = product_id!.startsWith('academy-')
+  const isQuickFix = isQuickFixProduct(product_id!)
+  const isAcademy = product_id!.startsWith('academy-') || isQuickFix
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -70,9 +77,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         : isAcademy
         ? `${origin}/academy/success?product=${product_id}&session_id={CHECKOUT_SESSION_ID}`
         : `${origin}/productivity/success?product=${product_id}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: isClipPilot ? `${origin}/clippilot#pricing` : isAcademy ? `${origin}/academy` : `${origin}/productivity`,
+      cancel_url: isClipPilot
+        ? `${origin}/clippilot#pricing`
+        : isQuickFix
+        ? `${origin}/academy#quick-fix`
+        : isAcademy ? `${origin}/academy` : `${origin}/productivity`,
       allow_promotion_codes: true,
       customer_creation: entry.subscription ? undefined : 'always',
+      // Quick-Fix guides: Stripe Tax, plus a required safety acknowledgement.
+      // Stripe Checkout's only required checkbox is the terms-of-service
+      // consent; its label is replaced with the safety notice text.
+      ...(isQuickFix && {
+        automatic_tax: { enabled: true },
+        consent_collection: { terms_of_service: 'required' as const },
+        custom_text: { terms_of_service_acceptance: { message: QF_SAFETY_CONSENT } },
+      }),
     })
 
     return res.status(200).json({ url: session.url })
