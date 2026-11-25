@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/blog'
 import { GUIDE_SLUGS } from '@/lib/guides'
+import { COURSES } from '@/lib/academy'
 
 const ANALYZE_TYPES = GUIDE_SLUGS
 
@@ -97,6 +98,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.85,
     },
+    ...COURSES.map(c => ({
+      url: `${base}/academy/${c.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
     {
       url: `${base}/academy/community`,
       lastModified: new Date(),

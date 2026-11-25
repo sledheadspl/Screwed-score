@@ -2,6 +2,11 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['mammoth'],
+  // Paid files live outside public/ and are read at request time by
+  // /api/download; make sure they ship with that route in traced builds.
+  outputFileTracingIncludes: {
+    '/api/download': ['./private/downloads/**'],
+  },
   // Import only the icon modules actually referenced, instead of the whole
   // lucide-react barrel file, and keep the Supabase SDK in its own lazy chunk.
   experimental: {

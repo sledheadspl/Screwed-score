@@ -1,120 +1,20 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, FileSearch, Gauge, Ear, Scale, Loader2, GraduationCap, Layers, Download, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
-
-interface Course {
-  id: string
-  icon: LucideIcon
-  title: string
-  subtitle: string
-  price: string
-  modules: number
-  badge: string | null
-}
-
-const COURSES: Course[] = [
-  {
-    id: 'academy-estimate-mastery',
-    icon: FileSearch,
-    title: 'Repair Estimate Mastery',
-    subtitle: 'Read, question, and negotiate any auto repair estimate like a service advisor would.',
-    price: '$39',
-    modules: 7,
-    badge: 'Best Seller',
-  },
-  {
-    id: 'academy-check-engine',
-    icon: Gauge,
-    title: 'Check Engine Light: Complete Diagnostic Course',
-    subtitle: 'Read OBD2 codes like a technician and follow a real diagnostic tree instead of guessing at parts.',
-    price: '$39',
-    modules: 7,
-    badge: null,
-  },
-  {
-    id: 'academy-noise-diagnosis',
-    icon: Ear,
-    title: 'Car Noise Diagnosis: Complete Course',
-    subtitle: "Train your ear system by system and stop guessing at what's making that sound.",
-    price: '$29',
-    modules: 7,
-    badge: null,
-  },
-  {
-    id: 'academy-fight-back',
-    icon: Scale,
-    title: 'Fight Back: Complete Dispute & Consumer Protection Course',
-    subtitle: 'Win almost any dispute — bad bill, bad charge, bad service — with the letters already written.',
-    price: '$39',
-    modules: 7,
-    badge: null,
-  },
-]
-
-// The four courses and the bundle have no Stripe prices yet (checkout still
-// holds price_REPLACE_* placeholders), so every Buy button failed with "This
-// product is not on sale yet". Show them as coming soon instead. Flip this
-// once scripts/create-academy-stripe-prices.js has created the live prices
-// and patched pages/api/product-checkout.
-const COURSES_ON_SALE = false
-
-function ComingSoon() {
-  return (
-    <span className="text-xs font-semibold px-4 py-2 rounded-lg"
-      style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(242,242,242,0.55)', border: '1px solid rgba(255,255,255,0.1)' }}>
-      Coming soon
-    </span>
-  )
-}
+import {
+  ArrowRight, Loader2, GraduationCap, Layers, Download, ShieldCheck, Users,
+  KeyRound, Cog, Disc3, Thermometer, BatteryCharging, Bath, ShowerHead, PlugZap, PaintRoller, Droplets, Wrench, ShieldAlert,
+  type LucideIcon,
+} from 'lucide-react'
+import { QF_LESSONS, QF_BUNDLES, type QuickFixLesson, type QuickFixBundle } from '@/lib/quick-fix'
+import { COURSES, type Course } from '@/lib/academy'
+import { BuyButton, useCheckout } from '@/components/academy/BuyButton'
 
 const VALUE_BLOCKS = [
   { stat: '4', label: 'Complete courses', desc: '28 modules total, built from real shop-floor experience.', color: '#ffd60a' },
   { stat: '$40', label: 'Saved with the bundle', desc: 'All four courses for $106 instead of $146 apart.', color: '#30d158' },
   { stat: '∞', label: 'Yours to keep', desc: 'Instant download, no subscription, no expiration.', color: '#00E5FF' },
 ]
-
-function BuyButton({ productId, label, style }: { productId: string; label: string; style: React.CSSProperties }) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleBuy = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await fetch('/api/product-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId }),
-      })
-      const data = await res.json()
-      if (!res.ok || !data.url) {
-        setError(data.error ?? 'Something went wrong. Please try again.')
-        setLoading(false)
-        return
-      }
-      window.location.href = data.url
-    } catch {
-      setError('Network error. Please try again.')
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="flex flex-col items-end gap-1">
-      <button
-        onClick={handleBuy}
-        disabled={loading}
-        className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
-        style={style}
-      >
-        {loading ? (<><Loader2 className="w-3.5 h-3.5 animate-spin" /> Redirecting…</>) : (<>{label} <ArrowRight className="w-3.5 h-3.5" /></>)}
-      </button>
-      {error && <p className="text-[11px] text-red-400 max-w-[160px] text-right">{error}</p>}
-    </div>
-  )
-}
 
 function CourseCard({ course }: { course: Course }) {
   const Icon = course.icon
@@ -128,7 +28,7 @@ function CourseCard({ course }: { course: Course }) {
             <Icon className="w-4 h-4" style={{ color: '#ffd60a' }} />
           </div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-brand-sub/50">
-            {course.modules} Modules
+            {course.modules.length} Modules
           </span>
         </div>
         {course.badge && (
@@ -140,23 +40,163 @@ function CourseCard({ course }: { course: Course }) {
       </div>
 
       <div className="space-y-1.5 flex-1">
-        <p className="font-bold text-brand-text">{course.title}</p>
+        <Link href={`/academy/${course.slug}`} className="font-bold text-brand-text hover:underline underline-offset-4">
+          {course.title}
+        </Link>
         <p className="text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>
           {course.subtitle}
         </p>
+        <Link href={`/academy/${course.slug}`} className="inline-flex items-center gap-1 text-xs font-semibold pt-1"
+          style={{ color: 'rgba(255,214,10,0.8)' }}>
+          See all {course.modules.length} modules <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       <div className="flex items-center justify-between pt-2 border-t border-brand-border/30">
         <span className="text-xl font-black text-brand-text">{course.price}</span>
-        {COURSES_ON_SALE ? (
-          <BuyButton
-            productId={course.id}
-            label="Get it"
-            style={{ background: 'rgba(255,214,10,0.1)', color: '#ffd60a', border: '1px solid rgba(255,214,10,0.25)' }}
-          />
-        ) : <ComingSoon />}
+        <BuyButton
+          productId={course.id}
+          label="Get it"
+          style={{ background: 'rgba(255,214,10,0.1)', color: '#ffd60a', border: '1px solid rgba(255,214,10,0.25)' }}
+        />
       </div>
     </div>
+  )
+}
+
+// ── Quick-Fix Series 1 ────────────────────────────────────────────────────────
+
+const ORANGE = '#ff7a1a'
+
+const QF_ICONS: Record<string, LucideIcon> = {
+  'qf-no-start-diagnosis': KeyRound,
+  'qf-serpentine-belt':    Cog,
+  'qf-brake-pads-rotors':  Disc3,
+  'qf-coolant-leak':       Thermometer,
+  'qf-battery-charging':   BatteryCharging,
+  'qf-running-toilet':     Bath,
+  'qf-unclog-drain':       ShowerHead,
+  'qf-gfci-outlet':        PlugZap,
+  'qf-drywall-patch':      PaintRoller,
+  'qf-leaky-faucet':       Droplets,
+}
+
+function QuickFixBuyButton({ productId, label, solid }: { productId: string; label: string; solid?: boolean }) {
+  const { loading, error, handleBuy } = useCheckout(productId)
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={handleBuy}
+        disabled={loading}
+        className="w-full min-h-[48px] flex items-center justify-center gap-2 rounded-xl text-base font-black transition-all active:scale-[0.98] hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+        style={solid
+          ? { background: 'linear-gradient(135deg, #ff9a3c, #ff6a00)', color: '#0a0a0a', boxShadow: '0 0 30px rgba(255,122,26,0.25)' }
+          : { background: 'rgba(255,122,26,0.12)', color: '#ff9a3c', border: '1px solid rgba(255,122,26,0.35)' }}
+      >
+        {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Opening checkout…</>) : (<>{label} <ArrowRight className="w-4 h-4" /></>)}
+      </button>
+      {error && <p className="text-xs text-red-400 text-center">{error}</p>}
+    </div>
+  )
+}
+
+function QuickFixCard({ lesson }: { lesson: QuickFixLesson }) {
+  const Icon = QF_ICONS[lesson.id] ?? Wrench
+  return (
+    <div className="glass-card rounded-2xl p-5 flex flex-col gap-4">
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(255,122,26,0.1)', border: '1px solid rgba(255,122,26,0.25)' }}>
+          <Icon className="w-5 h-5" style={{ color: ORANGE }} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,154,60,0.75)' }}>
+            #{lesson.num} · {lesson.category === 'car' ? 'Car' : 'Home'}
+          </p>
+          <p className="font-bold text-brand-text leading-snug">{lesson.title}</p>
+        </div>
+      </div>
+      <div className="flex items-baseline justify-between gap-3 text-sm mt-auto">
+        <span style={{ color: 'rgba(242,242,242,0.5)' }}>
+          A shop charges <span className="font-semibold text-brand-text/70">{lesson.shopPrice}</span>
+        </span>
+        <span className="font-black text-brand-text">This guide: <span style={{ color: ORANGE }}>${lesson.price}</span></span>
+      </div>
+      <QuickFixBuyButton productId={lesson.id} label={`Buy — $${lesson.price}`} />
+    </div>
+  )
+}
+
+function QuickFixBundleCard({ bundle }: { bundle: QuickFixBundle }) {
+  const separate = bundle.includes.reduce((sum, id) => sum + (QF_LESSONS.find(l => l.id === id)?.price ?? 0), 0)
+  const hl = bundle.highlight
+  return (
+    <div className={`rounded-2xl p-5 flex flex-col gap-4 relative ${hl ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+      style={hl
+        ? { background: 'linear-gradient(135deg, rgba(255,122,26,0.16), rgba(255,122,26,0.04))', border: `2px solid ${ORANGE}`, boxShadow: '0 0 50px rgba(255,122,26,0.18)' }
+        : { background: 'rgba(255,122,26,0.04)', border: '1px solid rgba(255,122,26,0.2)' }}>
+      {hl && (
+        <span className="absolute -top-3 left-5 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full"
+          style={{ background: ORANGE, color: '#0a0a0a' }}>
+          Best Value
+        </span>
+      )}
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(255,122,26,0.12)', border: '1px solid rgba(255,122,26,0.3)' }}>
+          <Layers className="w-5 h-5" style={{ color: ORANGE }} />
+        </div>
+        <div>
+          <p className="font-black text-lg text-brand-text leading-tight">{bundle.title}</p>
+          <p className="text-sm" style={{ color: 'rgba(242,242,242,0.5)' }}>{bundle.subtitle}</p>
+        </div>
+      </div>
+      <div className="flex items-baseline gap-2 mt-auto">
+        <span className="text-3xl font-black" style={{ color: ORANGE }}>${bundle.price}</span>
+        <span className="text-sm line-through" style={{ color: 'rgba(242,242,242,0.35)' }}>${separate}</span>
+        <span className="text-xs font-bold" style={{ color: 'rgba(255,154,60,0.8)' }}>save ${separate - bundle.price}</span>
+      </div>
+      <QuickFixBuyButton productId={bundle.id} label={`Get ${bundle.includes.length} guides — $${bundle.price}`} solid={hl} />
+    </div>
+  )
+}
+
+function QuickFixSection() {
+  return (
+    <section id="quick-fix" className="scroll-mt-16 max-w-6xl mx-auto px-4 sm:px-8 pt-16 pb-20 sm:py-24">
+      <div className="text-center space-y-3 mb-10">
+        <p className="text-[11px] font-bold uppercase tracking-[0.25em] flex items-center justify-center gap-2"
+          style={{ color: 'rgba(255,154,60,0.8)' }}>
+          <Wrench className="w-3.5 h-3.5" /> Quick-Fix Guides · Series 1
+        </p>
+        <h2 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
+          Fix it yourself. Keep the shop money.
+        </h2>
+        <p className="text-sm max-w-md mx-auto" style={{ color: 'rgba(242,242,242,0.5)' }}>
+          Ten step-by-step repair guides for the car and the house, each with a printable checklist.
+          Read it on your phone in the driveway.
+        </p>
+      </div>
+
+      {/* Bundles first: on a phone the best deal is the first thing you see */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 pt-3">
+        {QF_BUNDLES.map(b => <QuickFixBundleCard key={b.id} bundle={b} />)}
+      </div>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {QF_LESSONS.map(l => <QuickFixCard key={l.id} lesson={l} />)}
+      </div>
+
+      <div className="mt-8 rounded-xl p-4 flex items-start gap-3 text-left max-w-2xl mx-auto"
+        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" style={{ color: ORANGE }} />
+        <p className="text-xs leading-relaxed" style={{ color: 'rgba(242,242,242,0.45)' }}>
+          Every guide opens with a safety notice. At checkout you confirm you&apos;ve read it and that you&apos;re
+          responsible for your own work. Shop prices are typical U.S. estimates and vary by area and vehicle.
+          Instant access after purchase, plus a copy by email.
+        </p>
+      </div>
+    </section>
   )
 }
 
@@ -214,12 +254,19 @@ export default function AcademyPage() {
               }}>
               Browse the Courses <ArrowRight className="w-4 h-4" />
             </a>
+            <a href="#quick-fix"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-black transition-all hover:opacity-90 hover:scale-[1.02]"
+              style={{ background: 'linear-gradient(135deg, #ff9a3c, #ff6a00)', color: '#0a0a0a' }}>
+              <Wrench className="w-4 h-4" /> Repair Guides from $9
+            </a>
             <Link href="/academy/community"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02] text-brand-sub border border-brand-border hover:text-brand-text hover:bg-brand-muted">
               <Users className="w-4 h-4" /> Join the Community
             </Link>
           </div>
         </section>
+
+        <QuickFixSection />
 
         {/* ── Value blocks ─────────────────────────────────────────────── */}
         <section className="border-t border-b border-brand-border/30 py-14">
@@ -281,8 +328,7 @@ export default function AcademyPage() {
             </div>
             <div className="flex items-center gap-5">
               <span className="text-3xl font-black" style={{ color: '#ffd60a' }}>$106</span>
-              {COURSES_ON_SALE ? (
-                <BuyButton
+                              <BuyButton
                   productId="academy-bundle"
                   label="Get the bundle"
                   style={{
@@ -292,7 +338,6 @@ export default function AcademyPage() {
                     padding: '12px 20px',
                   }}
                 />
-              ) : <ComingSoon />}
             </div>
           </div>
         </section>

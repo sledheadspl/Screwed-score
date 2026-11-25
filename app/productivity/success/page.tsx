@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { paidDownloadUrl } from '@/lib/paid-downloads'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, Mail, Download } from 'lucide-react'
 
@@ -31,7 +32,8 @@ function SuccessInner() {
   const productId = params?.get('product') ?? ''
   const product = PRODUCTS[productId]
   const productName = product?.name ?? 'Your purchase'
-  const downloadUrl = product?.download
+  const sessionId = params?.get('session_id') ?? ''
+  const downloadUrl = product?.download && sessionId ? paidDownloadUrl(product.download, sessionId) : undefined
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-5 overflow-x-hidden">

@@ -4,6 +4,8 @@ import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, Mail, Download } from 'lucide-react'
+import { isQuickFixProduct, qfLessonsFor, qfDownloadPath, qfProductName } from '@/lib/quick-fix'
+import { paidDownloadUrl } from '@/lib/paid-downloads'
 
 // Mirror of the academy entries in PRODUCT_CATALOG (lib/email/product-delivery.ts) —
 // kept here for instant client-side rendering of the download link without a
@@ -19,9 +21,12 @@ const PRODUCTS: Record<string, { name: string; download: string }> = {
 function SuccessInner() {
   const params = useSearchParams()
   const productId = params?.get('product') ?? ''
+  const isQuickFix = isQuickFixProduct(productId)
   const product = PRODUCTS[productId]
-  const productName = product?.name ?? 'Your purchase'
-  const downloadUrl = product?.download
+  const productName = (isQuickFix ? qfProductName(productId) : product?.name) ?? 'Your purchase'
+  const sessionId = params?.get('session_id') ?? ''
+  const downloadUrl = product?.download && sessionId ? paidDownloadUrl(product.download, sessionId) : undefined
+  const qfLessons = isQuickFix ? qfLessonsFor(productId) : []
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-5 overflow-x-hidden">
@@ -54,12 +59,35 @@ function SuccessInner() {
             Purchase Confirmed
           </p>
           <h1 className="text-3xl sm:text-4xl font-black text-brand-text tracking-tight">
-            You&apos;re enrolled.
+            {isQuickFix ? (qfLessons.length > 1 ? 'Your guides are ready.' : 'Your guide is ready.') : <>You&apos;re enrolled.</>}
           </h1>
           <p className="text-brand-sub/60 text-base leading-relaxed">
             <span className="text-brand-text/80 font-semibold">{productName}</span> has been unlocked.
           </p>
         </div>
+
+        {/* Quick-Fix: one button per guide (bundles deliver several) */}
+        {qfLessons.length > 0 && (
+          <div className="space-y-2.5">
+            {qfLessons.map(l => (
+              <a
+                key={l.id}
+                href={paidDownloadUrl(qfDownloadPath(l), sessionId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 w-full px-5 py-4 rounded-xl text-sm font-bold text-left transition-all hover:opacity-90"
+                style={{
+                  background: qfLessons.length === 1 ? 'linear-gradient(135deg, #ff9a3c, #ff6a00)' : 'rgba(255,122,26,0.1)',
+                  color: qfLessons.length === 1 ? '#0a0a0a' : '#ff9a3c',
+                  border: '1px solid rgba(255,122,26,0.35)',
+                }}
+              >
+                <Download className="w-4 h-4 shrink-0" />
+                <span className="flex-1">#{l.num} {l.title}</span>
+              </a>
+            ))}
+          </div>
+        )}
 
         {/* Instant download — don't make the buyer wait for email */}
         {downloadUrl && (
