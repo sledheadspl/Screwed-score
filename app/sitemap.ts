@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/blog'
 import { GUIDE_SLUGS } from '@/lib/guides'
 import { COURSES } from '@/lib/academy'
+import { LESSON_PAGES, lessonPath } from '@/lib/academy-previews'
 
 const ANALYZE_TYPES = GUIDE_SLUGS
 
@@ -103,6 +104,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
+    })),
+    {
+      url: `${base}/academy/quick-fix`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    ...LESSON_PAGES.map(p => ({
+      url: `${base}${lessonPath(p.lesson)}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
     })),
     {
       url: `${base}/academy/community`,

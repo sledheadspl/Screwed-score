@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { ArrowRight, Car, Home, Receipt, Scale, Sparkles, Layers, Loader2, type LucideIcon } from 'lucide-react'
 import { QF_SERIES, QF_SERIES_PACKS, QF_EVERYTHING, QF_LESSONS, type QuickFixLesson, type QuickFixBundle } from '@/lib/quick-fix'
 import { useCheckout } from '@/components/academy/BuyButton'
@@ -48,13 +49,18 @@ function LessonCard({ lesson }: { lesson: QuickFixLesson }) {
         <Icon className="w-4 h-4 mt-1 shrink-0" style={{ color: ORANGE }} />
         <div className="min-w-0 space-y-1">
           <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,154,60,0.75)' }}>#{lesson.num}</p>
-          <p className="font-bold text-brand-text leading-snug">{lesson.title}</p>
+          <Link href={`/academy/quick-fix/${lesson.id.replace(/^qf-/, '')}`} className="block font-bold text-brand-text leading-snug hover:underline underline-offset-2">
+            {lesson.title}
+          </Link>
           {lesson.teaser && <p className="text-xs leading-relaxed" style={{ color: 'rgba(242,242,242,0.5)' }}>{lesson.teaser}</p>}
         </div>
       </div>
       <p className="text-xs mt-auto" style={{ color: 'rgba(242,242,242,0.45)' }}>
         {lesson.shopLabel ?? 'A shop charges'}: <span className="font-semibold text-brand-text/70">{lesson.shopPrice}</span>
       </p>
+      <Link href={`/academy/quick-fix/${lesson.id.replace(/^qf-/, '')}`} className="text-xs font-semibold -mt-1" style={{ color: '#ff9a3c' }}>
+        Free preview →
+      </Link>
       {sellable(lesson)
         ? <Buy productId={lesson.id} label={`Get it — $${lesson.price}`} />
         : <p className="text-xs text-center py-2" style={{ color: 'rgba(242,242,242,0.4)' }}>Coming soon</p>}

@@ -114,7 +114,12 @@ function QuickFixCard({ lesson }: { lesson: QuickFixLesson }) {
           <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(255,154,60,0.75)' }}>
             #{lesson.num} · {lesson.category === 'car' ? 'Car' : 'Home'}
           </p>
-          <p className="font-bold text-brand-text leading-snug">{lesson.title}</p>
+          <Link href={`/academy/quick-fix/${lesson.id.replace(/^qf-/, '')}`} className="block font-bold text-brand-text leading-snug hover:underline underline-offset-2">
+            {lesson.title}
+          </Link>
+          <Link href={`/academy/quick-fix/${lesson.id.replace(/^qf-/, '')}`} className="text-xs font-semibold" style={{ color: '#ff9a3c' }}>
+            Free preview →
+          </Link>
         </div>
       </div>
       <div className="flex items-baseline justify-between gap-3 text-sm mt-auto">
@@ -187,6 +192,12 @@ function QuickFixSection() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {QF_SERIES1_LESSONS.map(l => <QuickFixCard key={l.id} lesson={l} />)}
       </div>
+
+      <p className="text-center mt-8">
+        <Link href="/academy/quick-fix" className="inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#ff9a3c' }}>
+          Browse all {QF_LESSONS.length} guides with free previews <ArrowRight className="w-4 h-4" />
+        </Link>
+      </p>
 
       <div className="mt-8 rounded-xl p-4 flex items-start gap-3 text-left max-w-2xl mx-auto"
         style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
