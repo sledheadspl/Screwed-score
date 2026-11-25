@@ -40,9 +40,12 @@ export default function JobsClient({ initialJobs }: { initialJobs: Job[] }) {
   // The server already rendered the unfiltered list; only refetch once a filter changes.
   const skipFirstLoad = useRef(true)
 
+  // Loading starts when a filter actually changes, not inside the effect.
+  const selectCategory = (c: string) => { if (c !== category) { setLoading(true); setCat(c) } }
+  const selectLocType  = (l: string) => { if (l !== locType)  { setLoading(true); setLocType(l) } }
+
   useEffect(() => {
     if (skipFirstLoad.current) { skipFirstLoad.current = false; return }
-    setLoading(true)
     const params = new URLSearchParams()
     if (category !== 'all')  params.set('category', category)
     if (locType  !== 'all')  params.set('location_type', locType)
@@ -98,7 +101,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: Job[] }) {
             {CATEGORIES.map(cat => (
               <button
                 key={cat}
-                onClick={() => setCat(cat)}
+                onClick={() => selectCategory(cat)}
                 className="text-xs font-semibold px-3 py-1.5 rounded-full capitalize transition-all"
                 style={category === cat
                   ? { background: 'rgba(0,229,255,0.15)', color: '#00e5ff', border: '1px solid rgba(0,229,255,0.3)' }
@@ -115,7 +118,7 @@ export default function JobsClient({ initialJobs }: { initialJobs: Job[] }) {
             {LOCATION_TYPES.map(lt => (
               <button
                 key={lt.value}
-                onClick={() => setLocType(lt.value)}
+                onClick={() => selectLocType(lt.value)}
                 className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
                 style={locType === lt.value
                   ? { background: 'rgba(255,255,255,0.1)', color: 'rgba(240,244,255,0.9)', border: '1px solid rgba(255,255,255,0.15)' }

@@ -2,7 +2,7 @@ import type { Config } from '@netlify/functions'
 
 // Hits /api/cron/nurture every hour. Runs on Netlify's native cron — no
 // external service needed. Uses CRON_SECRET to authenticate.
-export default async (): Promise<Response> => {
+const nurtureCron = async (): Promise<Response> => {
   const secret = process.env.CRON_SECRET
   if (!secret) {
     console.error('[nurture-cron] CRON_SECRET not set')
@@ -25,6 +25,8 @@ export default async (): Promise<Response> => {
     return new Response(JSON.stringify({ error: 'Cron request failed' }), { status: 500 })
   }
 }
+
+export default nurtureCron
 
 export const config: Config = {
   schedule: '@hourly',

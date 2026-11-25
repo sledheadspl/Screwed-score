@@ -33,9 +33,15 @@ const MESSAGE_INTERVAL_MS = 2500
 export function ProgressBar({ phase, progress, label }: ProgressBarProps) {
   const messages = MESSAGES[phase]
   const [messageIdx, setMessageIdx] = useState(0)
+  // Start the rotating messages over when the phase changes (adjusting state
+  // during render, so there's no extra effect pass).
+  const [shownPhase, setShownPhase] = useState(phase)
+  if (phase !== shownPhase) {
+    setShownPhase(phase)
+    setMessageIdx(0)
+  }
 
   useEffect(() => {
-    setMessageIdx(0)
     if (!messages || messages.length < 2) return
     const id = setInterval(() => {
       setMessageIdx(i => (i + 1) % messages.length)

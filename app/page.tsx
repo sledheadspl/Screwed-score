@@ -6,6 +6,7 @@
 // the upload control could not be used until ~900 KB of JS had downloaded,
 // parsed and hydrated on the visitor's phone.
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import {
   FileText, Sparkles, ShieldCheck, Zap, TrendingUp, ChevronRight,
   Star, ChevronDown, Flame, MessageSquare, Building2, Wrench,
@@ -151,7 +152,7 @@ export default function HomePage() {
               </div>
 
               {/* Quick-Fix repair guides */}
-              <a href="/academy#quick-fix"
+              <Link href="/academy#quick-fix"
                 className="animate-fade-up w-full max-w-md mx-auto mb-8 sm:mb-10 flex items-center justify-center gap-2.5 min-h-[56px] px-6 py-4 rounded-2xl text-base sm:text-lg font-black transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   background: 'linear-gradient(135deg, #ff9a3c 0%, #ff6a00 100%)',
@@ -161,7 +162,7 @@ export default function HomePage() {
                 <Wrench className="w-5 h-5 shrink-0" />
                 Fix It Yourself — Repair Guides from $9
                 <ChevronRight className="w-5 h-5 shrink-0" />
-              </a>
+              </Link>
 
               {/* Headline */}
               <div className="animate-fade-up delay-100 mb-4 sm:mb-6">
@@ -419,7 +420,7 @@ export default function HomePage() {
                       <MessageSquare className="w-5 h-5 text-blue-400" />
                     </div>
                     <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1.5">Dispute Hub</p>
-                    <h3 className="text-lg font-black text-brand-text tracking-tight mb-3 leading-tight">Don't just know. Fight back.</h3>
+                    <h3 className="text-lg font-black text-brand-text tracking-tight mb-3 leading-tight">Don&apos;t just know. Fight back.</h3>
                     <p className="text-sm text-brand-sub/55 leading-relaxed">
                       Open a formal dispute linked to the vendor. They can respond publicly. Every outcome builds the community record.
                     </p>
@@ -495,11 +496,11 @@ export default function HomePage() {
                     fontSize: '160px', lineHeight: 1,
                     color: 'rgba(255,59,48,0.05)',
                     fontFamily: 'Georgia, "Times New Roman", serif',
-                  }}>"</div>
+                  }}>&quot;</div>
                 <div className="relative z-10 max-w-2xl mx-auto text-center">
                   <p className="font-bold text-brand-text/85 leading-relaxed mb-10"
                     style={{ fontSize: 'clamp(22px, 3.2vw, 30px)', lineHeight: 1.4 }}>
-                    "{TESTIMONIALS[0].quote}"
+                    &quot;{TESTIMONIALS[0].quote}&quot;
                   </p>
                   <div className="flex items-center justify-center gap-4">
                     <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-black shrink-0"
@@ -524,7 +525,7 @@ export default function HomePage() {
                     <div className="flex gap-0.5">
                       {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />)}
                     </div>
-                    <p className="text-sm text-brand-text/75 leading-relaxed relative z-10">"{t.quote}"</p>
+                    <p className="text-sm text-brand-text/75 leading-relaxed relative z-10">&quot;{t.quote}&quot;</p>
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
                         style={{ background: t.color + '16', color: t.color, border: `1px solid ${t.color}28` }}>

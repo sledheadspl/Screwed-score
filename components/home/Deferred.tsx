@@ -22,6 +22,10 @@ function WhenNear({ children, minHeight }: { children: ReactNode; minHeight: num
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    // Very old browsers: no observer, so just show it. This can't move into
+    // render — the server has no IntersectionObserver either, and rendering
+    // the widget there would break hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (typeof IntersectionObserver === 'undefined') { setShow(true); return }
 
     let frame = 0

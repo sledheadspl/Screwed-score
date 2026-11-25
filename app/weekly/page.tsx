@@ -238,7 +238,7 @@ export default async function WeeklyPage() {
             background: 'linear-gradient(135deg, rgba(255,59,48,0.1) 0%, rgba(255,59,48,0.04) 100%)',
             border: '1px solid rgba(255,59,48,0.25)',
           }}>
-          <p className="text-2xl font-black text-brand-text">Is your bill in next week's report?</p>
+          <p className="text-2xl font-black text-brand-text">Is your bill in next week&apos;s report?</p>
           <p className="text-sm text-brand-sub">Upload free. No account needed. Results in ~20 seconds.</p>
           <Link href="/"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-black text-white text-base hover:opacity-90 transition-all"

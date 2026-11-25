@@ -240,7 +240,7 @@ export default function AcademyPage() {
           <p className="animate-fade-up delay-200 text-lg sm:text-xl max-w-lg mx-auto leading-relaxed mb-10"
             style={{ color: 'rgba(242,242,242,0.5)' }}>
             Four complete courses that turn you into your own best advocate — reading estimates,
-            diagnosing your car, and fighting back when something's wrong.
+            diagnosing your car, and fighting back when something&apos;s wrong.
           </p>
 
           <div className="animate-fade-up delay-300 flex flex-wrap items-center justify-center gap-3">
@@ -391,7 +391,7 @@ export default function AcademyPage() {
             </div>
             <div className="flex-1 space-y-2">
               <p className="text-[11px] font-bold uppercase tracking-[0.25em]" style={{ color: 'rgba(255,214,10,0.7)' }}>
-                You're not learning this alone
+                You&apos;re not learning this alone
               </p>
               <h3 className="text-2xl font-black text-brand-text">The Academy Community</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.5)' }}>

@@ -239,7 +239,7 @@ export default function WorkerProfilePage({ params }: { params: Promise<{ id: st
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-brand-text truncate">{job.title}</p>
                     {job.rating_note && (
-                      <p className="text-xs text-brand-sub mt-0.5 line-clamp-1">"{job.rating_note}"</p>
+                      <p className="text-xs text-brand-sub mt-0.5 line-clamp-1">&quot;{job.rating_note}&quot;</p>
                     )}
                     {job.completed_at && (
                       <p className="text-[10px] text-brand-sub/50 mt-0.5">{timeAgo(job.completed_at)}</p>
