@@ -2,7 +2,7 @@
 
 Screwed Score (screwedscore.com) is run by REMbyDesign. People upload bills, invoices and contracts to it, so we take reports about its security seriously, and we're grateful to anyone who helps keep it safe.
 
-**Report a vulnerability to [security@rembydesign.com](mailto:security@rembydesign.com).** Please don't open a public GitHub issue, post about it publicly, or tell anyone else until we've fixed it.
+**Report a vulnerability to [support@screwedscore.com](mailto:support@screwedscore.com).** Please don't open a public GitHub issue, post about it publicly, or tell anyone else until we've fixed it.
 
 _Last updated: November 25, 2026_
 
@@ -48,7 +48,7 @@ Only the live production site is supported. Old branches, preview builds and the
 
 ## How to report
 
-Email **security@rembydesign.com** with:
+Email **support@screwedscore.com** with:
 
 - what the problem is and where (the URL or API route);
 - the steps to reproduce it, or a proof of concept;
