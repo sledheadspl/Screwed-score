@@ -109,6 +109,7 @@ Key routes:
 - `mammoth` is in `serverExternalPackages` — never import it from client components.
 - **Paid files never go in `public/`.** Academy courses, Quick-Fix guides and creator kits live in `private/downloads/` and are served only by `app/api/download` after it confirms the Stripe Checkout Session is paid and the file belongs to that product (`PRODUCT_CATALOG` in `lib/email/product-delivery.ts`). Build links with `paidDownloadUrl()` from `lib/paid-downloads.ts`. Only the free guide checklists stay in `public/downloads/`.
 - **Academy catalog:** courses in `lib/academy.ts` (each has its own page at `/academy/[slug]`), Quick-Fix guides and bundles in `lib/quick-fix.ts`. All prices live in the "Screwed Score" Stripe account (`acct_1TOBfIEKDzEsz6Uj`).
+- **Quick-Fix Series 2–6 (lessons 11–60)** are generated: edit `scripts/academy/series_*.py`, then run `python3 scripts/academy/build_lessons.py`. It writes the lesson HTML to `private/downloads/` and `lib/academy-series.generated.ts` (never edit that by hand); live Stripe price IDs come from `scripts/academy/prices.json`. Pricing: $5 a guide, $19 a 10-guide pack, $49 for all 50.
 - `fix-netlify-handler.js` must run after every build before deploying. It's part of `npm run build` but verify `netlify.toml` still has `command = "npm run build"` after any config changes.
 - API routes in `app/api/` have a 26-second Netlify function timeout (`netlify.toml`). Keep AI calls within ~45s with abort controllers.
 - Never nest route files inside `pages/api/` — all API routes use App Router.
