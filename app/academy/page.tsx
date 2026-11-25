@@ -6,7 +6,8 @@ import {
   KeyRound, Cog, Disc3, Thermometer, BatteryCharging, Bath, ShowerHead, PlugZap, PaintRoller, Droplets, Wrench, ShieldAlert,
   type LucideIcon,
 } from 'lucide-react'
-import { QF_LESSONS, QF_BUNDLES, type QuickFixLesson, type QuickFixBundle } from '@/lib/quick-fix'
+import { QF_LESSONS, QF_SERIES1_LESSONS, QF_SERIES1_BUNDLES, type QuickFixLesson, type QuickFixBundle } from '@/lib/quick-fix'
+import { QuickFixLibrary } from '@/components/academy/QuickFixLibrary'
 import { COURSES, type Course } from '@/lib/academy'
 import { BuyButton, useCheckout } from '@/components/academy/BuyButton'
 
@@ -180,11 +181,11 @@ function QuickFixSection() {
 
       {/* Bundles first: on a phone the best deal is the first thing you see */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 pt-3">
-        {QF_BUNDLES.map(b => <QuickFixBundleCard key={b.id} bundle={b} />)}
+        {QF_SERIES1_BUNDLES.map(b => <QuickFixBundleCard key={b.id} bundle={b} />)}
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {QF_LESSONS.map(l => <QuickFixCard key={l.id} lesson={l} />)}
+        {QF_SERIES1_LESSONS.map(l => <QuickFixCard key={l.id} lesson={l} />)}
       </div>
 
       <div className="mt-8 rounded-xl p-4 flex items-start gap-3 text-left max-w-2xl mx-auto"
@@ -240,7 +241,7 @@ export default function AcademyPage() {
           <p className="animate-fade-up delay-200 text-lg sm:text-xl max-w-lg mx-auto leading-relaxed mb-10"
             style={{ color: 'rgba(242,242,242,0.5)' }}>
             Four complete courses that turn you into your own best advocate — reading estimates,
-            diagnosing your car, and fighting back when something's wrong.
+            diagnosing your car, and fighting back when something&apos;s wrong.
           </p>
 
           <div className="animate-fade-up delay-300 flex flex-wrap items-center justify-center gap-3">
@@ -267,6 +268,7 @@ export default function AcademyPage() {
         </section>
 
         <QuickFixSection />
+        <QuickFixLibrary />
 
         {/* ── Value blocks ─────────────────────────────────────────────── */}
         <section className="border-t border-b border-brand-border/30 py-14">
@@ -391,7 +393,7 @@ export default function AcademyPage() {
             </div>
             <div className="flex-1 space-y-2">
               <p className="text-[11px] font-bold uppercase tracking-[0.25em]" style={{ color: 'rgba(255,214,10,0.7)' }}>
-                You're not learning this alone
+                You&apos;re not learning this alone
               </p>
               <h3 className="text-2xl font-black text-brand-text">The Academy Community</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(242,242,242,0.5)' }}>

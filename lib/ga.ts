@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 
-const MEASUREMENT_ID = 'G-23L7FKP8VQ'
+// Server-side events go to one property, the one GA_API_SECRET was created in.
+const MEASUREMENT_ID = process.env.GA_MP_MEASUREMENT_ID ?? 'G-23L7FKP8VQ'
 
 /**
  * Send a server-side event to GA4 via the Measurement Protocol.

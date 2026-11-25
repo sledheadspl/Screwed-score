@@ -148,7 +148,7 @@ export default function PrivacyPage() {
 
         <Section title="9. Security">
           <p>We take security seriously. All data is transmitted over HTTPS. Sensitive tokens are signed with HMAC-SHA256. Database access requires server-side authentication via service role keys that are never exposed to the client. IP addresses are stored only as one-way SHA-256 hashes.</p>
-          <p>No method of transmission or storage is 100% secure. If you discover a security vulnerability, please disclose it responsibly to <a href="mailto:security@rembydesign.com" className="text-red-400 hover:underline">security@rembydesign.com</a>.</p>
+          <p>No method of transmission or storage is 100% secure. If you discover a security vulnerability, please disclose it responsibly to <a href="mailto:support@screwedscore.com" className="text-red-400 hover:underline">support@screwedscore.com</a>. Our <Link href="/security" className="text-red-400 hover:underline">security policy</Link> explains what&apos;s in scope and what to expect.</p>
         </Section>
 
         <Section title="10. Changes to This Policy">

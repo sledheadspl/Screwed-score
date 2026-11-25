@@ -56,7 +56,7 @@ export function ApplicationForm({ jobId, minReputation, workerScore, isAuthentic
         style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.2)' }}
       >
         <p className="text-sm font-bold" style={{ color: '#4ade80' }}>Application Submitted ✓</p>
-        <p className="text-brand-sub text-xs mt-1">The operator will review and reach out if you're selected.</p>
+        <p className="text-brand-sub text-xs mt-1">The operator will review and reach out if you&apos;re selected.</p>
       </div>
     )
   }

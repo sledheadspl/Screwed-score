@@ -370,7 +370,7 @@ export function VideoGenerator({ hook, meta }: Props) {
     }
 
     rafRef.current = requestAnimationFrame(tick)
-  }, [hook, meta, stop])
+  }, [hook, meta])
 
   const reset = useCallback(() => {
     stop()

@@ -246,6 +246,9 @@ export default function CommunityClient({ initialExperiences }: { initialExperie
                 <div key={v.id} className="flex items-center gap-3 rounded-2xl px-4 py-3"
                   style={{ background: 'rgba(74,222,128,0.04)', border: '1px solid rgba(74,222,128,0.12)' }}>
                   {safeHref(v.logo_url) ? (
+                    // Business-supplied logo from any host, so next/image's
+                    // remotePatterns can't list it; a plain <img> is intended.
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={safeHref(v.logo_url)} alt={v.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-black flex-shrink-0"

@@ -180,8 +180,8 @@ export const PRODUCT_CATALOG: Record<string, {
     return [p.id, {
       name: qfProductName(p.id)!,
       tagline: isBundle
-        ? `${lessons.length} step-by-step repair guides with printable checklists.`
-        : 'Step-by-step repair guide with a printable checklist.',
+        ? `${lessons.length} step-by-step guides, each with a printable checklist.`
+        : 'Step-by-step guide with a printable checklist.',
       deliveryEnvKey: `PRODUCT_LINK_${p.id.toUpperCase().replace(/-/g, '_')}`,
       defaultPath: qfDownloadPath(lessons[0]),
       accentColor: '#ff7a1a',

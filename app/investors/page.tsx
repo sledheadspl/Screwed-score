@@ -126,10 +126,10 @@ export default function InvestorsPage() {
 
           <p className="text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
             style={{ color: 'rgba(242,242,242,0.5)' }}>
-            We're building the consumer protection layer for the internet
+            We&apos;re building the consumer protection layer for the internet
             and the AI content stack for creators.
             Both products are live, both are monetizing.
-            We're raising to accelerate.
+            We&apos;re raising to accelerate.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -327,7 +327,7 @@ export default function InvestorsPage() {
             <p className="text-sm" style={{ color: 'rgba(242,242,242,0.55)' }}>
               <span className="text-[#f2f2f2] font-semibold">Unit economics are strong.</span>{' '}
               GetScrewedScore has near-zero marginal cost per scan at scale (AI API + storage).
-              ClipPilot processes everything locally on the user's machine — our infrastructure costs don't scale with usage.
+              ClipPilot processes everything locally on the user&apos;s machine — our infrastructure costs don&apos;t scale with usage.
             </p>
           </div>
         </section>
@@ -379,7 +379,7 @@ export default function InvestorsPage() {
             <p className="text-[11px] font-bold uppercase tracking-[0.25em]"
               style={{ color: 'rgba(255,59,48,0.6)' }}>The Ask</p>
             <h2 className="text-3xl sm:text-4xl font-black text-[#f2f2f2] tracking-tight">
-              What we're looking for.
+              What we&apos;re looking for.
             </h2>
           </div>
 
@@ -488,14 +488,14 @@ export default function InvestorsPage() {
               <div className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
                 style={{ background: 'rgba(255,59,48,0.1)', color: 'rgba(255,100,80,0.9)', border: '1px solid rgba(255,59,48,0.2)' }}>
                 <Rocket className="w-3 h-3" />
-                Let's talk
+                Let&apos;s talk
               </div>
 
               <h2 className="text-3xl sm:text-4xl font-black text-[#f2f2f2] tracking-tight mb-4">
                 Ready to get in before this blows up?
               </h2>
               <p className="text-lg max-w-lg mx-auto mb-8" style={{ color: 'rgba(242,242,242,0.5)' }}>
-                Send an email and we'll get back within 24 hours with the full deck,
+                Send an email and we&apos;ll get back within 24 hours with the full deck,
                 demo access, and everything you need to make a decision.
               </p>
 

@@ -6,7 +6,7 @@ import nextTypeScript from 'eslint-config-next/typescript'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 
-export default [
+const config = [
   {
     ignores: [
       '.next/**', '.netlify/**', 'node_modules/**', 'out/**', 'build/**',
@@ -37,3 +37,5 @@ export default [
     },
   },
 ]
+
+export default config

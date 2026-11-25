@@ -1,4 +1,6 @@
-// Quick-Fix Series 1: ten single-repair guides plus three bundles.
+// Quick-Fix guides. Series 1: ten repair guides plus three bundles (below).
+// Series 2–6: fifty more guides, a pack per series and an everything bundle,
+// generated into lib/academy-series.generated.ts (see lib/academy-series.ts).
 //
 // One source of truth for the /academy cards, the success page, checkout
 // (pages/api/product-checkout) and email delivery (lib/email/product-delivery).
@@ -6,7 +8,10 @@
 //
 // Stripe products carry the same ids in metadata.academy_id.
 
-export type QuickFixCategory = 'car' | 'home'
+import { GEN_SERIES, GEN_LESSONS, GEN_PACKS, GEN_EVERYTHING } from './academy-series.generated'
+import type { SeriesCategory } from './academy-series'
+
+export type QuickFixCategory = SeriesCategory
 
 export interface QuickFixLesson {
   id: string
@@ -19,6 +24,10 @@ export interface QuickFixLesson {
   shopPrice: string
   /** Filename in private/downloads/ (served by /api/download). */
   file: string
+  /** Series 2+ only: series id, one-line teaser, and the label for shopPrice. */
+  series?: string
+  teaser?: string
+  shopLabel?: string
 }
 
 export interface QuickFixBundle {
@@ -29,9 +38,10 @@ export interface QuickFixBundle {
   price: number
   includes: string[]
   highlight?: boolean
+  series?: string
 }
 
-export const QF_LESSONS: QuickFixLesson[] = [
+export const QF_SERIES1_LESSONS: QuickFixLesson[] = [
   { id: 'qf-no-start-diagnosis', num: '01', title: "Car Won't Start? The 10-Minute Diagnosis", category: 'car', priceId: 'price_1UeK4QEKDzEsz6UjognEMCWZ', price: 9,  shopPrice: '$100–$180', file: 'academy-qf-01-no-start-diagnosis.html' },
   { id: 'qf-serpentine-belt',    num: '02', title: 'Replace Your Serpentine Belt',               category: 'car', priceId: 'price_1UeK4WEKDzEsz6UjQtv49ddn', price: 9,  shopPrice: '$100–$200', file: 'academy-qf-02-serpentine-belt.html' },
   { id: 'qf-brake-pads-rotors',  num: '03', title: 'Front Brake Pads and Rotors',                category: 'car', priceId: 'price_1UeK4XEKDzEsz6Ujci39Dckt', price: 12, shopPrice: '$250–$500', file: 'academy-qf-03-brake-pads-rotors.html' },
@@ -44,14 +54,14 @@ export const QF_LESSONS: QuickFixLesson[] = [
   { id: 'qf-leaky-faucet',       num: '10', title: 'Fix a Leaky Faucet (Any Type)',              category: 'home', priceId: 'price_1UeK4eEKDzEsz6UjNkyfyAcg', price: 9, shopPrice: '$150–$300', file: 'academy-qf-10-leaky-faucet.html' },
 ]
 
-export const QF_BUNDLES: QuickFixBundle[] = [
+export const QF_SERIES1_BUNDLES: QuickFixBundle[] = [
   {
     id: 'qf-all-10',
     title: 'All 10 — Best Value',
     subtitle: 'Every car and home guide in Series 1.',
     priceId: 'price_1UeK4gEKDzEsz6UjWvRN3UMA',
     price: 45,
-    includes: QF_LESSONS.map(l => l.id),
+    includes: QF_SERIES1_LESSONS.map(l => l.id),
     highlight: true,
   },
   {
@@ -60,7 +70,7 @@ export const QF_BUNDLES: QuickFixBundle[] = [
     subtitle: 'Guides 1–5: no-start, belt, brakes, coolant, battery.',
     priceId: 'price_1UeK4fEKDzEsz6UjNaY01r1x',
     price: 29,
-    includes: QF_LESSONS.filter(l => l.category === 'car').map(l => l.id),
+    includes: QF_SERIES1_LESSONS.filter(l => l.category === 'car').map(l => l.id),
   },
   {
     id: 'qf-home-pack',
@@ -68,9 +78,22 @@ export const QF_BUNDLES: QuickFixBundle[] = [
     subtitle: 'Guides 6–10: toilet, drains, GFCI, drywall, faucet.',
     priceId: 'price_1UeK4fEKDzEsz6UjuXR66NVf',
     price: 25,
-    includes: QF_LESSONS.filter(l => l.category === 'home').map(l => l.id),
+    includes: QF_SERIES1_LESSONS.filter(l => l.category === 'home').map(l => l.id),
   },
 ]
+
+// ── Series 2–6 (generated) ──────────────────────────────────────────────────
+export const QF_SERIES = GEN_SERIES
+export const QF_SERIES_PACKS: QuickFixBundle[] = GEN_PACKS.map(p => ({ ...p, subtitle: p.subtitle ?? '' }))
+export const QF_EVERYTHING: QuickFixBundle = {
+  ...GEN_EVERYTHING,
+  subtitle: `All ${GEN_EVERYTHING.includes.length} guides in Series 2–6.`,
+  highlight: true,
+}
+
+/** Every Quick-Fix guide and bundle, all series. */
+export const QF_LESSONS: QuickFixLesson[] = [...QF_SERIES1_LESSONS, ...GEN_LESSONS]
+export const QF_BUNDLES: QuickFixBundle[] = [...QF_SERIES1_BUNDLES, ...QF_SERIES_PACKS, QF_EVERYTHING]
 
 export const QF_LESSON_BY_ID: Record<string, QuickFixLesson> =
   Object.fromEntries(QF_LESSONS.map(l => [l.id, l]))
@@ -98,7 +121,11 @@ export function qfProductName(productId: string): string | null {
   const single = QF_LESSON_BY_ID[productId]
   if (single) return `Quick-Fix #${single.num}: ${single.title}`
   const bundle = QF_BUNDLE_BY_ID[productId]
-  if (bundle) return bundle.id === 'qf-all-10' ? 'Quick-Fix Series 1: All 10 Guides' : `Quick-Fix ${bundle.title}`
+  if (bundle) {
+    if (bundle.id === 'qf-all-10') return 'Quick-Fix Series 1: All 10 Guides'
+    if (bundle.id === QF_EVERYTHING.id) return `Quick-Fix: All ${bundle.includes.length} Guides (Series 2–6)`
+    return `Quick-Fix ${bundle.title}`
+  }
   return null
 }
 

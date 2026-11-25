@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '@/lib/stripe'
-import { QF_LESSONS, QF_BUNDLES, QF_SAFETY_CONSENT, isQuickFixProduct } from '@/lib/quick-fix'
+import { QF_LESSONS, QF_BUNDLES, QF_SAFETY_CONSENT, isQuickFixProduct, qfLessonsFor } from '@/lib/quick-fix'
 
 const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = {
   'creator-os':               { priceId: 'price_1TOCoPEKDzEsz6UjwGJfStP0', subscription: false },
@@ -35,7 +35,8 @@ const PRODUCT_MAP: Record<string, { priceId: string; subscription: boolean }> = 
 
   // ── Quick-Fix Series 1 (live prices live in lib/quick-fix.ts) ───────────
   ...Object.fromEntries(
-    [...QF_LESSONS, ...QF_BUNDLES].map(p => [p.id, { priceId: p.priceId, subscription: false }]),
+    // Only guides with a live Stripe price are sellable.
+    [...QF_LESSONS, ...QF_BUNDLES].filter(p => p.priceId).map(p => [p.id, { priceId: p.priceId, subscription: false }]),
   ),
 }
 
@@ -63,6 +64,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const isClipPilot = product_id!.startsWith('clippilot')
   const isQuickFix = isQuickFixProduct(product_id!)
+  // The safety acknowledgement only applies to hands-on repair guides.
+  const needsSafetyConsent = isQuickFix &&
+    qfLessonsFor(product_id!).some(l => l.category === 'car' || l.category === 'home')
   const isAcademy = product_id!.startsWith('academy-') || isQuickFix
 
   try {
@@ -82,11 +86,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         : isAcademy ? `${origin}/academy` : `${origin}/productivity`,
       allow_promotion_codes: true,
       customer_creation: entry.subscription ? undefined : 'always',
-      // Quick-Fix guides: Stripe Tax, plus a required safety acknowledgement.
-      // Stripe Checkout's only required checkbox is the terms-of-service
-      // consent; its label is replaced with the safety notice text.
-      ...(isQuickFix && {
-        automatic_tax: { enabled: true },
+      // Quick-Fix guides: Stripe Tax. Repair guides also need a safety
+      // acknowledgement: Stripe Checkout's only required checkbox is the
+      // terms-of-service consent, so its label is replaced with the notice.
+      ...(isQuickFix && { automatic_tax: { enabled: true } }),
+      ...(needsSafetyConsent && {
         consent_collection: { terms_of_service: 'required' as const },
         custom_text: { terms_of_service_acceptance: { message: QF_SAFETY_CONSENT } },
       }),

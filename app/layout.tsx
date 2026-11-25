@@ -3,6 +3,8 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import Script from 'next/script'
+import Image from 'next/image'
+import { GTAG_IDS } from '@/lib/analytics-config'
 import './globals.css'
 import Navbar from '@/components/navigation/Navbar'
 import { ADSENSE_CLIENT_ID } from '@/lib/adsense'
@@ -113,18 +115,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             visitor can click: funnel events from lib/track.ts queue up and are
             sent once the library arrives, instead of being lost for visitors
             who bounce before the browser idles. */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-MZCC8P2NG7"
-          strategy="lazyOnload"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">{`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-MZCC8P2NG7');
-          gtag('config', 'G-23L7FKP8VQ');
-          gtag('config', 'AW-18056991193');
-        `}</Script>
+        {GTAG_IDS.length > 0 && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_IDS[0]}`}
+              strategy="lazyOnload"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">{`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              ${GTAG_IDS.map(id => `gtag('config', ${JSON.stringify(id)});`).join('\n              ')}
+            `}</Script>
+          </>
+        )}
         {/* Google AdSense — site verification + Auto ads. Rendered only when
             NEXT_PUBLIC_ADSENSE_CLIENT_ID is set, so preview deploys and local
             dev never load ads. afterInteractive (not lazyOnload) keeps the tag
@@ -165,7 +169,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </nav>
           <div className="flex justify-center">
-            <img src="/rembydesign-logo.svg" alt="REMbyDesign logo" className="h-8 opacity-80" width="120" height="32" />
+            <Image src="/rembydesign-logo.svg" alt="REMbyDesign logo" className="h-8 w-auto opacity-80" width={120} height={32} />
           </div>
           <div>&copy; {new Date().getFullYear()} REMbyDesign. All rights reserved.</div>
           <div>Unauthorized reproduction or distribution is strictly prohibited.</div>

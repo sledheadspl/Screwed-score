@@ -48,6 +48,9 @@ export default function Navbar() {
   // swaps a nav label. The cookie read is synchronous; the SDK loads once the
   // browser is idle.
   useEffect(() => {
+    // The Pro cookie only exists in the browser; reading it during render
+    // would make the server and client HTML disagree.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsPro(hasProCookie())
 
     let unsubscribe: (() => void) | undefined

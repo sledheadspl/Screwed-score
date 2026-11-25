@@ -127,17 +127,12 @@ items complete — see git log for the commit that closed each one.
 
 ## Low priority
 
-- [ ] **This checkout's local Netlify CLI link is stale.** `.netlify/state.json`
-      (gitignored, machine-local, untouched by any commit here) points at
-      `flourishing-meerkat-9bc778` (no custom domain) — not the documented
-      production site `getscrewedscore` (`5e2b2f50-1c96-453d-94e1-55badd24ac09`).
-      Doesn't affect anything done today: every deploy this session went
-      through the GitHub→Netlify auto-deploy CI, verified live on
-      www.screwedscore.com directly, not through this CLI link. Only matters
-      if someone runs `netlify deploy --prod` by hand from this checkout —
-      it would currently target the wrong site. Fix: `netlify unlink` then
-      `netlify link` and pick `getscrewedscore` explicitly.
-      Not blocked — just not urgent.
+- [x] **Local Netlify CLI link was stale** (`.netlify/state.json` on the PC
+      pointed at `flourishing-meerkat-9bc778`, not `getscrewedscore`). Moot
+      since 2026-11-24: production runs on the Hostinger VPS (see CLAUDE.md),
+      and Netlify no longer serves the domain, so `netlify deploy` can't touch
+      the live site. If the Netlify site is ever used again, run
+      `netlify unlink` then `netlify link` and pick `getscrewedscore`.
 
 ## Environment note
 
